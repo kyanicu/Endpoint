@@ -5,26 +5,34 @@ using UnityEngine.UI;
 
 public class QTEButton : MonoBehaviour
 {
-    public enum KeyNames
-    {
-        up,
-        down,
-        left,
-        right
-    };
-    public KeyNames keyName { get; private set; }
-    private int[] arrowRotation =
-    {
-        180,
-        0,
-        270,
-        90
-    };
-    public bool active;
-    public GameObject arrowImage;
-    private Image button;
+    //QTE button's current status
+    public bool Active;
 
-    public void setColor(Color color)
+    //The QTE button's attached arrow image
+    public GameObject ArrowImage;
+
+    //Enums for possible QTE button presses
+    public enum KeyNames { up, down, left, right };
+
+    //This buttons needed QTE key
+    public KeyNames keyName { get; private set; }
+
+    /// <summary>
+    /// Rotation to be applied to arrow image.
+    /// Arrow starts facing downward and items line up with 
+    /// items in KeyNames which explains the array's item order
+    /// </summary>
+    private int[] arrowRotation = { 180, 0, 270, 90 };
+
+    //The sprite Component of the QTE button
+    private SpriteRenderer button;
+
+    /// <summary>
+    /// function used to change the background color of a button.
+    /// Called when initialized, activated, deactivated, and on misinput
+    /// </summary>
+    /// <param name="color"></param>
+    public void SetColor(Color color)
     {
         button.color = color;
     }
@@ -32,12 +40,25 @@ public class QTEButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Rng between 0 and 3 (inclusive)
         int rand = Random.Range(0, 3);
+
+        //Get the corresponding key name
         keyName = (KeyNames)rand;
+
+        //Get the rotation for our arrow
         Vector3 rotValue = new Vector3(0, 0, arrowRotation[rand]);
-        arrowImage.transform.Rotate(rotValue);
-        active = false;
-        button = GetComponent<Image>();
-        setColor(Color.gray);
+
+        //Apply that rotation
+        ArrowImage.transform.Rotate(rotValue);
+
+        //Button set to inactivate on start
+        Active = false;
+
+        //Retrieve QTE button's sprite renderer component
+        button = GetComponent<SpriteRenderer>();
+
+        //Set it's color to inactive color (gray)
+        SetColor(Color.gray);
     }
 }
