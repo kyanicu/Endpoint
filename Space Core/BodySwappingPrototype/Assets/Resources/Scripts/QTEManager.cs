@@ -69,6 +69,9 @@ public class QTEManager : MonoBehaviour
     /// </summary>
     private void activateButton()
     {
+
+        if (buttonStack.Count == 0) return;
+
         //Set active button to first button in stack
         activeButton = buttonStack.Peek().GetComponent<QTEButton>();
 
@@ -82,29 +85,34 @@ public class QTEManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (buttonStack.Count == 0) return;
+        
         //If first button in stack is active
         if (activeButton.Active)
         {
-            //If correct QTE button is pressed
-            if (Input.GetKeyDown(keys[(int)activeButton.keyName]))
+            if (Input.anyKey)
             {
-                //Change button color to green
-                activeButton.SetColor(Color.green);
+                //If correct QTE button is pressed
+                if (Input.GetKeyDown(keys[(int)activeButton.keyName]))
+                {
+                    //Change button color to green
+                    activeButton.SetColor(Color.green);
 
-                //Remove it from stack
-                buttonStack.Pop();
+                    //Remove it from stack
+                    buttonStack.Pop();
 
-                //TO DO
-                //We'll probably need to destroy it and move the others up
-                //if there are more than 3 items in our stack
+                    //TO DO
+                    //We'll probably need to destroy it and move the others up
+                    //if there are more than 3 items in our stack
 
-                //Activate the next button in the stack
-                activateButton();
-            }
-            else //Misinput
-            {
-                //Clear and repopulate stack
-                StartCoroutine(ClearStack());
+                    //Activate the next button in the stack
+                    activateButton();
+                }
+                else //Misinput
+                {
+                    //Clear and repopulate stack
+                    StartCoroutine(ClearStack());
+                }
             }
         }
     }
