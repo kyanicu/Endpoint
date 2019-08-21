@@ -14,7 +14,7 @@ public class QTEButton : MonoBehaviour
     //Enums for possible QTE button presses
     public enum KeyNames { up, down, left, right };
 
-    //This buttons needed QTE key
+    //This button's needed QTE key
     public KeyNames keyName { get; private set; }
 
     /// <summary>
@@ -37,11 +37,27 @@ public class QTEButton : MonoBehaviour
         button.color = color;
     }
 
+
+
+    // Start is called before the first frame update
+    public void Randomize()
+    {
+        //Get the rotation for our arrow
+        Vector3 rotValue = new Vector3(0, 0, arrowRotation[(int)keyName]);
+
+        //Apply that rotation
+        ArrowImage.transform.Rotate(-rotValue);
+
+        Initialize();
+    }
+
     // Start is called before the first frame update
     public void Initialize()
-    {
+    { 
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+
         //Rng between 0 and 3 (inclusive)
-        int rand = Random.Range(0, 3);
+        int rand = Random.Range(0, 4);
 
         //Get the corresponding key name
         keyName = (KeyNames)rand;

@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QTEManager : MonoBehaviour
 {
     public QTEButton[] buttons;
+    public Text lastInputText;
+    private string lastInputString;
 
     [SerializeField]
     private bool listening = false;
 
-    private int listIndex = 0;
+    private int listIndex;
 
     //The startSize locations where we'll be populating buttons
     public Transform[] ButtonLoc;
@@ -44,23 +47,48 @@ public class QTEManager : MonoBehaviour
         qteButton = Resources.Load<GameObject>("Prefabs/QTE Button");
 
         //Create a sample stack of QTE buttons size startSize
-        StackCreate(startSize);
+        StackCreate(true);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(keys[0]))
+        {
+            lastInputString = "Up Key";
+        }
+        else if (Input.GetKeyDown(keys[1]))
+        {
+            lastInputString = "Down Key";
+        }
+        else if (Input.GetKeyDown(keys[2]))
+        {
+            lastInputString = "Left Key";
+        }
+        if (Input.GetKeyDown(keys[3]))
+        {
+            lastInputString = "Right Key";
+        }
+        lastInputText.text = lastInputString;
     }
 
     /// <summary>
     /// This functions creates a stack of QTE buttons of size numItems
     /// </summary>
     /// <param name="numItems"></param>
-    public void StackCreate(int numItems)
+    public void StackCreate(bool firstTime)
     {
+        buttonStack = new List<QTEButton>();
+        listIndex = 0;
+
         //Loop through size of stack
-        for (int i = 0; i < numItems; i++)
+        for (int i = 0; i < startSize; i++)
         {
             //If there is still room to display buttons on panel
             if (i < startSize)
             {
                 buttons[i].transform.position = ButtonLoc[i].position;
-                buttons[i].Initialize();
+                if (firstTime)   buttons[i].Initialize();
+                else             buttons[i].Randomize();
             }
 
             //Add the button to our stack
@@ -70,8 +98,6 @@ public class QTEManager : MonoBehaviour
         //Activate our first button
         activateButton();
 
-        listening = true;
-
         StartCoroutine(Listener());
     }
 
@@ -80,7 +106,6 @@ public class QTEManager : MonoBehaviour
     /// </summary>
     private void activateButton()
     {
-
         if (listIndex == buttonStack.Count) return;
 
         //Set active button to first button in stack
@@ -91,6 +116,8 @@ public class QTEManager : MonoBehaviour
 
         //Set it to active color (white)
         activeButton.SetColor(Color.white);
+
+        listening = true;
     }
 
     // Update is called once per frame
@@ -108,13 +135,19 @@ public class QTEManager : MonoBehaviour
                 //If correct QTE button is pressed
                 if (Input.GetKeyDown(keys[(int)activeButton.keyName]))
                 {
+                    listening = false;
+
                     //Change button color to green
                     activeButton.SetColor(Color.green);
 
                     //Remove it from stack
                     listIndex++;
 
-                    if (listIndex == buttonStack.Count)   successfulHack();
+                    if (listIndex == buttonStack.Count)
+                    {
+                        successfulHack();
+                        yield return null;
+                    }
 
                     //TO DO
                     //We'll probably need to destroy it and move the others up
@@ -134,19 +167,12 @@ public class QTEManager : MonoBehaviour
                     //Pause so player knows they done goofed
                     yield return new WaitForSeconds(waitTime);
 
-                    //Iterate through stack
-                    foreach (QTEButton button in buttonStack)
-                    {
-                        Destroy(button);
-                    }
-
-                    buttonStack = new List<QTEButton>();
-                    listIndex = 0;
-                    StackCreate(startSize);
+                    StackCreate(false);
                 }
             }
             yield return new WaitForSeconds(.01f);
         }
+        listening = false;
 
         //end coroutine
         yield return null;
