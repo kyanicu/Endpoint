@@ -38,7 +38,7 @@ public class QTEButton : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Awake()
+    public void Initialize()
     {
         //Rng between 0 and 3 (inclusive)
         int rand = Random.Range(0, 3);
