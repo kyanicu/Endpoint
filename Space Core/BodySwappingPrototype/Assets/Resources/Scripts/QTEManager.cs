@@ -45,9 +45,8 @@ public class QTEManager : MonoBehaviour
     {
         //Load our QTE button from resource ONCE so we don't have to again
         qteButton = Resources.Load<GameObject>("Prefabs/QTE Button");
-
-        //Create a sample stack of QTE buttons size startSize
         StackCreate(true);
+        listening = false;
     }
 
     private void Update()
