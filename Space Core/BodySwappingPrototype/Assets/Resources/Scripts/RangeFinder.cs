@@ -51,12 +51,9 @@ public class RangeFinder : MonoBehaviour
     private void Update()
     {
         if (hackStart == false) StopCoroutine(Uploading());
-        while (LoadingBar.fillAmount < 1)
+        while (LoadingBar.fillAmount < .99f && hackStart)
         {
-            if (hackStart)
-            {
-                LoadingBar.fillAmount += Time.deltaTime/uploadTime;
-            }
+            LoadingBar.fillAmount += Time.deltaTime/uploadTime;
         }
     }
 
