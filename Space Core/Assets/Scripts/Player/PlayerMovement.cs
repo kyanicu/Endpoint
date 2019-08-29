@@ -8,18 +8,20 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     Collider2D col;
 
-    private Vector2 _velocity;
-    public Vector2 velocity { get { return _velocity; } private set { _velocity = value; rb.velocity = value; } }
+    //private Vector2 _velocity;
+    public Vector2 velocity { get { return rb.velocity; } private set { rb.velocity = value;  } }
 
     private float runSpeed, jumpVelocity;
     private bool isGrounded;
+
+    private Vector2 currentSlope;
 
     private void Awake()
     {
         rb = gameObject.AddComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
 
-        rb.gravityScale = 0;
+        rb.gravityScale = 1;
         rb.freezeRotation = true;
     }
 
@@ -37,14 +39,20 @@ public class PlayerMovement : MonoBehaviour
 
     public void Run(float direction)
     {
-        velocity = new Vector2(runSpeed * direction, velocity.y);
+        if (!isGrounded)
+        {
+            velocity = new Vector2(runSpeed * direction, velocity.y);
+        }
+        else
+        {
+            velocity = currentSlope * runSpeed * direction;
+        }
     }
 
     public void Jump ()
     {
         if (isGrounded)
         {
-            Debug.Log("Jump");
             velocity += jumpVelocity * Vector2.up;
         }
     }
@@ -60,26 +68,39 @@ public class PlayerMovement : MonoBehaviour
 
         RaycastHit2D[] hits = new RaycastHit2D[5];
 
-        int hitCount = col.Cast(Vector2.down, hits, 0.2f);
+        int hitCount = col.Cast(Vector2.down, hits, 0.05f);
 
         isGrounded = false;
 
+        Vector2 normal = Vector2.zero;
         for (int i = 0; i < hitCount; i++)
         {
             if (Vector2.Angle(hits[i].normal, Vector2.up) <= 45)
             {
-                isGrounded = true;
-                rb.MovePosition(Vector2.down * hits[i].normal);
-                velocity = new Vector2(velocity.x, 0);
-                break;
+                normal += hits[i].normal;
             }
         }
-
-        if (!isGrounded)
+        if (normal != Vector2.zero)
         {
-            //velocity += Physics2D.gravity * Time.fixedDeltaTime;
+            normal.Normalize();
+            isGrounded = true;
+
+            currentSlope = (Quaternion.Euler(0, 0, -90) * normal).normalized;
+
+            Debug.Log(currentSlope);
+        }
+        else
+        {
+            currentSlope = Vector2.right;
         }
 
-        rb.velocity = velocity;
+        if (isGrounded && rb.gravityScale != 0) 
+        {
+            rb.gravityScale = 0;
+        }
+        else if (rb.gravityScale == 0)
+        {
+            rb.gravityScale = 1;
+        }
     }
 }
