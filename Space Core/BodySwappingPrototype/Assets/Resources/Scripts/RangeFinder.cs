@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RangeFinder : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class RangeFinder : MonoBehaviour
     private bool hackStart = false;
     public QTEManager qteManager;
     private SphereCollider sphere;
+    public Image LoadingBar;
 
     // Start is called before the first frame update
     void Start()
     {
         sphere = GetComponent<SphereCollider>();
+        LoadingBar.fillAmount = 0;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,6 +51,13 @@ public class RangeFinder : MonoBehaviour
     private void Update()
     {
         if (hackStart == false) StopCoroutine(Uploading());
+        while (LoadingBar.fillAmount < 1)
+        {
+            if (hackStart)
+            {
+                LoadingBar.fillAmount += Time.deltaTime/uploadTime;
+            }
+        }
     }
 
     private IEnumerator Uploading()
