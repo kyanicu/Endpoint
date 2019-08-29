@@ -4,20 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class RangeFinder : MonoBehaviour
-{
-    private float uploadTime = 2;
-    [SerializeField]
-    private bool hackStart = false;
-    public QTEManager qteManager;
-    private SphereCollider sphere;
+{ 
+    //Loading bar depicting how much hack time is left
     public Image LoadingBar;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        sphere = GetComponent<SphereCollider>();
-    }
+    //Quick time event panel, activated when in range for long enough
+    public QTEManager QTEManager;
 
+    //Flag denoting whether player is currently uploading
+    private bool hackStart = false;
+
+    //Time it takes to upload, used in coroutine
+    private float uploadTime = 2;
+
+    //How much fill amount gets increased 
+    private const float UPLOAD_BAR_AMT = .0625f; 
+
+    /// <summary>
+    /// Begins uploading upon player entering hack area
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
@@ -27,32 +33,45 @@ public class RangeFinder : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Halts uploading upon player leaving hack area
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
             hackStart = false;
+            StopCoroutine(Uploading());
             hideQTE();
             LoadingBar.fillAmount = 0;
         }
     }
 
-    void startQTE()
+    /// <summary>
+    /// Activate the qte panel and populate it with new buttons
+    /// </summary>
+    private void startQTE()
     {
-        qteManager.gameObject.SetActive(true);
-        qteManager.StackCreate(false);
+        if (hackStart)
+        {
+            QTEManager.gameObject.SetActive(true);
+            QTEManager.StackCreate(false);
+        }
     }
 
-    void hideQTE()
+    /// <summary>
+    /// Hide the qte panel
+    /// </summary>
+    private void hideQTE()
     {
-        qteManager.gameObject.SetActive(false);
+        QTEManager.gameObject.SetActive(false);
     }
 
-    private void Update()
-    {
-        if (hackStart == false) StopCoroutine(Uploading());
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Uploading()
     {
         StartCoroutine(UpdateBar());
@@ -64,11 +83,18 @@ public class RangeFinder : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// continues filling bar while player is in hack area
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator UpdateBar()
     {
         while(hackStart)
         {
-            LoadingBar.fillAmount += .0625f;
+            //Fill bar 1/16th of the way 
+            LoadingBar.fillAmount += UPLOAD_BAR_AMT;
+
+            //Wait 1/16th of the upload time before updating bar again
             yield return new WaitForSeconds(uploadTime / 16);
         }
         yield return null;

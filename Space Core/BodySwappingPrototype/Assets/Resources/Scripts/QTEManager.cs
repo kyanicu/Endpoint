@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class QTEManager : MonoBehaviour
 {
-    public QTEButton[] buttons;
-    public Text lastInputText;
-    private string lastInputString;
+    public QTEButton[] buttons; //An array holding the 3 buttons used in the QTE panel
+    public Text lastInputText; //Txt displaying last key pressed
+    private string lastInputString; //String holding text for last button pressed
 
     [SerializeField]
-    private bool listening = false;
+    private bool listening = false; //returns whether or not QTE buttons are listening for input
 
-    private int listIndex;
+    private int listIndex; //The current index in the QTE panel
 
     //The startSize locations where we'll be populating buttons
     public Transform[] ButtonLoc;
@@ -49,6 +49,10 @@ public class QTEManager : MonoBehaviour
         listening = false;
     }
 
+    /// <summary>
+    /// Updates txt panel to show last button pressed.
+    /// For prototyping purposes only
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(keys[0]))
@@ -93,7 +97,6 @@ public class QTEManager : MonoBehaviour
             //Add the button to our stack
             buttonStack.Add(buttons[i]);
         }
-
         //Activate our first button
         activateButton();
 
@@ -116,6 +119,7 @@ public class QTEManager : MonoBehaviour
         //Set it to active color (white)
         activeButton.SetColor(Color.white);
 
+        //begin listening again
         listening = true;
     }
 
@@ -177,6 +181,8 @@ public class QTEManager : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Function that gets called after player successfully completes QTE
+    /// </summary>
     private void successfulHack() { }
-
 }
