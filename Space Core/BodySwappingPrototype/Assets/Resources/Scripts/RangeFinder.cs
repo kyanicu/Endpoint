@@ -16,7 +16,6 @@ public class RangeFinder : MonoBehaviour
     void Start()
     {
         sphere = GetComponent<SphereCollider>();
-        LoadingBar.fillAmount = 0;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,6 +33,7 @@ public class RangeFinder : MonoBehaviour
         {
             hackStart = false;
             hideQTE();
+            LoadingBar.fillAmount = 0;
         }
     }
 
@@ -51,18 +51,25 @@ public class RangeFinder : MonoBehaviour
     private void Update()
     {
         if (hackStart == false) StopCoroutine(Uploading());
-        while (LoadingBar.fillAmount < .99f && hackStart)
-        {
-            LoadingBar.fillAmount += Time.deltaTime/uploadTime;
-        }
     }
 
     private IEnumerator Uploading()
     {
+        StartCoroutine(UpdateBar());
         yield return new WaitForSeconds(uploadTime);
         if(hackStart)
         {
             startQTE();
+        }
+        yield return null;
+    }
+
+    private IEnumerator UpdateBar()
+    {
+        while(hackStart)
+        {
+            LoadingBar.fillAmount += .0625f;
+            yield return new WaitForSeconds(uploadTime / 16);
         }
         yield return null;
     }
