@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class QTEManager : MonoBehaviour
 {
-    public QTEButton[] buttons; //An array holding the 3 buttons used in the QTE panel
-    public Text lastInputText; //Txt displaying last key pressed
-    private string lastInputString; //String holding text for last button pressed
+    //An array holding the 3 buttons used in the QTE panel
+    public QTEButton[] buttons;
+
+    //Txt displaying last key pressed
+    public Text lastInputText;
+
+    //String holding text for last button pressed
+    private string lastInputString; 
 
     [SerializeField]
     private bool listening = false; //returns whether or not QTE buttons are listening for input
 
     private int listIndex; //The current index in the QTE panel
-
-    //The startSize locations where we'll be populating buttons
-    public Transform[] ButtonLoc;
 
     //Holds the most current active QTE button in the stack
     private QTEButton activeButton;
@@ -32,10 +34,8 @@ public class QTEManager : MonoBehaviour
         KeyCode.RightArrow
     };
 
-    //The QTE button we'll constantly be instantiating
-    private GameObject qteButton;
-
-    public int startSize;
+    //How many buttons we'll be generating
+    public int listSize { get; private set; }
 
     [SerializeField]
     private float waitTime = 2f;
@@ -43,56 +43,65 @@ public class QTEManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        //Load our QTE button from resource ONCE so we don't have to again
-        qteButton = Resources.Load<GameObject>("Prefabs/QTE Button");
-        StackCreate(true);
         listening = false;
+        listIndex = 0;
+        //Loop through space on panel
+        for (int i = 0; i < 4; i++)
+        {
+            buttons[i].Initialize();
+            buttons[i].gameObject.SetActive(false);
+        }
+        gameObject.SetActive(false);
+    }
+
+    public int getButtonsLeft()
+    {
+        return listSize - listIndex;
+    }
+
+    public void onActivate(int size)
+    {
+        if (size == 0)
+        {
+            successfulHack();
+            return;
+        }
+        listening = false;
+        listIndex = 0;
+        listSize = size;
+        stackCreate();
     }
 
     /// <summary>
-    /// Updates txt panel to show last button pressed.
+    /// Updates txt panel to show how many QTEs left
     /// For prototyping purposes only
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(keys[0]))
-        {
-            lastInputString = "Up Key";
-        }
-        else if (Input.GetKeyDown(keys[1]))
-        {
-            lastInputString = "Down Key";
-        }
-        else if (Input.GetKeyDown(keys[2]))
-        {
-            lastInputString = "Left Key";
-        }
-        if (Input.GetKeyDown(keys[3]))
-        {
-            lastInputString = "Right Key";
-        }
-        lastInputText.text = lastInputString;
+        lastInputText.text = listIndex + "/" + listSize;
     }
 
     /// <summary>
     /// This functions creates a stack of QTE buttons of size numItems
     /// </summary>
     /// <param name="numItems"></param>
-    public void StackCreate(bool firstTime)
+    private void stackCreate()
     {
-        buttonStack = new List<QTEButton>();
-        listIndex = 0;
-
-        //Loop through size of stack
-        for (int i = 0; i < startSize; i++)
+        for (int i = 0; i < 4; i++)
         {
-            //If there is still room to display buttons on panel
-            if (i < startSize)
-            {
-                buttons[i].transform.position = ButtonLoc[i].position;
-                if (firstTime)   buttons[i].Initialize();
-                else             buttons[i].Randomize();
-            }
+            buttons[i].gameObject.SetActive(false);
+        }
+        buttonStack = new List<QTEButton>();
+
+        //Loop through space on panel
+        for (int i = 0; i < 4; i++)
+        {
+            //No buttons left to generate
+            if (i >= listSize - listIndex)   break;
+
+            //Initialize a new random button
+            buttons[i].gameObject.SetActive(true);
+            buttons[i].Randomize();
 
             //Add the button to our stack
             buttonStack.Add(buttons[i]);
@@ -100,6 +109,7 @@ public class QTEManager : MonoBehaviour
         //Activate our first button
         activateButton();
 
+        //Start listening for input
         StartCoroutine(Listener());
     }
 
@@ -108,10 +118,8 @@ public class QTEManager : MonoBehaviour
     /// </summary>
     private void activateButton()
     {
-        if (listIndex == buttonStack.Count) return;
-
         //Set active button to first button in stack
-        activeButton = buttonStack[listIndex];
+        activeButton = buttonStack[listIndex % 4];
 
         //Make sure it is active
         activeButton.Active = true;
@@ -126,19 +134,23 @@ public class QTEManager : MonoBehaviour
     // Update is called once per frame
     private IEnumerator Listener()
     {
-        if (buttonStack.Count == 0) yield return null;
+        if (buttonStack.Count == 0 || listIndex == listSize) yield return null;
         
         //If first button in stack is active
-        while (activeButton.Active && listIndex < buttonStack.Count)
+        while (activeButton.Active && listIndex % 4 < buttonStack.Count)
         {
             if (!listening) break;
 
-            if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]) || Input.GetKeyDown(keys[startSize]))
+            if (Input.GetKeyDown(keys[0]) || 
+                Input.GetKeyDown(keys[1]) || 
+                Input.GetKeyDown(keys[2]) || 
+                Input.GetKeyDown(keys[3]))
             {
                 //If correct QTE button is pressed
                 if (Input.GetKeyDown(keys[(int)activeButton.keyName]))
                 {
                     listening = false;
+                    yield return new WaitForSeconds(.01f);
 
                     //Change button color to green
                     activeButton.SetColor(Color.green);
@@ -146,15 +158,20 @@ public class QTEManager : MonoBehaviour
                     //Remove it from stack
                     listIndex++;
 
-                    if (listIndex == buttonStack.Count)
+                    //If player has completed all QTE buttons in panel
+                    if (listIndex == listSize)
                     {
+                        listening = false;
                         successfulHack();
+                        break;
+                    }
+                    //If player has no more QTE buttons but listIndex isn't at last button
+                    //Create a new set of QTE buttons
+                    if (listIndex != 0 && listIndex % 4 == 0)
+                    {
+                        stackCreate();
                         yield return null;
                     }
-
-                    //TO DO
-                    //We'll probably need to destroy it and move the others up
-                    //if there are more than startSize items in our stack
 
                     yield return new WaitForSeconds(.01f);
 
@@ -167,10 +184,13 @@ public class QTEManager : MonoBehaviour
                     //Set misinput button color to red
                     activeButton.SetColor(Color.red);
 
+                    //Update ListIndex, player must reset set of QTEs
+                    listIndex -= (listIndex % 4);
+
                     //Pause so player knows they done goofed
                     yield return new WaitForSeconds(waitTime);
 
-                    StackCreate(false);
+                    stackCreate();
                 }
             }
             yield return new WaitForSeconds(.01f);
@@ -184,5 +204,8 @@ public class QTEManager : MonoBehaviour
     /// <summary>
     /// Function that gets called after player successfully completes QTE
     /// </summary>
-    private void successfulHack() { }
+    private void successfulHack()
+    {
+        StopCoroutine(Listener());
+    }
 }

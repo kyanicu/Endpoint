@@ -20,6 +20,8 @@ public class RangeFinder : MonoBehaviour
     //How much fill amount gets increased 
     private const float UPLOAD_BAR_AMT = .0625f; 
 
+    public int QTEButtonsAmt;
+
     /// <summary>
     /// Begins uploading upon player entering hack area
     /// </summary>
@@ -56,7 +58,7 @@ public class RangeFinder : MonoBehaviour
         if (hackStart)
         {
             QTEManager.gameObject.SetActive(true);
-            QTEManager.StackCreate(false);
+            QTEManager.onActivate(QTEButtonsAmt);
         }
     }
 
@@ -65,6 +67,7 @@ public class RangeFinder : MonoBehaviour
     /// </summary>
     private void hideQTE()
     {
+        QTEButtonsAmt = QTEManager.getButtonsLeft();
         QTEManager.gameObject.SetActive(false);
     }
 

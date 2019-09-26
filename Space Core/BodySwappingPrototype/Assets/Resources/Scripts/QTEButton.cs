@@ -25,7 +25,7 @@ public class QTEButton : MonoBehaviour
     private int[] arrowRotation = { 180, 0, 270, 90 };
 
     //The sprite Component of the QTE button
-    private SpriteRenderer button;
+    private Image button;
 
     /// <summary>
     /// function used to change the background color of a button.
@@ -72,7 +72,7 @@ public class QTEButton : MonoBehaviour
         Active = false;
 
         //Retrieve QTE button's sprite renderer component
-        button = GetComponent<SpriteRenderer>();
+        button = GetComponent<Image>();
 
         //Set it's color to inactive color (gray)
         SetColor(Color.gray);
