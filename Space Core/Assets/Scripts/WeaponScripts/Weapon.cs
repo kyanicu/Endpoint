@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
+    public bool IsReloading { get; set; }
     public int AmmoInClip { get; protected set; }
     public int TotalAmmo { get; set; }
     public int ClipSize { get; set; }
@@ -11,13 +12,15 @@ public abstract class Weapon : MonoBehaviour
     public int Damage { get; set; }
     public float RateOfFire { get; set; }
     public float Range { get; set; }
+    public float ReloadTime { get; set; }
+    protected object ReloadLock = new object();
 
-    protected ParticleSystem fireEffect { get; set; }
+    protected ParticleSystem fireEffect;
     protected GameObject fireLocation;
 
     public abstract void Fire();
 
-    public abstract void Reload();
+    public abstract IEnumerator Reload();
 
     public void AddAmmo(int num)
     {
