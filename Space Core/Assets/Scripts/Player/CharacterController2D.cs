@@ -173,7 +173,8 @@ public class CharacterController2D : MonoBehaviour
 
     private void translate(Vector2 moveBy)
     {
-        rb.MovePosition(transform.position + (Vector3)moveBy);
+        transform.position += (Vector3)moveBy;
+        //rb.MovePosition(transform.position + (Vector3)moveBy);
     }
 
     /*
@@ -520,7 +521,6 @@ public class CharacterController2D : MonoBehaviour
             stuck = false;
             if ((numHits = capCol.OverlapCollider(filter, colliders)) > 0)
             {
-
                 if (numHits > maxSize)
                     numHits = maxSize;
 
@@ -528,11 +528,11 @@ public class CharacterController2D : MonoBehaviour
                 {
                     dists[i] = capCol.Distance(colliders[i]);
 
-                    if (dists[i].distance < -totalCollisionOffset)
-                    { 
+                    if (dists[i].distance < 0)
+                    {
                         stuck = true;
 
-                        translate(dists[i].distance * dists[i].normal);
+                        translate((dists[i].distance) * dists[i].normal);
                     }
 
                 }

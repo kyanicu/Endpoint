@@ -67,7 +67,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            velocity = charCont.currentSlope * runSpeed * direction;
+            velocity -= (Vector2) Vector3.Project(velocity, charCont.currentSlope);
+            velocity += charCont.currentSlope * runSpeed * direction;
         }
     }
 
@@ -88,10 +89,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log(charCont.isGrounded);
+
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
         charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
+        forceUnground = false;
 
     }
 }
