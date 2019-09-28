@@ -7,13 +7,18 @@ public class Player : Singleton<Player>
 
     private PlayerMovement movement;
 
-    [SerializeField]
-    private float runSpeed, jumpVelocity;
-
-    void Awake()
+    private void OnValidate()
     {
-        movement = gameObject.AddComponent<PlayerMovement>();
-        movement.Initialize(runSpeed, jumpVelocity);
+        //Const Values
+
+       if(!GetComponent<PlayerMovement>())
+            movement = gameObject.AddComponent<PlayerMovement>();
+
+    }
+
+    private void Awake()
+    {
+        movement = GetComponent<PlayerMovement>();
     }
 
     public void Run(float direction)

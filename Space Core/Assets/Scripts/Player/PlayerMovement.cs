@@ -5,55 +5,78 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    Rigidbody2D rb;
-    Collider2D col;
+    CharacterController2D charCont;
 
-    //private Vector2 _velocity;
-    public Vector2 velocity { get { return rb.velocity; } private set { rb.velocity = value;  } }
+    private Vector2 _velocity;
+    public Vector2 velocity { get { return _velocity; } private set { _velocity = value;  } }
 
-    private float runSpeed, jumpVelocity;
-    private bool isGrounded;
+    private bool _forceUnground;
+    public bool forceUnground { private get { return _forceUnground; } set { if (value) _forceUnground = value; } }
 
-    private Vector2 currentSlope;
+    [SerializeField]
+    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1;
 
-    private void Awake()
+    private void OnValidate()
     {
-        rb = gameObject.AddComponent<Rigidbody2D>();
-        col = GetComponent<CapsuleCollider2D>();
+        //Const Values
 
-        rb.gravityScale = 1;
-        rb.freezeRotation = true;
-    }
+        if(!GetComponent<CharacterController2D>())
+            charCont = gameObject.AddComponent<CharacterController2D>();
 
-    public void Initialize(float _runSpeed, float _jumpVelocity)
-    {
-        runSpeed = _runSpeed;
-        jumpVelocity = _jumpVelocity;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        charCont = GetComponent<CharacterController2D>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (!collider.isTrigger)
+        {
+            CancelDirectionalVelocity(collider);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        if (!collider.isTrigger)
+        {
+            CancelDirectionalVelocity(collider);
+        }
+    }
+
+    public void CancelDirectionalVelocity(Collider2D collider)
+    {
+        ColliderDistance2D dist = charCont.capCol.Distance(collider);
+
+        Vector2 proj = Vector3.Project(velocity, -dist.normal);
+
+        if (Vector2.Dot(-dist.normal, velocity) > 0)
+        {
+            velocity -= proj;
+        }
     }
 
     public void Run(float direction)
     {
-        if (!isGrounded)
+        if (!charCont.isGrounded)
         {
             velocity = new Vector2(runSpeed * direction, velocity.y);
         }
         else
         {
-            velocity = currentSlope * runSpeed * direction;
+            velocity = charCont.currentSlope * runSpeed * direction;
         }
     }
 
     public void Jump ()
     {
-        if (isGrounded)
+        if (charCont.isGrounded)
         {
             velocity += jumpVelocity * Vector2.up;
+            forceUnground = true;
         }
     }
 
@@ -65,42 +88,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!charCont.isGrounded)
+          velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
-        RaycastHit2D[] hits = new RaycastHit2D[5];
+        charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
 
-        int hitCount = col.Cast(Vector2.down, hits, 0.05f);
-
-        isGrounded = false;
-
-        Vector2 normal = Vector2.zero;
-        for (int i = 0; i < hitCount; i++)
-        {
-            if (Vector2.Angle(hits[i].normal, Vector2.up) <= 45)
-            {
-                normal += hits[i].normal;
-            }
-        }
-        if (normal != Vector2.zero)
-        {
-            normal.Normalize();
-            isGrounded = true;
-
-            currentSlope = (Quaternion.Euler(0, 0, -90) * normal).normalized;
-
-            Debug.Log(currentSlope);
-        }
-        else
-        {
-            currentSlope = Vector2.right;
-        }
-
-        if (isGrounded && rb.gravityScale != 0) 
-        {
-            rb.gravityScale = 0;
-        }
-        else if (rb.gravityScale == 0)
-        {
-            rb.gravityScale = 1;
-        }
     }
 }
