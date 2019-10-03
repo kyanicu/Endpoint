@@ -31,32 +31,12 @@ public class PlayerMovement : MonoBehaviour
         charCont = GetComponent<CharacterController2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    public void CancelDirectionalVelocity(Collider2D collider, Vector2 direction)
     {
-        if (!collider.isTrigger)
-        {
-            CancelDirectionalVelocity(collider);
-        }
-    }
 
-    private void OnTriggerStay2D(Collider2D collider)
-    {
-        if (!collider.isTrigger)
-        {
-            CancelDirectionalVelocity(collider);
-        }
-    }
+        Vector2 proj = Vector3.Project(velocity, direction);
 
-    public void CancelDirectionalVelocity(Collider2D collider)
-    {
-        ColliderDistance2D dist = charCont.capCol.Distance(collider);
-
-        Vector2 proj = Vector3.Project(velocity, -dist.normal);
-
-        if (Vector2.Dot(-dist.normal, velocity) > 0)
-        {
-            velocity -= proj;
-        }
+        velocity -= proj;
     }
 
     public void Run(float direction)
@@ -68,8 +48,13 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             velocity -= (Vector2) Vector3.Project(velocity, charCont.currentSlope);
-            velocity += charCont.currentSlope * runSpeed * direction;
+            velocity += charCont. * runSpeed * direction;
         }
+    }
+
+    public void onControllerCollidedEvent(RaycastHit2D hit)
+    {
+
     }
 
     public void Jump ()
@@ -94,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
-        charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
+        charCont.move(velocity * Time.fixedDeltaTime);
         forceUnground = false;
 
     }
