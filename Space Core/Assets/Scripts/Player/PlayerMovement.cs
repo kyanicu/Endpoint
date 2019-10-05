@@ -52,8 +52,7 @@ public class PlayerMovement : MonoBehaviour
         ColliderDistance2D dist = charCont.capCol.Distance(collider);
 
         Vector2 proj = Vector3.Project(velocity, -dist.normal);
-
-        if (Vector2.Dot(-dist.normal, velocity) > 0)
+        if (Vector2.Dot(-dist.normal, velocity) < 0)
         {
             velocity -= proj;
         }
@@ -89,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(charCont.isGrounded);
+        //Debug.Log(charCont.isGrounded);
 
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;

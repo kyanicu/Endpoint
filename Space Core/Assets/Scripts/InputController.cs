@@ -36,6 +36,9 @@ public class InputController : MonoBehaviour
         {
             Player.instance.Jump();
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// <summary>

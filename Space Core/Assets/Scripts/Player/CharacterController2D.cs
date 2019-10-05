@@ -75,34 +75,6 @@ public static class VectorLibrary
 public class CharacterController2D : MonoBehaviour
 {
 
-    private struct MoveData
-    {
-
-        public Vector2 moveInitial;
-        public Vector2 moveDone;
-        public Vector2 moveLeft { get { return moveInitial - moveDone; } }
-        public Vector2 normal;
-        public RaycastHit2D[] hits;
-        public int hitSize;
-
-        public bool wasContinous;
-
-        public bool moveCompleted { get { return moveLeft.magnitude <= CharacterController2D.totalCollisionOffset; } }
-
-        public MoveData(Vector2 init, Vector2 done, Vector2 _normal, RaycastHit2D[] _hits, int _hitSize, bool _wasContinous)
-        {
-            moveInitial = init;
-            moveDone = done;
-            normal = _normal;
-            hits = _hits;
-            hitSize = _hitSize;
-            wasContinous = _wasContinous;
-        }
-
-    }
-
-    private const float extraCollisionOffset = 0.0035f;///0.0001f;
-    static public float totalCollisionOffset { get { return Physics2D.defaultContactOffset + extraCollisionOffset; } }
     private LayerMask layerMask { get { return Physics2D.GetLayerCollisionMask(gameObject.layer); } }
 
     private Vector2 _currentSlope;
@@ -125,12 +97,12 @@ public class CharacterController2D : MonoBehaviour
         if(!GetComponent<Rigidbody2D>())
             rb = gameObject.AddComponent<Rigidbody2D>();
 
-        if (rb.bodyType != RigidbodyType2D.Kinematic)
-            rb.bodyType = RigidbodyType2D.Kinematic;
+        if (rb.bodyType != RigidbodyType2D.Dynamic)
+            rb.bodyType = RigidbodyType2D.Dynamic;
         if (!rb.simulated)
             rb.simulated = true;
-        if (rb.useFullKinematicContacts)
-            rb.useFullKinematicContacts = false;
+        if (!rb.freezeRotation)
+            rb.freezeRotation = true;
 
         if (!GetComponent<CapsuleCollider2D>())
             capCol = gameObject.AddComponent<CapsuleCollider2D>();
@@ -156,240 +128,9 @@ public class CharacterController2D : MonoBehaviour
         if (forceUnground)
             Unground(true);
 
-        //if (rb.collisionDetectionMode == CollisionDetectionMode2D.Discrete)
-            MoveDiscrete(moveBy);
-        //else
-            //MoveContinous(moveBy);
+        rb.MovePosition(moveBy);
 
     }
-
-    private void MoveDiscrete(Vector2 moveBy)
-    {
-        if (!isGrounded)
-            translate(moveBy);
-        else
-            translate(Vector3.Project(moveBy, currentSlope));
-    }
-
-    private void translate(Vector2 moveBy)
-    {
-        transform.position += (Vector3)moveBy;
-        //rb.MovePosition(transform.position + (Vector3)moveBy);
-    }
-
-    /*
-    private void MoveContinous(Vector2 moveBy)
-    {
-        if (isGrounded)
-            MoveAlongGround(moveBy);
-        else
-            MoveMax(moveBy);
-    }
-    private MoveData moveUntilCollision(Vector2 moveBy)
-    {
-
-        Vector2 wallNormalForFixing = Vector2.zero;
-
-        bool prevGrounded = isGrounded;
-        Vector2 initMoveBy = moveBy;
-        Vector2 normal = Vector2.zero;
-        int maxSize = 5;
-
-        bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
-        Physics2D.queriesHitTriggers = false;
-
-        RaycastHit2D[] hits = new RaycastHit2D[maxSize];
-        int numHits;
-        if ((numHits = capCol.Cast(moveBy.normalized, hits, moveBy.magnitude)) > 0)
-        {
-            Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
-
-            int collidersHit = 0;
-            RaycastHit2D[] colliderHits = new RaycastHit2D[numHits];
-
-            if (numHits > maxSize)
-                numHits = maxSize;
-
-
-            float distance = moveBy.magnitude;
-            for (int i = 0; i < numHits; i++)
-            {
-                if (hits[i].distance < distance)
-                    distance = hits[i].distance;
-            }
-
-            bool projTest = false;
-            for (int i = 0; i < numHits; i++)
-            {
-
-                if (hits[i].distance > distance)
-                    continue;
-
-                colliderHits[collidersHit] = hits[i];
-                collidersHit++;
-
-                normal += hits[i].normal;
-                if (Vector3.Project(moveBy.normalized * hits[i].distance, hits[i].normal).magnitude <= totalCollisionOffset)
-                {
-                    projTest = true;
-                    break;
-                }
-
-            }
-            if (collidersHit == 0)
-            {
-
-                for (int i = 0; i < numHits; i++)
-                {
-                    hits[i] = new RaycastHit2D();
-                }
-                numHits = 0;
-
-                Physics2D.queriesHitTriggers = false;
-
-                if (moveBy.magnitude <= totalCollisionOffset)
-                    return new MoveData(initMoveBy, Vector2.zero, normal, hits, numHits, true);
-
-            }
-            else
-            {
-
-                hits = colliderHits;
-                numHits = collidersHit;
-
-                normal.Normalize();
-
-                if (distance < 0)
-                    distance = 0;
-
-                moveBy = (moveBy.normalized * (distance - totalCollisionOffset));
-
-                if (Vector2.Dot(moveBy, initMoveBy) <= 0)
-                    moveBy = initMoveBy.normalized * totalCollisionOffset / 2;
-
-                if (projTest || distance <= totalCollisionOffset)
-                    return new MoveData(initMoveBy, Vector2.zero, normal, hits, numHits, true);
-            }
-
-        }
-        else
-        {
-            Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
-
-            if (moveBy.magnitude <= totalCollisionOffset)
-            {
-                return new MoveData(initMoveBy, Vector2.zero, normal, hits, numHits, true);
-            }
-        }
-
-        translate(moveBy);
-
-        return new MoveData(initMoveBy, moveBy, normal, hits, numHits, true);
-
-    }
-
-    private void MoveMax(Vector2 moveBy)
-    {
-
-        bool prevGrounded = isGrounded;
-
-        Vector2 newMoveBy = moveBy;
-        MoveData moveData;
-        List<Vector2> directions = new List<Vector2>();
-        directions.Add(newMoveBy.normalized);
-        int loops = 0;
-        while (!(moveData = moveUntilCollision(newMoveBy)).moveCompleted)
-        {
-            if (!prevGrounded && isGrounded)
-                break;
-
-            prevGrounded = isGrounded;
-
-            directions.Add(newMoveBy);
-
-            newMoveBy = Vector3.Project(Vector3.Project(moveData.moveLeft, moveBy),
-                                        slopeFromNormal(moveData.normal));
-
-            if (Vector2.Dot(newMoveBy, moveBy) <= 0 || directions.Contains(newMoveBy.normalized))
-                break;
-
-            directions.Add(newMoveBy.normalized);
-
-            loops++;
-            if (loops > 10)
-            {
-                Debug.LogError("moveMaxPossibleXYDistance(): Possible Infinite Loop. Exiting");
-                break;
-            }
-        }
-    }
-
-    private void MoveAlongGround(Vector2 moveBy)
-    {
-
-        Vector2 newMoveBy = moveBy;
-        MoveData moveData;
-        int loops = 0;
-        while (!(moveData = moveUntilCollision(newMoveBy)).moveCompleted)
-        {
-
-            if (!isGrounded)
-            {
-                MoveMax(moveData.moveLeft);
-                break;
-            }
-
-            newMoveBy = Mathf.Sign(Vector2.Dot(moveData.moveLeft, currentSlope))
-                * moveData.moveLeft.magnitude * currentSlope;
-
-            loops++;
-            if (loops > 10)
-            {
-                //Debug.Break();
-                Debug.LogError("moveAlongGround(): Possible Infinite Loop. Exiting");
-
-                break;
-            }
-        }
-
-    }
-
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (!collider.isTrigger)
-        {
-            FixDiscreteCollision(collider);
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collider)
-    {
-        if (!collider.isTrigger)
-        {
-            FixDiscreteCollision(collider);
-        }
-    }
-
-    // Update is called once per frame
-    void FixDiscreteCollision(Collider2D collider)
-    {
-        ColliderDistance2D dist = capCol.Distance(collider);
-
-        if (Vector2.Angle(Vector2.up, dist.normal) <= slopeMax)
-        {
-            currentSlope = slopeFromNormal(-dist.normal);
-            isGrounded = true;
-        }
-
-        if (dist.distance < -totalCollisionOffset)
-        {
-            translate(dist.distance * dist.normal);
-        }     
-    void HandleContinousCollision(MoveData moveData)
-    {
-
-    }
-    */
 
     private void SetSlope(Vector2 newSlope)
     {
@@ -441,7 +182,7 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                translate((distance - totalCollisionOffset) * Vector2.down);
+                rb.MovePosition((distance) * Vector2.down);
                 Ground(slopeFromNormal(slopeNormal));
                 return true;
             }
@@ -459,31 +200,30 @@ public class CharacterController2D : MonoBehaviour
         isGrounded = false;
 
         if (forced)
-            translate(Vector2.up * totalCollisionOffset);
+            rb.MovePosition (Vector2.up * Physics2D.defaultContactOffset);
     }
 
-    private void UpdateState(ColliderDistance2D[] dists, int numHits)
+    private void UpdateState()
     {
-
-        if (numHits > 0)
+        int maxSize = 10;
+        ContactPoint2D[] contacts = new ContactPoint2D[maxSize];
+        int size = rb.GetContacts(contacts);
+        if (size > 0)
         {
-
             Vector2 slopeNormal = Vector2.zero;
-            foreach (ColliderDistance2D dist in dists)
+            for (int i = 0; i < size; i++)
             {
-                if (Vector2.Angle(Vector2.up, -dist.normal) <= slopeMax)
-                {
-                    slopeNormal += -dist.normal;
-                }
+                if (Vector2.Angle(Vector2.up, contacts[i].normal) <= slopeMax)
+                    slopeNormal += contacts[i].normal;
             }
             slopeNormal.Normalize();
-            
-            if(slopeNormal != Vector2.zero)
+
+            if (slopeNormal != Vector2.zero)
             {
                 if (!isGrounded)
                     Ground(slopeFromNormal(slopeNormal));
             }
-            else if(isGrounded)
+            else if (isGrounded)
             {
                 if (!AttemptReground())
                     Unground();
@@ -492,67 +232,18 @@ public class CharacterController2D : MonoBehaviour
         }
         else
         {
-            if(isGrounded)
+            if (isGrounded)
             {
                 if (!AttemptReground())
                     Unground();
             }
-        } 
-    }
-
-    private void CheckForAndHandleCollisions(bool movingObjectCollision = false)
-    {
-
-        bool stuck = true;
-
-        ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(layerMask);
-        filter.useTriggers = false;
-
-        int maxSize = 5;
-        Collider2D[] colliders = new Collider2D[maxSize];
-        ColliderDistance2D[] dists = new ColliderDistance2D[maxSize];
-        int numHits = 0;
-
-        int loops = 0;
-        while (stuck)
-        {
-
-            stuck = false;
-            if ((numHits = capCol.OverlapCollider(filter, colliders)) > 0)
-            {
-                if (numHits > maxSize)
-                    numHits = maxSize;
-
-                for (int i = 0; i < numHits; i++)
-                {
-                    dists[i] = capCol.Distance(colliders[i]);
-
-                    if (dists[i].distance < 0)
-                    {
-                        stuck = true;
-
-                        translate((dists[i].distance) * dists[i].normal);
-                    }
-
-                }
-            }
-
-            loops++;
-            if (loops > maxSize)
-            {
-                Debug.LogError("Possible Infinite Loop. Exiting");
-                break;
-            }
         }
-
-        UpdateState(dists, numHits);
-
     }
-
-
     private void FixedUpdate()
     {
-        CheckForAndHandleCollisions();
+
+        rb.velocity = Vector2.zero;
+
+        UpdateState();
     }
 }
