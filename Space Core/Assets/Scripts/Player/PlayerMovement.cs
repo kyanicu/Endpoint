@@ -21,8 +21,14 @@ public class PlayerMovement : MonoBehaviour
         //Const Values
 
         if(!GetComponent<CharacterController2D>())
-            charCont = gameObject.AddComponent<CharacterController2D>();
+            gameObject.AddComponent<CharacterController2D>();
 
+    }
+
+    private void Awake()
+    {
+        charCont = GetComponent<CharacterController2D>();
+        charCont.HandleContacts += HandleContacts;
     }
 
     // Start is called before the first frame update
@@ -31,31 +37,15 @@ public class PlayerMovement : MonoBehaviour
         charCont = GetComponent<CharacterController2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    public void CancelDirectionalVelocity(Vector2 direction)
     {
-        if (!collider.isTrigger)
-        {
-            CancelDirectionalVelocity(collider);
-        }
-    }
 
-    private void OnTriggerStay2D(Collider2D collider)
-    {
-        if (!collider.isTrigger)
-        {
-            CancelDirectionalVelocity(collider);
-        }
-    }
+        if (direction.normalized != velocity.normalized)
+            return;
+        
+        Vector2 proj = Vector3.Project(velocity, direction);
+        velocity -= proj;
 
-    public void CancelDirectionalVelocity(Collider2D collider)
-    {
-        ColliderDistance2D dist = charCont.capCol.Distance(collider);
-
-        Vector2 proj = Vector3.Project(velocity, -dist.normal);
-        if (Vector2.Dot(-dist.normal, velocity) < 0)
-        {
-            velocity -= proj;
-        }
     }
 
     public void Run(float direction)
@@ -71,12 +61,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void Jump ()
+    public void Jump()
     {
         if (charCont.isGrounded)
         {
             velocity += jumpVelocity * Vector2.up;
             forceUnground = true;
+        }
+    }
+
+    private void HandleContacts(ContactPoint2D[] contacts, int size)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            CancelDirectionalVelocity(-contacts[i].normal);
         }
     }
 
@@ -88,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         //Debug.Log(charCont.isGrounded);
 
         if (!charCont.isGrounded)

@@ -75,6 +75,9 @@ public static class VectorLibrary
 public class CharacterController2D : MonoBehaviour
 {
 
+    public delegate void HandleContactEvent(ContactPoint2D[] contacts, int size);
+    public event HandleContactEvent HandleContacts;
+
     private LayerMask layerMask { get { return Physics2D.GetLayerCollisionMask(gameObject.layer); } }
 
     private Vector2 _currentSlope;
@@ -107,8 +110,8 @@ public class CharacterController2D : MonoBehaviour
         if (!GetComponent<CapsuleCollider2D>())
             capCol = gameObject.AddComponent<CapsuleCollider2D>();
 
-        if (!capCol.isTrigger)
-            capCol.isTrigger = true;
+        if (capCol.isTrigger)
+            capCol.isTrigger = false;
     }
 
     private void Awake()
@@ -125,10 +128,17 @@ public class CharacterController2D : MonoBehaviour
 
     public void Move(Vector2 moveBy, bool forceUnground = false)
     {
-        if (forceUnground)
-            Unground(true);
+        if (moveBy == Vector2.zero)
+            return;
 
-        rb.MovePosition(moveBy);
+        if (isGrounded) {
+            if (forceUnground)
+                Unground(true);
+            else
+                moveBy = Vector3.Project(moveBy, currentSlope);
+        }
+
+       transform.position += (Vector3)moveBy;
 
     }
 
@@ -150,10 +160,10 @@ public class CharacterController2D : MonoBehaviour
 
         bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
         Physics2D.queriesHitTriggers = false;
-
+        
         RaycastHit2D[] hits = new RaycastHit2D[maxSize];
         int numHits;
-        if ((numHits = capCol.Cast(Vector2.down, hits, stepMax)) > 0)
+        if ((numHits = rb.Cast(Vector2.down, hits, stepMax)) > 0)
         {
             Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
 
@@ -182,7 +192,7 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                rb.MovePosition((distance) * Vector2.down);
+                transform.position += (Vector3)((distance - Physics2D.defaultContactOffset) * Vector2.down);
                 Ground(slopeFromNormal(slopeNormal));
                 return true;
             }
@@ -200,7 +210,7 @@ public class CharacterController2D : MonoBehaviour
         isGrounded = false;
 
         if (forced)
-            rb.MovePosition (Vector2.up * Physics2D.defaultContactOffset);
+            transform.position += (Vector3)Vector2.up * Physics2D.defaultContactOffset;
     }
 
     private void UpdateState()
@@ -210,6 +220,7 @@ public class CharacterController2D : MonoBehaviour
         int size = rb.GetContacts(contacts);
         if (size > 0)
         {
+
             Vector2 slopeNormal = Vector2.zero;
             for (int i = 0; i < size; i++)
             {
@@ -229,6 +240,7 @@ public class CharacterController2D : MonoBehaviour
                     Unground();
             }
 
+            HandleContacts?.Invoke(contacts, size);
         }
         else
         {
