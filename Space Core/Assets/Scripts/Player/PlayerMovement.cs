@@ -70,11 +70,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void HandleContacts(ContactPoint2D[] contacts, int size)
+    private void HandleContacts(Vector2[] points, Vector2[] normals, int size)
     {
         for (int i = 0; i < size; i++)
         {
-            CancelDirectionalVelocity(-contacts[i].normal);
+            CancelDirectionalVelocity(-normals[i]);
         }
     }
 

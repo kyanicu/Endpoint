@@ -75,7 +75,7 @@ public static class VectorLibrary
 public class CharacterController2D : MonoBehaviour
 {
 
-    public delegate void HandleContactEvent(ContactPoint2D[] contacts, int size);
+    public delegate void HandleContactEvent(Vector2[] points, Vector2[] normals, int size);
     public event HandleContactEvent HandleContacts;
 
     private LayerMask layerMask { get { return Physics2D.GetLayerCollisionMask(gameObject.layer); } }
@@ -100,8 +100,8 @@ public class CharacterController2D : MonoBehaviour
         if(!GetComponent<Rigidbody2D>())
             rb = gameObject.AddComponent<Rigidbody2D>();
 
-        if (rb.bodyType != RigidbodyType2D.Dynamic)
-            rb.bodyType = RigidbodyType2D.Dynamic;
+        if (rb.bodyType != RigidbodyType2D.Kinematic)
+            rb.bodyType = RigidbodyType2D.Kinematic;
         if (!rb.simulated)
             rb.simulated = true;
         if (!rb.freezeRotation)
@@ -110,8 +110,8 @@ public class CharacterController2D : MonoBehaviour
         if (!GetComponent<CapsuleCollider2D>())
             capCol = gameObject.AddComponent<CapsuleCollider2D>();
 
-        if (capCol.isTrigger)
-            capCol.isTrigger = false;
+        if (!capCol.isTrigger)
+            capCol.isTrigger = true;
     }
 
     private void Awake()
@@ -138,7 +138,7 @@ public class CharacterController2D : MonoBehaviour
                 moveBy = Vector3.Project(moveBy, currentSlope);
         }
 
-       transform.position += (Vector3)moveBy;
+        rb.MovePosition(transform.position + (Vector3)moveBy); //transform.position += (Vector3)moveBy;
 
     }
 
@@ -192,7 +192,7 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                transform.position += (Vector3)((distance - Physics2D.defaultContactOffset) * Vector2.down);
+                rb.MovePosition(transform.position + (Vector3)((distance - Physics2D.defaultContactOffset) * Vector2.down));
                 Ground(slopeFromNormal(slopeNormal));
                 return true;
             }
@@ -210,11 +210,57 @@ public class CharacterController2D : MonoBehaviour
         isGrounded = false;
 
         if (forced)
-            transform.position += (Vector3)Vector2.up * Physics2D.defaultContactOffset;
+            rb.MovePosition(transform.position + (Vector3)Vector2.up * Physics2D.defaultContactOffset);
     }
 
     private void UpdateState()
     {
+
+        bool stuck = true;
+
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(layerMask);
+        filter.useTriggers = false;
+
+        int maxSize = 10;
+        Collider2D[] colliders = new Collider2D[maxSize];
+        int numHits;
+
+        int loops = 0;
+        while (stuck)
+        {
+
+            stuck = false;
+            if ((numHits = capCol.OverlapCollider(filter, colliders)) > 0)
+            {
+
+                if (numHits > maxSize)
+                    numHits = maxSize;
+
+                for (int i = 0; i < numHits; i++)
+                {
+
+                    ColliderDistance2D dist = capCol.Distance(colliders[i]);
+
+                    if (dist.distance < -Physics2D.defaultContactOffset)
+                    {
+                        stuck = true;
+
+                        rb.MovePosition(transform.position + (dist.distance * dist.normal));
+                    }
+
+                }
+            }
+
+            loops++;
+            if (loops > 3)
+            {
+                Debug.LogError("Possible Infinite Loop. Exiting");
+                break;
+            }
+
+        }
+
         int maxSize = 10;
         ContactPoint2D[] contacts = new ContactPoint2D[maxSize];
         int size = rb.GetContacts(contacts);
@@ -253,9 +299,6 @@ public class CharacterController2D : MonoBehaviour
     }
     private void FixedUpdate()
     {
-
-        rb.velocity = Vector2.zero;
-
         UpdateState();
     }
 }
