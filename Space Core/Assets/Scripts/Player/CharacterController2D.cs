@@ -138,7 +138,43 @@ public class CharacterController2D : MonoBehaviour
                 moveBy = Vector3.Project(moveBy, currentSlope);
         }
 
-        rb.MovePosition(transform.position + (Vector3)moveBy); //transform.position += (Vector3)moveBy;
+        if (rb.collisionDetectionMode == CollisionDetectionMode2D.Continuous)
+        {
+
+            int maxSize = 5;
+
+            bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
+            Physics2D.queriesHitTriggers = false;
+
+            RaycastHit2D[] hits = new RaycastHit2D[maxSize];
+            int numHits;
+            if ((numHits = rb.Cast(moveBy.normalized, hits, moveBy.magnitude)) > 0)
+            {
+                Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
+
+                if (numHits > maxSize)
+                    numHits = maxSize;
+
+                float distance = moveBy.magnitude;
+                foreach (RaycastHit2D hit in hits)
+                {
+                    if (hit.distance < distance)
+                        distance = hit.distance;
+                }
+
+                transform.position += (Vector3)moveBy.normalized * distance;
+            }
+            else
+            {
+                transform.position += (Vector3)moveBy;
+            }
+            
+
+        }
+        else
+            transform.position += (Vector3)moveBy;
+
+        Physics2D.SyncTransforms();
 
     }
 
@@ -165,6 +201,7 @@ public class CharacterController2D : MonoBehaviour
         int numHits;
         if ((numHits = rb.Cast(Vector2.down, hits, stepMax)) > 0)
         {
+
             Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
 
             if (numHits > maxSize)
@@ -192,8 +229,9 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                rb.MovePosition(transform.position + (Vector3)((distance - Physics2D.defaultContactOffset) * Vector2.down));
+                transform.position += (Vector3)((distance - Physics2D.defaultContactOffset) * Vector2.down);
                 Ground(slopeFromNormal(slopeNormal));
+                Physics2D.SyncTransforms();
                 return true;
             }
             else
@@ -210,26 +248,29 @@ public class CharacterController2D : MonoBehaviour
         isGrounded = false;
 
         if (forced)
-            rb.MovePosition(transform.position + (Vector3)Vector2.up * Physics2D.defaultContactOffset);
+            transform.position += (Vector3)Vector2.up * Physics2D.defaultContactOffset;
     }
 
     private void UpdateState()
     {
 
-        bool stuck = true;
+        Physics2D.SyncTransforms();
+
+        bool stuck = false;
+        bool wasFixed = false;
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(layerMask);
-        filter.useTriggers = false;
-
-        int maxSize = 10;
+        filter.useTriggers = false; 
+        int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
+        Vector2[] points = new Vector2[maxSize];
+        Vector2[] normals = new Vector2[maxSize];
         int numHits;
 
         int loops = 0;
-        while (stuck)
+        do
         {
-
             stuck = false;
             if ((numHits = capCol.OverlapCollider(filter, colliders)) > 0)
             {
@@ -242,11 +283,27 @@ public class CharacterController2D : MonoBehaviour
 
                     ColliderDistance2D dist = capCol.Distance(colliders[i]);
 
+                    if (!wasFixed)
+                    {
+                        points[i] = dist.pointA;
+                        normals[i] = -dist.normal;
+                    }
+
                     if (dist.distance < -Physics2D.defaultContactOffset)
                     {
-                        stuck = true;
 
-                        rb.MovePosition(transform.position + (dist.distance * dist.normal));
+                        if (!wasFixed)
+                        {
+                            points = new Vector2[maxSize];
+                            normals = new Vector2[maxSize];
+                        }
+
+                        stuck = true;
+                        wasFixed = true;
+
+                        transform.position += (Vector3)(dist.pointB - dist.pointA + (Physics2D.defaultContactOffset * dist.normal));
+
+                        Physics2D.SyncTransforms();
                     }
 
                 }
@@ -259,41 +316,67 @@ public class CharacterController2D : MonoBehaviour
                 break;
             }
 
+        } while (stuck);
+
+        if (wasFixed)
+        {
+            //AttemptReground();
+
+            if ((numHits = capCol.OverlapCollider(filter, colliders)) > 0)
+            {
+
+                if (numHits > maxSize)
+                    numHits = maxSize;
+
+                for (int i = 0; i < numHits; i++)
+                {
+
+                    ColliderDistance2D dist = capCol.Distance(colliders[i]);
+
+                    points[i] = dist.pointA;
+                    normals[i] = -dist.normal;
+
+                }
+            }
         }
 
-        int maxSize = 10;
-        ContactPoint2D[] contacts = new ContactPoint2D[maxSize];
-        int size = rb.GetContacts(contacts);
-        if (size > 0)
+        if (numHits > 0)
         {
 
+
             Vector2 slopeNormal = Vector2.zero;
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < numHits; i++)
             {
-                if (Vector2.Angle(Vector2.up, contacts[i].normal) <= slopeMax)
-                    slopeNormal += contacts[i].normal;
+                if (Vector2.Angle(Vector2.up, normals[i]) <= slopeMax)
+                    slopeNormal += normals[i];
             }
             slopeNormal.Normalize();
 
             if (slopeNormal != Vector2.zero)
             {
+                Debug.Log(slopeNormal);
+
                 if (!isGrounded)
                     Ground(slopeFromNormal(slopeNormal));
             }
             else if (isGrounded)
             {
-                if (!AttemptReground())
-                    Unground();
+                //if (!AttemptReground())
+                    //Unground();
             }
 
-            HandleContacts?.Invoke(contacts, size);
+            HandleContacts?.Invoke(points, normals, numHits);
         }
         else
         {
+
+            
+
             if (isGrounded)
             {
-                if (!AttemptReground())
-                    Unground();
+                
+                //if (!AttemptReground())
+                    //Unground();
             }
         }
     }

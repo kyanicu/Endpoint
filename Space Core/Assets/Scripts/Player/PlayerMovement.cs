@@ -87,8 +87,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-        //Debug.Log(charCont.isGrounded);
-
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
