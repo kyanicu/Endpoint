@@ -11,7 +11,7 @@ public class Player : Singleton<Player>
     {
         //Const Values
 
-       if(!GetComponent<PlayerMovement>())
+       if(!(movement = GetComponent<PlayerMovement>()))
             movement = gameObject.AddComponent<PlayerMovement>();
 
     }

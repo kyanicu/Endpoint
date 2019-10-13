@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         charCont = GetComponent<CharacterController2D>();
-        charCont.HandleContacts += HandleContacts;
     }
 
     // Start is called before the first frame update
@@ -39,11 +38,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void CancelDirectionalVelocity(Vector2 direction)
     {
-
-        if (direction.normalized != velocity.normalized)
-            return;
         
         Vector2 proj = Vector3.Project(velocity, direction);
+
+        if (direction.normalized != proj.normalized)
+            return;
+
         velocity -= proj;
 
     }
@@ -65,16 +65,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (charCont.isGrounded)
         {
-            velocity += jumpVelocity * Vector2.up;
+            velocity = new Vector2(velocity.x, jumpVelocity);
             forceUnground = true;
         }
     }
 
-    private void HandleContacts(Vector2[] points, Vector2[] normals, int size)
+    private void HandleContacts(ContactData[] contacts, int contactCount)
     {
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < contactCount; i++)
         {
-            CancelDirectionalVelocity(-normals[i]);
+            CancelDirectionalVelocity(-contacts[i].normal);
         }
     }
 
@@ -90,7 +90,10 @@ public class PlayerMovement : MonoBehaviour
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
-        charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
+        MoveData moveData = charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
+
+        HandleContacts(moveData.contacts, moveData.contactCount);
+
         forceUnground = false;
 
     }
