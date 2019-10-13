@@ -5,10 +5,16 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public int Damage { get; set; }
-    public Vector3 Movement = new Vector3(0.5f, 0);
+    public float Range { get; set; }
+    public float Movement = 0.4f;
+    private float startX;
 
     public void Update()
     {
-        transform.position += Movement;
+        if (transform.position.x + startX > startX + Range)
+        {
+            Destroy(gameObject);
+        }
+        transform.position += (transform.right * Movement);
     }
 }
