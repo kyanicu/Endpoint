@@ -90,7 +90,7 @@ public class ObjectMover : MonoBehaviour
         int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
         ContactData[] contacts = new ContactData[maxSize];
-
+        int prevCount = 0;
         int loops = 0;
         do
         {
@@ -122,11 +122,17 @@ public class ObjectMover : MonoBehaviour
                     bool wasFixed = false;
                     if (dist.distance < -Physics2D.defaultContactOffset || dist.distance == 0)
                     {
+
+                        float angle = Vector2.Angle(-moveDirection, -dist.normal);
+                        Vector3 fix = (Vector3)((dist.distance / Mathf.Cos(angle * Mathf.Deg2Rad) + 0.001f) * moveDirection);
+
+                        if (fix.magnitude > -dist.distance * 3)
+                            fix = dist.distance * dist.normal;
+
                         stuck = true;
                         wasFixed = true;
 
-                        float angle = Vector2.Angle(-moveDirection, -dist.normal);
-                        Vector3 fix = (Vector3)((dist.distance/Mathf.Cos(angle*Mathf.Deg2Rad)  + 0.001f) * moveDirection);
+                        //Debug.Log("Angle: " + angle + " Fix: " + fix.magnitude + " Dist: " + dist.distance);
 
                         transform.position += fix;
                     }
@@ -135,8 +141,7 @@ public class ObjectMover : MonoBehaviour
                         stuck = true;
                         wasFixed = true;
 
-                        Vector3 fix = (Vector3)(0.0035f * moveDirection);
-
+                        Vector3 fix = (Vector3)(0.001f * moveDirection);
                         transform.position += fix;
                     }
 
@@ -153,7 +158,14 @@ public class ObjectMover : MonoBehaviour
                 break;
             }
 
+            if (loops > 1 && contactCount == 0 && !stuck)
+                contactCount = prevCount;
+            else 
+                prevCount = contactCount;
+
         } while (stuck);
+
+
 
         return contacts;
 
@@ -287,14 +299,12 @@ public class ObjectMover : MonoBehaviour
 
     }
 
-    public MoveData[] MoveMax(Vector2 moveBy, out int size)
+    public MoveData[] MoveMax(Vector2 moveBy, out int moveCount)
     {
         if (moveBy == Vector2.zero)
         {
-            size = 1;
-            MoveData[] md = new MoveData[1];
-            md[0] = MoveData.invalid;
-            return md;
+            moveCount = 0;
+            return new MoveData[0];
         }
 
         int maxSize = 10;
@@ -303,28 +313,27 @@ public class ObjectMover : MonoBehaviour
         List<Vector2> directions = new List<Vector2>();
         directions.Add(newMoveBy.normalized);
         int loops = 0;
-        size = 1;
-        while (!(moveDatas[size-1] = Move(newMoveBy)).moveCompleted)
+        moveCount = 1;
+        while (!(moveDatas[moveCount - 1] = Move(newMoveBy)).moveCompleted)
         {
+            //Debug.Log(newMoveBy);
             Vector2 averageHitNormal = Vector2.zero;
-            for (int i = 0; i < moveDatas[size-1].contactCount; i++)
+            for (int i = 0; i < moveDatas[moveCount-1].contactCount; i++)
             {
-                if (moveDatas[size - 1].contacts[i].wasHit)
-                    averageHitNormal += moveDatas[size - 1].contacts[i].normal;
-                if (moveDatas[size - 1].contacts[i].wasHit)
-                    Debug.Log("Fuck");
+                if (moveDatas[moveCount - 1].contacts[i].wasHit)
+                    averageHitNormal += moveDatas[moveCount - 1].contacts[i].normal;
             }
             if (averageHitNormal != Vector2.zero)
                 averageHitNormal.Normalize();
 
-            //Debug.Log(averageHitNormal);
-
             directions.Add(newMoveBy);
 
-            newMoveBy = Vector3.Project(Vector3.Project(moveDatas[size-1].moveRemaining, moveBy),
-                                        slopeFromNormal(averageHitNormal));
+            //newMoveBy = Vector3.Project(Vector3.Project(moveDatas[size - 1].moveRemaining, moveBy),
+            //                            slopeFromNormal(averageHitNormal));
+            newMoveBy = Vector3.Project(moveDatas[moveCount - 1].moveRemaining, slopeFromNormal(averageHitNormal));
 
-            if (Vector2.Dot(newMoveBy, moveBy) <= 0 || directions.Contains(newMoveBy.normalized))
+
+            if (newMoveBy == Vector2.zero || Vector2.Dot(newMoveBy, moveBy) <= 0 || directions.Contains(newMoveBy.normalized))
                 break;
 
             directions.Add(newMoveBy.normalized);
@@ -335,16 +344,19 @@ public class ObjectMover : MonoBehaviour
                 Debug.LogError("Possible Infinite Loop. Exiting");
                 break;
             }
-            size++;
+            moveCount++;
         }
         return moveDatas;
 
     }
 
-    public float speed;
+    //public float speed;
     // Update is called once per frame
     void FixedUpdate()
     {
+        /*
+        if (Input.GetKey(KeyCode.Return))
+            transform.position = new Vector2(0, 2);
 
         Vector2 direction = Vector2.zero;
 
@@ -358,6 +370,8 @@ public class ObjectMover : MonoBehaviour
             direction += Vector2.down;
 
         int size;
-        MoveMax(direction * speed * Time.fixedDeltaTime, out size);
+        MoveData[] moveData = MoveMax(direction * speed * Time.fixedDeltaTime, out size);
+        */
+
     }
 }

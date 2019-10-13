@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
+using System.Diagnostics;
+using System.Threading;
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -72,9 +74,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleContacts(ContactData[] contacts, int contactCount)
     {
-        for (int i = 0; i < contactCount; i++)
+        if (!charCont.isGrounded)
         {
-            CancelDirectionalVelocity(-contacts[i].normal);
+            for (int i = 0; i < contactCount; i++)
+            {
+                if (contacts[i].wasHit)
+                    CancelDirectionalVelocity(-contacts[i].normal);
+            }
+        }
+        else
+        {
+
         }
     }
 
@@ -87,12 +97,18 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
+
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
-        MoveData moveData = charCont.Move(velocity * Time.fixedDeltaTime, forceUnground);
+        if (velocity != Vector2.zero)
+        {
+            int moveCount;
+            MoveData[] moveDatas = charCont.Move(velocity * Time.fixedDeltaTime, out moveCount, forceUnground);
 
-        HandleContacts(moveData.contacts, moveData.contactCount);
+            for (int i = 0; i < moveCount; i++)
+                HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
+        }
 
         forceUnground = false;
 

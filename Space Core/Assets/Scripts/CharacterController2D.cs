@@ -116,21 +116,24 @@ public class CharacterController2D : MonoBehaviour
         
     }
 
-    public MoveData Move(Vector2 moveBy, bool forceUnground = false)
+    public MoveData[] Move(Vector2 moveBy, out int moveCount, bool forceUnground = false)
     {
         if (moveBy == Vector2.zero)
-            return MoveData.invalid;
+        {
+            moveCount = 0;
+            return new MoveData[0];
+        }
 
         if (forceUnground)
             Unground();
         else if (isGrounded)
             moveBy = Vector3.Project(moveBy, currentSlope);
 
-        MoveData moveData = mover.Move(moveBy);
+        MoveData[] moveDatas = mover.MoveMax(moveBy, out moveCount);
 
-        HandleMove(moveData);
+        HandleMove(moveDatas, moveCount);
 
-        return moveData;
+        return moveDatas;
     }
 
     private void SetSlope(Vector2 newSlope)
@@ -140,7 +143,6 @@ public class CharacterController2D : MonoBehaviour
 
     private void Ground(Vector2 newSlope)
     {
-        Debug.Log("Hit");
         isGrounded = true;
         SetSlope(newSlope);
     }
@@ -206,9 +208,9 @@ public class CharacterController2D : MonoBehaviour
             mover.Move(normalFromSlope(currentSlope) * Physics2D.defaultContactOffset);
     }
 
-    private void HandleMove(MoveData moveData)
+    private void HandleMove(MoveData[] moveDatas, int moveCount)
     {
-
+        MoveData moveData = moveDatas[moveCount-1];
         if (moveData.contactCount > 0)
         {
             Vector2 slopeNormal = Vector2.zero;
