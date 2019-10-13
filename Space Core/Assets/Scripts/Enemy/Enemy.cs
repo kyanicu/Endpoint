@@ -19,4 +19,13 @@ public class Enemy : MonoBehaviour
     {
         health -= damage;
     }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Bullet")
+        {
+            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+            Destroy(other.gameObject);
+        }
+    }
 }

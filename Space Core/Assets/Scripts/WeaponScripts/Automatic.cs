@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pistol : Weapon
+public class Automatic : Weapon
 {
     // Start is called before the first frame update
     void Start()
@@ -11,27 +11,32 @@ public class Pistol : Weapon
         ClipSize = 10;
         AmmoInClip = ClipSize;
         MaxAmmoCapacity = 50;
-        RateOfFire = .5f;
+        RateOfFire = .1f;
         ReloadTime = 1.5f;
         TotalAmmo = 30;
         Range = 100f;
-        fireLocation = GameObject.Find("FirePoint");
-        GameObject particleSystem = GameObject.Find("FireEffect");
-        fireEffect = particleSystem.GetComponent<ParticleSystem>();
+        Bullet = Resources.Load<GameObject>("WeaponResources/Bullet");
+        FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
+        FireTimer = 0;
+    }
+
+    private void Update()
+    {
+        if (FireTimer >= 0)
+        {
+            FireTimer -= Time.deltaTime;
+        }
     }
 
     public override void Fire()
     {
-        if (AmmoInClip > 0 && !IsReloading)
+        if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
-            fireEffect.Play();
             AmmoInClip -= 1;
-            RaycastHit2D hit = Physics2D.Raycast(this.fireLocation.transform.position, this.fireLocation.transform.right, Range);
-            if (hit.collider != null && hit.collider.gameObject.tag == "Enemy")
-            {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(this.Damage);
-            }
+            GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
+            bullet.GetComponent<Bullet>().Damage = Damage;
+            FireTimer = RateOfFire;
         }
         else if (AmmoInClip <= 0 && !IsReloading)
         {
