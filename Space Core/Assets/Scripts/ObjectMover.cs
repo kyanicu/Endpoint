@@ -108,25 +108,38 @@ public class ObjectMover : MonoBehaviour
 
                     if (dist.distance < 0)
                     {
-                        contacts[i] = new ContactData(Vector2.Dot(-dist.normal, moveDirection) < 0, dist.pointB, -dist.normal);
+                        contacts[i] = new ContactData(Vector2.Dot(-dist.normal, moveDirection) < -0.001, dist.pointB, -dist.normal);
 
                     }
                     else if (dist.distance > 0)
                     {
-                        contacts[i] = new ContactData(Vector2.Dot(dist.normal, moveDirection) < 0, dist.pointB, dist.normal);
+                        contacts[i] = new ContactData(Vector2.Dot(dist.normal, moveDirection) < -0.001, dist.pointB, dist.normal);
                     }
 
+                    //Debug.Log( "Dist: " + dist.distance + "Normal: " + contacts[i].normal + ", Move: " + moveDirection + ", Dot: " + Vector2.Dot(contacts[i].normal, moveDirection));
+                    //Debug.Log(contacts[i].wasHit);
+
                     bool wasFixed = false;
-                    if (dist.distance < -Physics2D.defaultContactOffset)
+                    if (dist.distance < -Physics2D.defaultContactOffset || dist.distance == 0)
                     {
                         stuck = true;
                         wasFixed = true;
 
                         float angle = Vector2.Angle(-moveDirection, -dist.normal);
-                        Vector3 fix = (Vector3)(dist.distance/Mathf.Cos(angle*Mathf.Deg2Rad) * moveDirection);
+                        Vector3 fix = (Vector3)((dist.distance/Mathf.Cos(angle*Mathf.Deg2Rad)  + 0.001f) * moveDirection);
 
                         transform.position += fix;
                     }
+                    else if (dist.distance == 0)
+                    {
+                        stuck = true;
+                        wasFixed = true;
+
+                        Vector3 fix = (Vector3)(0.0035f * moveDirection);
+
+                        transform.position += fix;
+                    }
+
 
                     if(wasFixed)
                         Physics2D.SyncTransforms();
@@ -141,7 +154,7 @@ public class ObjectMover : MonoBehaviour
             }
 
         } while (stuck);
-        
+
         return contacts;
 
     }
@@ -242,7 +255,7 @@ public class ObjectMover : MonoBehaviour
 
         if (moveMade.normalized != moveBy.normalized)
         {
-            //return MoveData.invalid;
+            return MoveData.invalid;
         }
 
         transform.position += (Vector3)moveMade;
@@ -276,6 +289,14 @@ public class ObjectMover : MonoBehaviour
 
     public MoveData[] MoveMax(Vector2 moveBy, out int size)
     {
+        if (moveBy == Vector2.zero)
+        {
+            size = 1;
+            MoveData[] md = new MoveData[1];
+            md[0] = MoveData.invalid;
+            return md;
+        }
+
         int maxSize = 10;
         Vector2 newMoveBy = moveBy;
         MoveData[] moveDatas = new MoveData[maxSize];
@@ -290,11 +311,13 @@ public class ObjectMover : MonoBehaviour
             {
                 if (moveDatas[size - 1].contacts[i].wasHit)
                     averageHitNormal += moveDatas[size - 1].contacts[i].normal;
+                if (moveDatas[size - 1].contacts[i].wasHit)
+                    Debug.Log("Fuck");
             }
             if (averageHitNormal != Vector2.zero)
                 averageHitNormal.Normalize();
 
-            Debug.Log(averageHitNormal);
+            //Debug.Log(averageHitNormal);
 
             directions.Add(newMoveBy);
 
@@ -332,7 +355,7 @@ public class ObjectMover : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
             direction += Vector2.up;
         if (Input.GetKey(KeyCode.S))
-            direction += Vector2.down;w
+            direction += Vector2.down;
 
         int size;
         MoveMax(direction * speed * Time.fixedDeltaTime, out size);
