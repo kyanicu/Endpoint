@@ -25,6 +25,8 @@ public class QTEManager : MonoBehaviour
     //Our stack of QTE buttons
     private List<QTEButton> buttonStack = new List<QTEButton>();
 
+    public GameObject Player;
+
     //Keycodes for the key inputs needed for quick time events
     private static KeyCode[] keys =
     {
@@ -203,9 +205,11 @@ public class QTEManager : MonoBehaviour
 
     /// <summary>
     /// Function that gets called after player successfully completes QTE
+    /// Upon completion, switches Player and Enemy bodies
     /// </summary>
     private void successfulHack()
     {
         StopCoroutine(Listener());
+        Player.GetComponent<PlayerBehavior>().Switch();
     }
 }
