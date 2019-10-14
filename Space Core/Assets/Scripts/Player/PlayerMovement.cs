@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
 
     [SerializeField]
-    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1, jumpCancelMinVel = 8, jumpCancelVel = 0, airAccel = 10, airDecel = 5, airMax = 5 ;
+    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1, jumpCancelMinVel = 8, jumpCancelVel = 2, airAccel = 50, airDecel = 25, airMax = 5 ;
 
     private bool isJumping, isJumpCanceling;
 
@@ -47,23 +47,28 @@ public class PlayerMovement : MonoBehaviour
 
         if (!charCont.isGrounded || forceUnground)
         {
-            
+
             if (direction == 0)
             {
-                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel;
+                int sign = (int)Mathf.Sign(velocity.x);
+                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel * Time.fixedDeltaTime;
+                if (Mathf.Sign(velocity.x) != sign)
+                    velocity = new Vector2(0, velocity.y);
             }
             else
             {
+                Debug.Log("Hit");
                 if (Mathf.Abs(velocity.x) < airMax)
-                    velocity += Vector2.right * direction * airAccel;
+                {
+                    velocity += Vector2.right * direction * airAccel * Time.fixedDeltaTime;
 
-                if (Mathf.Abs(velocity.x) >= airMax)
-                    velocity = new Vector2(direction * airMax, velocity.y);
-
+                    if (Mathf.Abs(velocity.x) > airMax)
+                        velocity = new Vector2(direction * airMax, velocity.y);
+                }
             }
 
             if (Mathf.Abs(velocity.x) >= airMax)
-                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel;
+                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel * Time.fixedDeltaTime;
         }
         else
         {
