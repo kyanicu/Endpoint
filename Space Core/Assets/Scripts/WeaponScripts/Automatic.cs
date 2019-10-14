@@ -27,6 +27,10 @@ public class Automatic : Weapon
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             AmmoInClip -= 1;
+            Quaternion pelletRotation = transform.rotation;
+            pelletRotation.x = 0.0f;
+            pelletRotation.y = 0.0f;
+            pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
             GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
             Bullet bulletScript = bullet.GetComponent<Bullet>();
             bulletScript.Damage = Damage;
@@ -37,49 +41,5 @@ public class Automatic : Weapon
         {
             StartCoroutine(Reload());
         }
-    }
-
-    public override IEnumerator Reload()
-    {
-        if (IsReloading)
-        {
-            yield return null;
-        }
-
-        if (AmmoInClip == ClipSize)
-        {
-            yield return null;
-        }
-
-        IsReloading = true;
-
-        yield return new WaitForSeconds(ReloadTime);
-
-        lock(ReloadLock)
-        {
-            if (TotalAmmo > 0)
-            {
-                if (TotalAmmo + AmmoInClip > ClipSize)
-                {
-                    if (AmmoInClip > 0)
-                    {
-                        TotalAmmo -= ClipSize - AmmoInClip;
-                    }
-                    else
-                    {
-                        TotalAmmo -= ClipSize;
-                    }
-                    AmmoInClip = ClipSize;
-                }
-                else
-                {
-                    AmmoInClip = TotalAmmo;
-                    TotalAmmo = 0;
-                }
-            }
-        }
-
-        IsReloading = false;
-        yield return null;
     }
 }

@@ -6,6 +6,11 @@ public class Player : MonoBehaviour
 {
     public Weapon gun;
 
+    private void Start()
+    {
+        gun = WeaponGenerator.GenerateWeapon(transform.Find("WeaponLocation")).GetComponent<Weapon>();
+    }
+
     // Update is called once per frame
     void Update()
     {

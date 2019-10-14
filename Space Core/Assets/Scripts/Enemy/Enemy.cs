@@ -6,6 +6,11 @@ public class Enemy : MonoBehaviour
 {
     private int health = 32;
 
+    void Start()
+    {
+        WeaponGenerator.GenerateWeapon(transform.Find("WeaponLocation"));
+    }
+
     // Update is called once per frame
     void Update()
     {

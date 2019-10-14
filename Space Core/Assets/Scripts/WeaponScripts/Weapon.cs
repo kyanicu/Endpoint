@@ -4,8 +4,15 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
+    public enum WeaponType
+    {
+        Automatic,
+        Spread,
+        Precision
+    }
+
     public bool IsReloading { get; set; }
-    public int AmmoInClip { get; protected set; }
+    public int AmmoInClip { get; set; }
     public float SpreadFactor { get; set; }
     public int TotalAmmo { get; set; }
     public int ClipSize { get; set; }
@@ -21,7 +28,49 @@ public abstract class Weapon : MonoBehaviour
 
     public abstract void Fire();
 
-    public abstract IEnumerator Reload();
+    public IEnumerator Reload()
+    {
+        if (IsReloading)
+        {
+            yield return null;
+        }
+
+        if (AmmoInClip == ClipSize)
+        {
+            yield return null;
+        }
+
+        IsReloading = true;
+
+        yield return new WaitForSeconds(ReloadTime);
+
+        lock (ReloadLock)
+        {
+            if (TotalAmmo > 0)
+            {
+                if (TotalAmmo + AmmoInClip > ClipSize)
+                {
+                    if (AmmoInClip > 0)
+                    {
+                        TotalAmmo -= ClipSize - AmmoInClip;
+                    }
+                    else
+                    {
+                        TotalAmmo -= ClipSize;
+                    }
+                    AmmoInClip = ClipSize;
+                }
+                else
+                {
+                    AmmoInClip = TotalAmmo;
+                    TotalAmmo = 0;
+                }
+            }
+        }
+
+        IsReloading = false;
+        yield return null;
+    }
 
     protected void Update()
     {
