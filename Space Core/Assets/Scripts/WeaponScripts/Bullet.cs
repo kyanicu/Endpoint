@@ -9,6 +9,11 @@ public class Bullet : MonoBehaviour
     public float Movement = 0.4f;
     private float startX;
 
+    public void Start()
+    {
+        startX = transform.position.x;
+    }
+
     public void Update()
     {
         if (transform.position.x + startX > startX + Range)

@@ -32,6 +32,7 @@ public class Automatic : Weapon
             pelletRotation.y = 0.0f;
             pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
             GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
+            bullet.transform.right = FireLocation.transform.right;
             Bullet bulletScript = bullet.GetComponent<Bullet>();
             bulletScript.Damage = Damage;
             bulletScript.Range = Range;

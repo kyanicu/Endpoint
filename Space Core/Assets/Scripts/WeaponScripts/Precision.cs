@@ -24,12 +24,23 @@ public class Precision : Weapon
         {
             if (hit.collider)
             {
-                lineRenderer.SetPosition(1, new Vector3(hit.point.x, transform.position.y));
+                lineRenderer.SetPosition(1, new Vector3(hit.point.x, hit.point.y));
             }
         }
         else
         {
-            lineRenderer.SetPosition(1, transform.right * Range);
+            lineRenderer.SetPosition(1, FireLocation.transform.right * Range);
+        }
+
+        if (FireTimer > 0)
+        {
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
+        }
+        else
+        {
+            lineRenderer.startColor = Color.yellow;
+            lineRenderer.endColor = Color.yellow;
         }
 
         base.Update();
@@ -41,7 +52,7 @@ public class Precision : Weapon
         {
             AmmoInClip -= 1;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
-            if (hit != null && hit.transform.gameObject.tag == "Enemy")
+            if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
             {
                 hit.transform.gameObject.GetComponent<Enemy>().TakeDamage(Damage);
             }

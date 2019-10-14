@@ -23,9 +23,9 @@ public class Spread : Weapon
             Quaternion pelletRotation = transform.rotation;
             for (int i = 0; i < NumPellets; i++)
             {
-                pelletRotation.x = 0.0f;
-                pelletRotation.y = 0.0f;
-                pelletRotation.z = 0.0f;
+                pelletRotation.x = FireLocation.transform.rotation.x;
+                pelletRotation.y = FireLocation.transform.rotation.y;
+                pelletRotation.z = FireLocation.transform.rotation.z;
                 pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
                 GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, pelletRotation);
                 Bullet bulletScript = bullet.GetComponent<Bullet>();
