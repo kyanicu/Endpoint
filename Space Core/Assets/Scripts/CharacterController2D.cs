@@ -83,6 +83,14 @@ public class CharacterController2D : MonoBehaviour
     private bool _isGrounded;
     public bool isGrounded { get { return _isGrounded; } private set { _isGrounded = value; } }
 
+    private bool _isTouchingCeiling;
+    public bool isTouchingCeiling { get { return _isTouchingCeiling; } private set { _isTouchingCeiling = value; } }
+
+    private bool _isTouchingLeftWall;
+    public bool isTouchingLeftWall { get { return _isTouchingLeftWall; } private set { _isTouchingLeftWall = value; } }
+
+    private bool _isTouchingRightWall;
+    public bool isTouchingRightWall { get { return _isTouchingRightWall; } private set { _isTouchingRightWall = value; } }
 
     [SerializeField] private float slopeMax = 45;
     [SerializeField] private float stepMax = 0.5f;
@@ -116,6 +124,81 @@ public class CharacterController2D : MonoBehaviour
         
     }
 
+    public MoveData[] MoveAlongGround(Vector2 moveBy, out int moveCount)
+    {
+
+        isTouchingCeiling = false;
+        isTouchingRightWall = false;
+        isTouchingLeftWall = false;
+
+        if (moveBy == Vector2.zero)
+        {
+            moveCount = 0;
+            return new MoveData[0];
+        }
+        int maxSize = 10;
+        MoveData[] moveDatas = new MoveData[maxSize];
+        Vector2 newMoveBy = moveBy;
+        int loops = 0;
+        moveCount = 1;
+        while (!(moveDatas[moveCount - 1] = mover.Move(newMoveBy)).moveCompleted)
+        {
+
+            bool hitWall = false;
+            Vector2 slopeNormal = Vector2.zero;
+            int size = moveDatas[moveCount - 1].contactCount;
+            for (int i = 0; i < size; i++)
+            {
+                isTouchingCeiling = false;
+                isTouchingRightWall = false;
+                isTouchingLeftWall = false;
+
+                ContactData contact = moveDatas[moveCount - 1].contacts[i];
+
+                if (Vector2.Angle(contact.normal, Vector2.up) < slopeMax)
+                    slopeNormal += contact.normal;
+                else
+                {
+                    if (contact.wasHit)
+                        hitWall = true;
+
+                    if (Vector2.Dot(contact.normal, Vector2.down) > 0)
+                        isTouchingCeiling = true;
+
+                    float dotRight = Vector2.Dot(contact.normal, Vector2.right);
+                    if (dotRight > 0)
+                        isTouchingRightWall = true;
+                    else if (dotRight < 0)
+                        isTouchingLeftWall = true;
+
+                }
+
+            }
+            if (slopeNormal != Vector2.zero)
+            {
+                SetSlope(slopeFromNormal(slopeNormal.normalized));
+            }
+            if (hitWall)
+                break;
+
+
+            newMoveBy = Mathf.Sign(Vector2.Dot(moveDatas[moveCount - 1].moveRemaining, currentSlope))
+                * moveDatas[moveCount - 1].moveRemaining.magnitude * currentSlope;
+
+            moveCount++;
+
+            loops++;
+            if (loops > maxSize)
+            {
+                Debug.LogError("Possible Infinite Loop. Exiting");
+                break;
+            }
+        }
+
+        return moveDatas;
+
+    }
+
     public MoveData[] Move(Vector2 moveBy, out int moveCount, bool forceUnground = false)
     {
         if (moveBy == Vector2.zero)
@@ -129,9 +212,17 @@ public class CharacterController2D : MonoBehaviour
         else if (isGrounded)
             moveBy = Vector3.Project(moveBy, currentSlope);
 
-        MoveData[] moveDatas = mover.MoveMax(moveBy, out moveCount);
-
-        HandleMove(moveDatas, moveCount);
+        MoveData[] moveDatas;
+        if (!isGrounded)
+        {
+            moveDatas = mover.MoveMax(moveBy, out moveCount);
+            HandleUngroundedMove(moveDatas, moveCount);
+        }
+        else
+        {
+            moveDatas = MoveAlongGround(moveBy, out moveCount);
+            HandleGroundedMove(moveDatas, moveCount);
+        }
 
         return moveDatas;
     }
@@ -187,7 +278,7 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                mover.Move((distance - Physics2D.defaultContactOffset) * Vector2.down);
+                mover.Move((distance) * Vector2.down);
                 Ground(slopeFromNormal(slopeNormal));
                 return true;
             }
@@ -202,15 +293,38 @@ public class CharacterController2D : MonoBehaviour
 
     public void Unground(bool forced = false)
     {
+
         isGrounded = false;
 
         if (forced)
             mover.Move(normalFromSlope(currentSlope) * Physics2D.defaultContactOffset);
     }
 
-    private void HandleMove(MoveData[] moveDatas, int moveCount)
+    private void HandleGroundedMove(MoveData[] moveDatas, int moveCount)
     {
+        if (moveCount == 0)
+            return;
+
         MoveData moveData = moveDatas[moveCount-1];
+        if (moveData.contactCount ==  0)
+        {
+            if (!AttemptReground())
+            {
+                Unground();
+            }
+
+        }
+    }
+    private void HandleUngroundedMove(MoveData[] moveDatas, int moveCount)
+    {
+        if (moveCount == 0)
+            return;
+
+        isTouchingCeiling = false;
+        isTouchingLeftWall = false;
+        isTouchingRightWall = false;
+
+        MoveData moveData = moveDatas[moveCount - 1];
         if (moveData.contactCount > 0)
         {
             Vector2 slopeNormal = Vector2.zero;
@@ -218,35 +332,29 @@ public class CharacterController2D : MonoBehaviour
             {
                 if (Vector2.Angle(moveData.contacts[i].normal, Vector2.up) < slopeMax)
                     slopeNormal += moveData.contacts[i].normal;
+                else
+                {
+                    if (Vector2.Dot(moveData.contacts[i].normal, Vector2.down) > 0)
+                        isTouchingCeiling = true;
+
+                    float dotLeft = Vector2.Dot(moveData.contacts[i].normal, Vector2.left);
+                    if (dotLeft > 0)
+                        isTouchingRightWall = true;
+                    else if (dotLeft < 0)
+                        isTouchingLeftWall = true;
+                }
             }
             if (slopeNormal != Vector2.zero)
             {
                 slopeNormal = slopeFromNormal(slopeNormal.normalized);
 
-                if (isGrounded)
-                {
-                    SetSlope(slopeNormal);
-                }
-                else
-                {
-                    Ground(slopeNormal);
-                }
+                Ground(slopeNormal);
             }
-            else
-            {
-                if (!AttemptReground())
-                    Unground();
-            }
-        }
-        else if (isGrounded)
-        {
-            if (!AttemptReground())
-                Unground();
         }
     }
 
     private void FixedUpdate()
-    { 
+    {
 
     }
 }

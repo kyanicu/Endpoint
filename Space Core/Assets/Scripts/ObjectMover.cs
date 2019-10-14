@@ -120,14 +120,14 @@ public class ObjectMover : MonoBehaviour
                     //Debug.Log(contacts[i].wasHit);
 
                     bool wasFixed = false;
-                    if (dist.distance < -Physics2D.defaultContactOffset || dist.distance == 0)
+                    if (dist.distance < -Physics2D.defaultContactOffset)
                     {
 
                         float angle = Vector2.Angle(-moveDirection, -dist.normal);
                         Vector3 fix = (Vector3)((dist.distance / Mathf.Cos(angle * Mathf.Deg2Rad) + 0.001f) * moveDirection);
 
                         if (fix.magnitude > -dist.distance * 3)
-                            fix = dist.distance * dist.normal;
+                            fix = (dist.distance) * dist.normal;
 
                         stuck = true;
                         wasFixed = true;
@@ -140,7 +140,6 @@ public class ObjectMover : MonoBehaviour
                     {
                         stuck = true;
                         wasFixed = true;
-
                         Vector3 fix = (Vector3)(0.001f * moveDirection);
                         transform.position += fix;
                     }
@@ -165,8 +164,15 @@ public class ObjectMover : MonoBehaviour
 
         } while (stuck);
 
-
-
+        col.isTrigger = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        Physics2D.autoSimulation = false;
+        Physics2D.Simulate(0);
+        Physics2D.autoSimulation = true;
+        ContactPoint2D[] contactPoints = new ContactPoint2D[5];
+        Debug.Log(rb.GetContacts(contactPoints));
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        col.isTrigger = true;
         return contacts;
 
     }

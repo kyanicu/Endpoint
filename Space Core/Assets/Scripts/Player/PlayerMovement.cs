@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Diagnostics;
-using System.Threading;
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -13,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 velocity { get { return _velocity; } private set { _velocity = value;  } }
 
     private bool _forceUnground;
-    public bool forceUnground { private get { return _forceUnground; } set { if (value) _forceUnground = value; } }
+    public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
 
     [SerializeField]
     private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1;
@@ -52,19 +49,33 @@ public class PlayerMovement : MonoBehaviour
 
     public void Run(float direction)
     {
-        if (!charCont.isGrounded)
+
+        if (charCont.isTouchingRightWall && direction == +1)
+            return;
+        else if (charCont.isTouchingLeftWall && direction == -1)
+            return;
+
+        if (!charCont.isGrounded || forceUnground)
         {
             velocity = new Vector2(runSpeed * direction, velocity.y);
         }
         else
         {
-            velocity -= (Vector2) Vector3.Project(velocity, charCont.currentSlope);
-            velocity += charCont.currentSlope * runSpeed * direction;
+            if (direction == 0)
+                velocity = Vector2.zero;
+            else
+            {
+                velocity -= (Vector2)Vector3.Project(velocity, charCont.currentSlope);
+                velocity += charCont.currentSlope * runSpeed * direction;
+            }
         }
     }
 
     public void Jump()
     {
+        if (charCont.isTouchingCeiling)
+            return;
+
         if (charCont.isGrounded)
         {
             velocity = new Vector2(velocity.x, jumpVelocity);
@@ -76,6 +87,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!charCont.isGrounded)
         {
+
+            if (charCont.isTouchingRightWall)
+                CancelDirectionalVelocity(Vector2.right);
+            else if (charCont.isTouchingLeftWall)
+                CancelDirectionalVelocity(Vector2.left);
+
             for (int i = 0; i < contactCount; i++)
             {
                 if (contacts[i].wasHit)
@@ -96,8 +113,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
@@ -111,6 +126,5 @@ public class PlayerMovement : MonoBehaviour
         }
 
         forceUnground = false;
-
     }
 }
