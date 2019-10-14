@@ -24,7 +24,7 @@ public struct MoveData
         moveInit = _moveInit;
         moveMade = _moveMade;
         moveRemaining = moveInit - moveMade;
-        if (moveCompleted = moveRemaining.magnitude < Physics2D.defaultContactOffset)
+        if (moveCompleted = moveRemaining.magnitude < Physics2D.defaultContactOffset + 0.001)
         {
             moveMade = moveInit;
             moveRemaining = Vector2.zero;
@@ -79,7 +79,7 @@ public class ObjectMover : MonoBehaviour
         col = GetComponent<Collider2D>();
     }
 
-    private ContactData[] HandleDiscreteCollision(Vector2 moveDirection, out int contactCount)
+    /*private ContactData[] HandleDiscreteCollision(Vector2 moveDirection, out int contactCount)
     {
 
         bool stuck;
@@ -175,6 +175,191 @@ public class ObjectMover : MonoBehaviour
         col.isTrigger = true;
         return contacts;
 
+    }*/
+
+    private ContactData[] HandleDiscreteCollision(Vector2 moveDirection, out int contactCount)
+    {
+        // Check for and handle any overlap
+
+        bool stuck;
+
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(layerMask);
+        filter.useTriggers = false;
+        int maxSize = 5;
+        Collider2D[] colliders = new Collider2D[maxSize];
+        ColliderDistance2D[] dists = new ColliderDistance2D[maxSize];
+        int prevCount = 0;
+        int distCount = 0;
+        int loops = 0;
+        do
+        {
+            stuck = false;
+            if ((distCount = contactCount = col.OverlapCollider(filter, colliders)) > 0)
+            {
+
+                if (contactCount > maxSize)
+                    contactCount = maxSize;
+
+                for (int i = 0; i < contactCount; i++)
+                {
+
+                    dists[i] = col.Distance(colliders[i]);
+                    
+                    bool wasFixed = false;
+                    if (dists[i].distance < -Physics2D.defaultContactOffset)
+                    {
+
+                        float angle = Vector2.Angle(-moveDirection, -dists[i].normal);
+                        Vector3 fix = (Vector3)((dists[i].distance / Mathf.Cos(angle * Mathf.Deg2Rad) + 0.001f) * moveDirection);
+
+                        if (fix.magnitude > -dists[i].distance * 3)
+                            fix = (dists[i].distance) * dists[i].normal;
+
+                        stuck = true;
+                        wasFixed = true;
+
+                        transform.position += fix;
+                    }
+                    else if (dists[i].distance == 0)
+                    {
+                        stuck = true;
+                        wasFixed = true;
+                        Vector3 fix = (Vector3)(0.001f * moveDirection);
+                        transform.position += fix;
+                    }
+
+                    if (wasFixed)
+                        Physics2D.SyncTransforms();
+                }
+
+                prevCount = contactCount;
+
+            }
+
+            loops++;
+            if (loops > maxSize && stuck)
+            {
+                Debug.LogError("Possible Infinite Loop. Exiting");
+                break;
+            }
+            
+        } while (stuck);
+
+        if (distCount == 0)
+            distCount = prevCount;
+        
+
+        // Gather contact points
+        ContactData[] contacts = new ContactData[(maxSize*4)];
+        contactCount = 0;
+
+        bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
+        Physics2D.queriesHitTriggers = false;
+
+        RaycastHit2D[] hits = new RaycastHit2D[maxSize];
+        int numHits;
+        if ((numHits = col.Cast(moveDirection, hits, Physics2D.defaultContactOffset)) > 0)
+        {
+
+            if (numHits > maxSize)
+                numHits = maxSize;
+
+            //Debug.Log("Hit");
+            for (int i = 0; i < numHits; i++)
+            {
+                contacts[contactCount] = new ContactData(true, hits[i].point, hits[i].normal);
+                contactCount++;
+
+                //Debug.Log(contacts[i].normal);
+
+            }
+
+        }
+        if ((numHits = col.Cast(rotateVector(moveDirection, 90), hits, Physics2D.defaultContactOffset)) > 0)
+        {
+            for (int i = 0; i < numHits; i++)
+            {
+                //if ((rotateVector(moveDirection, -90) == -hits[i].normal))
+                    //Debug.Log("Side+");
+                //else
+                    //Debug.Log("Hit");
+
+                bool alreadyIn = false;
+                for (int j = 0; j < contactCount; j++)
+                {
+                    if (hits[i].normal == contacts[j].normal)
+                        alreadyIn = true;
+                }
+                if (alreadyIn)
+                    continue;
+
+                contacts[contactCount] = new ContactData((rotateVector(moveDirection, 90) != -hits[i].normal), hits[0].point, hits[i].normal);
+                contactCount++;
+
+                //Debug.Log(contacts[i].normal);
+
+            }
+        }
+        if ((numHits = col.Cast(rotateVector(moveDirection, -90), hits, Physics2D.defaultContactOffset)) > 0)
+        {
+            for (int i = 0; i < numHits; i++)
+            {
+                //if (rotateVector(moveDirection, -90) == -hits[i].normal)
+                    //Debug.Log("Side-");
+                //else
+                    //Debug.Log("Hit");
+
+                bool alreadyIn = false;
+                for (int j = 0; j < contactCount; j++)
+                {
+                    if (hits[i].normal == contacts[j].normal)
+                        alreadyIn = true;
+                }
+                if (alreadyIn)
+                    continue;
+
+                contacts[contactCount] = new ContactData(rotateVector(moveDirection, -90) != -hits[i].normal, hits[0].point, hits[i].normal);
+                contactCount++;
+
+                //Debug.Log(contacts[i].normal);
+
+            }
+        }
+        //Debug.Log(distCount);
+        //Debug.Log(contactCount);
+
+        if (distCount > contactCount)
+        {
+            contactCount = distCount;
+            for (int i = 0; i < distCount; i++)
+            {
+                if (dists[i].distance < 0)
+                {
+
+                    contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal);
+
+                    //Debug.Log(contacts[i].normal);
+                }
+                else if (dists[i].distance > 0)
+                {
+                    contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal);
+                    //Debug.Log(contacts[i].normal);
+
+                }
+                else
+                {
+                    contacts[i] = new ContactData(true, dists[i].pointB, moveDirection);
+                    //Debug.Log(contacts[i].normal);
+
+                }
+            }
+        }
+
+        Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
+
+        return contacts;
+
     }
 
     private MoveData MoveDiscrete(Vector2 moveBy)
@@ -194,41 +379,65 @@ public class ObjectMover : MonoBehaviour
         return new MoveData(moveBy, moveMade, contacts, contactCount);
     }
 
-    private ContactData[] HandleContinuousCollision(Vector2 moveDirection, out int contactCount)
+    private ContactData[] HandleContinuousCollision(RaycastHit2D[] hits, float moveDistance, Vector2 moveDirection, int  hitCount, out int contactCount)
     {
-
-        bool stuck;
+        
+        if (hitCount != 0)
+        {
+            int initHitCount = hitCount;
+            int[] validHits = new int[initHitCount];
+            hitCount = 0;
+            for (int i = 0; i < initHitCount; i++)
+            {
+                if (hits[i].distance == moveDistance)
+                {
+                    Debug.Log(hits[i].normal);
+                    validHits[hitCount] = i;
+                    hitCount++;
+                }
+            }
+        }
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(layerMask);
         filter.useTriggers = false;
         int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
-        ContactData[] contacts = new ContactData[maxSize];
-
-        stuck = false;
+        ContactData[] contacts = new ContactData[maxSize + hitCount];
+        for (int i = 0; i < hitCount; i++)
+        {
+            contacts[i] = new ContactData(true, hits[i].point, hits[i].normal);
+        }
         if ((contactCount = col.OverlapCollider(filter, colliders)) > 0)
         {
 
             if (contactCount > maxSize)
                 contactCount = maxSize;
 
-            for (int i = 0; i < contactCount; i++)
+            int initContactCount = contactCount;
+            int[] validContacts = new int[initContactCount];
+            contactCount = 0;
+            for (int i = 0; i < initContactCount; i++)
             {
-
                 ColliderDistance2D dist = col.Distance(colliders[i]);
 
-                if (dist.distance < 0)
+                if (Vector2.Dot(dist.normal, moveDirection) == 0)
                 {
-                    contacts[i] = new ContactData(Vector2.Dot(-dist.normal, moveDirection) < 0, dist.pointB, -dist.normal);
+                    if (dist.distance < 0)
+                    {
+                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, -dist.normal);
 
-                }
-                else if (dist.distance > 0)
-                {
-                    contacts[i] = new ContactData(Vector2.Dot(dist.normal, moveDirection) < 0, dist.pointB, dist.normal);
+                    }
+                    else if (dist.distance > 0)
+                    {
+                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, dist.normal);
+                    }
+                    contactCount++;
                 }
             }
         }
+
+        contactCount += hitCount;
 
         return contacts;
 
@@ -244,6 +453,7 @@ public class ObjectMover : MonoBehaviour
         bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
         Physics2D.queriesHitTriggers = false;
 
+        float distance = moveBy.magnitude;
         RaycastHit2D[] hits = new RaycastHit2D[maxSize];
         int numHits;
         if ((numHits = col.Cast(moveBy.normalized, hits, moveBy.magnitude)) > 0)
@@ -254,23 +464,21 @@ public class ObjectMover : MonoBehaviour
             if (numHits > maxSize)
                 numHits = maxSize;
 
-            float distance = moveBy.magnitude;
-            foreach (RaycastHit2D hit in hits)
+            for (int i = 0; i < numHits; i++)
             {
-                if (hit.distance < distance)
-                    distance = hit.distance;
-            }
+                if ((hits[i].distance < distance && hits[i].distance != 0) || !(hits[i].distance == 0 && hits[i].normal == moveBy.normalized))
+                    distance = hits[i].distance;
 
-            moveMade = moveBy.normalized * (distance - Physics2D.defaultContactOffset);
+                Debug.Log(hits[i].distance);
+            }
+            moveMade = moveBy.normalized * distance;// - (Physics2D.defaultContactOffset));
 
         }
         else
         {
-            moveMade = moveBy.normalized * (moveBy.magnitude - Physics2D.defaultContactOffset);
-        }
-
-        Vector3 prevPos = transform.position;
-
+            moveMade = moveBy;// moveBy.normalized * (moveBy.magnitude - (Physics2D.defaultContactOffset));
+        }    
+    
         if (moveMade.normalized != moveBy.normalized)
         {
             return MoveData.invalid;
@@ -280,7 +488,7 @@ public class ObjectMover : MonoBehaviour
         Physics2D.SyncTransforms();
 
         int contactCount;
-        ContactData[] contacts = HandleContinuousCollision(moveBy.normalized, out contactCount);
+        ContactData[] contacts = HandleContinuousCollision(hits, distance, moveBy.normalized, numHits, out contactCount);
 
         if (moveMade.magnitude > moveBy.magnitude)
             moveMade = moveBy;
@@ -296,9 +504,8 @@ public class ObjectMover : MonoBehaviour
 
         if (rb.collisionDetectionMode == CollisionDetectionMode2D.Continuous)
         {
-            // Buggy, requires fixing using discrete for now
-            return MoveDiscrete(moveBy);//MoveContinuous(moveBy);
-            
+            //Buggy, use discrete for now)
+            return MoveDiscrete(moveBy); // return MoveContinuous(moveBy);
         }
         else
             return MoveDiscrete(moveBy);
@@ -307,6 +514,7 @@ public class ObjectMover : MonoBehaviour
 
     public MoveData[] MoveMax(Vector2 moveBy, out int moveCount)
     {
+
         if (moveBy == Vector2.zero)
         {
             moveCount = 0;
@@ -322,7 +530,6 @@ public class ObjectMover : MonoBehaviour
         moveCount = 1;
         while (!(moveDatas[moveCount - 1] = Move(newMoveBy)).moveCompleted)
         {
-            //Debug.Log(newMoveBy);
             Vector2 averageHitNormal = Vector2.zero;
             for (int i = 0; i < moveDatas[moveCount-1].contactCount; i++)
             {
@@ -332,15 +539,17 @@ public class ObjectMover : MonoBehaviour
             if (averageHitNormal != Vector2.zero)
                 averageHitNormal.Normalize();
 
+            //Debug.Log(moveDatas[moveCount - 1].contactCount);
             directions.Add(newMoveBy);
-
-            //newMoveBy = Vector3.Project(Vector3.Project(moveDatas[size - 1].moveRemaining, moveBy),
+            
+            //newMoveBy = Vector3.Project(Vector3.Project(moveDatas[moveCount - 1].moveRemaining, moveBy),
             //                            slopeFromNormal(averageHitNormal));
             newMoveBy = Vector3.Project(moveDatas[moveCount - 1].moveRemaining, slopeFromNormal(averageHitNormal));
 
-
+           
             if (newMoveBy == Vector2.zero || Vector2.Dot(newMoveBy, moveBy) <= 0 || directions.Contains(newMoveBy.normalized))
                 break;
+            //Debug.Log(newMoveBy == Vector2.zero);
 
             directions.Add(newMoveBy.normalized);
 
@@ -356,11 +565,11 @@ public class ObjectMover : MonoBehaviour
 
     }
 
-    //public float speed;
+    public float speed;
     // Update is called once per frame
     void FixedUpdate()
     {
-        /*
+        
         if (Input.GetKey(KeyCode.Return))
             transform.position = new Vector2(0, 2);
 
@@ -374,10 +583,10 @@ public class ObjectMover : MonoBehaviour
             direction += Vector2.up;
         if (Input.GetKey(KeyCode.S))
             direction += Vector2.down;
+        direction.Normalize();
 
         int size;
         MoveData[] moveData = MoveMax(direction * speed * Time.fixedDeltaTime, out size);
-        */
-
+        
     }
 }

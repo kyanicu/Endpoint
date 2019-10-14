@@ -31,6 +31,11 @@ public class Player : Singleton<Player>
         movement.Jump();
     }
 
+    public void JumpCancel()
+    {
+        movement.JumpCancel();
+    }
+
     // Update is called once per frame
     void Update()
     {

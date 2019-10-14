@@ -13,7 +13,9 @@ public class PlayerMovement : MonoBehaviour
     public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
 
     [SerializeField]
-    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1;
+    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1, jumpCancelMinVel = 8, jumpCancelVel = 0, airAccel = 10, airDecel = 5, airMax = 5 ;
+
+    private bool isJumping, isJumpCanceling;
 
     private void OnValidate()
     {
@@ -35,29 +37,33 @@ public class PlayerMovement : MonoBehaviour
         charCont = GetComponent<CharacterController2D>();
     }
 
-    public void CancelDirectionalVelocity(Vector2 direction)
-    {
-        
-        Vector2 proj = Vector3.Project(velocity, direction);
-
-        if (direction.normalized != proj.normalized)
-            return;
-
-        velocity -= proj;
-
-    }
-
     public void Run(float direction)
     {
 
         if (charCont.isTouchingRightWall && direction == +1)
-            return;
+            direction = 0;
         else if (charCont.isTouchingLeftWall && direction == -1)
-            return;
+            direction = 0;
 
         if (!charCont.isGrounded || forceUnground)
         {
-            velocity = new Vector2(runSpeed * direction, velocity.y);
+            
+            if (direction == 0)
+            {
+                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel;
+            }
+            else
+            {
+                if (Mathf.Abs(velocity.x) < airMax)
+                    velocity += Vector2.right * direction * airAccel;
+
+                if (Mathf.Abs(velocity.x) >= airMax)
+                    velocity = new Vector2(direction * airMax, velocity.y);
+
+            }
+
+            if (Mathf.Abs(velocity.x) >= airMax)
+                velocity += Vector2.right * -Mathf.Sign(velocity.x) * airDecel;
         }
         else
         {
@@ -80,7 +86,36 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity = new Vector2(velocity.x, jumpVelocity);
             forceUnground = true;
+            isJumping = true;
         }
+    }
+
+    public void JumpCancel()
+    {
+
+        if (isJumping)
+        {
+            if (velocity.y <= jumpCancelMinVel)
+            {
+                isJumping = false;
+                velocity = new Vector2(velocity.x, jumpCancelVel);
+            }
+            else if (velocity.y >= 0 || !charCont.isGrounded)
+                isJumpCanceling = true;
+        }
+
+    }
+
+    public void CancelDirectionalVelocity(Vector2 direction)
+    {
+
+        Vector2 proj = Vector3.Project(velocity, direction);
+
+        if (direction.normalized != proj.normalized)
+            return;
+
+        velocity -= proj;
+
     }
 
     private void HandleContacts(ContactData[] contacts, int contactCount)
@@ -96,12 +131,14 @@ public class PlayerMovement : MonoBehaviour
             for (int i = 0; i < contactCount; i++)
             {
                 if (contacts[i].wasHit)
+                {
                     CancelDirectionalVelocity(-contacts[i].normal);
+                }
             }
         }
         else
         {
-
+            
         }
     }
 
@@ -113,6 +150,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        if (isJumpCanceling)
+        {
+            if (velocity.y <= jumpCancelMinVel)
+            {
+                isJumpCanceling = false;
+                JumpCancel();
+            }
+            else if (charCont.isGrounded && !forceUnground)
+                isJumpCanceling = false;
+        }
+
+        if (isJumping && (velocity.y <= 0 || (charCont.isGrounded && !forceUnground)))
+        {
+            isJumping = false;
+        }
+
         if (!charCont.isGrounded)
           velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 

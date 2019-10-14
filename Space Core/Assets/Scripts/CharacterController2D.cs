@@ -229,11 +229,12 @@ public class CharacterController2D : MonoBehaviour
 
     private void SetSlope(Vector2 newSlope)
     {
-        currentSlope = newSlope;
+        currentSlope = newSlope; 
     }
 
     private void Ground(Vector2 newSlope)
     {
+
         isGrounded = true;
         SetSlope(newSlope);
     }
