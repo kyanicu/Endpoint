@@ -242,14 +242,13 @@ public class CharacterController2D : MonoBehaviour
 
     private void Ground(Vector2 newSlope)
     {
-
         isGrounded = true;
         SetSlope(newSlope);
     }
 
     private bool AttemptReground()
     {
-
+       
         int maxSize = 5;
 
         bool prevQueriesHitTriggers = Physics2D.queriesHitTriggers;
@@ -259,7 +258,7 @@ public class CharacterController2D : MonoBehaviour
         int numHits;
         if ((numHits = capCol.Cast(Vector2.down, hits, stepMax)) > 0)
         {
-
+            
             Physics2D.queriesHitTriggers = prevQueriesHitTriggers;
 
             if (numHits > maxSize)
@@ -268,9 +267,11 @@ public class CharacterController2D : MonoBehaviour
             float distance = stepMax;
             foreach (RaycastHit2D hit in hits)
             {
-                if (hit.distance < distance)
+                if (hit.distance < distance && hit.distance != 0)
                     distance = hit.distance;
             }
+
+            Debug.Log(distance);
 
             Vector2 slopeNormal = Vector2.zero;
             foreach (RaycastHit2D hit in hits)
@@ -287,17 +288,39 @@ public class CharacterController2D : MonoBehaviour
 
             if (slopeNormal != Vector2.zero)
             {
-                mover.Move((distance) * Vector2.down);
-                Ground(slopeFromNormal(slopeNormal));
+                HandleReground(mover.Move(distance * Vector2.down), slopeFromNormal(slopeNormal));
+                
                 return true;
             }
             else
                 return false;
-
         }
         else
             return false;
 
+    }
+
+    private void HandleReground(MoveData moveData, Vector2 slope)
+    {
+
+        for (int i = 0; i < moveData.contactCount; i++)
+        {
+            ContactData contact = moveData.contacts[i];
+
+            if (Vector2.Angle(moveData.contacts[i].normal, Vector2.up) >= slopeMax)
+            {
+                if (Vector2.Dot(contact.normal, Vector2.down) > 0.000001f)
+                    isTouchingCeiling = true;
+
+                float dotLeft = Vector2.Dot(contact.normal, Vector2.left);
+                if (dotLeft > Mathf.Epsilon)
+                    isTouchingRightWall = true;
+                else if (dotLeft < -Mathf.Epsilon)
+                    isTouchingLeftWall = true;
+            }
+        }
+
+        Ground(slope);
     }
 
     public void Unground(bool forced = false)
