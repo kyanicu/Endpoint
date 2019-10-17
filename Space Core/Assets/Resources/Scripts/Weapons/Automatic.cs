@@ -16,7 +16,7 @@ public class Automatic : Weapon
         ReloadTime = 1.5f;
         TotalAmmo = 30;
         Range = 100f;
-        Bullet = Resources.Load<GameObject>("WeaponResources/Bullet");
+        Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
         FireTimer = 0;
