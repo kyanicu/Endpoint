@@ -15,6 +15,13 @@ public class InputController : MonoBehaviour
     /// <summary> The current state of how input should be handled </summary>
     private InputState currentState;
 
+    private static KeyCode[] keys =
+    {
+        KeyCode.UpArrow,
+        KeyCode.DownArrow,
+        KeyCode.LeftArrow,
+        KeyCode.RightArrow
+    };
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +30,27 @@ public class InputController : MonoBehaviour
         // Initialize state
         currentState = InputState.GAMEPLAY;
 
+    }
+
+    public QTEButton.KeyNames? CheckQTEButtonPress()
+    {
+        if (Input.GetKeyDown(keys[0]))
+        {
+            return (QTEButton.KeyNames) 0;
+        }
+        else if (Input.GetKeyDown(keys[1]))
+        {
+            return (QTEButton.KeyNames) 1;
+        }
+        else if (Input.GetKeyDown(keys[2]))
+        {
+            return (QTEButton.KeyNames) 2;
+        }
+        else if (Input.GetKeyDown(keys[3]))
+        {
+            return (QTEButton.KeyNames) 3;
+        }
+        return null;
     }
 
     /// <summary>
@@ -40,6 +68,17 @@ public class InputController : MonoBehaviour
         {
             Player.instance.JumpCancel();
         }
+
+        if (Input.GetMouseButton(0))
+        {
+            Player.instance.Fire();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Player.instance.Reload();
+        }
+
+        Player.instance.AimWeapon();
 
         if (Input.GetKeyDown(KeyCode.Return))
             Player.instance.transform.position = new Vector2(0, 0);
@@ -75,7 +114,7 @@ public class InputController : MonoBehaviour
     {
         float horiz = Input.GetAxisRaw("Horizontal");
 
-        Player.instance.Run(horiz);
+        Player.instance.Move(horiz);
     }
 
     /// <summary>
@@ -144,5 +183,25 @@ public class InputController : MonoBehaviour
     private void LateUpdate()
     {
 
+    }
+
+    private static InputController _instance = null;
+
+    public static InputController instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<InputController>();
+                // fallback, might not be necessary.
+                if (_instance == null)
+                    _instance = new GameObject(typeof(InputController).Name).AddComponent<InputController>();
+
+                // This breaks scene reloading
+                // DontDestroyOnLoad(m_Instance.gameObject);
+            }
+            return _instance;
+        }
     }
 }

@@ -8,16 +8,14 @@ public class QTEManager : MonoBehaviour
     //An array holding the 3 buttons used in the QTE panel
     public QTEButton[] buttons;
 
-    //Txt displaying last key pressed
-    public Text lastInputText;
-
     //String holding text for last button pressed
-    private string lastInputString; 
+    private string lastInputString;
 
-    [SerializeField]
-    private bool listening = false; //returns whether or not QTE buttons are listening for input
+    //returns whether or not QTE buttons are listening for input
+    private bool listening = false;
 
-    private int listIndex; //The current index in the QTE panel
+    //The current index in the QTE panel
+    private int listIndex; 
 
     //Holds the most current active QTE button in the stack
     private QTEButton activeButton;
@@ -25,22 +23,12 @@ public class QTEManager : MonoBehaviour
     //Our stack of QTE buttons
     private List<QTEButton> buttonStack = new List<QTEButton>();
 
-    public GameObject Player;
-
-    //Keycodes for the key inputs needed for quick time events
-    private static KeyCode[] keys =
-    {
-        KeyCode.UpArrow,
-        KeyCode.DownArrow,
-        KeyCode.LeftArrow,
-        KeyCode.RightArrow
-    };
+    public GameObject Player;    
 
     //How many buttons we'll be generating
     public int listSize { get; private set; }
 
-    [SerializeField]
-    private float waitTime = 2f;
+    public float WaitTime = 2f;
 
     // Start is called before the first frame update
     void Awake()
@@ -72,15 +60,6 @@ public class QTEManager : MonoBehaviour
         listIndex = 0;
         listSize = size;
         stackCreate();
-    }
-
-    /// <summary>
-    /// Updates txt panel to show how many QTEs left
-    /// For prototyping purposes only
-    /// </summary>
-    private void Update()
-    {
-        lastInputText.text = listIndex + "/" + listSize;
     }
 
     /// <summary>
@@ -143,13 +122,12 @@ public class QTEManager : MonoBehaviour
         {
             if (!listening) break;
 
-            if (Input.GetKeyDown(keys[0]) || 
-                Input.GetKeyDown(keys[1]) || 
-                Input.GetKeyDown(keys[2]) || 
-                Input.GetKeyDown(keys[3]))
+            QTEButton.KeyNames? key = InputController.instance.CheckQTEButtonPress();
+
+            if (key != null)
             {
                 //If correct QTE button is pressed
-                if (Input.GetKeyDown(keys[(int)activeButton.keyName]))
+                if (key == activeButton.keyName)
                 {
                     listening = false;
                     yield return new WaitForSeconds(.01f);
@@ -190,7 +168,7 @@ public class QTEManager : MonoBehaviour
                     listIndex -= (listIndex % 4);
 
                     //Pause so player knows they done goofed
-                    yield return new WaitForSeconds(waitTime);
+                    yield return new WaitForSeconds(WaitTime);
 
                     stackCreate();
                 }
@@ -211,5 +189,25 @@ public class QTEManager : MonoBehaviour
     {
         StopCoroutine(Listener());
         Player.GetComponent<PlayerBehavior>().Switch();
+    }
+
+    private static QTEManager _instance = null;
+
+    public static QTEManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<QTEManager>();
+                // fallback, might not be necessary.
+                if (_instance == null)
+                    _instance = new GameObject(typeof(QTEManager).Name).AddComponent<QTEManager>();
+
+                // This breaks scene reloading
+                // DontDestroyOnLoad(m_Instance.gameObject);
+            }
+            return _instance;
+        }
     }
 }
