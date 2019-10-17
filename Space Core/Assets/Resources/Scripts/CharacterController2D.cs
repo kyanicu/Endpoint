@@ -271,8 +271,6 @@ public class CharacterController2D : MonoBehaviour
                     distance = hit.distance;
             }
 
-            Debug.Log(distance);
-
             Vector2 slopeNormal = Vector2.zero;
             foreach (RaycastHit2D hit in hits)
             {
@@ -325,7 +323,6 @@ public class CharacterController2D : MonoBehaviour
 
     public void Unground(bool forced = false)
     {
-
         isGrounded = false;
 
         if (forced)
