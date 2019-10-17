@@ -126,7 +126,6 @@ public class CharacterController2D : MonoBehaviour
 
     public MoveData[] MoveAlongGround(Vector2 moveBy, out int moveCount)
     {
-
         isTouchingCeiling = false;
         isTouchingRightWall = false;
         isTouchingLeftWall = false;
@@ -143,15 +142,15 @@ public class CharacterController2D : MonoBehaviour
         moveCount = 1;
         while (!(moveDatas[moveCount - 1] = mover.Move(newMoveBy)).moveCompleted)
         {
-
+            isTouchingCeiling = false;
+            isTouchingRightWall = false;
+            isTouchingLeftWall = false;
+            
             bool hitWall = false;
             Vector2 slopeNormal = Vector2.zero;
             int size = moveDatas[moveCount - 1].contactCount;
             for (int i = 0; i < size; i++)
             {
-                isTouchingCeiling = false;
-                isTouchingRightWall = false;
-                isTouchingLeftWall = false;
 
                 ContactData contact = moveDatas[moveCount - 1].contacts[i];
 
@@ -162,23 +161,28 @@ public class CharacterController2D : MonoBehaviour
                     if (contact.wasHit)
                         hitWall = true;
 
-                    if (Vector2.Dot(contact.normal, Vector2.down) > 0)
+                    if (Vector2.Dot(contact.normal, Vector2.down) > 0.000001f)
                         isTouchingCeiling = true;
-
-                    float dotRight = Vector2.Dot(contact.normal, Vector2.right);
-                    if (dotRight > 0)
+                    
+                    float dotLeft = Vector2.Dot(contact.normal, Vector2.left);
+                    if (dotLeft > Mathf.Epsilon)
                         isTouchingRightWall = true;
-                    else if (dotRight < 0)
+                    else if (dotLeft < -Mathf.Epsilon)
                         isTouchingLeftWall = true;
-
+                    
+                    Debug.Log(isTouchingLeftWall);
                 }
-
+                Debug.Log(isTouchingLeftWall);
             }
             if (slopeNormal != Vector2.zero)
             {
                 SetSlope(slopeFromNormal(slopeNormal.normalized));
             }
-            if (hitWall)
+            else
+            {
+                AttemptReground();
+            }
+            if (hitWall || isGrounded)
                 break;
 
 
@@ -221,7 +225,6 @@ public class CharacterController2D : MonoBehaviour
         else
         {
             moveDatas = MoveAlongGround(moveBy, out moveCount);
-            HandleGroundedMove(moveDatas, moveCount);
         }
 
         return moveDatas;
@@ -301,21 +304,6 @@ public class CharacterController2D : MonoBehaviour
             mover.Move(normalFromSlope(currentSlope) * Physics2D.defaultContactOffset);
     }
 
-    private void HandleGroundedMove(MoveData[] moveDatas, int moveCount)
-    {
-        if (moveCount == 0)
-            return;
-
-        MoveData moveData = moveDatas[moveCount-1];
-        if (moveData.contactCount ==  0)
-        {
-            if (!AttemptReground())
-            {
-                Unground();
-            }
-
-        }
-    }
     private void HandleUngroundedMove(MoveData[] moveDatas, int moveCount)
     {
         if (moveCount == 0)
@@ -331,17 +319,21 @@ public class CharacterController2D : MonoBehaviour
             Vector2 slopeNormal = Vector2.zero;
             for (int i = 0; i < moveData.contactCount; i++)
             {
+
+                ContactData contact = moveDatas[moveCount - 1].contacts[i];
+
                 if (Vector2.Angle(moveData.contacts[i].normal, Vector2.up) < slopeMax)
                     slopeNormal += moveData.contacts[i].normal;
                 else
                 {
-                    if (Vector2.Dot(moveData.contacts[i].normal, Vector2.down) > 0)
+
+                    if (Vector2.Dot(contact.normal, Vector2.down) > 0.000001f)
                         isTouchingCeiling = true;
 
-                    float dotLeft = Vector2.Dot(moveData.contacts[i].normal, Vector2.left);
-                    if (dotLeft > 0)
+                    float dotLeft = Vector2.Dot(contact.normal, Vector2.left);
+                    if (dotLeft > Mathf.Epsilon)
                         isTouchingRightWall = true;
-                    else if (dotLeft < 0)
+                    else if (dotLeft < -Mathf.Epsilon)
                         isTouchingLeftWall = true;
                 }
             }

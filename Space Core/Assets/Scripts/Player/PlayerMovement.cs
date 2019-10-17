@@ -57,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                Debug.Log("Hit");
                 if (Mathf.Abs(velocity.x) < airMax)
                 {
                     velocity += Vector2.right * direction * airAccel * Time.fixedDeltaTime;

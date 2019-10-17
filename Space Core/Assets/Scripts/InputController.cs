@@ -42,7 +42,7 @@ public class InputController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Player.instance.transform.position = new Vector2(0, 0);
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static VectorLibrary;
 
@@ -52,7 +53,6 @@ public struct ContactData
 
 public class ObjectMover : MonoBehaviour
 {
-
     private LayerMask layerMask { get { return Physics2D.GetLayerCollisionMask(gameObject.layer); } }
 
     Rigidbody2D rb;
@@ -334,14 +334,14 @@ public class ObjectMover : MonoBehaviour
             contactCount = distCount;
             for (int i = 0; i < distCount; i++)
             {
-                if (dists[i].distance < 0)
+                if (dists[i].distance < -Mathf.Epsilon)
                 {
 
                     contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal);
 
                     //Debug.Log(contacts[i].normal);
                 }
-                else if (dists[i].distance > 0)
+                else if (dists[i].distance > Mathf.Epsilon)
                 {
                     contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal);
                     //Debug.Log(contacts[i].normal);
@@ -421,14 +421,14 @@ public class ObjectMover : MonoBehaviour
             {
                 ColliderDistance2D dist = col.Distance(colliders[i]);
 
-                if (Vector2.Dot(dist.normal, moveDirection) == 0)
+                if (Mathf.Abs(Vector2.Dot(dist.normal, moveDirection)) <= Mathf.Epsilon)
                 {
-                    if (dist.distance < 0)
+                    if (dist.distance < -Mathf.Epsilon)
                     {
                         contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, -dist.normal);
 
                     }
-                    else if (dist.distance > 0)
+                    else if (dist.distance > Mathf.Epsilon)
                     {
                         contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, dist.normal);
                     }
