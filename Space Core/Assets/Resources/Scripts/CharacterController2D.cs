@@ -140,8 +140,11 @@ public class CharacterController2D : MonoBehaviour
         Vector2 newMoveBy = moveBy;
         int loops = 0;
         moveCount = 1;
-        while (!(moveDatas[moveCount - 1] = mover.Move(newMoveBy)).moveCompleted)
+        bool completed = false;
+        while (true)
         {
+            completed = (moveDatas[moveCount - 1] = mover.Move(newMoveBy)).moveCompleted;
+
             isTouchingCeiling = false;
             isTouchingRightWall = false;
             isTouchingLeftWall = false;
@@ -169,10 +172,7 @@ public class CharacterController2D : MonoBehaviour
                         isTouchingRightWall = true;
                     else if (dotLeft < -Mathf.Epsilon)
                         isTouchingLeftWall = true;
-                    
-                    Debug.Log(isTouchingLeftWall);
                 }
-                Debug.Log(isTouchingLeftWall);
             }
             if (slopeNormal != Vector2.zero)
             {
@@ -180,7 +180,12 @@ public class CharacterController2D : MonoBehaviour
             }
             else
             {
-                AttemptReground();
+                if (!AttemptReground())
+                {
+                    Unground();
+                    break;
+                }
+                 
             }
             if (hitWall || isGrounded)
                 break;
