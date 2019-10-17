@@ -78,6 +78,11 @@ public class InputController : MonoBehaviour
             Player.instance.Reload();
         }
 
+        if (Input.GetKey(KeyCode.F))
+        {
+            Player.instance.HackSelector();
+        }
+
         Player.instance.AimWeapon();
 
         if (Input.GetKeyDown(KeyCode.Return))

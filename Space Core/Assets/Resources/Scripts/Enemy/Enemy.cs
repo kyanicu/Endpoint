@@ -13,7 +13,8 @@ public class Enemy : Character
     {
         MaxHealth = 100;
         Health = MaxHealth;
-        WeaponGenerator.GenerateWeapon(transform.Find("WeaponLocation"));
+        RotationPoint = transform.Find("RotationPoint").gameObject;
+        Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
     }
@@ -24,6 +25,12 @@ public class Enemy : Character
         if (Health <= 0)
         {
             Destroy(gameObject);
+        }
+
+        if (IsSelected)
+        {
+            QTEManager.instance.gameObject.SetActive(true);
+            UpdateQTEManagerPosition();
         }
     }
 
@@ -36,6 +43,7 @@ public class Enemy : Character
         }
         if (IsSelected)
         {
+            QTEManager.instance.gameObject.SetActive(true);
             UpdateQTEManagerPosition();
         }
     }

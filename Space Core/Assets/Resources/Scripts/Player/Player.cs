@@ -104,11 +104,10 @@ public class Player : Character
 
     public void HackSelector()
     {
-        RaycastHit hit;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
 
-        if (Physics.Raycast(transform.position, transform.right, out hit, Mathf.Infinity))
+        if (hit)
         {
-            Debug.DrawRay(transform.position, transform.right * hit.distance, Color.yellow);
             if (hit.collider.gameObject.tag == "Enemy")
             {
                 enemy = hit.collider.gameObject.GetComponent<Enemy>();
@@ -118,13 +117,14 @@ public class Player : Character
         }
     }
 
-    public void Switch()
+    private void Switch()
     {
         enemy.HackArea.SetActive(false);
         enemy.gameObject.AddComponent<Player>();
         enemy.gameObject.tag = "Player";
         enemy.enabled = false;
         enemy = null;
+        QTEManager.instance.gameObject.SetActive(false);
         Destroy(gameObject);
     }
 
