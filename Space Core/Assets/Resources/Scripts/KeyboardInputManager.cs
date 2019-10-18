@@ -7,14 +7,8 @@ using UnityEngine.SceneManagement;
 /// Controls the input of the game through use of enum type and switch statements
 /// Based on current InputState, input is handled differently
 /// </summary>
-public class InputController : MonoBehaviour
+public class KeyboardInputManager : InputManager
 {
-
-    /// <summary> enum type used to keep track of how the input from user should be handled </summary>
-    private enum InputState { MENU, GAMEPLAY, PAUSE }
-    /// <summary> The current state of how input should be handled </summary>
-    private InputState currentState;
-
     private static KeyCode[] keys =
     {
         KeyCode.UpArrow,
@@ -32,7 +26,7 @@ public class InputController : MonoBehaviour
 
     }
 
-    public QTEButton.KeyNames? CheckQTEButtonPress()
+    public override QTEButton.KeyNames? CheckQTEButtonPress()
     {
         if (Input.GetKeyDown(keys[0]))
         {
@@ -58,7 +52,7 @@ public class InputController : MonoBehaviour
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    private void RunGameplayFrameInput()
+    protected override void RunGameplayFrameInput()
     {
         if (Input.GetButtonDown("Jump"))
         {
@@ -83,7 +77,11 @@ public class InputController : MonoBehaviour
             Player.instance.HackSelector();
         }
 
-        Player.instance.AimWeapon();
+        Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
+        Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
+
+        Player.instance.AimWeapon(angle);
 
         if (Input.GetKeyDown(KeyCode.Return))
             Player.instance.transform.position = new Vector2(0, 0);
@@ -94,7 +92,7 @@ public class InputController : MonoBehaviour
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    private void RunMenuFrameInput()
+    protected override void RunMenuFrameInput()
     {
 
     }
@@ -104,7 +102,7 @@ public class InputController : MonoBehaviour
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    private void RunPauseFrameInput()
+    protected override void RunPauseFrameInput()
     {
 
     }
@@ -115,7 +113,7 @@ public class InputController : MonoBehaviour
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    private void RunGameplayFixedInput()
+    protected override void RunGameplayFixedInput()
     {
         float horiz = Input.GetAxisRaw("Horizontal");
 
@@ -128,7 +126,7 @@ public class InputController : MonoBehaviour
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    private void RunMenuFixedInput()
+    protected override void RunMenuFixedInput()
     {
 
     }
@@ -139,73 +137,10 @@ public class InputController : MonoBehaviour
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    private void RunPauseFixedInput()
+    protected override void RunPauseFixedInput()
     {
 
     }
 
-    // FixedUpdate called once per physics tick
-    private void FixedUpdate()
-    {
-        // based on current InputState handle input appropriately
-        switch (currentState)
-        {
-            case (InputState.MENU):
-                RunMenuFixedInput();
-                break;
-            case (InputState.GAMEPLAY):
-                RunGameplayFixedInput();
-                break;
-            case (InputState.PAUSE):
-                RunPauseFixedInput();
-                break;
-            default:
-                break;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        switch (currentState)
-        {
-            case (InputState.MENU):
-                RunMenuFrameInput();
-                break;
-            case (InputState.GAMEPLAY):
-                RunGameplayFrameInput();
-                break;
-            case (InputState.PAUSE):
-                RunPauseFrameInput();
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    private void LateUpdate()
-    {
-
-    }
-
-    private static InputController _instance = null;
-
-    public static InputController instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<InputController>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(InputController).Name).AddComponent<InputController>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
-    }
+    
 }

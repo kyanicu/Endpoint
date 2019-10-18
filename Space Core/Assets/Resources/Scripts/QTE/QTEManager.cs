@@ -116,7 +116,7 @@ public class QTEManager : MonoBehaviour
         {
             if (!listening) break;
 
-            QTEButton.KeyNames? key = InputController.instance.CheckQTEButtonPress();
+            QTEButton.KeyNames? key = InputManager.instance.CheckQTEButtonPress();
 
             if (key != null)
             {

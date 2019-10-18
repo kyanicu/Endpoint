@@ -18,7 +18,7 @@ public abstract class Character : MonoBehaviour
     public abstract void Fire();
     public abstract void Reload();
     public abstract void Move(float axis);
-    public abstract void AimWeapon();
+    public abstract void AimWeapon(float angle);
     public abstract void Jump();
     public abstract void JumpCancel();
 }

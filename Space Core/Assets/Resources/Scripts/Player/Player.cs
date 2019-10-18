@@ -63,16 +63,8 @@ public class Player : Character
         Health -= damage;
     }
 
-    public override void AimWeapon()
-    {
-        Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(RotationPoint.transform.position);
-
-        //Get the Screen position of the mouse
-        Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
-
-        //Get the angle between the points
-        float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
-        
+    public override void AimWeapon(float angle)
+    {        
         if (lookingLeft && Mathf.Abs(angle) < 90)
         {
             Vector3 newScale = gameObject.transform.localScale;

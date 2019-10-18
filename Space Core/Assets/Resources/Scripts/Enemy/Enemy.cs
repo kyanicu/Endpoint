@@ -88,7 +88,7 @@ public class Enemy : Character
         throw new System.NotImplementedException();
     }
 
-    public override void AimWeapon()
+    public override void AimWeapon(float angle)
     {
         throw new System.NotImplementedException();
     }
