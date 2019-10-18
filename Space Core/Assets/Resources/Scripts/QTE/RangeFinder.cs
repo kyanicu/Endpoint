@@ -25,12 +25,13 @@ public class RangeFinder : MonoBehaviour
     /// <summary>
     /// Begins uploading upon player entering hack area
     /// </summary>
-    /// <param name="other"></param>
-    private void OnTriggerEnter(Collider other)
+    /// <param name="col"></param>
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if(other.gameObject.tag == "Player")
+       if (col.gameObject.tag == "Player")
         {
             hackStart = true;
+            QTEManager.gameObject.transform.GetChild(1).gameObject.SetActive(true);
             StartCoroutine(Uploading());
         }
     }
@@ -38,14 +39,16 @@ public class RangeFinder : MonoBehaviour
     /// <summary>
     /// Halts uploading upon player leaving hack area
     /// </summary>
-    /// <param name="other"></param>
-    private void OnTriggerExit(Collider other)
+    /// <param name="col"></param>
+    private void OnTriggerExit2D(Collider2D col)
     {
-        if (other.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player")
         {
             hackStart = false;
             StopCoroutine(Uploading());
-            hideQTE();
+            QTEButtonsAmt = QTEManager.getButtonsLeft();
+            QTEManager.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            QTEManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
             LoadingBar.fillAmount = 0;
         }
     }
@@ -57,18 +60,9 @@ public class RangeFinder : MonoBehaviour
     {
         if (hackStart)
         {
-            QTEManager.gameObject.SetActive(true);
+            QTEManager.gameObject.transform.GetChild(0).gameObject.SetActive(true);
             QTEManager.onActivate(QTEButtonsAmt);
         }
-    }
-
-    /// <summary>
-    /// Hide the qte panel
-    /// </summary>
-    private void hideQTE()
-    {
-        QTEButtonsAmt = QTEManager.getButtonsLeft();
-        QTEManager.gameObject.SetActive(false);
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ public abstract class Character : MonoBehaviour
     public Weapon Weapon { get; set; }
     public GameObject RotationPoint { get; set; }
 
-    public void Start()
+    protected void Start()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
     }

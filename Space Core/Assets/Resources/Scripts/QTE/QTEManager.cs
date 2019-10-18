@@ -8,9 +8,6 @@ public class QTEManager : MonoBehaviour
     //An array holding the 3 buttons used in the QTE panel
     public QTEButton[] buttons;
 
-    //String holding text for last button pressed
-    private string lastInputString;
-
     //returns whether or not QTE buttons are listening for input
     private bool listening = false;
 
@@ -22,8 +19,6 @@ public class QTEManager : MonoBehaviour
 
     //Our stack of QTE buttons
     private List<QTEButton> buttonStack = new List<QTEButton>();
-
-    public GameObject Player;    
 
     //How many buttons we'll be generating
     public int listSize { get; private set; }
@@ -41,7 +36,6 @@ public class QTEManager : MonoBehaviour
             buttons[i].Initialize();
             buttons[i].gameObject.SetActive(false);
         }
-        gameObject.SetActive(false);
     }
 
     public int getButtonsLeft()
@@ -143,6 +137,7 @@ public class QTEManager : MonoBehaviour
                     {
                         listening = false;
                         successfulHack();
+                        Destroy(gameObject);
                         break;
                     }
                     //If player has no more QTE buttons but listIndex isn't at last button
@@ -188,26 +183,7 @@ public class QTEManager : MonoBehaviour
     private void successfulHack()
     {
         StopCoroutine(Listener());
-        Player.GetComponent<PlayerBehavior>().Switch();
-    }
-
-    private static QTEManager _instance = null;
-
-    public static QTEManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<QTEManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(QTEManager).Name).AddComponent<QTEManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
+        Player player = Player.instance.gameObject.GetComponent<Player>();
+        player.Switch();
     }
 }

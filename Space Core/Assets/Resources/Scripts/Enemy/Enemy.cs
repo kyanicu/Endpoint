@@ -8,6 +8,7 @@ public class Enemy : Character
     public GameObject HackArea { get; private set; }
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
+    public GameObject QTEPanel;
 
     private void Awake()
     {
@@ -17,6 +18,9 @@ public class Enemy : Character
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
+        HackArea = transform.Find("HackArea").gameObject;
+        QTEPanel = transform.Find("QTE_Canvas").gameObject;
+        QTEPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -29,7 +33,7 @@ public class Enemy : Character
 
         if (IsSelected)
         {
-            QTEManager.instance.gameObject.SetActive(true);
+            QTEPanel.SetActive(true);
             UpdateQTEManagerPosition();
         }
     }
@@ -41,9 +45,15 @@ public class Enemy : Character
             TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
             Destroy(other.gameObject);
         }
+        else if(other.tag == "HackProjectile")
+        {
+            IsSelected = true;
+            HackArea.SetActive(true);
+            UpdateQTEManagerPosition();
+        }
         if (IsSelected)
         {
-            QTEManager.instance.gameObject.SetActive(true);
+            QTEPanel.SetActive(true);
             UpdateQTEManagerPosition();
         }
     }
@@ -55,11 +65,11 @@ public class Enemy : Character
         float distToRight = Vector2.Distance(pos, QTEPointRight.position);
         if (distToLeft < distToRight)
         {
-            QTEManager.instance.transform.position = QTEPointRight.position;
+            QTEPanel.transform.position = QTEPointRight.position;
         }
         else
         {
-            QTEManager.instance.transform.position = QTEPointLeft.position;
+            QTEPanel.transform.position = QTEPointLeft.position;
         }
     }
 

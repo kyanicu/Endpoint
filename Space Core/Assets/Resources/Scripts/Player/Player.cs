@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Player : Character
 {
-
     private PlayerMovement movement;
-    private Enemy enemy;
+    public Enemy enemy;
     private bool lookingLeft;
+    private GameObject hackProj;
+    private float angle;
 
     private void OnValidate()
     {
@@ -15,20 +16,21 @@ public class Player : Character
 
        if(!(movement = GetComponent<PlayerMovement>()))
             movement = gameObject.AddComponent<PlayerMovement>();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void Awake()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
-        Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        if (Weapon == null)
+        {
+            Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        }
+        else
+        {
+            Weapon = RotationPoint.transform.Find("WeaponLocation").GetChild(0).GetComponent<Weapon>();
+        }
         movement = GetComponent<PlayerMovement>();
+        hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
     }
 
     public override void Jump()
@@ -69,7 +71,7 @@ public class Player : Character
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
         //Get the angle between the points
-        float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
+        angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
         
         if (lookingLeft && Mathf.Abs(angle) < 90)
         {
@@ -104,27 +106,20 @@ public class Player : Character
 
     public void HackSelector()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
-
-        if (hit)
-        {
-            if (hit.collider.gameObject.tag == "Enemy")
-            {
-                enemy = hit.collider.gameObject.GetComponent<Enemy>();
-                enemy.IsSelected = true;
-                enemy.HackArea.SetActive(true);
-            }
-        }
+        GameObject hackAttempt = Instantiate(hackProj, transform.position, Quaternion.identity);
+        hackAttempt.transform.forward = new Vector3(angle, 0, 0);
     }
 
-    private void Switch()
+    public void Switch()
     {
-        enemy.HackArea.SetActive(false);
+        Destroy(RotationPoint);
         enemy.gameObject.AddComponent<Player>();
         enemy.gameObject.tag = "Player";
-        enemy.enabled = false;
+        enemy.gameObject.name = "Player";
+        Destroy(enemy.HackArea.gameObject);
+        Destroy(enemy.QTEPanel.gameObject);
+        Destroy(enemy);
         enemy = null;
-        QTEManager.instance.gameObject.SetActive(false);
         Destroy(gameObject);
     }
 
