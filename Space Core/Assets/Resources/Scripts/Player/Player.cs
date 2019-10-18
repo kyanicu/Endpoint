@@ -21,13 +21,14 @@ public class Player : Character
     private void Awake()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
-        if (Weapon == null)
+        Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
+        if (WeaponTransform.childCount == 0)
         {
-            Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+            Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
         }
         else
         {
-            Weapon = RotationPoint.transform.Find("WeaponLocation").GetChild(0).GetComponent<Weapon>();
+            Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
