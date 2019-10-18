@@ -8,7 +8,7 @@ public class Enemy : Character
     public GameObject HackArea { get; private set; }
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
-    public GameObject QTEPanel;
+    public GameObject QTEPanel { get; private set; }
 
     private void Awake()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HackBullet : MonoBehaviour
 {
-    public float Speed = 15f;
+    private float Speed = 15f;
 
     public void Start()
     {
@@ -19,7 +19,7 @@ public class HackBullet : MonoBehaviour
     {
         if (col.gameObject.tag == "Enemy")
         {
-            Player.instance.enemy = col.gameObject.GetComponent<Enemy>();
+            Player.instance.Enemy = col.gameObject.GetComponent<Enemy>();
             Destroy(gameObject);
         }
     }

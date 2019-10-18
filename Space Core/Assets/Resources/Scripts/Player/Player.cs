@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public Enemy Enemy { get; set; }
     private PlayerMovement movement;
-    public Enemy enemy;
     private bool lookingLeft;
     private GameObject hackProj;
-    private float angle;
 
     private void OnValidate()
     {
@@ -72,7 +71,7 @@ public class Player : Character
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
         //Get the angle between the points
-        angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
         
         if (lookingLeft && Mathf.Abs(angle) < 90)
         {
@@ -107,20 +106,20 @@ public class Player : Character
 
     public void HackSelector()
     {
-        GameObject hackAttempt = Instantiate(hackProj, transform.position, Quaternion.identity);
-        hackAttempt.transform.forward = new Vector3(angle, 0, 0);
+        GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
+        hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
     }
 
     public void Switch()
     {
         Destroy(RotationPoint);
-        enemy.gameObject.AddComponent<Player>();
-        enemy.gameObject.tag = "Player";
-        enemy.gameObject.name = "Player";
-        Destroy(enemy.HackArea.gameObject);
-        Destroy(enemy.QTEPanel.gameObject);
-        Destroy(enemy);
-        enemy = null;
+        Enemy.gameObject.AddComponent<Player>();
+        Enemy.gameObject.tag = "Player";
+        Enemy.gameObject.name = "Player";
+        Destroy(Enemy.HackArea.gameObject);
+        Destroy(Enemy.QTEPanel.gameObject);
+        Destroy(Enemy);
+        Enemy = null;
         Destroy(gameObject);
     }
 

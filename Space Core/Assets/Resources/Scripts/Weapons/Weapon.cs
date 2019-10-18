@@ -22,8 +22,8 @@ public abstract class Weapon : MonoBehaviour
     public float FireTimer { get; set; }
     public float Range { get; set; }
     public float ReloadTime { get; set; }
+    public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
-    protected GameObject FireLocation;
     protected GameObject Bullet;
 
     public abstract void Fire();
