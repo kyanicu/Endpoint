@@ -67,7 +67,7 @@ public abstract class Weapon : MonoBehaviour
                 }
             }
         }
-
+        HUDController.instance.UpdateAmmo(this);
         IsReloading = false;
         yield return null;
     }

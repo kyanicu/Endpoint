@@ -12,7 +12,7 @@ public class Enemy : Character
 
     private void Awake()
     {
-        MaxHealth = 100;
+        MaxHealth = 85;
         Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();

@@ -7,7 +7,10 @@ public class Player : Character
     public Enemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
+    private bool canSwap;
     private GameObject hackProj;
+
+    private const float COOLDOWN_TIME = 2.5f;
 
     private void OnValidate()
     {
@@ -19,6 +22,10 @@ public class Player : Character
 
     private void Awake()
     {
+        MaxHealth = 100;
+        Health = MaxHealth;
+        canSwap = true; 
+
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
         if (WeaponTransform.childCount == 0)
@@ -31,6 +38,9 @@ public class Player : Character
         }
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
+
+        HUDController.instance.UpdateHealth(MaxHealth, Health);
+        HUDController.instance.UpdateAmmo(Weapon);
     }
 
     public override void Jump()
@@ -46,6 +56,7 @@ public class Player : Character
     public override void Fire()
     {
         Weapon.Fire();
+        HUDController.instance.UpdateAmmo(Weapon);
     }
 
     public override void Reload()
@@ -61,6 +72,7 @@ public class Player : Character
     public override void TakeDamage(int damage)
     {
         Health -= damage;
+        HUDController.instance.UpdateHealth(MaxHealth, Health);
     }
 
     public override void AimWeapon(float angle)
@@ -98,13 +110,20 @@ public class Player : Character
 
     public void HackSelector()
     {
-        GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-        hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
+        if (canSwap)
+        {
+            GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
+            hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
+            canSwap = false;
+            StartCoroutine(implementSwapCooldown());
+        }
     }
 
     public void Switch()
     {
         Destroy(RotationPoint);
+        MaxHealth = Enemy.MaxHealth;
+        Health = Enemy.Health;
         Enemy.gameObject.AddComponent<Player>();
         Enemy.gameObject.tag = "Player";
         Enemy.gameObject.name = "Player";
@@ -113,6 +132,24 @@ public class Player : Character
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
+        HUDController.instance.UpdateHealth(MaxHealth, Health);
+    }
+
+    /// <summary>
+    /// Waits for COOLDOWN_TIME amount of time and then reset ability to hack
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator implementSwapCooldown()
+    {
+        float timer = 0;
+        HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+        while (timer < COOLDOWN_TIME)
+        {
+            timer += .1f;
+            yield return new WaitForSeconds(.1f);
+            HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+        }
+        canSwap = true;
     }
 
     private static Player _instance = null;
