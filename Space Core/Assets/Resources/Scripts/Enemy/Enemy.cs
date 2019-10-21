@@ -27,6 +27,8 @@ public class Enemy : Character
     // Update is called once per frame
     void Update()
     {
+        bool moveLeft = false;
+
         if (Health <= 0)
         {
             Destroy(gameObject);
@@ -47,6 +49,15 @@ public class Enemy : Character
             AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
             Fire();
         }
+        if (moveLeft)
+        {
+            Move(-180);
+        }
+        else
+        {
+            Move(180);
+        }
+
     }
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -96,7 +107,14 @@ public class Enemy : Character
 
     public override void Move(float axis)
     {
-        throw new System.NotImplementedException();
+        if (axis > 0)
+        {
+            transform.position -= new Vector3(15f, 0, 0);
+        }
+        else
+        {
+            transform.position += new Vector3(15f, 0, 0);
+        }
     }
 
     public override void AimWeapon(float angle)
