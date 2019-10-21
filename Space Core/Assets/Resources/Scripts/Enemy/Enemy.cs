@@ -9,6 +9,7 @@ public class Enemy : Character
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
     public GameObject QTEPanel { get; private set; }
+    private bool lookingLeft = false;
 
     private void Awake()
     {
@@ -35,6 +36,16 @@ public class Enemy : Character
         {
             QTEPanel.SetActive(true);
             UpdateQTEManagerPosition();
+        }
+
+        if (IsPlayerInRange())
+        {
+            Debug.Log("In Range");
+            Vector3 playerPosition = GetPlayerPosition();
+            Vector3 myPosition = transform.position;
+            Vector3 diff = playerPosition - myPosition;
+            AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+            Fire();
         }
     }
 
@@ -75,7 +86,7 @@ public class Enemy : Character
 
     public override void Fire()
     {
-        throw new System.NotImplementedException();
+        Weapon.Fire();
     }
 
     public override void Reload()
@@ -90,7 +101,24 @@ public class Enemy : Character
 
     public override void AimWeapon(float angle)
     {
-        throw new System.NotImplementedException();
+        bool pointLeft = Mathf.Abs(angle) > 90;
+        if (pointLeft ^ lookingLeft)
+        {
+            Vector3 newScale = gameObject.transform.localScale;
+            newScale.x *= -1;
+            gameObject.transform.localScale = newScale;
+            newScale = RotationPoint.transform.localScale;
+            newScale.x *= -1;
+            newScale.y *= -1;
+            RotationPoint.transform.localScale = newScale;
+            lookingLeft = !lookingLeft;
+        }
+        if (lookingLeft)
+        {
+            angle *= -1;
+        }
+
+        RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
     public override void Jump()
@@ -106,5 +134,21 @@ public class Enemy : Character
     public override void TakeDamage(int damage)
     {
         Health -= damage;
+    }
+
+    public bool IsPlayerInRange()
+    {
+        var playerPos = GetPlayerPosition();
+        return (Vector3.Distance(playerPos, transform.position) < 5);
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        var player = GameObject.FindGameObjectsWithTag("Player");
+        if (player != null)
+        {
+            return player[0].transform.position;
+        }
+        return Vector3.zero;
     }
 }
