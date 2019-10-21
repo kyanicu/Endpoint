@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HackBullet : MonoBehaviour
 {
-    private float Speed = 15f;
+    private float Speed = 45f;
 
     public void Start()
     {

@@ -15,7 +15,7 @@ public class RangeFinder : MonoBehaviour
     private bool hackStart = false;
 
     //Time it takes to upload, used in coroutine
-    private float uploadTime = 2;
+    private float uploadTime = 1f;
 
     //How much fill amount gets increased 
     private const float UPLOAD_BAR_AMT = .0625f; 
