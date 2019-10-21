@@ -10,6 +10,7 @@ public class Enemy : Character
     private Transform QTEPointRight;
     public GameObject QTEPanel { get; private set; }
     private bool lookingLeft = false;
+    private bool moveLeft = false;
 
     private void Awake()
     {
@@ -27,8 +28,6 @@ public class Enemy : Character
     // Update is called once per frame
     void Update()
     {
-        bool moveLeft = false;
-
         if (Health <= 0)
         {
             Destroy(gameObject);
@@ -40,6 +39,17 @@ public class Enemy : Character
             UpdateQTEManagerPosition();
         }
 
+        if (moveLeft)
+        {
+            Move(-180);
+            moveLeft = false;
+        }
+        else
+        {
+            Move(180);
+            moveLeft = true;
+        }
+
         if (IsPlayerInRange())
         {
             Debug.Log("In Range");
@@ -49,14 +59,7 @@ public class Enemy : Character
             AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
             Fire();
         }
-        if (moveLeft)
-        {
-            Move(-180);
-        }
-        else
-        {
-            Move(180);
-        }
+
 
     }
 
@@ -109,11 +112,11 @@ public class Enemy : Character
     {
         if (axis > 0)
         {
-            transform.position -= new Vector3(15f, 0, 0);
+            transform.position -= new Vector3(15f * Time.deltaTime, 0, 0);
         }
         else
         {
-            transform.position += new Vector3(15f, 0, 0);
+            transform.position += new Vector3(15f * Time.deltaTime, 0, 0);
         }
     }
 
@@ -163,6 +166,7 @@ public class Enemy : Character
     public Vector3 GetPlayerPosition()
     {
         var player = GameObject.FindGameObjectsWithTag("Player");
+        //bug here: player is not null, meaning code is getting hung up here.
         if (player != null)
         {
             return player[0].transform.position;
