@@ -25,11 +25,7 @@ public class Enemy : Character
         HackArea = transform.Find("HackArea").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
-    }
-
-    protected new void Start()
-    {
-        base.Start();
+        Speed = 8f;
         StartCoroutine(PositionCheck());
     }
 
@@ -155,22 +151,24 @@ public class Enemy : Character
     public bool IsPlayerInRange()
     {
         Vector3 playerPos = Player.instance.transform.position;
+        StopCoroutine(PositionCheck());
         return (Vector3.Distance(playerPos, transform.position) < 5);
     }
 
     private IEnumerator PositionCheck()
     {
-        while(true)
+        while (true)
         {
-            Move(Speed*Time.deltaTime);
-            foreach(Transform MovePoint in MovePoints)
+            Vector2 pos = transform.position;
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].position);
+            if ( Dist0 < .5 || Dist1 < .5 )
             {
-                if (transform.position.x == MovePoint.position.x)
-                {
-                    moveLeft = !(moveLeft);
-                }
+                moveLeft = !moveLeft;
+                Move(Speed * Time.deltaTime);
             }
-            yield return new WaitForSeconds(.1f);
+            Move(Speed * Time.deltaTime);
+            yield return new WaitForSeconds(.01f);
         }
     }
 }
