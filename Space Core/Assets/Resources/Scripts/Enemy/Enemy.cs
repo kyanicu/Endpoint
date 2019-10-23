@@ -9,6 +9,10 @@ public class Enemy : Character
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
     public GameObject QTEPanel { get; private set; }
+    private bool lookingLeft = false;
+    private bool moveLeft = false;
+    public float Speed { get; private set; }
+    public Transform[] MovePoints;
 
     private void Awake()
     {
@@ -21,6 +25,8 @@ public class Enemy : Character
         HackArea = transform.Find("HackArea").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
+        Speed = 8f;
+        StartCoroutine(PositionCheck());
     }
 
     // Update is called once per frame
@@ -35,6 +41,16 @@ public class Enemy : Character
         {
             QTEPanel.SetActive(true);
             UpdateQTEManagerPosition();
+        }
+
+        if (IsPlayerInRange())
+        {
+            Debug.Log("In Range");
+            Vector3 playerPosition = Player.instance.transform.position;
+            Vector3 myPosition = transform.position;
+            Vector3 diff = playerPosition - myPosition;
+            AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+            Fire();
         }
     }
 
@@ -75,7 +91,7 @@ public class Enemy : Character
 
     public override void Fire()
     {
-        throw new System.NotImplementedException();
+        Weapon.Fire();
     }
 
     public override void Reload()
@@ -83,14 +99,38 @@ public class Enemy : Character
         throw new System.NotImplementedException();
     }
 
-    public override void Move(float axis)
+    public override void Move(float speed)
     {
-        throw new System.NotImplementedException();
+        if(moveLeft)
+        {
+            transform.position -= new Vector3(speed, 0, 0);
+        }
+        else
+        {
+            transform.position += new Vector3(speed, 0, 0);
+        }
     }
 
     public override void AimWeapon(float angle)
     {
-        throw new System.NotImplementedException();
+        bool pointLeft = Mathf.Abs(angle) > 90;
+        if (pointLeft ^ lookingLeft)
+        {
+            Vector3 newScale = gameObject.transform.localScale;
+            newScale.x *= -1;
+            gameObject.transform.localScale = newScale;
+            newScale = RotationPoint.transform.localScale;
+            newScale.x *= -1;
+            newScale.y *= -1;
+            RotationPoint.transform.localScale = newScale;
+            lookingLeft = !lookingLeft;
+        }
+        if (lookingLeft)
+        {
+            angle *= -1;
+        }
+
+        RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
     public override void Jump()
@@ -106,5 +146,29 @@ public class Enemy : Character
     public override void TakeDamage(int damage)
     {
         Health -= damage;
+    }
+
+    public bool IsPlayerInRange()
+    {
+        Vector3 playerPos = Player.instance.transform.position;
+        StopCoroutine(PositionCheck());
+        return (Vector3.Distance(playerPos, transform.position) < 5);
+    }
+
+    private IEnumerator PositionCheck()
+    {
+        while (true)
+        {
+            Vector2 pos = transform.position;
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].position);
+            if ( Dist0 < .5 || Dist1 < .5 )
+            {
+                moveLeft = !moveLeft;
+                Move(Speed * Time.deltaTime);
+            }
+            Move(Speed * Time.deltaTime);
+            yield return new WaitForSeconds(.01f);
+        }
     }
 }
