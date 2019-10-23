@@ -11,6 +11,8 @@ public class Enemy : Character
     public GameObject QTEPanel { get; private set; }
     private bool lookingLeft = false;
     private bool moveLeft = false;
+    public float Speed { get; private set; }
+    public Transform[] MovePoints;
 
     private void Awake()
     {
@@ -23,6 +25,12 @@ public class Enemy : Character
         HackArea = transform.Find("HackArea").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
+    }
+
+    protected new void Start()
+    {
+        base.Start();
+        StartCoroutine(PositionCheck());
     }
 
     // Update is called once per frame
@@ -39,28 +47,15 @@ public class Enemy : Character
             UpdateQTEManagerPosition();
         }
 
-        if (moveLeft)
-        {
-            Move(-180);
-            moveLeft = false;
-        }
-        else
-        {
-            Move(180);
-            moveLeft = true;
-        }
-
         if (IsPlayerInRange())
         {
             Debug.Log("In Range");
-            Vector3 playerPosition = GetPlayerPosition();
+            Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
             AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
             Fire();
         }
-
-
     }
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -108,15 +103,15 @@ public class Enemy : Character
         throw new System.NotImplementedException();
     }
 
-    public override void Move(float axis)
+    public override void Move(float speed)
     {
-        if (axis > 0)
+        if(moveLeft)
         {
-            transform.position -= new Vector3(15f * Time.deltaTime, 0, 0);
+            transform.position -= new Vector3(speed, 0, 0);
         }
         else
         {
-            transform.position += new Vector3(15f * Time.deltaTime, 0, 0);
+            transform.position += new Vector3(speed, 0, 0);
         }
     }
 
@@ -159,18 +154,23 @@ public class Enemy : Character
 
     public bool IsPlayerInRange()
     {
-        var playerPos = GetPlayerPosition();
+        Vector3 playerPos = Player.instance.transform.position;
         return (Vector3.Distance(playerPos, transform.position) < 5);
     }
 
-    public Vector3 GetPlayerPosition()
+    private IEnumerator PositionCheck()
     {
-        var player = GameObject.FindGameObjectsWithTag("Player");
-        //bug here: player is not null, meaning code is getting hung up here.
-        if (player != null)
+        while(true)
         {
-            return player[0].transform.position;
+            Move(Speed*Time.deltaTime);
+            foreach(Transform MovePoint in MovePoints)
+            {
+                if (transform.position.x == MovePoint.position.x)
+                {
+                    moveLeft = !(moveLeft);
+                }
+            }
+            yield return new WaitForSeconds(.1f);
         }
-        return Vector3.zero;
     }
 }
