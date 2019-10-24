@@ -76,8 +76,11 @@ public class Player : Character
     }
 
     public override void AimWeapon(float angle)
-    {        
-        if (lookingLeft && Mathf.Abs(angle) < 90)
+    {
+        bool pointLeft = Mathf.Abs(angle) > 90;
+
+        // if the weapon points in the direction that the character is not facing
+        if (pointLeft ^ lookingLeft)
         {
             Vector3 newScale = gameObject.transform.localScale;
             newScale.x *= -1;
@@ -86,18 +89,7 @@ public class Player : Character
             newScale.x *= -1;
             newScale.y *= -1;
             RotationPoint.transform.localScale = newScale;
-            lookingLeft = false;
-        }
-        else if (!lookingLeft && Mathf.Abs(angle) > 90)
-        {
-            Vector3 newScale = gameObject.transform.localScale;
-            newScale.x *= -1;
-            gameObject.transform.localScale = newScale;
-            newScale = RotationPoint.transform.localScale;
-            newScale.x *= -1;
-            newScale.y *= -1;
-            RotationPoint.transform.localScale = newScale;
-            lookingLeft = true;
+            lookingLeft = !lookingLeft;
         }
 
         if(lookingLeft)
