@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
 
     [SerializeField]
-    private float runSpeed = 5, jumpVelocity = 10, gravityScale = 1, jumpCancelMinVel = 8, jumpCancelVel = 2, airAccel = 50, airDecel = 25, airMax = 5 ;
+    private float runMax = 7, runAccel = 40, runDecel = 40, jumpVelocity = 15, gravityScale = 1, jumpCancelMinVel = 12, jumpCancelVel = 2, airAccel = 50, airDecel = 25, airMax = 9;
 
     private bool isJumping, isJumpCanceling;
 
@@ -71,12 +71,22 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (direction == 0)
-                velocity = Vector2.zero;
+
+            float velSign = Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
+
+            if (direction == 0 || velocity.magnitude > runMax)
+            {
+                if (velocity.magnitude - runDecel * Time.fixedDeltaTime <= 0)
+                    velocity = Vector2.zero;
+                else
+                    velocity += charCont.currentSlope * runDecel * -velSign * Time.fixedDeltaTime;
+            }
             else
             {
-                velocity -= (Vector2)Vector3.Project(velocity, charCont.currentSlope);
-                velocity += charCont.currentSlope * runSpeed * direction;
+                if (Mathf.Abs((velocity.magnitude * velSign) + (runAccel * direction * Time.fixedDeltaTime)) >= runMax)
+                    velocity = charCont.currentSlope * runMax * direction;
+                else
+                    velocity += charCont.currentSlope * runAccel * Time.fixedDeltaTime * direction;
             }
         }
     }
@@ -167,6 +177,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        bool prevGroundedState = charCont.isGrounded;
 
         if (isJumpCanceling)
         {
@@ -194,6 +205,13 @@ public class PlayerMovement : MonoBehaviour
 
             for (int i = 0; i < moveCount; i++)
                 HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
+            if (charCont.isGrounded)
+            {
+                if (prevGroundedState != charCont.isGrounded)
+                    velocity = Vector3.Project(velocity, charCont.currentSlope);
+                else
+                    velocity = charCont.currentSlope * velocity.magnitude * Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
+            }
         }
 
         forceUnground = false;
