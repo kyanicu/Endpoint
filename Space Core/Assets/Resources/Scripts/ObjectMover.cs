@@ -42,12 +42,14 @@ public struct ContactData
     public bool wasHit;
     public Vector2 point;
     public Vector2 normal;
+    public Collider2D collider;
 
-    public ContactData(bool _wasHit, Vector2 _point, Vector2 _normal)
+    public ContactData(bool _wasHit, Vector2 _point, Vector2 _normal, Collider2D _collider)
     {
         wasHit = _wasHit;
         point = _point;
         normal = _normal;
+        collider = _collider;
     }
 }
 
@@ -268,7 +270,7 @@ public class ObjectMover : MonoBehaviour
             //Debug.Log("Hit");
             for (int i = 0; i < numHits; i++)
             {
-                contacts[contactCount] = new ContactData(true, hits[i].point, hits[i].normal);
+                contacts[contactCount] = new ContactData(true, hits[i].point, hits[i].normal, hits[i].collider);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -294,7 +296,7 @@ public class ObjectMover : MonoBehaviour
                 if (alreadyIn)
                     continue;
 
-                contacts[contactCount] = new ContactData((rotateVector(moveDirection, 90) != -hits[i].normal), hits[0].point, hits[i].normal);
+                contacts[contactCount] = new ContactData((rotateVector(moveDirection, 90) != -hits[i].normal), hits[0].point, hits[i].normal, hits[i].collider);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -319,7 +321,7 @@ public class ObjectMover : MonoBehaviour
                 if (alreadyIn)
                     continue;
 
-                contacts[contactCount] = new ContactData(rotateVector(moveDirection, -90) != -hits[i].normal, hits[0].point, hits[i].normal);
+                contacts[contactCount] = new ContactData(rotateVector(moveDirection, -90) != -hits[i].normal, hits[0].point, hits[i].normal, hits[i].collider);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -337,19 +339,19 @@ public class ObjectMover : MonoBehaviour
                 if (dists[i].distance < -Mathf.Epsilon)
                 {
 
-                    contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal);
+                    contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal, hits[i].collider);
 
                     //Debug.Log(contacts[i].normal);
                 }
                 else if (dists[i].distance > Mathf.Epsilon)
                 {
-                    contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal);
+                    contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal, hits[i].collider);
                     //Debug.Log(contacts[i].normal);
 
                 }
                 else
                 {
-                    contacts[i] = new ContactData(true, dists[i].pointB, moveDirection);
+                    contacts[i] = new ContactData(true, dists[i].pointB, moveDirection, hits[i].collider);
                     //Debug.Log(contacts[i].normal);
 
                 }
@@ -406,7 +408,7 @@ public class ObjectMover : MonoBehaviour
         ContactData[] contacts = new ContactData[maxSize + hitCount];
         for (int i = 0; i < hitCount; i++)
         {
-            contacts[i] = new ContactData(true, hits[i].point, hits[i].normal);
+            contacts[i] = new ContactData(true, hits[i].point, hits[i].normal, hits[i].collider);
         }
         if ((contactCount = col.OverlapCollider(filter, colliders)) > 0)
         {
@@ -425,12 +427,12 @@ public class ObjectMover : MonoBehaviour
                 {
                     if (dist.distance < -Mathf.Epsilon)
                     {
-                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, -dist.normal);
+                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, -dist.normal, hits[i].collider);
 
                     }
                     else if (dist.distance > Mathf.Epsilon)
                     {
-                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, dist.normal);
+                        contacts[contactCount + hitCount] = new ContactData(false, dist.pointB, dist.normal, hits[i].collider);
                     }
                     contactCount++;
                 }

@@ -43,11 +43,6 @@ public class Player : Character
         HUDController.instance.UpdateAmmo(Weapon);
     }
 
-    private void OnDisable()
-    {
-        Debug.Log("WTF");
-    }
-
     public override void Jump()
     {
         movement.Jump();

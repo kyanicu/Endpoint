@@ -13,9 +13,14 @@ public class PlayerMovement : MonoBehaviour
     public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
 
     [SerializeField]
-    private float runMax = 7, runAccel = 40, runDecel = 40, jumpVelocity = 15, gravityScale = 1, jumpCancelMinVel = 12, jumpCancelVel = 2, airAccel = 50, airDecel = 25, airMax = 9;
+    private float runMax = 7, runAccel = 40, runDecel = 40,
+        jumpVelocity = 15, gravityScale = 1, jumpCancelMinVel = 12, jumpCancelVel = 2,
+        airAccel = 50, airDecel = 25, airMax = 9,
+        pushForce = 14;
 
     private bool isJumping, isJumpCanceling;
+
+    private float pushingDirection;
 
     private void OnValidate()
     {
@@ -41,9 +46,17 @@ public class PlayerMovement : MonoBehaviour
     {
 
         if (charCont.isTouchingRightWall && direction == +1)
-            direction = 0;
+        {
+            if (charCont.isGrounded)
+                pushingDirection = +1;
+            //return;
+        }
         else if (charCont.isTouchingLeftWall && direction == -1)
-            direction = 0;
+        {
+            if (charCont.isGrounded)
+                pushingDirection = -1;
+            //return;
+        }
 
         if (!charCont.isGrounded || forceUnground)
         {
@@ -161,12 +174,35 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            bool pushing = false;
+            for(int i = 0; i < contactCount; i++)
+            {
+                if (contacts[i].collider.tag == "PushableObject")
+                    Debug.Log(pushingDirection);
+                if (pushingDirection == -1 && contacts[i].normal.x > 0 && contacts[i].collider.tag == "PushableObject")
+                {
+                    pushing = true;
+                    Push(contacts[i]);
+                    break;
+                }
+                else if(pushingDirection == +1 && contacts[i].normal.x < 0 && contacts[i].collider.tag == "PushableObject")
+                {
+                    pushing = true;
+                    Push(contacts[i]);
+                    break;
+                }
+            }
 
-            if (charCont.isTouchingRightWall)
+            if (charCont.isTouchingRightWall && !(pushing && pushingDirection == +1))
                 CancelDirectionalVelocity(Vector2.right);
-            else if (charCont.isTouchingLeftWall)
+            else if (charCont.isTouchingLeftWall && !(pushing && pushingDirection == -1))
                 CancelDirectionalVelocity(Vector2.left);
         }
+    }
+
+    void Push(ContactData contact)
+    {
+        contact.collider.attachedRigidbody.AddForceAtPosition(pushForce * Vector2.right * pushingDirection, contact.point);
     }
 
     // Update is called once per frame
@@ -177,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         bool prevGroundedState = charCont.isGrounded;
 
         if (isJumpCanceling)
@@ -202,7 +239,7 @@ public class PlayerMovement : MonoBehaviour
         {
             int moveCount;
             MoveData[] moveDatas = charCont.Move(velocity * Time.fixedDeltaTime, out moveCount, forceUnground);
-
+            
             for (int i = 0; i < moveCount; i++)
                 HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
             if (charCont.isGrounded)
@@ -215,5 +252,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         forceUnground = false;
+        pushingDirection = 0;
     }
 }

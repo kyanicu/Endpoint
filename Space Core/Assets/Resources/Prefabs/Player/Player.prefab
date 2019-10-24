@@ -166,6 +166,7 @@ MonoBehaviour:
   airAccel: 50
   airDecel: 25
   airMax: 9
+  pushForce: 14
 --- !u!114 &6722272305491184668
 MonoBehaviour:
   m_ObjectHideFlags: 0
