@@ -115,10 +115,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector2 proj = Vector3.Project(velocity, direction);
 
+        velocity -= proj;
+
+
         if (direction.normalized != proj.normalized)
             return;
 
-        velocity -= proj;
+        //velocity -= proj;
 
     }
 
@@ -127,22 +130,32 @@ public class PlayerMovement : MonoBehaviour
         if (!charCont.isGrounded)
         {
 
+            if (charCont.isTouchingCeiling)
+                CancelDirectionalVelocity(Vector2.up);
+
             if (charCont.isTouchingRightWall)
                 CancelDirectionalVelocity(Vector2.right);
             else if (charCont.isTouchingLeftWall)
                 CancelDirectionalVelocity(Vector2.left);
 
+            // Need to figure out why this acts weird, for now use the less accurate code up top
+            /* 
             for (int i = 0; i < contactCount; i++)
             {
                 if (contacts[i].wasHit)
-                {
+                { 
                     CancelDirectionalVelocity(-contacts[i].normal);
                 }
             }
+            */
         }
         else
         {
-            
+
+            if (charCont.isTouchingRightWall)
+                CancelDirectionalVelocity(Vector2.right);
+            else if (charCont.isTouchingLeftWall)
+                CancelDirectionalVelocity(Vector2.left);
         }
     }
 
@@ -172,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (!charCont.isGrounded)
-          velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
+            velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
 
         if (velocity != Vector2.zero)
         {
