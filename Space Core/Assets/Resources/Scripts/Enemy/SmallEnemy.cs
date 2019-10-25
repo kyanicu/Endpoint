@@ -12,7 +12,7 @@ public class SmallEnemy : Character
     private bool lookingLeft = false;
     private bool moveLeft = false;
     public float Speed { get; private set; }
-    public Transform[] MovePoints;
+    public GameObject[] MovePoints;
 
     private void Awake()
     {
@@ -26,6 +26,16 @@ public class SmallEnemy : Character
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
         Speed = 4f;
+
+        // Instantiate left, right movement boundaries
+        GameObject left = new GameObject();
+        GameObject right = new GameObject();
+        left.transform.position = new Vector3(4.33f, -1.57295f, 0);
+        right.transform.position = new Vector3(21.54f, -1.57295f, 0);
+        MovePoints = new GameObject[2];
+        MovePoints[0] = left;
+        MovePoints[1] = right;
+
         StartCoroutine(PositionCheck());
     }
 
@@ -45,7 +55,6 @@ public class SmallEnemy : Character
 
         if (IsPlayerInRange())
         {
-            Debug.Log("In Range");
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
@@ -56,12 +65,12 @@ public class SmallEnemy : Character
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Bullet")
+        if (other.CompareTag("Bullet"))
         {
             TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
             Destroy(other.gameObject);
         }
-        else if (other.tag == "HackProjectile")
+        else if (other.CompareTag("HackProjectile"))
         {
             IsSelected = true;
             HackArea.SetActive(true);
@@ -152,7 +161,7 @@ public class SmallEnemy : Character
     {
         Vector3 playerPos = Player.instance.transform.position;
         StopCoroutine(PositionCheck());
-        return (Vector3.Distance(playerPos, transform.position) < 10);
+        return (Vector3.Distance(playerPos, transform.position) < 20);
     }
 
     private IEnumerator PositionCheck()
@@ -160,8 +169,8 @@ public class SmallEnemy : Character
         while (true)
         {
             Vector2 pos = transform.position;
-            float Dist0 = Vector2.Distance(pos, MovePoints[0].position);
-            float Dist1 = Vector2.Distance(pos, MovePoints[1].position);
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
             if (Dist0 < .5 || Dist1 < .5)
             {
                 moveLeft = !moveLeft;
