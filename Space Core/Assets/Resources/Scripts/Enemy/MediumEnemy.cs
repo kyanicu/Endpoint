@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Character
+public class MediumEnemy : Character
 {
     public bool IsSelected { get; set; }
     public GameObject HackArea { get; private set; }
@@ -45,7 +45,6 @@ public class Enemy : Character
 
         if (IsPlayerInRange())
         {
-            Debug.Log("In Range");
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
@@ -96,7 +95,7 @@ public class Enemy : Character
 
     public override void Reload()
     {
-        throw new System.NotImplementedException();
+        StartCoroutine(Weapon.Reload());
     }
 
     public override void Move(float speed)

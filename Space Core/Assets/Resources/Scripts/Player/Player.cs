@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public Enemy Enemy { get; set; }
+    public MediumEnemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
