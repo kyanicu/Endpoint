@@ -8,7 +8,14 @@ public abstract class Weapon : MonoBehaviour
     {
         Automatic,
         Spread,
-        Precision
+        Precision,
+        Burst
+    }
+
+    public enum ReloadType
+    {
+        AllAtOnce,
+        Individual
     }
 
     public bool IsReloading { get; set; }
@@ -22,6 +29,7 @@ public abstract class Weapon : MonoBehaviour
     public float FireTimer { get; set; }
     public float Range { get; set; }
     public float ReloadTime { get; set; }
+    public ReloadType ReloadMethod { get; set; }
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected GameObject Bullet;
@@ -29,6 +37,21 @@ public abstract class Weapon : MonoBehaviour
     public abstract void Fire();
 
     public IEnumerator Reload()
+    {
+        switch(ReloadMethod)
+        {
+            case ReloadType.AllAtOnce:
+                StartCoroutine(ReloadAllAtOnce());
+                break;
+            
+            case ReloadType.Individual:
+                StartCoroutine(ReloadIndividual());
+                break;
+        }
+        yield return null;
+    }
+
+    public IEnumerator ReloadAllAtOnce()
     {
         if (IsReloading)
         {
@@ -68,6 +91,36 @@ public abstract class Weapon : MonoBehaviour
             }
         }
         HUDController.instance.UpdateAmmo(this);
+        IsReloading = false;
+        yield return null;
+    }
+
+    public IEnumerator ReloadIndividual()
+    {
+        if (IsReloading)
+        {
+            yield return null;
+        }
+
+        if (AmmoInClip == ClipSize)
+        {
+            yield return null;
+        }
+
+        IsReloading = true;
+
+        if (AmmoInClip == 0)
+        {
+            yield return new WaitForSeconds(ReloadTime / 4);
+        }
+
+        while (TotalAmmo > 0 && AmmoInClip < ClipSize && IsReloading)
+        {
+            TotalAmmo--;
+            AmmoInClip++;
+            HUDController.instance.UpdateAmmo(this);
+            yield return new WaitForSeconds(ReloadTime / ClipSize);
+        }
         IsReloading = false;
         yield return null;
     }

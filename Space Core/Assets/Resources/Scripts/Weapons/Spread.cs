@@ -17,6 +17,7 @@ public class Spread : Weapon
 
     public override void Fire()
     {
+        if (IsReloading && ReloadMethod == ReloadType.AllAtOnce) return;
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             AmmoInClip -= 1;

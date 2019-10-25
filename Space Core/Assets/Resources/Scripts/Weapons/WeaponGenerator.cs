@@ -16,6 +16,8 @@ public static class WeaponGenerator
                 return BuildSpreadWeapon(parent);
             case Weapon.WeaponType.Precision:
                 return BuildPrecisionWeapon(parent);
+            case Weapon.WeaponType.Burst:
+                return BuildBurstWeapon(parent);
             default:
                 return null;
         }
@@ -34,6 +36,7 @@ public static class WeaponGenerator
         precision.RateOfFire = UnityEngine.Random.Range(0.2f, 1f);
         precision.ReloadTime = UnityEngine.Random.Range(0.5f, 3.0f);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
+        precision.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 
@@ -50,6 +53,7 @@ public static class WeaponGenerator
         automatic.RateOfFire = UnityEngine.Random.Range(0.07f, 0.2f);
         automatic.ReloadTime = UnityEngine.Random.Range(0.5f, 3.0f);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
+        automatic.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 
@@ -67,6 +71,26 @@ public static class WeaponGenerator
         spread.ReloadTime = UnityEngine.Random.Range(1.0f, 4.0f);
         spread.NumPellets = UnityEngine.Random.Range(4, 8);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
+        spread.ReloadMethod = (Weapon.ReloadType) UnityEngine.Random.Range(0, 2);
+        return weaponObject;
+    }
+
+    private static GameObject BuildBurstWeapon(Transform parent)
+    {
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Burst");
+        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
+        Burst burst = weaponObject.GetComponent<Burst>();
+        burst.SpreadFactor = UnityEngine.Random.Range(0.0f, 0.02f);
+        burst.Damage = UnityEngine.Random.Range(5, 15);
+        burst.ClipSize = UnityEngine.Random.Range(12, 40);
+        burst.AmmoInClip = burst.ClipSize;
+        burst.MaxAmmoCapacity = burst.ClipSize * 4;
+        burst.RateOfFire = UnityEngine.Random.Range(0.07f, 0.2f);
+        burst.ReloadTime = UnityEngine.Random.Range(0.5f, 3.0f);
+        burst.TotalAmmo = burst.MaxAmmoCapacity;
+        burst.BurstAmt = UnityEngine.Random.Range(2, 5);
+        burst.SpeedBetweenBurst = UnityEngine.Random.Range(.001f, .2f);
+        burst.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 }

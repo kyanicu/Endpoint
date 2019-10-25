@@ -24,7 +24,8 @@ public class Automatic : Weapon
 
     public override void Fire()
     {
-        if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
+        if (IsReloading && ReloadMethod == ReloadType.AllAtOnce) return;
+        if (AmmoInClip > 0 && FireTimer < 0)
         {
             AmmoInClip -= 1;
             Quaternion pelletRotation = transform.rotation;
