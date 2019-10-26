@@ -37,6 +37,7 @@ public class Player : Character
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
+        Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
@@ -89,8 +90,11 @@ public class Player : Character
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
-            Destroy(other.gameObject);
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
         }
     }
 

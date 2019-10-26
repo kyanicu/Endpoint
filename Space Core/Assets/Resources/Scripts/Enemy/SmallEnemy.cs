@@ -18,22 +18,20 @@ public class SmallEnemy : Character
     private void Awake()
     {
         PatrolRange = 8.0f;
-        MaxHealth = 50;
-        Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        Weapon.BulletSource = Bullet.BulletSource.Enemy;
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
-        Speed = 4f;
 
         // Instantiate left, right movement boundaries
         GameObject left = new GameObject();
         GameObject right = new GameObject();
-        left.transform.position = new Vector3(transform.position.x - PatrolRange, transform.position.y, 0);
-        right.transform.position = new Vector3(transform.position.x + PatrolRange, transform.position.y, 0);
+        left.transform.position = new Vector3(transform.position.x - PatrolRange, 0, 0);
+        right.transform.position = new Vector3(transform.position.x + PatrolRange, 0, 0);
         MovePoints = new GameObject[2];
         MovePoints[0] = left;
         MovePoints[1] = right;
@@ -69,8 +67,11 @@ public class SmallEnemy : Character
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
-            Destroy(other.gameObject);
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
         }
         else if (other.CompareTag("HackProjectile"))
         {
@@ -170,13 +171,12 @@ public class SmallEnemy : Character
     {
         while (true)
         {
-            Vector2 pos = transform.position;
+            Vector2 pos = new Vector2(transform.position.x, 0);
             float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
             float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
             if (Dist0 < .5 || Dist1 < .5)
             {
                 moveLeft = !moveLeft;
-                Move(Speed * Time.deltaTime);
             }
             Move(Speed * Time.deltaTime);
             yield return new WaitForSeconds(.01f);

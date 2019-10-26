@@ -12,8 +12,8 @@ public static class WeaponGenerationInfo
     /// </summary>
     public static class AutomaticStats
     {
-        public static float MinSpread = 0.0f;
-        public static float MaxSpread = 0.02f;
+        public static float MinSpread = 0f;
+        public static float MaxSpread = 3f;
 
         public static int MinDamage = 5;
         public static int MaxDamage = 15;
@@ -33,8 +33,8 @@ public static class WeaponGenerationInfo
     /// </summary>
     public static class SpreadStats
     {
-        public static float MinSpread = 0.07f;
-        public static float MaxSpread = 0.14f;
+        public static float MinSpread = 7f;
+        public static float MaxSpread = 14f;
 
         public static int MinDamage = 3;
         public static int MaxDamage = 10;

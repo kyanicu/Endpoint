@@ -4,17 +4,28 @@ using automaticStats = WeaponGenerationInfo.AutomaticStats;
 using precisionStats = WeaponGenerationInfo.PrecisionStats;
 using spreadStats = WeaponGenerationInfo.SpreadStats;
 
+/// <summary>
+/// This class will generate a random weapon
+/// </summary>
 public static class WeaponGenerator
 {
     //Used for generating max ammo capacity
     private const int MIN_RNG = 3;
     private const int MAX_RNG = 5;
 
+    /// <summary>
+    /// Main function to generate a weapon
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static GameObject GenerateWeapon(Transform parent)
     {
+        //get number of weapons that can be generated
         int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
+        //parse into a weapon type
         Weapon.WeaponType weaponType = (Weapon.WeaponType) UnityEngine.Random.Range(0, num);
 
+        //Switch on the weapon type
         switch(weaponType)
         {
             case Weapon.WeaponType.Automatic:
@@ -28,6 +39,12 @@ public static class WeaponGenerator
         }
     }
 
+    /// <summary>
+    /// This function will generate a randomly made automatic weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildAutomaticWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Automatic");
@@ -44,6 +61,12 @@ public static class WeaponGenerator
         return weaponObject;
     }
 
+    /// <summary>
+    /// This function will generate a randomly made precision weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildPrecisionWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Precision");
@@ -60,6 +83,12 @@ public static class WeaponGenerator
         return weaponObject;
     }
 
+    /// <summary>
+    /// This function will generate a randomly made spread weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildSpreadWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Spread");
