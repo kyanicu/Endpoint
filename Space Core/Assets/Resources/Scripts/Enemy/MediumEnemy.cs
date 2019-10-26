@@ -5,6 +5,7 @@ using UnityEngine;
 public class MediumEnemy : Character
 {
     public bool IsSelected { get; set; }
+    public float PatrolRange { get; set; }
     public GameObject HackArea { get; private set; }
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
@@ -16,6 +17,7 @@ public class MediumEnemy : Character
 
     private void Awake()
     {
+        PatrolRange = 6.0f;
         MaxHealth = 85;
         Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
@@ -30,8 +32,8 @@ public class MediumEnemy : Character
         // Instantiate left, right movement boundaries
         GameObject left = new GameObject();
         GameObject right = new GameObject();
-        left.transform.position = new Vector3(-8.33f, -1.57295f, 0);
-        right.transform.position = new Vector3(4.33f, -1.57295f, 0);
+        left.transform.position = new Vector3(transform.position.x - PatrolRange, transform.position.y, transform.position.z);
+        right.transform.position = new Vector3(transform.position.x + PatrolRange, transform.position.y, transform.position.z);
         MovePoints = new GameObject[2];
         MovePoints[0] = left;
         MovePoints[1] = right;
