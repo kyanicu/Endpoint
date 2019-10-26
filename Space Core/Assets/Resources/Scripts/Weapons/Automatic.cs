@@ -1,20 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Class that holds all behavior for an automatic weapon
+/// </summary>
 public class Automatic : Weapon
 {
     // Start is called before the first frame update
     void Start()
     {
-        SpreadFactor = 0;
-        Damage = 8;
-        ClipSize = 10;
-        AmmoInClip = ClipSize;
-        MaxAmmoCapacity = 50;
-        RateOfFire = .1f;
-        ReloadTime = 1.5f;
-        TotalAmmo = 30;
         Range = 100f;
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         RotationPoint = transform.parent.transform.parent;
@@ -23,8 +16,12 @@ public class Automatic : Weapon
         FireTimer = 0;
     }
 
+    /// <summary>
+    /// The fire function is used to launch a projectile from the tip of the automatic weapon
+    /// </summary>
     public override void Fire()
     {
+        //if we have ammo, are not reloading, and the timer will let us fire another shot. Fire a bullet
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             AmmoInClip -= 1;
@@ -38,6 +35,8 @@ public class Automatic : Weapon
             bulletScript.Range = Range;
             FireTimer = RateOfFire;
         }
+
+        //reload if out of ammo
         else if (AmmoInClip <= 0 && !IsReloading)
         {
             StartCoroutine(Reload());
