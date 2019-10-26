@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public Enemy Enemy { get; set; }
+    public MediumEnemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
@@ -71,8 +71,26 @@ public class Player : Character
 
     public override void TakeDamage(int damage)
     {
-        Health -= damage;
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
+
+        if (Health - damage <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Health -= damage;
+            HUDController.instance.UpdateHealth(MaxHealth, Health);
+        }
+
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+            Destroy(other.gameObject);
+        }
     }
 
     public override void AimWeapon(float angle)
