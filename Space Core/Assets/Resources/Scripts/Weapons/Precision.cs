@@ -52,9 +52,10 @@ public class Precision : Weapon
         {
             AmmoInClip -= 1;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
-            if (hit.transform != null && hit.transform.gameObject.tag == "Enemy")
+            //TODO CLEAN UP IF STATEMENT
+            if (hit.transform != null && (hit.transform.gameObject.tag == "Enemy" || hit.transform.gameObject.tag == "Player"))
             {
-                hit.transform.gameObject.GetComponent<Enemy>().TakeDamage(Damage);
+                hit.transform.gameObject.GetComponent<Character>().TakeDamage(Damage);
             }
             FireTimer = RateOfFire;
         }

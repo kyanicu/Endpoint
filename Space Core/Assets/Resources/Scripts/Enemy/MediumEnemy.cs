@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Character
+public class MediumEnemy : Character
 {
     public bool IsSelected { get; set; }
+    public float PatrolRange { get; set; }
     public GameObject HackArea { get; private set; }
     private Transform QTEPointLeft;
     private Transform QTEPointRight;
@@ -12,10 +13,11 @@ public class Enemy : Character
     private bool lookingLeft = false;
     private bool moveLeft = false;
     public float Speed { get; private set; }
-    public Transform[] MovePoints;
+    public GameObject[] MovePoints;
 
     private void Awake()
     {
+        PatrolRange = 6.0f;
         MaxHealth = 85;
         Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
@@ -26,6 +28,16 @@ public class Enemy : Character
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
         Speed = 8f;
+
+        // Instantiate left, right movement boundaries
+        GameObject left = new GameObject();
+        GameObject right = new GameObject();
+        left.transform.position = new Vector3(transform.position.x - PatrolRange, transform.position.y, transform.position.z);
+        right.transform.position = new Vector3(transform.position.x + PatrolRange, transform.position.y, transform.position.z);
+        MovePoints = new GameObject[2];
+        MovePoints[0] = left;
+        MovePoints[1] = right;
+
         StartCoroutine(PositionCheck());
     }
 
@@ -45,7 +57,6 @@ public class Enemy : Character
 
         if (IsPlayerInRange())
         {
-            Debug.Log("In Range");
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
@@ -56,12 +67,12 @@ public class Enemy : Character
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Bullet")
+        if (other.CompareTag("Bullet"))
         {
             TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
             Destroy(other.gameObject);
         }
-        else if(other.tag == "HackProjectile")
+        else if(other.CompareTag("HackProjectile"))
         {
             IsSelected = true;
             HackArea.SetActive(true);
@@ -96,7 +107,7 @@ public class Enemy : Character
 
     public override void Reload()
     {
-        throw new System.NotImplementedException();
+        StartCoroutine(Weapon.Reload());
     }
 
     public override void Move(float speed)
@@ -152,7 +163,7 @@ public class Enemy : Character
     {
         Vector3 playerPos = Player.instance.transform.position;
         StopCoroutine(PositionCheck());
-        return (Vector3.Distance(playerPos, transform.position) < 5);
+        return (Vector3.Distance(playerPos, transform.position) < 10);
     }
 
     private IEnumerator PositionCheck()
@@ -160,8 +171,8 @@ public class Enemy : Character
         while (true)
         {
             Vector2 pos = transform.position;
-            float Dist0 = Vector2.Distance(pos, MovePoints[0].position);
-            float Dist1 = Vector2.Distance(pos, MovePoints[1].position);
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
             if ( Dist0 < .5 || Dist1 < .5 )
             {
                 moveLeft = !moveLeft;
