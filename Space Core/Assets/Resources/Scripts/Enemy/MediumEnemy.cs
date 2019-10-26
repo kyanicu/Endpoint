@@ -12,7 +12,7 @@ public class MediumEnemy : Character
     public GameObject QTEPanel { get; private set; }
     private bool lookingLeft = false;
     private bool moveLeft = false;
-    public float Speed { get; private set; }
+    public float Speed { get; set; }
     public GameObject[] MovePoints;
 
     private void Awake()
