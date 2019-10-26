@@ -17,6 +17,7 @@ public class Automatic : Weapon
         TotalAmmo = 30;
         Range = 100f;
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        RotationPoint = transform.parent.transform.parent;
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
         FireTimer = 0;
@@ -27,12 +28,10 @@ public class Automatic : Weapon
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             AmmoInClip -= 1;
-            Quaternion pelletRotation = transform.rotation;
-            pelletRotation.x = 0.0f;
-            pelletRotation.y = 0.0f;
+            Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
             pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
             GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
-            bullet.transform.right = FireLocation.transform.right;
+            bullet.transform.Rotate(pelletRotation);
             Bullet bulletScript = bullet.GetComponent<Bullet>();
             bulletScript.Damage = Damage;
             bulletScript.Range = Range;

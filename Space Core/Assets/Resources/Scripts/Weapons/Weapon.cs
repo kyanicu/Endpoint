@@ -25,6 +25,7 @@ public abstract class Weapon : MonoBehaviour
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected GameObject Bullet;
+    protected Transform RotationPoint;
 
     public abstract void Fire();
 
