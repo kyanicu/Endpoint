@@ -20,12 +20,9 @@ public class Precision : Weapon
     {
         lineRenderer.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
-        if (hit)
+        if (hit && hit.collider && hit.collider.gameObject.tag != BulletSource.ToString())
         {
-            if (hit.collider)
-            {
-                lineRenderer.SetPosition(1, new Vector3(hit.point.x, hit.point.y));
-            }
+            lineRenderer.SetPosition(1, new Vector3(hit.point.x, hit.point.y));
         }
         else
         {
@@ -46,16 +43,29 @@ public class Precision : Weapon
         base.Update();
     }
 
+    /// <summary>
+    /// Fires a single raycast shot outwards towards the direction the weapon is facing
+    /// If the hit collides with an object that doesnt have the same tag as the the bulletsource
+    /// then that object takes damage
+    /// </summary>
     public override void Fire()
     {
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             AmmoInClip -= 1;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, transform.right);
             //TODO CLEAN UP IF STATEMENT
-            if (hit.transform != null && (hit.transform.gameObject.tag == "Enemy" || hit.transform.gameObject.tag == "Player"))
+
+            foreach (RaycastHit2D hit in hits)
             {
-                hit.transform.gameObject.GetComponent<Character>().TakeDamage(Damage);
+                string tag = hit.transform.gameObject.tag;
+                if (hit.transform != null && (tag == "Enemy" || tag == "Player"))
+                {
+                    if (hit.transform.gameObject.tag != BulletSource.ToString())
+                    {
+                        hit.transform.gameObject.GetComponent<Character>().TakeDamage(Damage);
+                    }
+                }
             }
             FireTimer = RateOfFire;
         }

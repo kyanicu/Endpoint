@@ -22,6 +22,7 @@ public class SmallEnemy : Character
         Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        Weapon.BulletSource = Bullet.BulletSource.Enemy;
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
@@ -69,8 +70,11 @@ public class SmallEnemy : Character
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
-            Destroy(other.gameObject);
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
         }
         else if (other.CompareTag("HackProjectile"))
         {

@@ -30,6 +30,7 @@ public class Spread : Weapon
                 bullet.transform.Rotate(pelletRotation);
                 Bullet bulletScript = bullet.GetComponent<Bullet>();
                 bulletScript.Damage = Damage;
+                bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;
             }
             FireTimer = RateOfFire;
