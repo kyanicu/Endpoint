@@ -31,6 +31,7 @@ public class Player : Character
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
+            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
@@ -143,6 +144,7 @@ public class Player : Character
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+            HUDController.instance.UpdateDiagnosticPanels();
     }
 
     /// <summary>

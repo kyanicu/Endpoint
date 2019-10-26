@@ -4122,6 +4122,20 @@ MonoBehaviour:
   swapBar: {fileID: 2384159577708533766}
   healthAmt: {fileID: 2384159579286674126}
   ammoAmt: {fileID: 2384159578076585466}
+  WeaponDiagnosticBars:
+  - {fileID: 888694359}
+  - {fileID: 1895476962}
+  - {fileID: 608159115}
+  - {fileID: 1536026851}
+  - {fileID: 805746477}
+  WeaponDiagnosticValues:
+  - {fileID: 1703410885}
+  - {fileID: 600549936}
+  - {fileID: 2054174777}
+  - {fileID: 697147446}
+  - {fileID: 869809996}
+  WeaponDiagnosticInfoPanel: {fileID: 2384159579573599886}
+  ClassDiagnosticInfoPanel: {fileID: 6406129123857397261}
 --- !u!224 &2384159579541067602
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4575,7 +4589,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05006a1c06729b469905bcb4ad1ddd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovePoints: []
 --- !u!1 &3888688838908963018
 GameObject:
   m_ObjectHideFlags: 0

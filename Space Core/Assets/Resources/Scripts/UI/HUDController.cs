@@ -8,7 +8,14 @@ public class HUDController : MonoBehaviour
     public Image healthBar, ammoBar, swapBar;
     public Text healthAmt, ammoAmt;
 
-    public enum WeaponDiagnosticCategories
+    #region Custom Colors
+    Color customRed = new Color(.94921875f, .15234375f, .2265625f, 1);
+    Color customYellow = new Color(.89453125f, .8359375f, .19140625f, 1);
+    Color customGreen = new Color(.35546875f, .89453125f, .19140625f, 1);
+    Color customBlue = new Color(.19140625f, .78515625f, .89453125f, 1);
+    #endregion
+
+    public enum Category
     {
         Damage,
         FireRate,
@@ -75,28 +82,31 @@ public class HUDController : MonoBehaviour
         ammoAmt.text = ammoInClip + "rnd/ " + totalAmmo;
     }
 
+    /// <summary>
+    /// Updates the swap bar to correctly display swap cooldown
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="max"></param>
     public void UpdateSwap(float val, float max)
     {
         swapBar.fillAmount = val / max;
     }
 
+    /// <summary>
+    /// Toggles the visibility for diagnostic panels
+    /// </summary>
     public void toggleDiagnosticPanels()
     {
         diagnosticPanelsVisible = !diagnosticPanelsVisible;
         WeaponDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
         ClassDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
-        UpdateDiagnosticPanels();
     }
     public void UpdateDiagnosticPanels()
     {
-        // Bar colors (red, yellow, green, blue)
-        //Color[] weaponDiagnosticColors = { new Color(243, 39, 58, 1), new Color(229, 214, 49, 1), new Color(91, 229, 49, 1), new Color(49, 201, 229, 1) };
-        Color[] weaponDiagnosticColors = { Color.red, Color.yellow, Color.green, Color.blue };
-
         float[] weaponDiagnosticValues = {
             Player.instance.Weapon.Damage,
-            Player.instance.Weapon.RateOfFire,
-            Player.instance.Weapon.ReloadTime,
+            Mathf.Round(Player.instance.Weapon.RateOfFire * 100f) / 100f,
+            Mathf.Round(Player.instance.Weapon.ReloadTime * 100f) / 100f,
             Player.instance.Weapon.ClipSize,
             Player.instance.Weapon.TotalAmmo
             };
@@ -109,25 +119,26 @@ public class HUDController : MonoBehaviour
             WeaponGenerationInfo.TotalRangeStats.MaxClipSize * 5
             };
 
-        for (var i = 0; i < 5; i++)
+        //Loop through each stat and update value and fill amount for bar
+        foreach (Category c in System.Enum.GetValues(typeof(Category)))
         {
-            WeaponDiagnosticBars[i].fillAmount = weaponDiagnosticValues[i] / weaponDiagnosticMaxs[i];
-            WeaponDiagnosticValues[i].text = weaponDiagnosticValues[i] + "";
-            if (WeaponDiagnosticBars[i].fillAmount > 0.95)
+            WeaponDiagnosticBars[(int) c].fillAmount = weaponDiagnosticValues[(int) c] / weaponDiagnosticMaxs[(int) c];
+            WeaponDiagnosticValues[(int) c].text = $"{weaponDiagnosticValues[(int) c]}";
+            if (WeaponDiagnosticBars[(int) c].fillAmount > 0.95)
             {
-                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[3];
+                WeaponDiagnosticBars[(int)c].color = customBlue;
             }
-            else if (WeaponDiagnosticBars[i].fillAmount > 0.66)
+            else if (WeaponDiagnosticBars[(int) c].fillAmount > 0.66)
             {
-                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[2];
+                WeaponDiagnosticBars[(int)c].color = customGreen;
             }
-            else if (WeaponDiagnosticBars[i].fillAmount > 0.33)
+            else if (WeaponDiagnosticBars[(int) c].fillAmount > 0.33)
             {
-                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[1];
+                WeaponDiagnosticBars[(int)c].color = customYellow;
             }
             else
             {
-                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[0];
+                WeaponDiagnosticBars[(int)c].color = customRed;
             }
         }
         
