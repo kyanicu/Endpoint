@@ -8,6 +8,23 @@ public class HUDController : MonoBehaviour
     public Image healthBar, ammoBar, swapBar;
     public Text healthAmt, ammoAmt;
 
+    public enum WeaponDiagnosticCategories
+    {
+        Damage,
+        FireRate,
+        ReloadTime,
+        MagazineSize,
+        AmmoTotal
+    }
+
+    public Image[] WeaponDiagnosticBars;
+    public Text[] WeaponDiagnosticValues;
+
+    public GameObject WeaponDiagnosticInfoPanel;
+    public GameObject ClassDiagnosticInfoPanel;
+
+    private bool diagnosticPanelsVisible = true;
+
     private static HUDController _instance = null;
     public static HUDController instance
     {
@@ -25,6 +42,12 @@ public class HUDController : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    private void Start()
+    {
+        // Close the diagnostic panels and set boolean to false.
+        toggleDiagnosticPanels();
     }
 
     /// <summary>
@@ -56,4 +79,59 @@ public class HUDController : MonoBehaviour
     {
         swapBar.fillAmount = val / max;
     }
+
+    public void toggleDiagnosticPanels()
+    {
+        diagnosticPanelsVisible = !diagnosticPanelsVisible;
+        WeaponDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
+        ClassDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
+        UpdateDiagnosticPanels();
+    }
+    public void UpdateDiagnosticPanels()
+    {
+        // Bar colors (red, yellow, green, blue)
+        //Color[] weaponDiagnosticColors = { new Color(243, 39, 58, 1), new Color(229, 214, 49, 1), new Color(91, 229, 49, 1), new Color(49, 201, 229, 1) };
+        Color[] weaponDiagnosticColors = { Color.red, Color.yellow, Color.green, Color.blue };
+
+        float[] weaponDiagnosticValues = {
+            Player.instance.Weapon.Damage,
+            Player.instance.Weapon.RateOfFire,
+            Player.instance.Weapon.ReloadTime,
+            Player.instance.Weapon.ClipSize,
+            Player.instance.Weapon.TotalAmmo
+            };
+
+        float[] weaponDiagnosticMaxs = { 
+            WeaponGenerationInfo.TotalRangeStats.MaxDamage,
+            WeaponGenerationInfo.TotalRangeStats.MaxRateOfFire,
+            WeaponGenerationInfo.TotalRangeStats.MaxReloadTime,
+            WeaponGenerationInfo.TotalRangeStats.MaxClipSize,
+            WeaponGenerationInfo.TotalRangeStats.MaxClipSize * 5
+            };
+
+        for (var i = 0; i < 5; i++)
+        {
+            WeaponDiagnosticBars[i].fillAmount = weaponDiagnosticValues[i] / weaponDiagnosticMaxs[i];
+            WeaponDiagnosticValues[i].text = weaponDiagnosticValues[i] + "";
+            if (WeaponDiagnosticBars[i].fillAmount > 0.95)
+            {
+                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[3];
+            }
+            else if (WeaponDiagnosticBars[i].fillAmount > 0.66)
+            {
+                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[2];
+            }
+            else if (WeaponDiagnosticBars[i].fillAmount > 0.33)
+            {
+                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[1];
+            }
+            else
+            {
+                WeaponDiagnosticBars[i].color = weaponDiagnosticColors[0];
+            }
+        }
+        
+    }
+
+
 }

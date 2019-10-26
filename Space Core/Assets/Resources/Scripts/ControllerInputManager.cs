@@ -124,12 +124,11 @@ public class ControllerInputManager : InputManager
             Player.instance.AimWeapon(angle);
         }
 
-        /*
         if (prevState.Value.Buttons.LeftStick == ButtonState.Released && state.Value.Buttons.LeftStick == ButtonState.Pressed)
         {
-            //Swap UI Pannels
+            // Toggle Diagnostic Panels
+            HUDController.instance.toggleDiagnosticPanels();
         }
-        */
 
         /*
         if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
