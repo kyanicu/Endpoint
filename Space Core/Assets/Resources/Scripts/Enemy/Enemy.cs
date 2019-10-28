@@ -34,8 +34,6 @@ public class Enemy : Character
         MovePoints = new GameObject[2];
         MovePoints[0] = left;
         MovePoints[1] = right;
-
-        StartCoroutine(PositionCheck());
     }
 
     // Update is called once per frame
@@ -59,6 +57,10 @@ public class Enemy : Character
             Vector3 diff = playerPosition - myPosition;
             AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
             Fire();
+        }
+        else
+        {
+            StartCoroutine(PositionCheck());
         }
     }
 
@@ -99,10 +101,6 @@ public class Enemy : Character
         else
         {
             QTEPanel.transform.position = QTEPointLeft.position;
-        }
-        if (gameObject.transform.localScale.x != 1)
-        {
-            gameObject.transform.localScale = newScale;
         }
     }
 
@@ -174,7 +172,7 @@ public class Enemy : Character
 
     protected IEnumerator PositionCheck()
     {
-        while (true)
+        while (!IsPlayerInRange())
         {
             Vector2 pos = new Vector2(transform.position.x, 0);
             float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);

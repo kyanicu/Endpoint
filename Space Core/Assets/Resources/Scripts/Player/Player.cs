@@ -80,6 +80,10 @@ public class Player : Character
         {
             Health = MaxHealth;
             transform.position = startPos;
+            canSwap = true; 
+            Enemy.IsSelected = false;
+            Enemy.HackArea.SetActive(false);
+            Enemy = null;
         }
         else
         {
@@ -148,8 +152,15 @@ public class Player : Character
         Health = Enemy.Health;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
+        Camera cam = Camera.main;
 
-        Camera.main.transform.parent = Enemy.transform;
+        cam.transform.parent = Enemy.transform;
+        float camZ = cam.transform.position.z;
+        cam.transform.position = Enemy.transform.position;
+        cam.transform.position = new Vector3(cam.transform.position.x, 
+                                             cam.transform.position.y, 
+                                             camZ);
+
         Enemy.gameObject.AddComponent<Player>();
         Enemy.tag = "Player";
         Enemy.name = "Player";

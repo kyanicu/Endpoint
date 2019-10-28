@@ -1175,7 +1175,7 @@ MonoBehaviour:
   - {fileID: 3658287851770230751}
   - {fileID: 3658287851241600587}
   - {fileID: 3658287852694330065}
-  WaitTime: 2
+  WaitTime: 1
 --- !u!1 &3658287852694330071
 GameObject:
   m_ObjectHideFlags: 0

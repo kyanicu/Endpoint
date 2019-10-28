@@ -19,7 +19,7 @@ public class HackBullet : MonoBehaviour
     {
         if (col.gameObject.tag == "Enemy")
         {
-            Player.instance.Enemy = col.gameObject.GetComponent<MediumEnemy>();
+            Player.instance.Enemy = col.gameObject.GetComponent<Enemy>();
             Destroy(gameObject);
         }
     }
