@@ -81,13 +81,16 @@ public class Player : Character
             Health = MaxHealth;
             transform.position = startPos;
             canSwap = true; 
-            Enemy.IsSelected = false;
-            Enemy.HackArea.SetActive(false);
-            Enemy = null;
+            if (Enemy != null)
+            {
+                Enemy.IsSelected = false;
+                Enemy.HackArea.SetActive(false);
+                Enemy = null;
+            }
         }
         else
         {
-            Health -= damage;
+            Health -= damage / 5;
             HUDController.instance.UpdateHealth(MaxHealth, Health);
         }
 

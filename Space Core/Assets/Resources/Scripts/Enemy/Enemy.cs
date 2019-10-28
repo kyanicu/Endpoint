@@ -23,7 +23,7 @@ public class Enemy : Character
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
-        QTEPanel = transform.Find("QTE_Canvas").gameObject;
+        QTEPanel = transform.Find("QTE_Canvas_Group").gameObject;
         QTEPanel.SetActive(false);
 
         // Instantiate left, right movement boundaries
@@ -52,6 +52,7 @@ public class Enemy : Character
 
         if (IsPlayerInRange())
         {
+            UpdateQTEManagerPosition();
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
@@ -97,6 +98,7 @@ public class Enemy : Character
         if (distToLeft < distToRight)
         {
             QTEPanel.transform.position = QTEPointRight.position;
+            QTEPanel.transform.localScale = newScale;
         }
         else
         {
