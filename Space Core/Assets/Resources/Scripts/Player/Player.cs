@@ -29,6 +29,12 @@ public class Player : Character
         startPos = transform.position;
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
+
+        
+        RotationPoint.transform.localScale = new Vector3(1, 1, 1);
+        
+        transform.localScale = new Vector3(1, 1, 1);
+
         Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
         if (WeaponTransform.childCount == 0)
         {
@@ -78,15 +84,7 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            Health = MaxHealth;
-            transform.position = startPos;
-            canSwap = true; 
-            if (Enemy != null)
-            {
-                Enemy.IsSelected = false;
-                Enemy.HackArea.SetActive(false);
-                Enemy = null;
-            }
+            ResetPlayer();
         }
         else
         {
@@ -105,6 +103,10 @@ public class Player : Character
                 TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
                 Destroy(other.gameObject);
             }
+        }
+        else if(other.CompareTag("OB"))
+        {
+            ResetPlayer();
         }
     }
 
@@ -141,8 +143,9 @@ public class Player : Character
     {
         if (canSwap)
         {
+            Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
             GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-            hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
+            hackAttempt.transform.Rotate(launchRotation);
             canSwap = false;
             StartCoroutine(implementSwapCooldown());
         }
@@ -163,7 +166,12 @@ public class Player : Character
         cam.transform.position = new Vector3(cam.transform.position.x, 
                                              cam.transform.position.y, 
                                              camZ);
-
+        /*
+        Vector3 newScale = gameObject.transform.localScale;
+        newScale = RotationPoint.transform.localScale;
+        newScale.x *= -1;
+        RotationPoint.transform.localScale = newScale;
+        */
         Enemy.gameObject.AddComponent<Player>();
         Enemy.tag = "Player";
         Enemy.name = "Player";
@@ -189,6 +197,19 @@ public class Player : Character
             HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         }
         canSwap = true;
+    }
+
+    private void ResetPlayer()
+    {
+        Health = MaxHealth;
+        transform.position = startPos;
+        canSwap = true;
+        if (Enemy != null)
+        {
+            Enemy.IsSelected = false;
+            Enemy.HackArea.SetActive(false);
+            Enemy = null;
+        }
     }
 
     private static Player _instance = null;
