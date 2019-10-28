@@ -1,14 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Player : Character
 {
-    public Character Enemy { get; set; }
+    public Enemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
+    private Vector2 startPos;
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -22,9 +23,10 @@ public class Player : Character
 
     private void Awake()
     {
-        MaxHealth = 100000;
+        MaxHealth = 100;
         Health = MaxHealth;
-        canSwap = true; 
+        canSwap = true;
+        startPos = transform.position;
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
@@ -76,7 +78,8 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            Destroy(gameObject);
+            Health = MaxHealth;
+            transform.position = startPos;
         }
         else
         {
@@ -141,22 +144,11 @@ public class Player : Character
     public void Switch()
     {
         Destroy(RotationPoint);
-        if (Enemy.GetComponent<SmallEnemy>() != null)
-        {
-            SmallEnemy se = Enemy.GetComponent<SmallEnemy>();
-            MaxHealth = se.MaxHealth;
-            Health = se.Health;
-            Destroy(se.HackArea.gameObject);
-            Destroy(se.QTEPanel.gameObject);
-        }
-        else if (Enemy.GetComponent<MediumEnemy>() != null)
-        {
-            MediumEnemy me = Enemy.GetComponent<MediumEnemy>();
-            MaxHealth = me.MaxHealth;
-            Health = me.Health;
-            Destroy(me.HackArea.gameObject);
-            Destroy(me.QTEPanel.gameObject);
-        }
+        MaxHealth = Enemy.MaxHealth;
+        Health = Enemy.Health;
+        Destroy(Enemy.HackArea.gameObject);
+        Destroy(Enemy.QTEPanel.gameObject);
+
         Camera.main.transform.parent = Enemy.transform;
         Enemy.gameObject.AddComponent<Player>();
         Enemy.tag = "Player";
@@ -165,7 +157,7 @@ public class Player : Character
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
-            HUDController.instance.UpdateDiagnosticPanels();
+        HUDController.instance.UpdateDiagnosticPanels();
     }
 
     /// <summary>
