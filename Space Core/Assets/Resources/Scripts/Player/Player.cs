@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public MediumEnemy Enemy { get; set; }
+    public Character Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
@@ -22,7 +22,7 @@ public class Player : Character
 
     private void Awake()
     {
-        MaxHealth = 100;
+        MaxHealth = 100000;
         Health = MaxHealth;
         canSwap = true; 
 
@@ -108,6 +108,10 @@ public class Player : Character
             Vector3 newScale = gameObject.transform.localScale;
             newScale.x *= -1;
             gameObject.transform.localScale = newScale;
+            if (Camera.main.transform.localScale.x != 1)
+            {
+                Camera.main.transform.localScale = newScale;
+            }
             newScale = RotationPoint.transform.localScale;
             newScale.x *= -1;
             newScale.y *= -1;
@@ -137,13 +141,26 @@ public class Player : Character
     public void Switch()
     {
         Destroy(RotationPoint);
-        MaxHealth = Enemy.MaxHealth;
-        Health = Enemy.Health;
+        if (Enemy.GetComponent<SmallEnemy>() != null)
+        {
+            SmallEnemy se = Enemy.GetComponent<SmallEnemy>();
+            MaxHealth = se.MaxHealth;
+            Health = se.Health;
+            Destroy(se.HackArea.gameObject);
+            Destroy(se.QTEPanel.gameObject);
+        }
+        else if (Enemy.GetComponent<MediumEnemy>() != null)
+        {
+            MediumEnemy me = Enemy.GetComponent<MediumEnemy>();
+            MaxHealth = me.MaxHealth;
+            Health = me.Health;
+            Destroy(me.HackArea.gameObject);
+            Destroy(me.QTEPanel.gameObject);
+        }
+        Camera.main.transform.parent = Enemy.transform;
         Enemy.gameObject.AddComponent<Player>();
-        Enemy.gameObject.tag = "Player";
-        Enemy.gameObject.name = "Player";
-        Destroy(Enemy.HackArea.gameObject);
-        Destroy(Enemy.QTEPanel.gameObject);
+        Enemy.tag = "Player";
+        Enemy.name = "Player";
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);

@@ -91,6 +91,8 @@ public class SmallEnemy : Character
         Vector2 pos = Player.instance.transform.position;
         float distToLeft = Vector2.Distance(pos, QTEPointLeft.position);
         float distToRight = Vector2.Distance(pos, QTEPointRight.position);
+        Vector3 newScale = gameObject.transform.localScale;
+        newScale.x *= -1;
         if (distToLeft < distToRight)
         {
             QTEPanel.transform.position = QTEPointRight.position;
@@ -98,6 +100,10 @@ public class SmallEnemy : Character
         else
         {
             QTEPanel.transform.position = QTEPointLeft.position;
+        }
+        if (gameObject.transform.localScale.x != 1)
+        {
+            gameObject.transform.localScale = newScale;
         }
     }
 

@@ -600,7 +600,7 @@ Transform:
   m_GameObject: {fileID: 3658287851861717635}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 3658287851682297180}
   m_RootOrder: 0
@@ -664,7 +664,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingBar: {fileID: 3658287852492889904}
   QTEManager: {fileID: 3658287852568277068}
-  QTEButtonsAmt: 4
+  QTEButtonsAmt: 3
 --- !u!70 &3658287851861717661
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -964,7 +964,6 @@ GameObject:
   - component: {fileID: 3658287852492889911}
   - component: {fileID: 3658287852492889905}
   - component: {fileID: 3658287852492889904}
-  - component: {fileID: 3658287852492889906}
   m_Layer: 5
   m_Name: LoadBar
   m_TagString: Untagged
@@ -1028,19 +1027,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 1
---- !u!114 &3658287852492889906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3658287852492889910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f50e115ec07b5a479da5c99afc80ba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MovePoints: []
 --- !u!1 &3658287852552660558
 GameObject:
   m_ObjectHideFlags: 0
