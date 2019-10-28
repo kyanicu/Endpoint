@@ -9,6 +9,7 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
+    private Vector2 startPos;
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -22,6 +23,7 @@ public class Player : Character
 
     private void Awake()
     {
+        startPos = transform.position;
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true; 
@@ -76,13 +78,14 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            Destroy(gameObject);
+            Health = MaxHealth;
+            transform.position = startPos;
         }
         else
         {
             Health -= damage;
-            HUDController.instance.UpdateHealth(MaxHealth, Health);
         }
+        HUDController.instance.UpdateHealth(MaxHealth, Health);
 
     }
 
@@ -92,9 +95,13 @@ public class Player : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
             {
-                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage/5);
                 Destroy(other.gameObject);
             }
+        }
+        else if (other.CompareTag("OB"))
+        {
+            transform.position = startPos;
         }
     }
 
@@ -142,6 +149,7 @@ public class Player : Character
         Enemy.gameObject.AddComponent<Player>();
         Enemy.gameObject.tag = "Player";
         Enemy.gameObject.name = "Player";
+        Camera.main.transform.parent = Enemy.gameObject.transform;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
         Destroy(Enemy);

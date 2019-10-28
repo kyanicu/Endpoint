@@ -93,7 +93,9 @@ public abstract class Weapon : MonoBehaviour
         }
 
         //update hud
-        HUDController.instance.UpdateAmmo(this);
+        GameObject parent = transform.parent.gameObject;
+        if (parent.tag == "Player")
+            HUDController.instance.UpdateAmmo(this);
         IsReloading = false;
         yield return null;
     }
