@@ -38,6 +38,10 @@ public class QTEManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Return amount of QTE buttons left to press
+    /// </summary>
+    /// <returns></returns>
     public int getButtonsLeft()
     {
         return listSize - listIndex;

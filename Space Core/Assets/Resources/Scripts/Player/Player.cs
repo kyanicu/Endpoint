@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public Enemy Enemy { get; set; }
+    public MediumEnemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
@@ -31,11 +31,13 @@ public class Player : Character
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
+            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
+        Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
@@ -71,8 +73,29 @@ public class Player : Character
 
     public override void TakeDamage(int damage)
     {
-        Health -= damage;
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
+
+        if (Health - damage <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Health -= damage;
+            HUDController.instance.UpdateHealth(MaxHealth, Health);
+        }
+
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
+        }
     }
 
     public override void AimWeapon(float angle)
@@ -125,6 +148,7 @@ public class Player : Character
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+            HUDController.instance.UpdateDiagnosticPanels();
     }
 
     /// <summary>
