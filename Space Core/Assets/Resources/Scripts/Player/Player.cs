@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Player : Character
 {
@@ -9,6 +9,7 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
+    private Vector2 startPos;
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -24,18 +25,27 @@ public class Player : Character
     {
         MaxHealth = 100;
         Health = MaxHealth;
-        canSwap = true; 
+        canSwap = true;
+        startPos = transform.position;
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
+
+        
+        RotationPoint.transform.localScale = new Vector3(1, 1, 1);
+        
+        transform.localScale = new Vector3(1, 1, 1);
+
         Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
+            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
+        Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
@@ -71,8 +81,33 @@ public class Player : Character
 
     public override void TakeDamage(int damage)
     {
-        Health -= damage;
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
+
+        if (Health - damage <= 0)
+        {
+            ResetPlayer();
+        }
+        else
+        {
+            Health -= damage / 5;
+            HUDController.instance.UpdateHealth(MaxHealth, Health);
+        }
+
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
+        }
+        else if(other.CompareTag("OB"))
+        {
+            ResetPlayer();
+        }
     }
 
     public override void AimWeapon(float angle)
@@ -85,6 +120,10 @@ public class Player : Character
             Vector3 newScale = gameObject.transform.localScale;
             newScale.x *= -1;
             gameObject.transform.localScale = newScale;
+            if (Camera.main.transform.localScale.x != 1)
+            {
+                Camera.main.transform.localScale = newScale;
+            }
             newScale = RotationPoint.transform.localScale;
             newScale.x *= -1;
             newScale.y *= -1;
@@ -104,8 +143,9 @@ public class Player : Character
     {
         if (canSwap)
         {
+            Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
             GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-            hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
+            hackAttempt.transform.Rotate(launchRotation);
             canSwap = false;
             StartCoroutine(implementSwapCooldown());
         }
@@ -116,15 +156,30 @@ public class Player : Character
         Destroy(RotationPoint);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;
-        Enemy.gameObject.AddComponent<Player>();
-        Enemy.gameObject.tag = "Player";
-        Enemy.gameObject.name = "Player";
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
+        Camera cam = Camera.main;
+
+        cam.transform.parent = Enemy.transform;
+        float camZ = cam.transform.position.z;
+        cam.transform.position = Enemy.transform.position;
+        cam.transform.position = new Vector3(cam.transform.position.x, 
+                                             cam.transform.position.y, 
+                                             camZ);
+        /*
+        Vector3 newScale = gameObject.transform.localScale;
+        newScale = RotationPoint.transform.localScale;
+        newScale.x *= -1;
+        RotationPoint.transform.localScale = newScale;
+        */
+        Enemy.gameObject.AddComponent<Player>();
+        Enemy.tag = "Player";
+        Enemy.name = "Player";
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+        HUDController.instance.UpdateDiagnosticPanels();
     }
 
     /// <summary>
@@ -142,6 +197,19 @@ public class Player : Character
             HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         }
         canSwap = true;
+    }
+
+    private void ResetPlayer()
+    {
+        Health = MaxHealth;
+        transform.position = startPos;
+        canSwap = true;
+        if (Enemy != null)
+        {
+            Enemy.IsSelected = false;
+            Enemy.HackArea.SetActive(false);
+            Enemy = null;
+        }
     }
 
     private static Player _instance = null;

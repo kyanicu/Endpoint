@@ -5,28 +5,35 @@ using UnityEngine;
 public class Enemy : Character
 {
     public bool IsSelected { get; set; }
-    public GameObject HackArea { get; private set; }
-    private Transform QTEPointLeft;
-    private Transform QTEPointRight;
-    public GameObject QTEPanel { get; private set; }
-    private bool lookingLeft = false;
-    private bool moveLeft = false;
-    public float Speed { get; private set; }
-    public Transform[] MovePoints;
+    public float PatrolRange { get; set; }
+    public GameObject HackArea { get; protected set; }
+    protected Transform QTEPointLeft;
+    protected Transform QTEPointRight;
+    public GameObject QTEPanel { get; protected set; }
+    protected bool lookingLeft = false;
+    protected bool moveLeft = false;
+    public float Speed { get; set; }
+    public GameObject[] MovePoints;
 
-    private void Awake()
+    protected void Awake()
     {
-        MaxHealth = 85;
-        Health = MaxHealth;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        Weapon.BulletSource = Bullet.BulletSource.Enemy;
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
-        QTEPanel = transform.Find("QTE_Canvas").gameObject;
+        QTEPanel = transform.Find("QTE_Canvas_Group").gameObject;
         QTEPanel.SetActive(false);
-        Speed = 8f;
-        StartCoroutine(PositionCheck());
+
+        // Instantiate left, right movement boundaries
+        GameObject left = new GameObject();
+        GameObject right = new GameObject();
+        left.transform.position = new Vector3(transform.position.x - PatrolRange, 0, 0);
+        right.transform.position = new Vector3(transform.position.x + PatrolRange, 0, 0);
+        MovePoints = new GameObject[2];
+        MovePoints[0] = left;
+        MovePoints[1] = right;
     }
 
     // Update is called once per frame
@@ -45,23 +52,30 @@ public class Enemy : Character
 
         if (IsPlayerInRange())
         {
-            Debug.Log("In Range");
+            UpdateQTEManagerPosition();
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
             AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
             Fire();
         }
+        else
+        {
+            StartCoroutine(PositionCheck());
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Bullet")
+        if (other.CompareTag("Bullet"))
         {
-            TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
-            Destroy(other.gameObject);
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                Destroy(other.gameObject);
+            }
         }
-        else if(other.tag == "HackProjectile")
+        else if (other.CompareTag("HackProjectile"))
         {
             IsSelected = true;
             HackArea.SetActive(true);
@@ -74,14 +88,17 @@ public class Enemy : Character
         }
     }
 
-    private void UpdateQTEManagerPosition()
+    protected void UpdateQTEManagerPosition()
     {
         Vector2 pos = Player.instance.transform.position;
         float distToLeft = Vector2.Distance(pos, QTEPointLeft.position);
         float distToRight = Vector2.Distance(pos, QTEPointRight.position);
+        Vector3 newScale = gameObject.transform.localScale;
+        newScale.x *= -1;
         if (distToLeft < distToRight)
         {
             QTEPanel.transform.position = QTEPointRight.position;
+            QTEPanel.transform.localScale = newScale;
         }
         else
         {
@@ -96,12 +113,12 @@ public class Enemy : Character
 
     public override void Reload()
     {
-        throw new System.NotImplementedException();
+        StartCoroutine(Weapon.Reload());
     }
 
     public override void Move(float speed)
     {
-        if(moveLeft)
+        if (moveLeft)
         {
             transform.position -= new Vector3(speed, 0, 0);
         }
@@ -152,20 +169,19 @@ public class Enemy : Character
     {
         Vector3 playerPos = Player.instance.transform.position;
         StopCoroutine(PositionCheck());
-        return (Vector3.Distance(playerPos, transform.position) < 5);
+        return (Vector3.Distance(playerPos, transform.position) < 20);
     }
 
-    private IEnumerator PositionCheck()
+    protected IEnumerator PositionCheck()
     {
-        while (true)
+        while (!IsPlayerInRange())
         {
-            Vector2 pos = transform.position;
-            float Dist0 = Vector2.Distance(pos, MovePoints[0].position);
-            float Dist1 = Vector2.Distance(pos, MovePoints[1].position);
-            if ( Dist0 < .5 || Dist1 < .5 )
+            Vector2 pos = new Vector2(transform.position.x, 0);
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
+            if (Dist0 < .5 || Dist1 < .5)
             {
                 moveLeft = !moveLeft;
-                Move(Speed * Time.deltaTime);
             }
             Move(Speed * Time.deltaTime);
             yield return new WaitForSeconds(.01f);

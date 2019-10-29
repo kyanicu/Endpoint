@@ -38,6 +38,10 @@ public class QTEManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Return amount of QTE buttons left to press
+    /// </summary>
+    /// <returns></returns>
     public int getButtonsLeft()
     {
         return listSize - listIndex;
@@ -182,8 +186,12 @@ public class QTEManager : MonoBehaviour
     /// </summary>
     private void successfulHack()
     {
-        StopCoroutine(Listener());
-        Player player = Player.instance.gameObject.GetComponent<Player>();
-        player.Switch();
+        if (listIndex == buttonStack.Count)
+        {
+            StopCoroutine(Listener());
+            listening = false;
+            Player player = Player.instance.gameObject.GetComponent<Player>();
+            player.Switch();
+        }
     }
 }

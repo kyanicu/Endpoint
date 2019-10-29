@@ -77,6 +77,12 @@ public class KeyboardInputManager : InputManager
             Player.instance.HackSelector();
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            // Toggle Diagnostic Panels
+            HUDController.instance.toggleDiagnosticPanels();
+        }
+
         Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
         float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;

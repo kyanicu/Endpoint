@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - HackProjectile
   - PushableObject
+  - OB
   layers:
   - Default
   - TransparentFX

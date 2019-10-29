@@ -26,6 +26,6 @@ public class HackBullet : MonoBehaviour
 
     public void Update()
     {
-        transform.position += transform.forward * Speed * Time.deltaTime;
+        transform.position += transform.right * Speed * Time.deltaTime;
     }
 }

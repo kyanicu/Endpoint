@@ -11,6 +11,8 @@ public class RangeFinder : MonoBehaviour
     //Quick time event panel, activated when in range for long enough
     public QTEManager QTEManager;
 
+    public GameObject QTEPanel;
+
     //Flag denoting whether player is currently uploading
     private bool hackStart = false;
 
@@ -31,7 +33,8 @@ public class RangeFinder : MonoBehaviour
        if (col.gameObject.tag == "Player")
         {
             hackStart = true;
-            QTEManager.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+
+            LoadingBar.gameObject.SetActive(true);
             StartCoroutine(Uploading());
         }
     }
@@ -47,8 +50,8 @@ public class RangeFinder : MonoBehaviour
             hackStart = false;
             StopCoroutine(Uploading());
             QTEButtonsAmt = QTEManager.getButtonsLeft();
-            QTEManager.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-            QTEManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            LoadingBar.gameObject.SetActive(false);
+            QTEPanel.gameObject.SetActive(false);
             LoadingBar.fillAmount = 0;
         }
     }
@@ -60,7 +63,7 @@ public class RangeFinder : MonoBehaviour
     {
         if (hackStart)
         {
-            QTEManager.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            QTEPanel.gameObject.SetActive(true);
             QTEManager.onActivate(QTEButtonsAmt);
         }
     }

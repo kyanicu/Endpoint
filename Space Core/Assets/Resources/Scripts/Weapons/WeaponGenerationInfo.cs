@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Class that holds the ranges for all weapon type stats
+/// </summary>
 public static class WeaponGenerationInfo
 {
+    /// <summary>
+    /// Stat ranges for Automatic Weapons
+    /// </summary>
     public static class AutomaticStats
     {
-        public static float MinSpread = 0.0f;
-        public static float MaxSpread = 0.02f;
+        public static float MinSpread = 0f;
+        public static float MaxSpread = 3f;
 
         public static int MinDamage = 5;
         public static int MaxDamage = 15;
@@ -22,10 +27,14 @@ public static class WeaponGenerationInfo
         public static float MaxReloadTime = 3.0f;
     }
 
+    /// <summary>
+    /// Stat ranges for Spread Weapons
+    /// </summary>
     public static class SpreadStats
     {
-        public static float MinSpread = 0.07f;
-        public static float MaxSpread = 0.14f;
+        public static float MinSpread = 7f;
+        public static float MaxSpread = 14f;
+
 
         public static int MinDamage = 3;
         public static int MaxDamage = 10;
@@ -42,6 +51,12 @@ public static class WeaponGenerationInfo
         public static int MinNumPellets = 4;
         public static int MaxNumPellets = 8;
     }
+
+
+
+    /// <summary>
+    /// Stat ranges for Precision Weapons
+    /// </summary>
 
     public static class PrecisionStats
     {
@@ -60,6 +75,12 @@ public static class WeaponGenerationInfo
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;
     }
+
+
+
+    /// <summary>
+    /// Lowest and highest for each of all Weapons
+    /// </summary>
 
     public static class TotalRangeStats
     {

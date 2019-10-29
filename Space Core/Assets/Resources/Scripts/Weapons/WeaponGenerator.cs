@@ -4,13 +4,28 @@ using automaticStats = WeaponGenerationInfo.AutomaticStats;
 using precisionStats = WeaponGenerationInfo.PrecisionStats;
 using spreadStats = WeaponGenerationInfo.SpreadStats;
 
+/// <summary>
+/// This class will generate a random weapon
+/// </summary>
 public static class WeaponGenerator
 {
+    //Used for generating max ammo capacity
+    private const int MIN_RNG = 3;
+    private const int MAX_RNG = 5;
+
+    /// <summary>
+    /// Main function to generate a weapon
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static GameObject GenerateWeapon(Transform parent)
     {
+        //get number of weapons that can be generated
         int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
+        //parse into a weapon type
         Weapon.WeaponType weaponType = (Weapon.WeaponType) UnityEngine.Random.Range(0, num);
 
+        //Switch on the weapon type
         switch(weaponType)
         {
             case Weapon.WeaponType.Automatic:
@@ -26,6 +41,12 @@ public static class WeaponGenerator
         }
     }
 
+    /// <summary>
+    /// This function will generate a randomly made automatic weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildAutomaticWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Automatic");
@@ -35,14 +56,19 @@ public static class WeaponGenerator
         automatic.Damage = UnityEngine.Random.Range(automaticStats.MinDamage, automaticStats.MaxDamage);
         automatic.ClipSize = UnityEngine.Random.Range(automaticStats.MinClipSize, automaticStats.MaxClipSize);
         automatic.AmmoInClip = automatic.ClipSize;
-        automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * 3, automatic.ClipSize * 5);
+        automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
         automatic.RateOfFire = UnityEngine.Random.Range(automaticStats.MinRateOfFire, automaticStats.MaxRateOfFire);
         automatic.ReloadTime = UnityEngine.Random.Range(automaticStats.MinReloadTime, automaticStats.MaxReloadTime);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
         automatic.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
-
+    /// <summary>
+    /// This function will generate a randomly made precision weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildPrecisionWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Precision");
@@ -52,14 +78,19 @@ public static class WeaponGenerator
         precision.Damage = UnityEngine.Random.Range(precisionStats.MinDamage, precisionStats.MaxDamage);
         precision.ClipSize = UnityEngine.Random.Range(precisionStats.MinClipSize, precisionStats.MaxClipSize);
         precision.AmmoInClip = precision.ClipSize;
-        precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * 3, precision.ClipSize * 5);
+        precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
         precision.RateOfFire = UnityEngine.Random.Range(precisionStats.MinRateOfFire, precisionStats.MaxRateOfFire);
         precision.ReloadTime = UnityEngine.Random.Range(precisionStats.MinReloadTime, precisionStats.MaxReloadTime);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
-        precision.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 
+    /// <summary>
+    /// This function will generate a randomly made spread weapon base on stats from
+    /// automatic stats.
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
     private static GameObject BuildSpreadWeapon(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Spread");
@@ -69,7 +100,7 @@ public static class WeaponGenerator
         spread.Damage = UnityEngine.Random.Range(spreadStats.MinDamage, spreadStats.MaxDamage);
         spread.ClipSize = UnityEngine.Random.Range(spreadStats.MinClipSize, spreadStats.MaxClipSize);
         spread.AmmoInClip = spread.ClipSize;
-        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * 3, spread.ClipSize * 5);
+        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
         spread.RateOfFire = UnityEngine.Random.Range(spreadStats.MinRateOfFire, spreadStats.MaxRateOfFire);
         spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
