@@ -23,22 +23,33 @@ public static class WeaponGenerator
         //get number of weapons that can be generated
         int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
         //parse into a weapon type
-        Weapon.WeaponType weaponType = (Weapon.WeaponType) UnityEngine.Random.Range(0, num);
+        int rngVal = UnityEngine.Random.Range(0, Weapon.WeaponsList.Count);
+        Tuple<string, Weapon.WeaponType> = Weapon.WeaponsList[rngVal].get
+        Weapon.WeaponType weaponType = (Weapon.WeaponType) Weapon.WeaponsList[rngVal].
+        GameObject weapon = new GameObject();
 
-        //Switch on the weapon type
+        //Switch on the weapon typeSpread
         switch(weaponType)
         {
             case Weapon.WeaponType.Automatic:
-                return BuildAutomaticWeapon(parent);
+                weapon = BuildAutomaticWeapon(parent);
+                break;
             case Weapon.WeaponType.Spread:
-                return BuildSpreadWeapon(parent);
+                weapon = BuildSpreadWeapon(parent);
+                break;
             case Weapon.WeaponType.Precision:
-                return BuildPrecisionWeapon(parent);
-            case Weapon.WeaponType.Burst:
-                return BuildBurstWeapon(parent);
+                weapon = BuildPrecisionWeapon(parent);
+                break;
             default:
-                return null;
+                return weapon;
         }
+
+        //Get Weapon component from generated weapon
+        Weapon w = weapon.GetComponent<Weapon>();
+
+        //Update its name based on stats
+        w.name = generateNewWeaponName(w);
+        return weapon;
     }
 
     /// <summary>
@@ -105,26 +116,7 @@ public static class WeaponGenerator
         spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
-        spread.ReloadMethod = (Weapon.ReloadType) UnityEngine.Random.Range(0, 2);
-        return weaponObject;
-    }
-
-    private static GameObject BuildBurstWeapon(Transform parent)
-    {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Burst");
-        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
-        Burst burst = weaponObject.GetComponent<Burst>();
-        burst.SpreadFactor = UnityEngine.Random.Range(0.0f, 0.02f);
-        burst.Damage = UnityEngine.Random.Range(5, 15);
-        burst.ClipSize = UnityEngine.Random.Range(12, 40);
-        burst.AmmoInClip = burst.ClipSize;
-        burst.MaxAmmoCapacity = burst.ClipSize * 4;
-        burst.RateOfFire = UnityEngine.Random.Range(0.07f, 0.2f);
-        burst.ReloadTime = UnityEngine.Random.Range(0.5f, 3.0f);
-        burst.TotalAmmo = burst.MaxAmmoCapacity;
-        burst.BurstAmt = UnityEngine.Random.Range(2, 5);
-        burst.SpeedBetweenBurst = UnityEngine.Random.Range(.001f, .2f);
-        burst.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
+        spread.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public abstract class Weapon : MonoBehaviour
         Automatic,
         Spread,
         Precision,
-        Burst
+        //Heavy,
     }
 
     public enum ReloadType
@@ -21,6 +22,16 @@ public abstract class Weapon : MonoBehaviour
         AllAtOnce,
         Individual
     }
+
+    public static Dictionary<int, Tuple<string, WeaponType>> WeaponsList = new Dictionary<int, Tuple<string, WeaponType>>()
+    {
+        { 0, Tuple.Create("Okamoto", WeaponType.Spread) },
+        { 1, Tuple.Create("Thor", WeaponType.Automatic) },
+        { 2, Tuple.Create("Tributar", WeaponType.Precision) },
+        { 3, Tuple.Create("Bestafera", WeaponType.Spread) },
+        //{ "Korvus", WeaponType.Heavy },
+        //{ "Tsar Tsarevich", WeaponType.Heavy },
+    };
 
     public bool IsReloading { get; set; }
     public Bullet.BulletSource BulletSource { get; set; }
