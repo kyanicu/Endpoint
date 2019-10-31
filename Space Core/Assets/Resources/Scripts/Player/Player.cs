@@ -166,12 +166,10 @@ public class Player : Character
         cam.transform.position = new Vector3(cam.transform.position.x, 
                                              cam.transform.position.y, 
                                              camZ);
-        /*
-        Vector3 newScale = gameObject.transform.localScale;
-        newScale = RotationPoint.transform.localScale;
-        newScale.x *= -1;
-        RotationPoint.transform.localScale = newScale;
-        */
+
+        Enemy.gameObject.AddComponent<ObjectMover>();
+        Enemy.gameObject.AddComponent<CharacterController2D>();
+        Enemy.gameObject.AddComponent<PlayerMovement>();
         Enemy.gameObject.AddComponent<Player>();
         Enemy.tag = "Player";
         Enemy.name = "Player";

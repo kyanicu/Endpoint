@@ -10,7 +10,6 @@ using XInputDotNetPure;
 /// </summary>
 public class ControllerInputManager : InputManager
 {
-    private bool playerIndexSet = false;
     private GamePadState? state;
     private GamePadState? prevState;
 
