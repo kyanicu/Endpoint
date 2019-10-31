@@ -77,6 +77,7 @@ public class Spread : Weapon
                 bulletScript.Damage = Damage;
                 bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;
+                bulletScript.Velocity = BulletVeloc;
             }
             FireTimer = RateOfFire;
         }

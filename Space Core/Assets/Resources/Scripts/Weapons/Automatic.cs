@@ -34,6 +34,7 @@ public class Automatic : Weapon
             bulletScript.Damage = Damage;
             bulletScript.Source = BulletSource;
             bulletScript.Range = Range;
+            bulletScript.Velocity = BulletVeloc;
             FireTimer = RateOfFire;
         }
 

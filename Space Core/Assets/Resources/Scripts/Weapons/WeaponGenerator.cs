@@ -77,6 +77,8 @@ public static class WeaponGenerator
         automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
         automatic.RateOfFire = UnityEngine.Random.Range(automaticStats.MinRateOfFire, automaticStats.MaxRateOfFire);
         automatic.ReloadTime = UnityEngine.Random.Range(automaticStats.MinReloadTime, automaticStats.MaxReloadTime);
+        automatic.Range = UnityEngine.Random.Range(automaticStats.MinRange, automaticStats.MaxRange);
+        automatic.BulletVeloc = UnityEngine.Random.Range(automaticStats.MinBulletVeloc, automaticStats.MaxBulletVeloc);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
         return weaponObject;
     }
@@ -98,6 +100,8 @@ public static class WeaponGenerator
         precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
         precision.RateOfFire = UnityEngine.Random.Range(precisionStats.MinRateOfFire, precisionStats.MaxRateOfFire);
         precision.ReloadTime = UnityEngine.Random.Range(precisionStats.MinReloadTime, precisionStats.MaxReloadTime);
+        precision.Range = UnityEngine.Random.Range(precisionStats.MinRange, precisionStats.MaxRange);
+        precision.BulletVeloc = UnityEngine.Random.Range(precisionStats.MinBulletVeloc, precisionStats.MaxBulletVeloc);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
         return weaponObject;
     }
@@ -121,6 +125,8 @@ public static class WeaponGenerator
         spread.RateOfFire = UnityEngine.Random.Range(spreadStats.MinRateOfFire, spreadStats.MaxRateOfFire);
         spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
+        spread.Range = UnityEngine.Random.Range(spreadStats.MinRange, spreadStats.MaxRange);
+        spread.BulletVeloc = UnityEngine.Random.Range(spreadStats.MinBulletVeloc, spreadStats.MaxBulletVeloc);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
         return weaponObject;
     }
