@@ -13,7 +13,6 @@ public class Spread : Weapon
     /// </summary>
     private void Start()
     {
-        Range = 20f;
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;

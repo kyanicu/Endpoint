@@ -36,30 +36,21 @@ public static class WeaponGenerator
             case Weapon.WeaponType.Automatic:
                 weapon = BuildAutomaticWeapon(parent);
                 Automatic a = weapon.GetComponent<Automatic>();
-                prefix = WeaponGenerationInfo.generateNewWeaponName(a,
-                                              automaticStats.MaxDamage,
-                                              automaticStats.MaxClipSize,
-                                              automaticStats.MaxRateOfFire,
-                                              automaticStats.MaxReloadTime);
+                prefix = automaticStats.GenerateAutomaticName(a);
                 break;
+
             case Weapon.WeaponType.Spread:
                 weapon = BuildSpreadWeapon(parent);
                 Spread s = weapon.GetComponent<Spread>();
-                prefix = WeaponGenerationInfo.generateNewWeaponName(s,
-                                              spreadStats.MaxDamage,
-                                              spreadStats.MaxClipSize,
-                                              spreadStats.MaxRateOfFire,
-                                              spreadStats.MaxReloadTime);
+                prefix = spreadStats.GenerateSpreadName(s);
                 break;
+
             case Weapon.WeaponType.Precision:
                 weapon = BuildPrecisionWeapon(parent);
                 Precision p = weapon.GetComponent<Precision>();
-                prefix = WeaponGenerationInfo.generateNewWeaponName(p,
-                                              precisionStats.MaxDamage,
-                                              precisionStats.MaxClipSize,
-                                              precisionStats.MaxRateOfFire,
-                                              precisionStats.MaxReloadTime);
+                prefix = precisionStats.GeneratePrecisionName(p);
                 break;
+
             default:
                 return weapon;
         }

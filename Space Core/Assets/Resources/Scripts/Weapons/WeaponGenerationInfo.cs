@@ -35,6 +35,18 @@ public static class WeaponGenerationInfo
 
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;
+
+        public static float MaxRange = 15f;
+        public static float MinRange = 23f;
+
+        public static float MaxBulletVeloc = 14f;
+        public static float MinBulletVeloc = 28f;
+
+        public static string GenerateAutomaticName(Weapon wep)
+        {
+            return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
+                                         MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
+        }
     }
 
     /// <summary>
@@ -62,6 +74,18 @@ public static class WeaponGenerationInfo
 
         public static int MinNumPellets = 4;
         public static int MaxNumPellets = 8;
+
+        public static float MaxRange = 17f;
+        public static float MinRange = 22f;
+
+        public static float MaxBulletVeloc = 12f;
+        public static float MinBulletVeloc = 22f;
+
+        public static string GenerateSpreadName(Weapon wep)
+        {
+            return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire, 
+                                         MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
+        }
     }
 
     /// <summary>
@@ -87,6 +111,18 @@ public static class WeaponGenerationInfo
 
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;
+
+        public static float MaxRange = 45f;
+        public static float MinRange = 100f;
+
+        public static float MaxBulletVeloc = 20f;
+        public static float MinBulletVeloc = 40f;
+
+        public static string GeneratePrecisionName(Weapon wep)
+        {
+            return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
+                                         MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
+        }
     }
 
 
@@ -118,67 +154,92 @@ public static class WeaponGenerationInfo
     /// </summary>
     /// <param name="wep"></param>
     /// <returns></returns>
-    public static string generateNewWeaponName(Weapon wep, int MaxDamage, int MaxClipSize, float MaxRateOfFire, float MaxReloadTime)
+    private static string generateNewWeaponName(Weapon wep, int MaxDamage, int MinDamage, int MaxClipSize, int MinClipSize, float MaxRateOfFire, float MinRateOfFire,
+                                                 float MaxReloadTime, float MinReloadTime, float MaxRange, float MinRange, float MaxBulletVeloc, float MinBulletVeloc)
     {
         //Check if all stats are in really good range
         if (wep.Damage / MaxDamage > MAX_AVG_RANGE_CHECK &&
-           wep.ClipSize / MaxClipSize > MAX_AVG_RANGE_CHECK &&
+            wep.ClipSize / MaxClipSize > MAX_AVG_RANGE_CHECK &&
             wep.RateOfFire / MaxRateOfFire > MAX_AVG_RANGE_CHECK &&
-            wep.ReloadTime / MaxReloadTime > MAX_AVG_RANGE_CHECK)
+            wep.ReloadTime / MaxReloadTime > MAX_AVG_RANGE_CHECK &&
+            wep.Range / MaxRange > MAX_AVG_RANGE_CHECK &&
+            wep.BulletVeloc / MaxBulletVeloc > MAX_AVG_RANGE_CHECK)
         {
             string[] BestNames = { "Legendary ", "Godly ", "Unique ", "Optimal ", "Ideal" };
             int rngVal = Random.Range(0, BestNames.Length);
             return BestNames[rngVal];
         }
         //Check if all stats are in really terrible range
-        else if (wep.Damage / MaxDamage < MIN_AVG_RANGE_CHECK &&
-                 wep.ClipSize / MaxClipSize < MIN_AVG_RANGE_CHECK &&
-                 wep.RateOfFire / MaxRateOfFire < MIN_AVG_RANGE_CHECK &&
-                 wep.ReloadTime / MaxReloadTime < MIN_AVG_RANGE_CHECK)
+        else if ((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) < MIN_AVG_RANGE_CHECK &&
+                 (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) < MIN_AVG_RANGE_CHECK &&
+                 (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) < MIN_AVG_RANGE_CHECK &&
+                 (wep.Range - MinRange) / (MaxRange - MinRange) < MIN_AVG_RANGE_CHECK &&
+                 (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) < MIN_AVG_RANGE_CHECK &&
+                 (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) < MIN_AVG_RANGE_CHECK)
         {
             string[] WorstNames = { "Tattered ", "Rusted ", "Scrapped ", "Broken ", "Useless" };
             int rngVal = Random.Range(0, WorstNames.Length);
             return WorstNames[rngVal];
         }
         //Check if just damage is good
-        else if ((wep.Damage / (float) MaxDamage) > MAX_RANGE_CHECK)
+        else if ((wep.Damage - (float) MinDamage) / (MaxDamage - MinDamage) > MAX_RANGE_CHECK)
         {
             return "Powerful ";
         }
         //Check if just damage is bad
-        else if ((wep.Damage / (float) MaxDamage) < MIN_RANGE_CHECK)
+        else if ((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) < MIN_RANGE_CHECK)
         {
             return "Pathetic ";
         }
         //Check if just ClipSize is good
-        else if ((wep.ClipSize / (float) MaxClipSize) > MAX_RANGE_CHECK)
+        else if ((wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) > MAX_RANGE_CHECK)
         {
             return "Loaded ";
         }
         //Check if just ClipSize is bad
-        else if ((wep.ClipSize / (float) MaxClipSize) < MIN_RANGE_CHECK)
+        else if ((wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) < MIN_RANGE_CHECK)
         {
             return "Hollow ";
         }
         //Check if just RateOfFire is good
-        else if ((wep.RateOfFire / MaxRateOfFire) > MAX_RANGE_CHECK)
+        else if ((wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) > MAX_RANGE_CHECK)
         {
             return "Celeritous ";
         }
         //Check if just RateOfFire is bad
-        else if ((wep.RateOfFire / MaxRateOfFire) < MIN_RANGE_CHECK)
+        else if ((wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) < MIN_RANGE_CHECK)
         {
             return "Sluggish ";
         }
         //Check if just ReloadTime is good
-        else if ((wep.ReloadTime / MaxReloadTime) > MAX_RANGE_CHECK)
+        else if ((wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) > MAX_RANGE_CHECK)
         {
             return "Ergonomic ";
         }
         //Check if just ReloadTime is bad
-        else if ((wep.ReloadTime / MaxReloadTime) < MIN_RANGE_CHECK)
+        else if ((wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) < MIN_RANGE_CHECK)
         {
             return "Clumsy ";
+        }
+        //Check if just Range is good
+        else if ((wep.Range - MinRange) / (MaxRange - MinRange) > MAX_RANGE_CHECK)
+        {
+            return "Scoped ";
+        }
+        //Check if just Range is bad
+        else if ((wep.Range - MinRange) / (MaxRange - MinRange) < MIN_RANGE_CHECK)
+        {
+            return "Blind ";
+        }
+        //Check if just BulletVeloc is good
+        else if ((wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) > MAX_RANGE_CHECK)
+        {
+            return "Dispensing ";
+        }
+        //Check if just BulletVeloc is bad
+        else if ((wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) < MIN_RANGE_CHECK)
+        {
+            return "Slow ";
         }
         //Check if stats are in above average range
         else if (((wep.Damage / MaxDamage) +

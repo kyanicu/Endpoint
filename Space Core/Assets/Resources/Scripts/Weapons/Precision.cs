@@ -13,7 +13,6 @@ public class Precision : Weapon
     /// </summary>
     public void Start()
     {
-        Range = 100f;
         Bullet = Resources.Load<GameObject>("WeaponResources/Bullet");
         lineRenderer = transform.Find("Laser").gameObject.GetComponent<LineRenderer>();
         FireLocation = transform.Find("FirePoint").gameObject;
