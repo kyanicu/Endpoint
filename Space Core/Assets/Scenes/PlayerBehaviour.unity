@@ -9766,7 +9766,8 @@ PrefabInstance:
       propertyPath: field of view
       value: 75
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7144365245844948252, guid: 3541e3bfaf464c54ab189be755c8c445, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3541e3bfaf464c54ab189be755c8c445, type: 3}
 --- !u!1 &1914807220
 GameObject:
@@ -10431,7 +10432,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:

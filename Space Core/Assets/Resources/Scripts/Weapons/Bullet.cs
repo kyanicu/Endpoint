@@ -10,16 +10,21 @@ public class Bullet : MonoBehaviour
 
     public int Damage { get; set; }
     public float Range { get; set; }
-    public float Movement = 0.4f;
     public BulletSource Source { get; set; }
     private float startX;
+    private float lowRange;
+    private float highRange;
+    private float movement;
 
     /// <summary>
     /// Initialize start x to the base x position of the bullet
     /// </summary>
     public void Start()
     {
+        movement = 20f;
         startX = transform.position.x;
+        highRange = startX + Range;
+        lowRange = startX - Range;
     }
 
     /// <summary>
@@ -28,11 +33,11 @@ public class Bullet : MonoBehaviour
     public void Update()
     {
         //if we have travelled outside the range, destroy the bullet
-        if (transform.position.x + startX > startX + Range || transform.position.x + startX < startX - Range)
+        if (transform.position.x > highRange || transform.position.x < lowRange)
         {
             Destroy(gameObject);
         }
 
-        transform.position += (transform.right * Movement);
+        transform.position += (transform.right * movement * Time.deltaTime);
     }
 }
