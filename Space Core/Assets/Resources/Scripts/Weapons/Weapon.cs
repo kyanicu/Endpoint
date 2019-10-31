@@ -17,6 +17,9 @@ public abstract class Weapon : MonoBehaviour
         //Heavy,
     }
 
+    /// <summary>
+    /// Dictionary that holds all weapon names and their weapon types
+    /// </summary>
     public static Dictionary<int, Tuple<string, WeaponType>> WeaponsList = new Dictionary<int, Tuple<string, WeaponType>>()
     {
         { 0, Tuple.Create("Okamoto", WeaponType.Spread) },
