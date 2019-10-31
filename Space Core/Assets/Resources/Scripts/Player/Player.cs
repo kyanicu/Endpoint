@@ -167,6 +167,9 @@ public class Player : Character
                                              cam.transform.position.y, 
                                              camZ);
 
+        Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
+        rigidBody.isKinematic = true;
+        rigidBody.simulated = true;
         Enemy.gameObject.AddComponent<ObjectMover>();
         Enemy.gameObject.AddComponent<CharacterController2D>();
         Enemy.gameObject.AddComponent<PlayerMovement>();

@@ -5473,6 +5473,49 @@ PolygonCollider2D:
       - {x: -41.36561, y: -33.04608}
       - {x: 26.280024, y: -33.04608}
       - {x: 47.183662, y: 31.288746}
+--- !u!1 &1383132180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1383132182}
+  - component: {fileID: 1383132181}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1383132181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383132180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 442dea660335f734a9410c322f943e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1383132182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383132180}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -22.77221, y: -11.660757, z: 7.1000023}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1393473858
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7969,7 +8012,7 @@ PrefabInstance:
     - target: {fileID: 2111511844433904067, guid: 3afa8600abbd2214d951dba2552527e7,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2111511844433904093, guid: 3afa8600abbd2214d951dba2552527e7,
         type: 3}
@@ -8043,7 +8086,7 @@ PrefabInstance:
     - target: {fileID: 8738084454927866968, guid: 4e3359a76f49fa54fb21696b2d599868,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8738084454927866974, guid: 4e3359a76f49fa54fb21696b2d599868,
         type: 3}
