@@ -8,7 +8,7 @@ public class Automatic : Weapon
     // Start is called before the first frame update
     void Start()
     {
-        Range = 100f;
+        Range = 20f;
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         RotationPoint = transform.parent.transform.parent;
         FireLocation = transform.Find("FirePoint").gameObject;

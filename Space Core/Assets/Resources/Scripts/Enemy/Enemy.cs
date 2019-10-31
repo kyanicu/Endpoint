@@ -61,7 +61,14 @@ public class Enemy : Character
         }
         else
         {
-            StartCoroutine(PositionCheck());
+            Vector2 pos = new Vector2(transform.position.x, 0);
+            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
+            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
+            if (Dist0 < .5 || Dist1 < .5)
+            {
+                moveLeft = !moveLeft;
+            }
+            Move(Speed);
         }
     }
 
@@ -120,11 +127,11 @@ public class Enemy : Character
     {
         if (moveLeft)
         {
-            transform.position -= new Vector3(speed, 0, 0);
+            transform.position -= new Vector3(speed * Time.deltaTime, 0, 0);
         }
         else
         {
-            transform.position += new Vector3(speed, 0, 0);
+            transform.position += new Vector3(speed * Time.deltaTime, 0, 0);
         }
     }
 
@@ -168,23 +175,6 @@ public class Enemy : Character
     public bool IsPlayerInRange()
     {
         Vector3 playerPos = Player.instance.transform.position;
-        StopCoroutine(PositionCheck());
         return (Vector3.Distance(playerPos, transform.position) < 20);
-    }
-
-    protected IEnumerator PositionCheck()
-    {
-        while (!IsPlayerInRange())
-        {
-            Vector2 pos = new Vector2(transform.position.x, 0);
-            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
-            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
-            if (Dist0 < .5 || Dist1 < .5)
-            {
-                moveLeft = !moveLeft;
-            }
-            Move(Speed * Time.deltaTime);
-            yield return new WaitForSeconds(.01f);
-        }
     }
 }

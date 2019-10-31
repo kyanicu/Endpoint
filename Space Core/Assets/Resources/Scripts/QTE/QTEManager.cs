@@ -128,7 +128,7 @@ public class QTEManager : MonoBehaviour
                 if (key == activeButton.keyName)
                 {
                     listening = false;
-                    yield return new WaitForSeconds(.01f);
+                    yield return null;
 
                     //Change button color to green
                     activeButton.SetColor(Color.green);
@@ -152,7 +152,7 @@ public class QTEManager : MonoBehaviour
                         yield return null;
                     }
 
-                    yield return new WaitForSeconds(.01f);
+                    yield return null;
 
                     //Activate the next button in the stack
                     activateButton();
@@ -172,7 +172,7 @@ public class QTEManager : MonoBehaviour
                     stackCreate();
                 }
             }
-            yield return new WaitForSeconds(.01f);
+            yield return null;
         }
         listening = false;
 
