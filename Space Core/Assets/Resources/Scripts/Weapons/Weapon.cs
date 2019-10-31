@@ -51,45 +51,12 @@ public abstract class Weapon : MonoBehaviour
     /// </summary>
     public abstract void Fire();
 
-    /// <summary>
-    /// Main coroutine used to reload the weapon
-    /// </summary>
-    /// <returns></returns>
     public void Reload()
     {
-        StartCoroutine(ReloadIndividual());
+        StartCoroutine(ReloadRoutine());
     }
 
-    public IEnumerator ReloadIndividual()
-    {
-        if (IsReloading)
-        {
-            yield return null;
-        }
-
-        if (AmmoInClip == ClipSize)
-        {
-            yield return null;
-        }
-
-        IsReloading = true;
-
-        if (AmmoInClip == 0)
-        {
-            yield return new WaitForSeconds(ReloadTime / 4);
-        }
-
-        while (TotalAmmo > 0 && AmmoInClip < ClipSize && IsReloading)
-        {
-            TotalAmmo--;
-            AmmoInClip++;
-            HUDController.instance.UpdateAmmo(this);
-            yield return new WaitForSeconds(ReloadTime / ClipSize);
-        }
-        IsReloading = false;
-        yield return null;
-    }
-
+    protected abstract IEnumerator ReloadRoutine();
 
     /// <summary>
     /// Main update function decrementing fire timer

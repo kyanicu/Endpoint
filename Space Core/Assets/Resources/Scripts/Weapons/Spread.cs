@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// This class holds all information about the behavior of a spread weapon
@@ -20,6 +21,37 @@ public class Spread : Weapon
         //grab the rotation point for the weapon
         RotationPoint = transform.parent.transform.parent;
     }
+
+    protected override IEnumerator ReloadRoutine()
+    {
+        if (IsReloading)
+        {
+            yield return null;
+        }
+
+        if (AmmoInClip == ClipSize)
+        {
+            yield return null;
+        }
+
+        IsReloading = true;
+
+        if (AmmoInClip == 0)
+        {
+            yield return new WaitForSeconds(ReloadTime / 4);
+        }
+
+        while (TotalAmmo > 0 && AmmoInClip < ClipSize && IsReloading)
+        {
+            TotalAmmo--;
+            AmmoInClip++;
+            HUDController.instance.UpdateAmmo(this);
+            yield return new WaitForSeconds(ReloadTime / ClipSize);
+        }
+        IsReloading = false;
+        yield return null;
+    }
+
 
     /// <summary>
     /// Fire out a bust of pellets in a random spread
