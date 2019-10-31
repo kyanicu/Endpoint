@@ -10,6 +10,7 @@ public class Player : Character
     private bool canSwap;
     private GameObject hackProj;
     private Vector2 startPos;
+    public string Class { get; private set; }
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -27,6 +28,12 @@ public class Player : Character
         Health = MaxHealth;
         canSwap = true;
         startPos = transform.position;
+        if (Class == null)
+        {
+            Class = "medium";
+        }
+        ResetSwap();
+
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
@@ -51,6 +58,7 @@ public class Player : Character
 
         HUDController.instance.UpdateHealth(MaxHealth, Health);
         HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.updateCharacterClass();
     }
 
     public override void Jump()
@@ -146,9 +154,17 @@ public class Player : Character
             Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
             GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
             hackAttempt.transform.Rotate(launchRotation);
-            canSwap = false;
-            StartCoroutine(implementSwapCooldown());
+            ResetSwap();
         }
+    }
+
+    private void ResetSwap()
+    {
+        canSwap = false;
+        // Disables Swapping for the duration specified in COOLDOWN_TIME.
+        StartCoroutine(implementSwapCooldown());
+        // Begins HUD animation loop for swapping bar.
+        HUDController.instance.RechargeSwap(COOLDOWN_TIME);
     }
 
     public void Switch()
@@ -159,6 +175,7 @@ public class Player : Character
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
         Camera cam = Camera.main;
+        Class = Enemy.Class;
 
         cam.transform.parent = Enemy.transform;
         float camZ = cam.transform.position.z;
@@ -180,6 +197,7 @@ public class Player : Character
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
         HUDController.instance.UpdateDiagnosticPanels();
+        HUDController.instance.updateCharacterClass();
     }
 
     /// <summary>
@@ -189,14 +207,15 @@ public class Player : Character
     private IEnumerator implementSwapCooldown()
     {
         float timer = 0;
-        HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+        //HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         while (timer < COOLDOWN_TIME)
         {
-            timer += .1f;
-            yield return new WaitForSeconds(.1f);
-            HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+            timer += .05f;
+            yield return new WaitForSeconds(.05f);
+            //HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         }
         canSwap = true;
+        Debug.Log("can swap now");
     }
 
     private void ResetPlayer()
