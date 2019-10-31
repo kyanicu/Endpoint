@@ -57,7 +57,7 @@ public class Player : Character
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
         HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.UpdateWeapon(Weapon);
         HUDController.instance.updateCharacterClass();
     }
 
@@ -194,6 +194,7 @@ public class Player : Character
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+        HUDController.instance.UpdateWeapon(Weapon);
         HUDController.instance.UpdateDiagnosticPanels();
         HUDController.instance.updateCharacterClass();
     }
@@ -205,15 +206,12 @@ public class Player : Character
     private IEnumerator implementSwapCooldown()
     {
         float timer = 0;
-        //HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         while (timer < COOLDOWN_TIME)
         {
             timer += .05f;
             yield return new WaitForSeconds(.05f);
-            //HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         }
         canSwap = true;
-        Debug.Log("can swap now");
     }
 
     private void ResetPlayer()

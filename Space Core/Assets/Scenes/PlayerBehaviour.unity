@@ -7107,6 +7107,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7807910742771922170, guid: 3541e3bfaf464c54ab189be755c8c445,
+        type: 3}
+      propertyPath: field of view
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7807910742771922170, guid: 3541e3bfaf464c54ab189be755c8c445,
+        type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2400223630958586077, guid: 3541e3bfaf464c54ab189be755c8c445,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7186,16 +7196,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7807910742771922170, guid: 3541e3bfaf464c54ab189be755c8c445,
-        type: 3}
-      propertyPath: field of view
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7807910742771922170, guid: 3541e3bfaf464c54ab189be755c8c445,
-        type: 3}
-      propertyPath: m_FOVAxisMode
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7144365245844948252, guid: 3541e3bfaf464c54ab189be755c8c445, type: 3}
@@ -8039,7 +8039,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3afa8600abbd2214d951dba2552527e7, type: 3}
---- !u!1001 &6053536219883829430
+--- !u!1001 &4092717736120446957
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2

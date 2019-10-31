@@ -7,22 +7,44 @@ using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
-    public Image healthBar, HealthBarDamage, ammoBar;
-    public Text ammoAmt;
-    public TextMeshProUGUI healthAmt;
 
-    #region CharacterClass Section
-    public TextMeshProUGUI CharacterClassClassText, CharacterClassNameText;
-    public Image CharacterClassImage;
+    #region CharacterHealth
+    public Image HealthBar, HealthBarDamage;
+    public TextMeshProUGUI HealthAmountText;
     #endregion
 
-    #region Swapping Section
+    #region CharacterClass
+    public TextMeshProUGUI CharacterClassClassText, CharacterClassNameText;
+    public Image CharacterClassImage;
+
+    [SerializeField]
+    private Sprite[] CharacterClassImages = { };
+    #endregion
+
+    #region Swapping
     public TextMeshProUGUI SwappingText;
     public Image SwappingBarLeft, SwappingBarRight, SwappingBarFrame, SwappingBarReset;
     #endregion
 
+    #region Ammo
+    public Image AmmoBar, AmmoBarFrame;
+    public RawImage AmmoBarTiled;
+    public TextMeshProUGUI AmmoAmountText, AmmoBarLabel;
+    #endregion
+
+    #region Weapon
+    public Image WeaponImage, WeaponClassImage, WeaponClassFrame;
+    public TextMeshProUGUI WeaponNameText, WeaponClassText;
+
     [SerializeField]
-    private Sprite[] CharacterClassImages = {};
+    private Sprite[] WeaponClassImages = { };
+
+    private Color ColorWeaponClassAutomatic = new Color32(0xe5, 0x2a, 0xfb, 0xff);
+    private Color ColorWeaponClassScatter = new Color32(0x2a, 0xf9, 0xfb, 0xff);
+    private Color ColorWeaponClassPrecision = new Color32(0xea, 0xfb, 0x2a, 0xff);
+    private Color currentWeaponClassColor;
+    private string currentWeaponClassText;
+    #endregion
 
     #region Custom Colors
     Color customRed = new Color(.94921875f, .15234375f, .2265625f, 1);
@@ -88,10 +110,10 @@ public class HUDController : MonoBehaviour
     public void UpdateHealth(float maxHealth, float health)
     {
         // Tween the health bar to the upated value.
-        healthBar.DOFillAmount(health / maxHealth, 1);
+        HealthBar.DOFillAmount(health / maxHealth, 1);
         // Tween the damage health bar slightly slower, to provide the effect of showing damage taken.
         HealthBarDamage.DOFillAmount(health / maxHealth, 2);
-        healthAmt.text = "<style=\"HPNumber\">" + health + "</style><sprite=0>" + maxHealth;
+        HealthAmountText.text = "<style=\"HPNumber\">" + health + "</style><sprite=0>" + maxHealth;
     }
 
     /// <summary>
@@ -120,7 +142,61 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates ammo bar and amount ui element in Player HUD Canvas 
+    /// Updates ammo and weapon aspects in the HUD.
+    /// </summary>
+    /// <param name="weapon"></param>
+    public void UpdateWeapon(Weapon weapon)
+    {
+        // Update weapon HUD elements to reflect current weapon...
+        // Update current weapon class color and set various elements to that color.
+        if (weapon is Automatic)
+        {
+            currentWeaponClassColor = ColorWeaponClassAutomatic;
+            currentWeaponClassText = "auto";
+            WeaponClassImage.sprite = WeaponClassImages[0];
+        }
+        else if (weapon is Precision)
+        {
+            currentWeaponClassColor = ColorWeaponClassPrecision;
+            currentWeaponClassText = "precise";
+            WeaponClassImage.sprite = WeaponClassImages[1];
+        }
+        else if (weapon is Spread)
+        {
+            currentWeaponClassColor = ColorWeaponClassScatter;
+            currentWeaponClassText = "scatter";
+            WeaponClassImage.sprite = WeaponClassImages[2];
+        }
+        Debug.Log(currentWeaponClassText);
+
+        // class frame
+        WeaponClassFrame.color = currentWeaponClassColor;
+        // class text
+        WeaponClassText.color = currentWeaponClassColor;
+        // class image
+        WeaponClassImage.color = currentWeaponClassColor;
+        // ammo bar frame
+        AmmoBarFrame.color = currentWeaponClassColor;
+        // ammo bar image
+        AmmoBarTiled.color = currentWeaponClassColor;
+        // ammo bar label
+        AmmoBarLabel.color = currentWeaponClassColor;
+        // current ammo text color
+        AmmoAmountText.color = currentWeaponClassColor;
+        // weapon name
+        WeaponNameText.color = currentWeaponClassColor;
+        // weapon image
+        WeaponImage.color = currentWeaponClassColor;
+
+        // Update the class name.
+        WeaponClassText.text = currentWeaponClassText;
+
+        // Update current ammo.
+        UpdateAmmo(weapon);
+    }
+
+    /// <summary>
+    /// Updates ammo aspects in the HUD.
     /// </summary>
     /// <param name="weapon"></param>
     public void UpdateAmmo(Weapon weapon)
@@ -129,8 +205,25 @@ public class HUDController : MonoBehaviour
         float clipSize = weapon.ClipSize;
         float totalAmmo = weapon.TotalAmmo;
 
-        ammoBar.fillAmount = ammoInClip / clipSize;
-        ammoAmt.text = ammoInClip + "rnd/ " + totalAmmo;
+        float ammoRatio = ammoInClip / clipSize;
+
+        AmmoBarTiled.uvRect = new Rect(0, 0, ammoInClip, ammoInClip);
+
+        float frameWidth = AmmoBarFrame.rectTransform.sizeDelta.x;
+        float frameHeight = AmmoBarFrame.rectTransform.sizeDelta.y;
+
+        AmmoBarTiled.rectTransform.sizeDelta = new Vector2(frameWidth * ammoRatio, frameHeight);
+
+        if (ammoRatio == 0)
+        {
+            AmmoBarFrame.fillAmount = 1;
+        } else
+        {
+            AmmoBarFrame.fillAmount = (float)1.0 - ammoRatio;
+        }
+
+        // Update text for 
+        AmmoAmountText.text = "<style=\"AmmoNumber\">" + ammoInClip + "</style><sprite=0>" + totalAmmo;
     }
 
     /// <summary>
@@ -223,7 +316,6 @@ public class HUDController : MonoBehaviour
             timer += .05f;
             yield return new WaitForSeconds(.05f);
         }
-        Debug.Log("completed swap animation");
     }
 
     /// <summary>
