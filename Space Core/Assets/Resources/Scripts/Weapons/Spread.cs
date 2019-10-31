@@ -27,13 +27,11 @@ public class Spread : Weapon
     /// </summary>
     public override void Fire()
     {
-
-        if (IsReloading && ReloadMethod == ReloadType.AllAtOnce) return;
-
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
 
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
+            IsReloading = false;
             AmmoInClip -= 1;
             //pellet rotation will be used for determining the spread of each bullet
             Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
@@ -55,7 +53,7 @@ public class Spread : Weapon
         //reload if out of ammo
         else if (AmmoInClip <= 0 && !IsReloading)
         {
-            StartCoroutine(Reload());
+           Reload();
         }
     }
 }

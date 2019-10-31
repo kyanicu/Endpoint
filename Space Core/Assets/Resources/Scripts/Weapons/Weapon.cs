@@ -17,12 +17,6 @@ public abstract class Weapon : MonoBehaviour
         //Heavy,
     }
 
-    public enum ReloadType
-    {
-        AllAtOnce,
-        Individual
-    }
-
     public static Dictionary<int, Tuple<string, WeaponType>> WeaponsList = new Dictionary<int, Tuple<string, WeaponType>>()
     {
         { 0, Tuple.Create("Okamoto", WeaponType.Spread) },
@@ -32,7 +26,8 @@ public abstract class Weapon : MonoBehaviour
         //{ "Korvus", WeaponType.Heavy },
         //{ "Tsar Tsarevich", WeaponType.Heavy },
     };
-
+    
+    public string Name { get; set; }
     public bool IsReloading { get; set; }
     public Bullet.BulletSource BulletSource { get; set; }
     public int AmmoInClip { get; set; }
@@ -45,7 +40,6 @@ public abstract class Weapon : MonoBehaviour
     public float FireTimer { get; set; }
     public float Range { get; set; }
     public float ReloadTime { get; set; }
-    public ReloadType ReloadMethod { get; set; }
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected GameObject Bullet;
@@ -60,79 +54,9 @@ public abstract class Weapon : MonoBehaviour
     /// Main coroutine used to reload the weapon
     /// </summary>
     /// <returns></returns>
-    public IEnumerator Reload()
+    public void Reload()
     {
-
-        switch(ReloadMethod)
-        {
-            case ReloadType.AllAtOnce:
-                StartCoroutine(ReloadAllAtOnce());
-                break;
-            
-            case ReloadType.Individual:
-                StartCoroutine(ReloadIndividual());
-                break;
-        }
-        yield return null;
-    }
-
-    public IEnumerator ReloadAllAtOnce()
-    {
-
-        //if already reloading, return
-
-        if (IsReloading)
-        {
-            yield return null;
-        }
-
-        //if we have max ammo in our clip, return
-        if (AmmoInClip == ClipSize)
-        {
-            yield return null;
-        }
-
-        IsReloading = true;
-
-        //Wait until reaload timer is up.
-        yield return new WaitForSeconds(ReloadTime);
-
-        //lock the reload object so no concurrent reloads happen
-        lock (ReloadLock)
-        {
-            //if our total ammo is above zero
-            if (TotalAmmo > 0)
-            {
-                //if the amount of ammo in the clip plus the ammo size is greater than the clipsize
-                if (TotalAmmo + AmmoInClip > ClipSize)
-                {
-                    //if we already had ammo in our clip, subtract the difference from total ammo
-                    if (AmmoInClip > 0)
-                    {
-                        TotalAmmo -= ClipSize - AmmoInClip;
-                    }
-                    //otherwise remove clipsize from the ammo pool
-                    else
-                    {
-                        TotalAmmo -= ClipSize;
-                    }
-                    //reset ammo in clip
-                    AmmoInClip = ClipSize;
-                }
-                //if we are going to run out of total ammo on this reload
-                else
-                {
-                    //set ammo in clip to total ammo and set total ammo to zero
-                    AmmoInClip = TotalAmmo;
-                    TotalAmmo = 0;
-                }
-            }
-        }
-
-        //update hud
-        HUDController.instance.UpdateAmmo(this);
-        IsReloading = false;
-        yield return null;
+        StartCoroutine(ReloadIndividual());
     }
 
     public IEnumerator ReloadIndividual()
@@ -169,7 +93,6 @@ public abstract class Weapon : MonoBehaviour
     /// <summary>
     /// Main update function decrementing fire timer
     /// </summary>
-
     protected void Update()
     {
         if (FireTimer >= 0)
@@ -193,6 +116,4 @@ public abstract class Weapon : MonoBehaviour
             TotalAmmo += num;
         }
     }
-
-
 }

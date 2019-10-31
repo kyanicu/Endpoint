@@ -21,11 +21,10 @@ public class Automatic : Weapon
     /// </summary>
     public override void Fire()
     {
-        if (IsReloading && ReloadMethod == ReloadType.AllAtOnce) return;
-        if (AmmoInClip > 0 && FireTimer < 0)
         //if we have ammo, are not reloading, and the timer will let us fire another shot. Fire a bullet
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
+            IsReloading = false;
             AmmoInClip -= 1;
             Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
             pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
@@ -41,7 +40,7 @@ public class Automatic : Weapon
         //reload if out of ammo
         else if (AmmoInClip <= 0 && !IsReloading)
         {
-            StartCoroutine(Reload());
+           Reload();
         }
     }
 }

@@ -22,33 +22,49 @@ public static class WeaponGenerator
     {
         //get number of weapons that can be generated
         int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
+
         //parse into a weapon type
         int rngVal = UnityEngine.Random.Range(0, Weapon.WeaponsList.Count);
-        Tuple<string, Weapon.WeaponType> = Weapon.WeaponsList[rngVal].get
-        Weapon.WeaponType weaponType = (Weapon.WeaponType) Weapon.WeaponsList[rngVal].
+        Weapon.WeaponType weaponType = Weapon.WeaponsList[rngVal].Item2;
+        string weaponName = Weapon.WeaponsList[rngVal].Item1;
         GameObject weapon = new GameObject();
+        string prefix = "";
 
-        //Switch on the weapon typeSpread
+        //Switch on the weapon type
         switch(weaponType)
         {
             case Weapon.WeaponType.Automatic:
                 weapon = BuildAutomaticWeapon(parent);
+                Automatic a = weapon.GetComponent<Automatic>();
+                prefix = WeaponGenerationInfo.generateNewWeaponName(a,
+                                              automaticStats.MaxDamage,
+                                              automaticStats.MaxClipSize,
+                                              automaticStats.MaxRateOfFire,
+                                              automaticStats.MaxReloadTime);
                 break;
             case Weapon.WeaponType.Spread:
                 weapon = BuildSpreadWeapon(parent);
+                Spread s = weapon.GetComponent<Spread>();
+                prefix = WeaponGenerationInfo.generateNewWeaponName(s,
+                                              spreadStats.MaxDamage,
+                                              spreadStats.MaxClipSize,
+                                              spreadStats.MaxRateOfFire,
+                                              spreadStats.MaxReloadTime);
                 break;
             case Weapon.WeaponType.Precision:
                 weapon = BuildPrecisionWeapon(parent);
+                Precision p = weapon.GetComponent<Precision>();
+                prefix = WeaponGenerationInfo.generateNewWeaponName(p,
+                                              precisionStats.MaxDamage,
+                                              precisionStats.MaxClipSize,
+                                              precisionStats.MaxRateOfFire,
+                                              precisionStats.MaxReloadTime);
                 break;
             default:
                 return weapon;
         }
-
-        //Get Weapon component from generated weapon
-        Weapon w = weapon.GetComponent<Weapon>();
-
-        //Update its name based on stats
-        w.name = generateNewWeaponName(w);
+        Weapon wep = weapon.GetComponent<Weapon>();
+        wep.Name = prefix + weaponName;
         return weapon;
     }
 
@@ -71,7 +87,6 @@ public static class WeaponGenerator
         automatic.RateOfFire = UnityEngine.Random.Range(automaticStats.MinRateOfFire, automaticStats.MaxRateOfFire);
         automatic.ReloadTime = UnityEngine.Random.Range(automaticStats.MinReloadTime, automaticStats.MaxReloadTime);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
-        automatic.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
     /// <summary>
@@ -116,7 +131,6 @@ public static class WeaponGenerator
         spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
-        spread.ReloadMethod = (Weapon.ReloadType)UnityEngine.Random.Range(0, 2);
         return weaponObject;
     }
 }

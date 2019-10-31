@@ -113,7 +113,7 @@ public class Enemy : Character
 
     public override void Reload()
     {
-        StartCoroutine(Weapon.Reload());
+        Weapon.Reload();
     }
 
     public override void Move(float speed)

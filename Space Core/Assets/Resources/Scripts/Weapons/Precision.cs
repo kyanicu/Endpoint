@@ -62,9 +62,9 @@ public class Precision : Weapon
     /// </summary>
     public override void Fire()
     {
-        if (IsReloading && ReloadMethod == ReloadType.AllAtOnce) return;
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
+            IsReloading = false;
             AmmoInClip -= 1;
 
             //get all hits
@@ -90,7 +90,7 @@ public class Precision : Weapon
         //reload if out of ammo
         else if (AmmoInClip <= 0 && !IsReloading)
         {
-            StartCoroutine(Reload());
+           Reload();
         }
     }
 }
