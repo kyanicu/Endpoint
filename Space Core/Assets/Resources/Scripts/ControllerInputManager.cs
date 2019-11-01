@@ -180,11 +180,58 @@ public class ControllerInputManager : InputManager
     }
 
     /// <summary>
-    /// Runs the frame input intended while in the menu InputState
+    /// Runs the frame input intended while in the main menu InputState
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    protected override void RunMenuFrameInput()
+    protected override void RunMainMenuFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+
+        //Check vertical movement through menu with D-Pad
+        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseMenu(1);
+        }
+        //Check vertical movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            MainMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            MainMenuManager.instance.SelectButton();
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player panel InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerPanelFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player menu InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerMenuFrameInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
@@ -229,7 +276,35 @@ public class ControllerInputManager : InputManager
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    protected override void RunMenuFixedInput()
+    protected override void RunMainMenuFixedInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player panel InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerPanelFixedInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player menu InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerMenuFixedInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
