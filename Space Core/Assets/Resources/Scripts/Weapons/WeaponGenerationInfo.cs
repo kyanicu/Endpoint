@@ -6,12 +6,17 @@ using UnityEngine;
 /// </summary>
 public static class WeaponGenerationInfo
 {
+    #region Constant Range Checkers For RNG Name Generation
     const float MAX_AVG_RANGE_CHECK = .8f;
     const float MIN_AVG_RANGE_CHECK = .25f;
     const float MAX_ABOVE_AVG_RANGE_CHECK = .6f;
     const float MIN_BELOW_AVG_RANGE_CHECK = .4f;
     const float MAX_RANGE_CHECK = .85f;
     const float MIN_RANGE_CHECK = .15f;
+    #endregion
+
+    //Set to false if you want names to be static
+    private static bool generateNames = true;
 
     /// <summary>
     /// Stat ranges for Automatic Weapons
@@ -44,6 +49,7 @@ public static class WeaponGenerationInfo
 
         public static string GenerateAutomaticName(Weapon wep)
         {
+            if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
@@ -83,6 +89,7 @@ public static class WeaponGenerationInfo
 
         public static string GenerateSpreadName(Weapon wep)
         {
+            if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire, 
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
@@ -120,6 +127,7 @@ public static class WeaponGenerationInfo
 
         public static string GeneratePrecisionName(Weapon wep)
         {
+            if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
@@ -158,12 +166,12 @@ public static class WeaponGenerationInfo
                                                  float MaxReloadTime, float MinReloadTime, float MaxRange, float MinRange, float MaxBulletVeloc, float MinBulletVeloc)
     {
         //Check if all stats are in really good range
-        if (wep.Damage / MaxDamage > MAX_AVG_RANGE_CHECK &&
-            wep.ClipSize / MaxClipSize > MAX_AVG_RANGE_CHECK &&
-            wep.RateOfFire / MaxRateOfFire > MAX_AVG_RANGE_CHECK &&
-            wep.ReloadTime / MaxReloadTime > MAX_AVG_RANGE_CHECK &&
-            wep.Range / MaxRange > MAX_AVG_RANGE_CHECK &&
-            wep.BulletVeloc / MaxBulletVeloc > MAX_AVG_RANGE_CHECK)
+        if ((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) > MAX_AVG_RANGE_CHECK &&
+                 (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) > MAX_AVG_RANGE_CHECK &&
+                 (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) > MAX_AVG_RANGE_CHECK &&
+                 (wep.Range - MinRange) / (MaxRange - MinRange) > MAX_AVG_RANGE_CHECK &&
+                 (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) > MAX_AVG_RANGE_CHECK &&
+                 (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) > MAX_AVG_RANGE_CHECK)
         {
             string[] BestNames = { "Legendary ", "Godly ", "Unique ", "Optimal ", "Ideal" };
             int rngVal = Random.Range(0, BestNames.Length);
@@ -242,20 +250,24 @@ public static class WeaponGenerationInfo
             return "Slow ";
         }
         //Check if stats are in above average range
-        else if (((wep.Damage / MaxDamage) +
-           (wep.ClipSize / MaxClipSize) +
-            (wep.RateOfFire / MaxRateOfFire) + 
-            (wep.ReloadTime / MaxReloadTime)) / 4 > MAX_ABOVE_AVG_RANGE_CHECK)
+        else if (((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) +
+                  (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) +
+                  (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) +
+                  (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) +
+                  (wep.Range - MinRange) / (MaxRange - MinRange) +
+                  (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc)) / 6 > MAX_ABOVE_AVG_RANGE_CHECK)
         {
             string[] AboveAvgNames = { "Modified ", "Upgraded ", "Advanced ", "Improved ", "Enhanced" };
             int rngVal = Random.Range(0, AboveAvgNames.Length);
             return AboveAvgNames[rngVal];
         }
         //Check if stats are in below average range
-        else if (((wep.Damage / MaxDamage) +
-           (wep.ClipSize / MaxClipSize) +
-            (wep.RateOfFire / MaxRateOfFire) + 
-            (wep.ReloadTime / MaxReloadTime)) / 4 < MIN_BELOW_AVG_RANGE_CHECK)
+        else if (((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) +
+                  (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) +
+                  (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) +
+                  (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) +
+                  (wep.Range - MinRange) / (MaxRange - MinRange) +
+                  (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc)) / 6 < MIN_BELOW_AVG_RANGE_CHECK)
         {
             string[] BelowAvgNames = { "Tested ", "Worn ", "Weathered ", "Battered ", "Damaged" };
             int rngVal = Random.Range(0, BelowAvgNames.Length);

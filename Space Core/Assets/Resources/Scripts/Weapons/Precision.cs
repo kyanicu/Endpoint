@@ -14,9 +14,10 @@ public class Precision : Weapon
     /// </summary>
     public void Start()
     {
-        Bullet = Resources.Load<GameObject>("WeaponResources/Bullet");
+        Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         lineRenderer = transform.Find("Laser").gameObject.GetComponent<LineRenderer>();
         FireLocation = transform.Find("FirePoint").gameObject;
+        RotationPoint = transform.parent.transform.parent;
         IsReloading = false;
         FireTimer = 0;
     }
@@ -62,28 +63,22 @@ public class Precision : Weapon
     /// </summary>
     public override void Fire()
     {
+        // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             IsReloading = false;
             AmmoInClip -= 1;
 
-            //get all hits
-            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, transform.right);
-            //TODO CLEAN UP IF STATEMENT
-
-            //If one of the hits is an enemy or a player and that object does not share 
-            //the bullet source tag, then have that object take damage
-            foreach (RaycastHit2D hit in hits)
-            {
-                string tag = hit.transform.gameObject.tag;
-                if (hit.transform != null && (tag == "Enemy" || tag == "Player"))
-                {
-                    if (hit.transform.gameObject.tag != BulletSource.ToString())
-                    {
-                        hit.transform.gameObject.GetComponent<Character>().TakeDamage(Damage);
-                    }
-                }
-            }
+            //pellet rotation will be used for determining the spread of each bullet
+            Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
+            pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
+            GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
+            bullet.transform.Rotate(pelletRotation);
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+            bulletScript.Damage = Damage;
+            bulletScript.Source = BulletSource;
+            bulletScript.Range = Range;
+            bulletScript.Velocity = BulletVeloc;
             FireTimer = RateOfFire;
         }
 

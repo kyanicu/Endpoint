@@ -59,7 +59,6 @@ public class Spread : Weapon
     public override void Fire()
     {
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
-
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
             IsReloading = false;
