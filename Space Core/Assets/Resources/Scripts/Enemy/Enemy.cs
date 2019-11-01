@@ -69,7 +69,7 @@ public class Enemy : Character
             {
                 moveLeft = !moveLeft;
             }
-            Move(Speed * Time.deltaTime);
+            Move(Speed);
         }
     }
 

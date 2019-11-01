@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+//We'll need to figure out a way to decouple scene loading from player
+using UnityEngine.SceneManagement;
+
 
 public class Player : Character
 {
@@ -92,7 +95,8 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            ResetPlayer();
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
         else
         {
@@ -114,7 +118,8 @@ public class Player : Character
         }
         else if(other.CompareTag("OB"))
         {
-            ResetPlayer();
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -184,6 +189,9 @@ public class Player : Character
                                              cam.transform.position.y, 
                                              camZ);
 
+        Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
+        rigidBody.isKinematic = true;
+        rigidBody.simulated = true;
         Enemy.gameObject.AddComponent<ObjectMover>();
         Enemy.gameObject.AddComponent<CharacterController2D>();
         Enemy.gameObject.AddComponent<PlayerMovement>();
@@ -212,19 +220,6 @@ public class Player : Character
             yield return new WaitForSeconds(.05f);
         }
         canSwap = true;
-    }
-
-    private void ResetPlayer()
-    {
-        Health = MaxHealth;
-        transform.position = startPos;
-        canSwap = true;
-        if (Enemy != null)
-        {
-            Enemy.IsSelected = false;
-            Enemy.HackArea.SetActive(false);
-            Enemy = null;
-        }
     }
 
     private static Player _instance = null;
