@@ -98,7 +98,27 @@ public class KeyboardInputManager : InputManager
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    protected override void RunMenuFrameInput()
+    protected override void RunMainMenuFrameInput()
+    {
+
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player panel InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerPanelFrameInput()
+    {
+
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player menu InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerMenuFrameInput()
     {
 
     }
@@ -132,7 +152,29 @@ public class KeyboardInputManager : InputManager
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    protected override void RunMenuFixedInput()
+    protected override void RunMainMenuFixedInput()
+    {
+
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player panel InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerPanelFixedInput()
+    {
+
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player menu InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerMenuFixedInput()
     {
 
     }

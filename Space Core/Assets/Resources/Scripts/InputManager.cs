@@ -5,14 +5,18 @@ using UnityEngine;
 public abstract class InputManager : MonoBehaviour
 {
     /// <summary> enum type used to keep track of how the input from user should be handled </summary>
-    protected enum InputState { MENU, GAMEPLAY, PAUSE }
+    public enum InputState { MAIN_MENU, PLAYER_PANEL, PLAYER_MENU, GAMEPLAY, PAUSE }
     /// <summary> The current state of how input should be handled </summary>
-    protected InputState currentState;
+    public InputState currentState { get; set; }
 
     protected abstract void RunGameplayFrameInput();
-    protected abstract void RunMenuFrameInput();
+    protected abstract void RunMainMenuFrameInput();
+    protected abstract void RunPlayerPanelFrameInput();
+    protected abstract void RunPlayerMenuFrameInput();
     protected abstract void RunPauseFrameInput();
-    protected abstract void RunMenuFixedInput();
+    protected abstract void RunMainMenuFixedInput();
+    protected abstract void RunPlayerPanelFixedInput();
+    protected abstract void RunPlayerMenuFixedInput();
     protected abstract void RunGameplayFixedInput();
     protected abstract void RunPauseFixedInput();
     public abstract QTEButton.KeyNames? CheckQTEButtonPress();
@@ -22,8 +26,14 @@ public abstract class InputManager : MonoBehaviour
         // based on current InputState handle input appropriately
         switch (currentState)
         {
-            case (InputState.MENU):
-                RunMenuFixedInput();
+            case (InputState.MAIN_MENU):
+                RunMainMenuFixedInput();
+                break;
+            case (InputState.PLAYER_PANEL):
+                RunPlayerPanelFixedInput();
+                break;
+            case (InputState.PLAYER_MENU):
+                RunPlayerMenuFixedInput();
                 break;
             case (InputState.GAMEPLAY):
                 RunGameplayFixedInput();
@@ -41,8 +51,14 @@ public abstract class InputManager : MonoBehaviour
     {
         switch (currentState)
         {
-            case (InputState.MENU):
-                RunMenuFrameInput();
+            case (InputState.MAIN_MENU):
+                RunMainMenuFrameInput();
+                break;
+            case (InputState.PLAYER_PANEL):
+                RunPlayerPanelFrameInput();
+                break;
+            case (InputState.PLAYER_MENU):
+                RunPlayerMenuFrameInput();
                 break;
             case (InputState.GAMEPLAY):
                 RunGameplayFrameInput();
