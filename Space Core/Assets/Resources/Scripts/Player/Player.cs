@@ -25,6 +25,17 @@ public class Player : Character
             movement = gameObject.AddComponent<PlayerMovement>();
     }
 
+    /// <summary>
+    /// Update HUD after successfully swapping into a new enemy
+    /// Start called on new Player component enabled
+    /// </summary>
+    private new void Start()
+    {
+        base.Start();
+        HUDController.instance.UpdateHUD(this);
+        Weapon.ControlledByPlayer = true;
+    }
+
     private void Awake()
     {
         MaxHealth = 100;
@@ -49,7 +60,6 @@ public class Player : Character
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
-            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
@@ -58,10 +68,7 @@ public class Player : Character
         Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateWeapon(Weapon);
-        HUDController.instance.updateCharacterClass();
+        HUDController.instance.UpdateHUD(this);
     }
 
     public override void Jump()
@@ -77,12 +84,15 @@ public class Player : Character
     public override void Fire()
     {
         Weapon.Fire();
-        HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.UpdateAmmo(this);
     }
 
     public override void Reload()
     {
         Weapon.Reload();
+
+        //update hud
+        HUDController.instance.UpdateAmmo(this);
     }
 
     public override void Move(float axis)
@@ -101,7 +111,7 @@ public class Player : Character
         else
         {
             Health -= damage / 5;
-            HUDController.instance.UpdateHealth(MaxHealth, Health);
+            HUDController.instance.UpdatePlayer(this);
         }
 
     }
@@ -169,7 +179,7 @@ public class Player : Character
         // Disables Swapping for the duration specified in COOLDOWN_TIME.
         StartCoroutine(implementSwapCooldown());
         // Begins HUD animation loop for swapping bar.
-        HUDController.instance.RechargeSwap(COOLDOWN_TIME);
+        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
     }
 
     public void Switch()
@@ -201,10 +211,6 @@ public class Player : Character
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateWeapon(Weapon);
-        HUDController.instance.UpdateDiagnosticPanels();
-        HUDController.instance.updateCharacterClass();
     }
 
     /// <summary>

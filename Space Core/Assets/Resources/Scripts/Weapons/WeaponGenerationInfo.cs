@@ -113,8 +113,8 @@ public static class WeaponGenerationInfo
         public static int MinClipSize = 1;
         public static int MaxClipSize = 10;
 
-        public static float MinRateOfFire = 0.07f;
-        public static float MaxRateOfFire = 0.2f;
+        public static float MinRateOfFire = 0.25f;
+        public static float MaxRateOfFire = 1.0f;
 
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;

@@ -144,8 +144,6 @@ public class Precision : Weapon
             }
         }
 
-        //update hud
-        HUDController.instance.UpdateAmmo(this);
         IsReloading = false;
         yield return null;
     }

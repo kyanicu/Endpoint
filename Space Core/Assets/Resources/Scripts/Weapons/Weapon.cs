@@ -44,6 +44,7 @@ public abstract class Weapon : MonoBehaviour
     public float Range { get; set; }
     public float BulletVeloc { get; set; }
     public float ReloadTime { get; set; }
+    public bool ControlledByPlayer { get; set; }
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected GameObject Bullet;
@@ -57,6 +58,12 @@ public abstract class Weapon : MonoBehaviour
     public void Reload()
     {
         StartCoroutine(ReloadRoutine());
+
+        //Give enemy back ammo so they don't run out
+        if (!ControlledByPlayer)
+        {
+            TotalAmmo += ClipSize;
+        }
     }
 
     protected abstract IEnumerator ReloadRoutine();
