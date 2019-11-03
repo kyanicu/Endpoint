@@ -14,6 +14,7 @@ public class Enemy : Character
     protected bool moveLeft = false;
     public float Speed { get; set; }
     public GameObject[] MovePoints;
+    public string Class { get; set; }
 
     protected void Awake()
     {

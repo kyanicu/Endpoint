@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+//We'll need to figure out a way to decouple scene loading from player
+using UnityEngine.SceneManagement;
+
 
 public class Player : Character
 {
@@ -10,6 +13,7 @@ public class Player : Character
     private bool canSwap;
     private GameObject hackProj;
     private Vector2 startPos;
+    public string Class { get; private set; }
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -27,6 +31,12 @@ public class Player : Character
         Health = MaxHealth;
         canSwap = true;
         startPos = transform.position;
+        if (Class == null)
+        {
+            Class = "medium";
+        }
+        ResetSwap();
+
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
@@ -50,7 +60,8 @@ public class Player : Character
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
         HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.UpdateWeapon(Weapon);
+        HUDController.instance.updateCharacterClass();
     }
 
     public override void Jump()
@@ -84,7 +95,8 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            ResetPlayer();
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
         else
         {
@@ -106,7 +118,8 @@ public class Player : Character
         }
         else if(other.CompareTag("OB"))
         {
-            ResetPlayer();
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -146,9 +159,17 @@ public class Player : Character
             Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
             GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
             hackAttempt.transform.Rotate(launchRotation);
-            canSwap = false;
-            StartCoroutine(implementSwapCooldown());
+            ResetSwap();
         }
+    }
+
+    private void ResetSwap()
+    {
+        canSwap = false;
+        // Disables Swapping for the duration specified in COOLDOWN_TIME.
+        StartCoroutine(implementSwapCooldown());
+        // Begins HUD animation loop for swapping bar.
+        HUDController.instance.RechargeSwap(COOLDOWN_TIME);
     }
 
     public void Switch()
@@ -159,6 +180,7 @@ public class Player : Character
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
         Camera cam = Camera.main;
+        Class = Enemy.Class;
 
         cam.transform.parent = Enemy.transform;
         float camZ = cam.transform.position.z;
@@ -180,7 +202,9 @@ public class Player : Character
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+        HUDController.instance.UpdateWeapon(Weapon);
         HUDController.instance.UpdateDiagnosticPanels();
+        HUDController.instance.updateCharacterClass();
     }
 
     /// <summary>
@@ -190,27 +214,12 @@ public class Player : Character
     private IEnumerator implementSwapCooldown()
     {
         float timer = 0;
-        HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         while (timer < COOLDOWN_TIME)
         {
-            timer += .1f;
-            yield return new WaitForSeconds(.1f);
-            HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+            timer += .05f;
+            yield return new WaitForSeconds(.05f);
         }
         canSwap = true;
-    }
-
-    private void ResetPlayer()
-    {
-        Health = MaxHealth;
-        transform.position = startPos;
-        canSwap = true;
-        if (Enemy != null)
-        {
-            Enemy.IsSelected = false;
-            Enemy.HackArea.SetActive(false);
-            Enemy = null;
-        }
     }
 
     private static Player _instance = null;
