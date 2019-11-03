@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// This class holds all information about the behavior of a spread weapon
@@ -13,7 +14,6 @@ public class Spread : Weapon
     /// </summary>
     private void Start()
     {
-        Range = 20f;
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
@@ -21,6 +21,37 @@ public class Spread : Weapon
         //grab the rotation point for the weapon
         RotationPoint = transform.parent.transform.parent;
     }
+
+    protected override IEnumerator ReloadRoutine()
+    {
+        if (IsReloading)
+        {
+            yield return null;
+        }
+
+        if (AmmoInClip == ClipSize)
+        {
+            yield return null;
+        }
+
+        IsReloading = true;
+
+        if (AmmoInClip == 0)
+        {
+            yield return new WaitForSeconds(ReloadTime / 4);
+        }
+
+        while (TotalAmmo > 0 && AmmoInClip < ClipSize && IsReloading)
+        {
+            TotalAmmo--;
+            AmmoInClip++;
+            HUDController.instance.UpdateAmmo(this);
+            yield return new WaitForSeconds(ReloadTime / ClipSize);
+        }
+        IsReloading = false;
+        yield return null;
+    }
+
 
     /// <summary>
     /// Fire out a bust of pellets in a random spread
@@ -30,6 +61,7 @@ public class Spread : Weapon
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
+            IsReloading = false;
             AmmoInClip -= 1;
             //pellet rotation will be used for determining the spread of each bullet
             Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
@@ -44,6 +76,7 @@ public class Spread : Weapon
                 bulletScript.Damage = Damage;
                 bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;
+                bulletScript.Velocity = BulletVeloc;
             }
             FireTimer = RateOfFire;
         }
@@ -51,7 +84,7 @@ public class Spread : Weapon
         //reload if out of ammo
         else if (AmmoInClip <= 0 && !IsReloading)
         {
-            StartCoroutine(Reload());
+           Reload();
         }
     }
 }

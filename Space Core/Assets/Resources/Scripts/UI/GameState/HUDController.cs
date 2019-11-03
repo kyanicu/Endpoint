@@ -35,6 +35,7 @@ public class HUDController : MonoBehaviour
     #region Weapon
     public Image WeaponImage, WeaponClassImage, WeaponClassFrame;
     public TextMeshProUGUI WeaponNameText, WeaponClassText;
+    public Text DiagnosticWeaponName;
 
     [SerializeField]
     private Sprite[] WeaponClassImages = { };
@@ -190,6 +191,8 @@ public class HUDController : MonoBehaviour
 
         // Update the class name.
         WeaponClassText.text = currentWeaponClassText;
+        // Update Diagnostic weapon name text
+        DiagnosticWeaponName.text = Player.instance.Weapon.Name;
 
         // Update current ammo.
         UpdateAmmo(weapon);
