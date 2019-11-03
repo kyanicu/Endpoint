@@ -22,21 +22,41 @@ public static class WeaponGenerator
     {
         //get number of weapons that can be generated
         int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
+
         //parse into a weapon type
-        Weapon.WeaponType weaponType = (Weapon.WeaponType) UnityEngine.Random.Range(0, num);
+        int rngVal = UnityEngine.Random.Range(0, Weapon.WeaponsList.Count);
+        Weapon.WeaponType weaponType = Weapon.WeaponsList[rngVal].Item2;
+        string weaponName = Weapon.WeaponsList[rngVal].Item1;
+        GameObject weapon = new GameObject();
+        string prefix = "";
 
         //Switch on the weapon type
         switch(weaponType)
         {
             case Weapon.WeaponType.Automatic:
-                return BuildAutomaticWeapon(parent);
+                weapon = BuildAutomaticWeapon(parent);
+                Automatic a = weapon.GetComponent<Automatic>();
+                prefix = automaticStats.GenerateAutomaticName(a);
+                break;
+
             case Weapon.WeaponType.Spread:
-                return BuildSpreadWeapon(parent);
+                weapon = BuildSpreadWeapon(parent);
+                Spread s = weapon.GetComponent<Spread>();
+                prefix = spreadStats.GenerateSpreadName(s);
+                break;
+
             case Weapon.WeaponType.Precision:
-                return BuildPrecisionWeapon(parent);
+                weapon = BuildPrecisionWeapon(parent);
+                Precision p = weapon.GetComponent<Precision>();
+                prefix = precisionStats.GeneratePrecisionName(p);
+                break;
+
             default:
-                return null;
+                return weapon;
         }
+        Weapon wep = weapon.GetComponent<Weapon>();
+        wep.Name = prefix + weaponName;
+        return weapon;
     }
 
     /// <summary>
@@ -57,10 +77,11 @@ public static class WeaponGenerator
         automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
         automatic.RateOfFire = UnityEngine.Random.Range(automaticStats.MinRateOfFire, automaticStats.MaxRateOfFire);
         automatic.ReloadTime = UnityEngine.Random.Range(automaticStats.MinReloadTime, automaticStats.MaxReloadTime);
+        automatic.Range = UnityEngine.Random.Range(automaticStats.MinRange, automaticStats.MaxRange);
+        automatic.BulletVeloc = UnityEngine.Random.Range(automaticStats.MinBulletVeloc, automaticStats.MaxBulletVeloc);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
         return weaponObject;
     }
-
     /// <summary>
     /// This function will generate a randomly made precision weapon base on stats from
     /// automatic stats.
@@ -79,6 +100,8 @@ public static class WeaponGenerator
         precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
         precision.RateOfFire = UnityEngine.Random.Range(precisionStats.MinRateOfFire, precisionStats.MaxRateOfFire);
         precision.ReloadTime = UnityEngine.Random.Range(precisionStats.MinReloadTime, precisionStats.MaxReloadTime);
+        precision.Range = UnityEngine.Random.Range(precisionStats.MinRange, precisionStats.MaxRange);
+        precision.BulletVeloc = UnityEngine.Random.Range(precisionStats.MinBulletVeloc, precisionStats.MaxBulletVeloc);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
         return weaponObject;
     }
@@ -102,6 +125,8 @@ public static class WeaponGenerator
         spread.RateOfFire = UnityEngine.Random.Range(spreadStats.MinRateOfFire, spreadStats.MaxRateOfFire);
         spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
+        spread.Range = UnityEngine.Random.Range(spreadStats.MinRange, spreadStats.MaxRange);
+        spread.BulletVeloc = UnityEngine.Random.Range(spreadStats.MinBulletVeloc, spreadStats.MaxBulletVeloc);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
         return weaponObject;
     }

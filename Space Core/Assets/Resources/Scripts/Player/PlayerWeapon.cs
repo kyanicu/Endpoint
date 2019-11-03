@@ -45,7 +45,7 @@ public class PlayerWeapon : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Debug.Log($"Reloading!");
-            StartCoroutine(gun.Reload());
+            gun.Reload();
             Debug.Log($"Number of shots left: {gun.AmmoInClip}");
             Debug.Log($"Total Ammo: {gun.TotalAmmo}");
         }

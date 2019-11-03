@@ -3459,6 +3459,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff38478deaec6034a801f8ed7df53e45, type: 3}
+--- !u!114 &759815494 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 190097500009231241, guid: 998b62b925595b247838fde546564c5e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4092717736120446957}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &788749302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8161,6 +8173,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 664215239}
+    - target: {fileID: 190097499087124770, guid: 998b62b925595b247838fde546564c5e,
+        type: 3}
+      propertyPath: DiagnosticWeaponName
+      value: 
+      objectReference: {fileID: 759815494}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 998b62b925595b247838fde546564c5e, type: 3}
 --- !u!1001 &8738084453767210299
