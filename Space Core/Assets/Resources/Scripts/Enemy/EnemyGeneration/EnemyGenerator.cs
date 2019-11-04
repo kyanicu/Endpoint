@@ -27,7 +27,24 @@ public class EnemyGenerator : MonoBehaviour
             case "medium":
                 GenerateMediumEnemy();
                 break;
+            case "large":
+                GenerateLargeEnemy();
+                break;
         }
+    }
+
+    /// <summary>
+    /// Generates a random large enemy based on stats stored in EnemyInfo
+    /// </summary>
+    private void GenerateLargeEnemy()
+    {
+        GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/LargeEnemy");
+        GameObject instantiatedEnemy = GameObject.Instantiate(enemy, transform.position, Quaternion.identity);
+        LargeEnemy largeEnemy = instantiatedEnemy.GetComponent<LargeEnemy>();
+        largeEnemy.MaxHealth = Random.Range(EnemyInfo.LargeEnemyHealthLo, EnemyInfo.LargeEnemyHealthHi);
+        largeEnemy.Speed = Random.Range(EnemyInfo.LargeEnemySpeedLo, EnemyInfo.LargeEnemySpeedHi);
+        largeEnemy.Health = largeEnemy.MaxHealth;
+        largeEnemy.Class = "large";
     }
 
     /// <summary>
