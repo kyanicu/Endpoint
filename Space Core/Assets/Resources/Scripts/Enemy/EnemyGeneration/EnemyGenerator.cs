@@ -41,6 +41,7 @@ public class EnemyGenerator : MonoBehaviour
         mediumEnemy.MaxHealth = Random.Range(EnemyInfo.MediumEnemyHealthLo, EnemyInfo.MediumEnemyHealthHi);
         mediumEnemy.Speed = Random.Range(EnemyInfo.MediumEnemySpeedLo, EnemyInfo.MediumEnemySpeedHi);
         mediumEnemy.Health = mediumEnemy.MaxHealth;
+        mediumEnemy.Class = "medium";
     }
 
     /// <summary>
@@ -54,5 +55,6 @@ public class EnemyGenerator : MonoBehaviour
         smallEnemy.MaxHealth = Random.Range(EnemyInfo.SmallEnemyHealthLo, EnemyInfo.SmallEnemyHealthHi);
         smallEnemy.Speed = Random.Range(EnemyInfo.SmallEnemySpeedLo, EnemyInfo.SmallEnemySpeedHi);
         smallEnemy.Health = smallEnemy.MaxHealth;
+        smallEnemy.Class = "small";
     }
 }

@@ -174,6 +174,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            /*
             bool pushing = false;
             for(int i = 0; i < contactCount; i++)
             {
@@ -197,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
                 CancelDirectionalVelocity(Vector2.right);
             else if (charCont.isTouchingLeftWall && !(pushing && pushingDirection == -1))
                 CancelDirectionalVelocity(Vector2.left);
+                */
         }
     }
 

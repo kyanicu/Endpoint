@@ -1,15 +1,19 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//We'll need to figure out a way to decouple scene loading from player
+using UnityEngine.SceneManagement;
+
 
 public class Player : Character
 {
-    public MediumEnemy Enemy { get; set; }
+    public Enemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
     private Vector2 startPos;
+    public string Class { get; private set; }
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -26,9 +30,22 @@ public class Player : Character
         startPos = transform.position;
         MaxHealth = 100;
         Health = MaxHealth;
-        canSwap = true; 
+        canSwap = true;
+        startPos = transform.position;
+        if (Class == null)
+        {
+            Class = "medium";
+        }
+        ResetSwap();
+
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
+
+        
+        RotationPoint.transform.localScale = new Vector3(1, 1, 1);
+        
+        transform.localScale = new Vector3(1, 1, 1);
+
         Transform WeaponTransform = RotationPoint.transform.Find("WeaponLocation");
         if (WeaponTransform.childCount == 0)
         {
@@ -44,7 +61,8 @@ public class Player : Character
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
         HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.UpdateWeapon(Weapon);
+        HUDController.instance.updateCharacterClass();
     }
 
     public override void Jump()
@@ -78,12 +96,13 @@ public class Player : Character
 
         if (Health - damage <= 0)
         {
-            Health = MaxHealth;
-            transform.position = startPos;
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
         else
         {
-            Health -= damage;
+            Health -= damage / 5;
+            HUDController.instance.UpdateHealth(MaxHealth, Health);
         }
         HUDController.instance.UpdateHealth(MaxHealth, Health);
 
@@ -99,9 +118,10 @@ public class Player : Character
                 Destroy(other.gameObject);
             }
         }
-        else if (other.CompareTag("OB"))
+        else if(other.CompareTag("OB"))
         {
-            transform.position = startPos;
+            //We'll need to figure out a way to decouple scene loading from player
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -115,6 +135,10 @@ public class Player : Character
             Vector3 newScale = gameObject.transform.localScale;
             newScale.x *= -1;
             gameObject.transform.localScale = newScale;
+            if (Camera.main.transform.localScale.x != 1)
+            {
+                Camera.main.transform.localScale = newScale;
+            }
             newScale = RotationPoint.transform.localScale;
             newScale.x *= -1;
             newScale.y *= -1;
@@ -134,11 +158,20 @@ public class Player : Character
     {
         if (canSwap)
         {
+            Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
             GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-            hackAttempt.transform.forward = Weapon.FireLocation.transform.right;
-            canSwap = false;
-            StartCoroutine(implementSwapCooldown());
+            hackAttempt.transform.Rotate(launchRotation);
+            ResetSwap();
         }
+    }
+
+    private void ResetSwap()
+    {
+        canSwap = false;
+        // Disables Swapping for the duration specified in COOLDOWN_TIME.
+        StartCoroutine(implementSwapCooldown());
+        // Begins HUD animation loop for swapping bar.
+        HUDController.instance.RechargeSwap(COOLDOWN_TIME);
     }
 
     public void Switch()
@@ -146,17 +179,34 @@ public class Player : Character
         Destroy(RotationPoint);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;
-        Enemy.gameObject.AddComponent<Player>();
-        Enemy.gameObject.tag = "Player";
-        Enemy.gameObject.name = "Player";
-        Camera.main.transform.parent = Enemy.gameObject.transform;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
+        Camera cam = Camera.main;
+        Class = Enemy.Class;
+
+        cam.transform.parent = Enemy.transform;
+        float camZ = cam.transform.position.z;
+        cam.transform.position = Enemy.transform.position;
+        cam.transform.position = new Vector3(cam.transform.position.x, 
+                                             cam.transform.position.y, 
+                                             camZ);
+
+        Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
+        rigidBody.isKinematic = true;
+        rigidBody.simulated = true;
+        Enemy.gameObject.AddComponent<ObjectMover>();
+        Enemy.gameObject.AddComponent<CharacterController2D>();
+        Enemy.gameObject.AddComponent<PlayerMovement>();
+        Enemy.gameObject.AddComponent<Player>();
+        Enemy.tag = "Player";
+        Enemy.name = "Player";
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
-            HUDController.instance.UpdateDiagnosticPanels();
+        HUDController.instance.UpdateWeapon(Weapon);
+        HUDController.instance.UpdateDiagnosticPanels();
+        HUDController.instance.updateCharacterClass();
     }
 
     /// <summary>
@@ -166,12 +216,10 @@ public class Player : Character
     private IEnumerator implementSwapCooldown()
     {
         float timer = 0;
-        HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
         while (timer < COOLDOWN_TIME)
         {
-            timer += .1f;
-            yield return new WaitForSeconds(.1f);
-            HUDController.instance.UpdateSwap(timer, COOLDOWN_TIME);
+            timer += .05f;
+            yield return new WaitForSeconds(.05f);
         }
         canSwap = true;
     }

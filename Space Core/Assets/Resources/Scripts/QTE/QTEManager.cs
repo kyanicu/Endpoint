@@ -128,7 +128,7 @@ public class QTEManager : MonoBehaviour
                 if (key == activeButton.keyName)
                 {
                     listening = false;
-                    yield return new WaitForSeconds(.01f);
+                    yield return null;
 
                     //Change button color to green
                     activeButton.SetColor(Color.green);
@@ -152,7 +152,7 @@ public class QTEManager : MonoBehaviour
                         yield return null;
                     }
 
-                    yield return new WaitForSeconds(.01f);
+                    yield return null;
 
                     //Activate the next button in the stack
                     activateButton();
@@ -172,7 +172,7 @@ public class QTEManager : MonoBehaviour
                     stackCreate();
                 }
             }
-            yield return new WaitForSeconds(.01f);
+            yield return null;
         }
         listening = false;
 
@@ -186,8 +186,12 @@ public class QTEManager : MonoBehaviour
     /// </summary>
     private void successfulHack()
     {
-        StopCoroutine(Listener());
-        Player player = Player.instance.gameObject.GetComponent<Player>();
-        player.Switch();
+        if (listIndex == buttonStack.Count)
+        {
+            StopCoroutine(Listener());
+            listening = false;
+            Player player = Player.instance.gameObject.GetComponent<Player>();
+            player.Switch();
+        }
     }
 }
