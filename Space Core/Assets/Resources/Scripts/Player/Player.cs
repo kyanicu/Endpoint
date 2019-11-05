@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Player : Character
 {
-    public Enemy Enemy { get; set; }
+    public MediumEnemy Enemy { get; set; }
     private PlayerMovement movement;
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
+    private Vector2 startPos;
 
     private const float COOLDOWN_TIME = 2.5f;
 
@@ -22,6 +23,7 @@ public class Player : Character
 
     private void Awake()
     {
+        startPos = transform.position;
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true; 
@@ -31,11 +33,13 @@ public class Player : Character
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
+            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
+        Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
 
@@ -71,8 +75,34 @@ public class Player : Character
 
     public override void TakeDamage(int damage)
     {
-        Health -= damage;
+
+        if (Health - damage <= 0)
+        {
+            Health = MaxHealth;
+            transform.position = startPos;
+        }
+        else
+        {
+            Health -= damage;
+        }
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage/5);
+                Destroy(other.gameObject);
+            }
+        }
+        else if (other.CompareTag("OB"))
+        {
+            transform.position = startPos;
+        }
     }
 
     public override void AimWeapon(float angle)
@@ -119,12 +149,14 @@ public class Player : Character
         Enemy.gameObject.AddComponent<Player>();
         Enemy.gameObject.tag = "Player";
         Enemy.gameObject.name = "Player";
+        Camera.main.transform.parent = Enemy.gameObject.transform;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
         HUDController.instance.UpdateHealth(MaxHealth, Health);
+            HUDController.instance.UpdateDiagnosticPanels();
     }
 
     /// <summary>
