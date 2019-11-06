@@ -39,18 +39,6 @@ public class Player : Character
 
     }
 
-    private void Update()
-    {
-        Vector2 playerPos = new Vector2(transform.localPosition.x, transform.localPosition.y);
-        Vector2 camPos = Camera.main.transform.position;
-        GameObject cam = Camera.main.gameObject;
-        if (camPos != playerPos)
-        {
-            Camera.main.transform.position = Vector2.MoveTowards(transform.position, playerPos, 10f * Time.deltaTime);
-        }
-        cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, -13f);
-    }
-
     private void Awake()
     {
         MaxHealth = 100;
