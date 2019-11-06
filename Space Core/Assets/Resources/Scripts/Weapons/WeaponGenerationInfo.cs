@@ -44,8 +44,8 @@ public static class WeaponGenerationInfo
         public static float MaxRange = 15f;
         public static float MinRange = 23f;
 
-        public static float MaxBulletVeloc = 14f;
-        public static float MinBulletVeloc = 28f;
+        public static float MaxBulletVeloc = 8f;
+        public static float MinBulletVeloc = 14f;
 
         public static string GenerateAutomaticName(Weapon wep)
         {
@@ -84,8 +84,8 @@ public static class WeaponGenerationInfo
         public static float MaxRange = 17f;
         public static float MinRange = 22f;
 
-        public static float MaxBulletVeloc = 12f;
-        public static float MinBulletVeloc = 22f;
+        public static float MaxBulletVeloc = 6f;
+        public static float MinBulletVeloc = 12f;
 
         public static string GenerateSpreadName(Weapon wep)
         {
@@ -123,7 +123,7 @@ public static class WeaponGenerationInfo
         public static float MinRange = 100f;
 
         public static float MaxBulletVeloc = 20f;
-        public static float MinBulletVeloc = 40f;
+        public static float MinBulletVeloc = 30f;
 
         public static string GeneratePrecisionName(Weapon wep)
         {

@@ -23,7 +23,8 @@ public class QTEManager : MonoBehaviour
     //How many buttons we'll be generating
     public int listSize { get; private set; }
 
-    public float WaitTime = 2f;
+    //Amount of time it takes to start the hack
+    public float WaitTime = 1f;
 
     // Start is called before the first frame update
     void Awake()
@@ -36,6 +37,9 @@ public class QTEManager : MonoBehaviour
             buttons[i].Initialize();
             buttons[i].gameObject.SetActive(false);
         }
+
+        Vector3 defaultScale = new Vector3(1, 1, 1);
+        gameObject.transform.localScale = defaultScale;
     }
 
     /// <summary>
@@ -81,6 +85,7 @@ public class QTEManager : MonoBehaviour
             //Initialize a new random button
             buttons[i].gameObject.SetActive(true);
             buttons[i].Randomize();
+            buttons[i].SetColor(Color.gray);
 
             //Add the button to our stack
             buttonStack.Add(buttons[i]);
