@@ -16,12 +16,32 @@ public abstract class Character : MonoBehaviour
     protected void Start()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
+        activeAbility = Instantiate(activeAbility, transform);
+        passiveAbility = Instantiate(passiveAbility, transform);
     }
 
     public bool ActivateActiveAbility()
     {
         return activeAbility.AttemptActivation();
     }
+
+    public void SetPassiveAbility(PassiveAbility ability)
+    {
+        passiveAbility = Instantiate(ability, transform);
+    }
+    public void SetActiveAbility(ActiveAbility ability)
+    {
+        activeAbility = Instantiate(ability, transform);
+    }
+    public ActiveAbility GetActiveAbility()
+    {
+        return activeAbility;
+    }
+    public PassiveAbility GetPassiveAbility()
+    {
+        return passiveAbility;
+    }
+    
 
     public abstract void TakeDamage(int damage);
     public abstract void Fire();

@@ -184,6 +184,9 @@ public class Player : Character
 
     public void Switch()
     {
+        SetActiveAbility(Enemy.GetActiveAbility());
+        SetPassiveAbility(Enemy.GetPassiveAbility());
+
         Destroy(RotationPoint);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;
