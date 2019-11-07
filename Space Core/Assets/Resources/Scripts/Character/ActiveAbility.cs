@@ -5,9 +5,17 @@ using UnityEngine;
 public abstract class ActiveAbility : Ability
 {
 
-    void Awake()
+    public bool AttemptActivation()
     {
-        type = Ability.AbilityType.ACTIVE;
+        if (activationCondition)
+        {
+            Activate();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

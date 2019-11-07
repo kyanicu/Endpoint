@@ -4,10 +4,20 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
-    public enum AbilityType { PASSIVE, ACTIVE };
+    protected abstract bool activationCondition { get;  }
 
-    public AbilityType type { get; protected set; }
+    private Character owner;
 
-    public abstract void Activate();
+    private void Awake()
+    {
+        owner = GetComponent<Character>();
+    }
+
+    public void resetOwner(Character character)
+    {
+        owner = GetComponent<Character>();
+    }
+
+    protected abstract void Activate();
 
 }
