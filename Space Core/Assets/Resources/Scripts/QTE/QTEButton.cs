@@ -8,24 +8,20 @@ public class QTEButton : MonoBehaviour
     //QTE button's current status
     public bool Active;
 
-    //The QTE button's attached arrow image
-    public GameObject ArrowImage;
+    //The UI controller buttons to be loaded onto QTE button
+    public Sprite[] ABXYButtons;
+
+    //The sprite Renderer for the attached image, displays ABXY
+    public Image ButtonImage;
 
     //Enums for possible QTE button presses
-    public enum KeyNames { up, down, left, right };
+    public enum KeyNames { A, B, X, Y };
 
     //This button's needed QTE key
     public KeyNames keyName { get; private set; }
 
-    /// <summary>
-    /// Rotation to be applied to arrow image.
-    /// Arrow starts facing downward and items line up with 
-    /// items in KeyNames which explains the array's item order
-    /// </summary>
-    private int[] arrowRotation = { 180, 0, 270, 90 };
-
     //The sprite Component of the QTE button
-    private Image button;
+    private SpriteRenderer button;
 
     /// <summary>
     /// function used to change the background color of a button.
@@ -37,18 +33,16 @@ public class QTEButton : MonoBehaviour
         button.color = color;
     }
 
-
-
-    // Start is called before the first frame update
     public void Randomize()
     {
-        //Get the rotation for our arrow
-        Vector3 rotValue = new Vector3(0, 0, arrowRotation[(int)keyName]);
+        //Rng between 0 and 3 (inclusive)
+        int rand = Random.Range(0, 4);
 
-        //Apply that rotation
-        ArrowImage.transform.Rotate(-rotValue);
+        //Attach new ui sprite to button
+        ButtonImage.sprite = ABXYButtons[rand];
 
-        Initialize();
+        //Get the corresponding key name
+        keyName = (KeyNames)rand;
     }
 
     // Start is called before the first frame update
@@ -56,23 +50,13 @@ public class QTEButton : MonoBehaviour
     { 
         transform.rotation = Quaternion.Euler(Vector3.zero);
 
-        //Rng between 0 and 3 (inclusive)
-        int rand = Random.Range(0, 4);
-
-        //Get the corresponding key name
-        keyName = (KeyNames)rand;
-
-        //Get the rotation for our arrow
-        Vector3 rotValue = new Vector3(0, 0, arrowRotation[rand]);
-
-        //Apply that rotation
-        ArrowImage.transform.Rotate(rotValue);
+        Randomize();
 
         //Button set to inactivate on start
         Active = false;
 
         //Retrieve QTE button's sprite renderer component
-        button = GetComponent<Image>();
+        button = GetComponent<SpriteRenderer>();
 
         //Set it's color to inactive color (gray)
         SetColor(Color.gray);

@@ -12,7 +12,9 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
-    private Vector2 startPos;
+    Vector2 newPos;
+
+    const float HACK_AREA_LENGTH = 22.5f;
     public string Class { get; private set; }
 
     private const float COOLDOWN_TIME = 2.5f;
@@ -34,6 +36,7 @@ public class Player : Character
         base.Start();
         HUDController.instance.UpdateHUD(this);
         Weapon.ControlledByPlayer = true;
+
     }
 
     private void Awake()
@@ -41,7 +44,6 @@ public class Player : Character
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true;
-        startPos = transform.position;
         if (Class == null)
         {
             Class = "medium";
@@ -89,10 +91,14 @@ public class Player : Character
 
     public override void Reload()
     {
-        Weapon.Reload();
+        //If player is not in hack circle, reload
+        if (Enemy == null || Vector3.Distance(transform.position, Enemy.transform.position) > HACK_AREA_LENGTH)
+        {
+            Weapon.Reload();
 
-        //update hud
-        HUDController.instance.UpdateAmmo(this);
+            //update hud
+            HUDController.instance.UpdateAmmo(this);
+        }
     }
 
     public override void Move(float axis)
@@ -189,15 +195,7 @@ public class Player : Character
         Health = Enemy.Health;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
-        Camera cam = Camera.main;
         Class = Enemy.Class;
-
-        cam.transform.parent = Enemy.transform;
-        float camZ = cam.transform.position.z;
-        cam.transform.position = Enemy.transform.position;
-        cam.transform.position = new Vector3(cam.transform.position.x, 
-                                             cam.transform.position.y, 
-                                             camZ);
 
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
@@ -206,6 +204,9 @@ public class Player : Character
         Enemy.gameObject.AddComponent<CharacterController2D>();
         Enemy.gameObject.AddComponent<PlayerMovement>();
         Enemy.gameObject.AddComponent<Player>();
+        Camera.main.transform.parent = Enemy.transform;
+        Reload();
+        HUDController.instance.UpdateAmmo(this);
         Enemy.tag = "Player";
         Enemy.name = "Player";
         Destroy(Enemy);

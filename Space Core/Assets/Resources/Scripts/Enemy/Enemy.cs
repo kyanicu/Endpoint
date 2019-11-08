@@ -24,7 +24,7 @@ public class Enemy : Character
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
-        QTEPanel = transform.Find("QTE_Canvas_Group").gameObject;
+        QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
 
         // Instantiate left, right movement boundaries
@@ -101,16 +101,16 @@ public class Enemy : Character
         Vector2 pos = Player.instance.transform.position;
         float distToLeft = Vector2.Distance(pos, QTEPointLeft.position);
         float distToRight = Vector2.Distance(pos, QTEPointRight.position);
-        Vector3 newScale = gameObject.transform.localScale;
-        newScale.x *= -1;
         if (distToLeft < distToRight)
         {
-            QTEPanel.transform.position = QTEPointRight.position;
+            QTEPanel.transform.position = QTEPointLeft.position;
+            Vector3 newScale = gameObject.transform.localScale;
+            newScale.x *= -1;
             QTEPanel.transform.localScale = newScale;
+            QTEPanel.transform.position = QTEPointRight.position;
         }
         else
         {
-            QTEPanel.transform.position = QTEPointLeft.position;
         }
     }
 

@@ -82,7 +82,6 @@ public class WeaponPanelManager : MonoBehaviour
             currentWeaponClassText = "scatter";
             WeaponClassImage.sprite = WeaponClassImages[2];
         }
-        Debug.Log(currentWeaponClassText);
 
         // class frame
         WeaponClassFrame.color = currentWeaponClassColor;
