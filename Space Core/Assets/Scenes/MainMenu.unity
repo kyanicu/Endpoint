@@ -1835,7 +1835,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'ASSEET ===&
+  m_text: 'ASSET ===&
 
     REEF 90024./'
   m_isRightToLeft: 0
@@ -1880,7 +1880,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1
@@ -1907,7 +1907,7 @@ MonoBehaviour:
   m_margin: {x: 0.1701355, y: 0, z: 1.1988102, w: -0.006591797}
   m_textInfo:
     textComponent: {fileID: 498740632}
-    characterCount: 24
+    characterCount: 23
     spriteCount: 0
     spaceCount: 3
     wordCount: 3
@@ -2768,7 +2768,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1
@@ -4335,7 +4335,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "overdone tech interface\n\r_011"
+  m_text: "super tech interface\n\r_011"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 422046facbed63142a7588095ec1d8c3, type: 2}
   m_sharedMaterial: {fileID: -6365767805775545708, guid: 422046facbed63142a7588095ec1d8c3,
@@ -4378,7 +4378,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1
@@ -4405,7 +4405,7 @@ MonoBehaviour:
   m_margin: {x: -3.5213964, y: 0, z: 0.8001404, w: -0.006591797}
   m_textInfo:
     textComponent: {fileID: 1378839413}
-    characterCount: 29
+    characterCount: 26
     spriteCount: 0
     spaceCount: 3
     wordCount: 4
@@ -4787,7 +4787,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1

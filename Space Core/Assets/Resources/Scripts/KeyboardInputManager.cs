@@ -83,6 +83,17 @@ public class KeyboardInputManager : InputManager
             HUDController.instance.toggleDiagnosticPanels();
         }
 
+        // Toggles/deals with Pause Menu.
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // If the pause menu isn't already open...
+            if (!PauseMenuManager.instance.PauseMenuPanelIsActive)
+            {
+                // Open the pause menu.
+                PauseMenuManager.instance.OpenPauseMenu();
+            } 
+        }
+
         Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
         float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
@@ -141,7 +152,28 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunPauseFrameInput()
     {
-
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            PauseMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            PauseMenuManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            PauseMenuManager.instance.SelectButton();
+        }
+        // Toggles/deals with Pause Menu.
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // If the pause menu is already open...
+            if (PauseMenuManager.instance.PauseMenuPanelIsActive)
+            {
+                // Close the pause menu.
+                PauseMenuManager.instance.ClosePauseMenu();
+            }
+        }
     }
 
     /// <summary>

@@ -36,6 +36,23 @@ public class MainMenuAnimations : MonoBehaviour
     Color colorHighlightedTinybit = new Color32(0xff, 0x9f, 0x0a, 255);
     Color colorUnhighlightedTinybit = new Color32(0xff, 0xff, 0xff, 255);
 
+    private string[] tinybitsRandomText = { 
+        "del NST.EXE~555", 
+        "future -PXT", 
+        "open DATASET 905",
+        "ASSET ===& error",
+        "REEF 90024./",
+        "destroy tech34-int",
+        "_011",
+        "_899*",
+        "_56624%",
+        "COL data text",
+        "now fea0--4=",
+        "dat project_exodus.dat",
+        "run mercuryRising",
+
+    };
+
     private static MainMenuManager _instance = null;
     public static MainMenuManager instance
     {
@@ -91,7 +108,7 @@ public class MainMenuAnimations : MonoBehaviour
                 MainMenuLogoImageMainBase.enabled = false;
 
                 // Run the tinybit animation cycle (the small elements that appear randomly in the logo)
-                animationTinybitHelper();
+                AnimationTinybitHelper();
 
                 yield return new WaitForSeconds(Random.Range(lowerTime, upperTime));
             }
@@ -116,7 +133,7 @@ public class MainMenuAnimations : MonoBehaviour
         StartCoroutine(AnimationMenuLogoGlitchImage(restPeriod));
     }
 
-    public void animationTinybitHelper()
+    public void AnimationTinybitHelper()
     {
         animationRandomizePosition(TinybitPanel1);
         animationRandomizePosition(TinybitPanel2);
@@ -132,6 +149,48 @@ public class MainMenuAnimations : MonoBehaviour
         animationRandomizePosition(TinybitImage10);
         animationRandomizePosition(TinybitImage11);
         animationRandomizePosition(TinybitImage12);
+    }
+
+    public void AnimationTinybitTextHelper()
+    {
+        StartCoroutine(animationRandomizeText(TinybitPanel1.GetComponentsInChildren<TextMeshProUGUI>()[0], 3));
+        StartCoroutine(animationRandomizeText(TinybitPanel2.GetComponentsInChildren<TextMeshProUGUI>()[0], 2));
+        StartCoroutine(animationRandomizeText(TinybitPanel3.GetComponentsInChildren<TextMeshProUGUI>()[0], 2));
+        StartCoroutine(animationRandomizeText(TinybitText4, 2));
+    }
+
+    private IEnumerator animationRandomizeText(TextMeshProUGUI textObj, int numLines)
+    {
+        // Create a string to store the new text.
+        string newText = "";
+
+        // Avoid duplicates to ensure that the newly randomly generated
+        int[] alreadyExistInText = new int[numLines];
+
+        // Loop over the number of lines and generate a new string.
+        for (int i = 0; i < numLines; i++)
+        {
+            // Generate a new line.
+            int newLine = Random.Range(0, tinybitsRandomText.Length);
+
+            // Avoid duplicate lines by rerunning the random line until we get a line that hasn't been run for this text element yet.
+            while (System.Array.IndexOf(alreadyExistInText, newLine) != -1) {
+                newLine = Random.Range(0, tinybitsRandomText.Length);
+            }
+
+            // Add the line to the new text string.
+            newText += tinybitsRandomText[newLine] + "\n";
+
+            // Add this line to the duplicate checker.
+            alreadyExistInText[i] = newLine;
+        }
+
+        // Set the object's text to the new text string.
+        textObj.text = newText;
+
+        // Wait for a random amount of time and start the next animation cycle.
+        yield return new WaitForSeconds(Random.Range(0.2f, 0.4f));
+        StartCoroutine(animationRandomizeText(textObj, numLines));
     }
 
     private void animationRandomizePosition(GameObject obj)
@@ -187,100 +246,5 @@ public class MainMenuAnimations : MonoBehaviour
         Vector3 newRandomPosition = new Vector3(newRandomX, newRandomY, 0);
 
         obj.GetComponent<RectTransform>().localPosition = newRandomPosition;
-    }
-
-    // Define a distance for the arrows to travel in the X axis.
-    private float buttonArrowDistanceToTravel = 22f;
-    private float buttonArrowAnimationLength = 0.5f;
-    public IEnumerator AnimationMenuButtonArrowSelected(Button thisButton)
-    {
-        // This function will animate two aspects of the button's arrows - the opacity and the position.
-        // The arrows will move in slightly position-wise, and fade in from 0 to 1 alpha.
-
-        // Get the left and right arrows on the button.
-        Image leftArrow = thisButton.GetComponentsInChildren<Image>()[1];
-        Image rightArrow = thisButton.GetComponentsInChildren<Image>()[2];
-
-        // Start a timer.
-        float timer = 0;
-
-        // Grab the original positions for the arrows.
-        Vector3 leftArrowPosition = leftArrow.GetComponent<RectTransform>().localPosition;
-        Vector3 rightArrowPosition = rightArrow.GetComponent<RectTransform>().localPosition;
-        // Create variables to store the tweened position for the arrows.
-        float leftArrowNewPositionX = leftArrowPosition.x;
-        float rightArrowNewPositionX = rightArrowPosition.x;
-
-        // Begin the position tween for both of the arrows.
-        DOTween.To(() => leftArrowNewPositionX, x => leftArrowNewPositionX = x, leftArrowPosition.x + buttonArrowDistanceToTravel, buttonArrowAnimationLength);
-        DOTween.To(() => rightArrowNewPositionX, x => rightArrowNewPositionX = x, rightArrowPosition.x - buttonArrowDistanceToTravel, buttonArrowAnimationLength);
-
-        // Begin the constant alpha transition for both of the arrows.
-
-        while (timer < buttonArrowAnimationLength)
-        {
-            // Redefine the position of the arrows based on the tweening variable.
-            leftArrow.rectTransform.localPosition = new Vector3(leftArrowNewPositionX, leftArrowPosition.y, leftArrowPosition.z);
-            rightArrow.rectTransform.localPosition = new Vector3(rightArrowNewPositionX, rightArrowPosition.y, rightArrowPosition.z);
-            
-            // Change the colors of the arrow to slowly fade in to alpha 1.
-            Color leftColor = leftArrow.color;
-            leftColor.a += 0.05f / buttonArrowAnimationLength;
-            leftArrow.color = leftColor;
-
-            Color rightColor = rightArrow.color;
-            rightColor.a += 0.05f / buttonArrowAnimationLength;
-            rightArrow.color = rightColor;
-
-            // Increment timer and continue loop.
-            timer += .05f;
-            yield return new WaitForSeconds(.05f);
-        }
-    }
-
-    public IEnumerator AnimationMenuButtonArrowUnselected(Button thisButton)
-    {
-        // This function will animate two aspects of the button's arrows - the opacity and the position.
-        // The arrows will move out slightly position-wise, and fade out from 1 to 0 alpha.
-
-        // Get the left and right arrows on the button.
-        Image leftArrow = thisButton.GetComponentsInChildren<Image>()[1];
-        Image rightArrow = thisButton.GetComponentsInChildren<Image>()[2];
-
-        // Start a timer.
-        float timer = 0;
-
-        // Grab the original positions for the arrows.
-        Vector3 leftArrowPosition = leftArrow.GetComponent<RectTransform>().localPosition;
-        Vector3 rightArrowPosition = rightArrow.GetComponent<RectTransform>().localPosition;
-        // Create variables to store the tweened position for the arrows.
-        float leftArrowNewPositionX = leftArrowPosition.x;
-        float rightArrowNewPositionX = rightArrowPosition.x;
-
-        // Begin the position tween for both of the arrows.
-        DOTween.To(() => leftArrowNewPositionX, x => leftArrowNewPositionX = x, leftArrowPosition.x - buttonArrowDistanceToTravel, buttonArrowAnimationLength);
-        DOTween.To(() => rightArrowNewPositionX, x => rightArrowNewPositionX = x, rightArrowPosition.x + buttonArrowDistanceToTravel, buttonArrowAnimationLength);
-
-        // Begin the constant alpha transition for both of the arrows.
-
-        while (timer < buttonArrowAnimationLength)
-        {
-            // Redefine the position of the arrows based on the tweening variable.
-            leftArrow.rectTransform.localPosition = new Vector3(leftArrowNewPositionX, leftArrowPosition.y, leftArrowPosition.z);
-            rightArrow.rectTransform.localPosition = new Vector3(rightArrowNewPositionX, rightArrowPosition.y, rightArrowPosition.z);
-
-            // Change the colors of the arrow to slowly fade in to alpha 1.
-            Color leftColor = leftArrow.color;
-            leftColor.a -= 0.05f / buttonArrowAnimationLength;
-            leftArrow.color = leftColor;
-
-            Color rightColor = rightArrow.color;
-            rightColor.a -= 0.05f / buttonArrowAnimationLength;
-            rightArrow.color = rightColor;
-
-            // Increment timer and continue loop.
-            timer += .05f;
-            yield return new WaitForSeconds(.05f);
-        }
     }
 }

@@ -6,16 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro; // TextMesh Pro
 
-public class MainMenuManager : MonoBehaviour
-{
-    /// <summary>
-    /// Used to load specific scenes based on add order in build settings
-    /// </summary>
-    private enum Scenes
-    {
-        MainMenu,
-        DemoScene
-    }
+public class PauseMenuManager : MonoBehaviour {
 
     /// <summary>
     /// The enum id for each button in the main menu list
@@ -23,10 +14,10 @@ public class MainMenuManager : MonoBehaviour
     private enum MenuItemID
     {
         ResumeButton,
-        NewButton,
         LoadButton,
         SettingsButton,
-        ExitButton
+        ExitGameButton,
+        ExitDesktopButton
     }
 
     private const int TOTAL_MENU_ITEMS = 5;
@@ -43,19 +34,20 @@ public class MainMenuManager : MonoBehaviour
     Color colorMenuButtonUnselectedText = new Color32(0xff, 0xff, 0xff, 255);
     Color colorMenuButtonUnselectedImage = new Color32(0xff, 0xff, 0xff, 255);
 
-    public MainMenuAnimations MainMenuAnims;
+    public GameObject PauseMenuPanel;
+    public bool PauseMenuPanelIsActive { get; set; }
 
-    private static MainMenuManager _instance = null;
-    public static MainMenuManager instance
+    private static PauseMenuManager _instance = null;
+    public static PauseMenuManager instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<MainMenuManager>();
+                _instance = FindObjectOfType<PauseMenuManager>();
                 // fallback, might not be necessary.
                 if (_instance == null)
-                    _instance = new GameObject(typeof(MainMenuManager).Name).AddComponent<MainMenuManager>();
+                    _instance = new GameObject(typeof(PauseMenuManager).Name).AddComponent<PauseMenuManager>();
 
                 // This breaks scene reloading
                 // DontDestroyOnLoad(m_Instance.gameObject);
@@ -64,10 +56,29 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        // Set current state to Main Menu.
-        InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+        // Set selected button ID to the resume button.
+        selectedID = MenuItemID.ResumeButton;
+
+        // Trigger selection of first menu item.
+        TraverseMenu(0);
+
+        // Hide this panel.
+        PauseMenuPanel.gameObject.SetActive(false);
+        this.PauseMenuPanelIsActive = false;
+    }
+
+    // This function is called when the pause menu is opened in the game.
+    public void OpenPauseMenu()
+    {
+        // Set current state to Pause Menu.
+        InputManager.instance.currentState = InputManager.InputState.PAUSE;
+
+        // Show this panel.
+        PauseMenuPanel.gameObject.SetActive(true);
+        this.PauseMenuPanelIsActive = true;
 
         // Set selected button ID to the resume button.
         selectedID = MenuItemID.ResumeButton;
@@ -75,14 +86,22 @@ public class MainMenuManager : MonoBehaviour
         // Trigger selection of first menu item.
         TraverseMenu(0);
 
-        // Run the main menu logo's glitching image animation.
-        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
+        // Set gameplay timescale to 0 to pause the gameplay.
+        //Time.timeScale = 0;
+    }
 
-        // Run the helper function for animating the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitHelper();
+    // This function is called when the pause menu is closed.
+    public void ClosePauseMenu()
+    {
+        // Hide this panel.
+        PauseMenuPanel.gameObject.SetActive(false);
+        this.PauseMenuPanelIsActive = false;
 
-        // Run the helper function for animating the text of the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitTextHelper();
+        // Set current state to Gameplay.
+        InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
+
+        // Set gameplay timescale to 1 to resume the gameplay.
+        //Time.timeScale = 1;
     }
 
     /// <summary>
@@ -106,7 +125,7 @@ public class MainMenuManager : MonoBehaviour
         {
             selected--;
         }
-        if(selected < 0)
+        if (selected < 0)
         {
             selected = TOTAL_MENU_ITEMS - 1;
         }
@@ -179,68 +198,48 @@ public class MainMenuManager : MonoBehaviour
     {
         if (selectedID == MenuItemID.ResumeButton)
         {
-            TagText.text = "Resume latest game";
-        }
-        else if (selectedID == MenuItemID.NewButton)
-        {
-            TagText.text = "Create a new game";
+            TagText.text = "Resume the game";
         }
         else if (selectedID == MenuItemID.LoadButton)
         {
-            TagText.text = "Load a saved game";
+            TagText.text = "Load another saved game";
         }
         else if (selectedID == MenuItemID.SettingsButton)
         {
             TagText.text = "Change settings";
         }
-        else if (selectedID == MenuItemID.ExitButton)
+        else if (selectedID == MenuItemID.ExitGameButton)
         {
-            TagText.text = "Exit the game";
+            TagText.text = "Exit this game to main menu";
+        }
+        else if (selectedID == MenuItemID.ExitDesktopButton)
+        {
+            TagText.text = "Exit this game to desktop";
         }
     }
-
-    /// <summary>
-    /// Invoke the currently selected main menu button
-    /// </summary>
     public void SelectButton()
     {
         MenuButtons[(int)selectedID].onClick.Invoke();
     }
 
-    /// <summary>
-    /// Resume the most recently saved game
-    /// </summary>
     public void ResumeGame()
     {
+        ClosePauseMenu();
     }
-
-    /// <summary>
-    /// Takes the player to the first level of the game
-    /// </summary>
-    public void StartNewGame()
-    {
-        InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
-        SceneManager.LoadScene((int)Scenes.DemoScene);
-    }
-
     public void LoadGame()
     {
-
+        Debug.Log("clicked load");
     }
-
-    /// <summary>
-    /// Open the settings panel to adjust the game's settings
-    /// </summary>
     public void OpenSettings()
     {
-
+        Debug.Log("clicked settings");
     }
-
-    /// <summary>
-    /// Closes the game window
-    /// </summary>
-    public void QuitGame()
+    public void QuitGameToMenu()
     {
-        Application.Quit();
+        Debug.Log("clicked quit 1");
+    }
+    public void QuitGameToDesktop()
+    {
+        Debug.Log("clicked quit 2");
     }
 }
