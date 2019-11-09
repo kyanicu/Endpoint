@@ -42,6 +42,18 @@ public class Enemy : Character
     {
         if (Health <= 0)
         {
+            // Drop ammo upon death
+            if (Weapon.TotalAmmo > 0)
+            {
+                if (Random.Range(0,10) % 2 == 0)
+                {
+                    GameObject dAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
+                    GameObject instantiatedDroppedAmmo = GameObject.Instantiate(dAmmo, transform.position, Quaternion.identity);
+                    DroppedAmmo droppedAmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
+                    droppedAmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
+                }
+
+            }
             Destroy(gameObject);
         }
 
