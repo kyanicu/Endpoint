@@ -9,25 +9,39 @@ public abstract class Character : MonoBehaviour
     public Weapon Weapon { get; set; }
     public GameObject RotationPoint { get; set; }
     [SerializeField]
-    private List<Ability> abilities = new List<Ability>(2);
+    private ActiveAbility activeAbility;
+    [SerializeField]
+    private PassiveAbility passiveAbility;
 
     protected void Start()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
+        activeAbility = Instantiate(activeAbility, transform);
+        passiveAbility = Instantiate(passiveAbility, transform);
     }
 
-    public bool ActivateAbility(int i)
+    public bool ActivateActiveAbility()
     {
-        if (i >= abilities.Count || abilities[i].type == Ability.AbilityType.PASSIVE)
-        {
-            return false;
-        }
-        else
-        {
-            abilities[i].Activate();
-            return true;
-        }
+        return activeAbility.AttemptActivation();
     }
+
+    public void SetPassiveAbility(PassiveAbility ability)
+    {
+        passiveAbility = Instantiate(ability, transform);
+    }
+    public void SetActiveAbility(ActiveAbility ability)
+    {
+        activeAbility = Instantiate(ability, transform);
+    }
+    public ActiveAbility GetActiveAbility()
+    {
+        return activeAbility;
+    }
+    public PassiveAbility GetPassiveAbility()
+    {
+        return passiveAbility;
+    }
+    
 
     public abstract void TakeDamage(int damage);
     public abstract void Fire();

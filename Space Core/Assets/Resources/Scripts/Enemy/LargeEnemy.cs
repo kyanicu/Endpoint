@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MediumEnemy : Enemy
+public class LargeEnemy : Enemy
 {
     new void Awake()
     {
-        PatrolRange = 4.0f;
+        PatrolRange = 3.0f;
         base.Awake();
     }
 }
