@@ -345,17 +345,6 @@ public class ControllerInputManager : InputManager
         {
             PauseMenuManager.instance.SelectButton();
         }
-
-        // Toggles/deals with Pause Menu.
-        if (prevState.Value.Buttons.Start == ButtonState.Released && state.Value.Buttons.Start == ButtonState.Pressed)
-        {
-            // If the pause menu is already open...
-            if (PauseMenuManager.instance.PauseMenuPanelIsActive)
-            {
-                // Close the pause menu.
-                PauseMenuManager.instance.ClosePauseMenu();
-            }
-        }
     }
 
     private bool CheckControllerConnected()
