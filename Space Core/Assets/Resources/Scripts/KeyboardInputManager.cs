@@ -67,7 +67,7 @@ public class KeyboardInputManager : InputManager
         {
             Player.instance.Fire();
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Player.instance.Reload();
         }
@@ -100,7 +100,18 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunMainMenuFrameInput()
     {
-
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            MainMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            MainMenuManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            MainMenuManager.instance.SelectButton();
+        }
     }
 
     /// <summary>

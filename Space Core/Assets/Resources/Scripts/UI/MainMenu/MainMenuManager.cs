@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using TMPro; // TextMesh Pro
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -20,20 +22,28 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     private enum MenuItemID
     {
-        Resume,
-        New,
-        Load,
-        Settings,
-        Exit
+        ResumeButton,
+        NewButton,
+        LoadButton,
+        SettingsButton,
+        ExitButton
     }
 
     private const int TOTAL_MENU_ITEMS = 5;
     private MenuItemID selectedID;
     public Button[] MenuButtons;
 
-    private Color deselectedColor = Color.white;
-    private Color selectedColor = Color.yellow;
+    [SerializeField]
+    private Sprite[] MenuButtonImages = { };
 
+    public TextMeshProUGUI TagText;
+
+    Color colorMenuButtonSelectedText = new Color32(0x00, 0x00, 0x00, 255);
+    Color colorMenuButtonSelectedImage = new Color32(0xff, 0x9f, 0x0a, 255);
+    Color colorMenuButtonUnselectedText = new Color32(0xff, 0xff, 0xff, 255);
+    Color colorMenuButtonUnselectedImage = new Color32(0xff, 0xff, 0xff, 255);
+
+    public MainMenuAnimations MainMenuAnims;
 
     private static MainMenuManager _instance = null;
     public static MainMenuManager instance
@@ -56,9 +66,22 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        // Set current state to Main Menu.
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
-        selectedID = MenuItemID.Resume;
+
+        // Set selected button ID to the resume button.
+        selectedID = MenuItemID.ResumeButton;
+
+        // Trigger selection of first menu item.
         TraverseMenu(0);
+
+        // Run the logo animation loops.
+        //Vector3 elemPosition = TinybitPanel1.GetComponent<RectTransform>().localPosition;
+        //StartCoroutine(AnimationLogoLoop1(1, elemPosition));
+
+        // Run the main menu logo's glitching image animation.
+        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
+        MainMenuAnims.animationTinybitHelper();
     }
 
     /// <summary>
@@ -67,8 +90,13 @@ public class MainMenuManager : MonoBehaviour
     /// <param name="vert"></param>
     public void TraverseMenu(float vert)
     {
+        // Find out the previously selected button.
         int selected = (int)selectedID;
-        MenuButtons[selected].GetComponent<Image>().color = deselectedColor;
+
+        // Change style of previously selected button to regular.
+        changeButtonToUnselected(MenuButtons[selected]);
+
+        // Based on input vert, change the current selected button ID.
         if (vert > 0)
         {
             selected++;
@@ -86,8 +114,88 @@ public class MainMenuManager : MonoBehaviour
             selected = 0;
         }
         selectedID = (MenuItemID)selected;
-        MenuButtons[selected].Select();
-        MenuButtons[selected].GetComponent<Image>().color = selectedColor;
+
+        // Change style of newly selected button to selected.
+        changeButtonToSelected(MenuButtons[selected]);
+
+        // Set the tag text based on the selected button.
+        changeTag();
+    }
+
+    public void InteractionPointerEnterButton(Button thisButton)
+    {
+        // Find out the previously selected button.
+        int selected = (int)selectedID;
+
+        // Change style of previously selected button to regular.
+        changeButtonToUnselected(MenuButtons[selected]);
+
+        // Change current selected ID to the button that was just hovered.
+        selectedID = (MenuItemID)System.Enum.Parse(typeof(MenuItemID), thisButton.name);
+        selected = (int)selectedID;
+
+        // Change style of newly selected button to selected.
+        changeButtonToSelected(MenuButtons[selected]);
+
+        // Set the tag text based on the selected button.
+        changeTag();
+    }
+
+    private void changeButtonToSelected(Button thisButton)
+    {
+        thisButton.Select();
+        thisButton.GetComponent<Image>().sprite = MenuButtonImages[1];
+        thisButton.GetComponent<Image>().color = colorMenuButtonSelectedImage;
+        thisButton.GetComponentInChildren(typeof(TextMeshProUGUI)).GetComponent<TextMeshProUGUI>().color = colorMenuButtonSelectedText;
+
+        // Animate the side arrows on the button, to selected position.
+        Image leftArrow = thisButton.GetComponentsInChildren<Image>()[1];
+        Animator leftAnimator = leftArrow.GetComponent<Animator>();
+        leftAnimator.Play("LeftArrowIn");
+
+        Image rightArrow = thisButton.GetComponentsInChildren<Image>()[2];
+        Animator rightAnimator = rightArrow.GetComponent<Animator>();
+        rightAnimator.Play("RightArrowIn");
+    }
+
+    private void changeButtonToUnselected(Button thisButton)
+    {
+        thisButton.GetComponent<Image>().sprite = MenuButtonImages[0];
+        thisButton.GetComponent<Image>().color = colorMenuButtonUnselectedImage;
+        thisButton.GetComponentInChildren(typeof(TextMeshProUGUI)).GetComponent<TextMeshProUGUI>().color = colorMenuButtonUnselectedText;
+
+        // Animate the side arrows on the button, to unselected position.
+        Image leftArrow = thisButton.GetComponentsInChildren<Image>()[1];
+        Animator leftAnimator = leftArrow.GetComponent<Animator>();
+        leftAnimator.Play("LeftArrowOut");
+
+        Image rightArrow = thisButton.GetComponentsInChildren<Image>()[2];
+        Animator rightAnimator = rightArrow.GetComponent<Animator>();
+        rightAnimator.Play("RightArrowOut");
+    }
+
+    private void changeTag()
+    {
+        if (selectedID == MenuItemID.ResumeButton)
+        {
+            TagText.text = "Resume latest game";
+        }
+        else if (selectedID == MenuItemID.NewButton)
+        {
+            TagText.text = "Create a new game";
+        }
+        else if (selectedID == MenuItemID.LoadButton)
+        {
+            TagText.text = "Load a saved game";
+        }
+        else if (selectedID == MenuItemID.SettingsButton)
+        {
+            TagText.text = "Change settings";
+        }
+        else if (selectedID == MenuItemID.ExitButton)
+        {
+            TagText.text = "Exit the game";
+        }
     }
 
     /// <summary>
@@ -103,7 +211,6 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void ResumeGame()
     {
-
     }
 
     /// <summary>
