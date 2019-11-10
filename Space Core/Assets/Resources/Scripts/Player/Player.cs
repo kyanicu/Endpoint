@@ -132,7 +132,13 @@ public class Player : Character
                 Destroy(other.gameObject);
             }
         }
-        else if(other.CompareTag("OB"))
+        else if (other.CompareTag("Ammo"))
+        {
+            Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
+            HUDController.instance.UpdateAmmo(this);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("OB"))
         {
             //We'll need to figure out a way to decouple scene loading from player
             SceneManager.LoadScene(0);
