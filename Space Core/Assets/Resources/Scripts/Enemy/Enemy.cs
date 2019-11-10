@@ -7,6 +7,7 @@ public class Enemy : Character
     public bool IsSelected { get; set; }
     public float PatrolRange { get; set; }
     public GameObject HackArea { get; protected set; }
+    private GameObject DropAmmo { get; set; }
     protected Transform QTEPointLeft;
     protected Transform QTEPointRight;
     public GameObject QTEPanel { get; protected set; }
@@ -21,6 +22,7 @@ public class Enemy : Character
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         Weapon.BulletSource = Bullet.BulletSource.Enemy;
+        DropAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
         HackArea = transform.Find("HackArea").gameObject;
@@ -47,10 +49,9 @@ public class Enemy : Character
             {
                 if (Random.Range(0,10) % 2 == 0)
                 {
-                    GameObject dAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
-                    GameObject instantiatedDroppedAmmo = GameObject.Instantiate(dAmmo, transform.position, Quaternion.identity);
-                    DroppedAmmo droppedAmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
-                    droppedAmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
+                    GameObject instantiatedDroppedAmmo = GameObject.Instantiate(DropAmmo, transform.position, Quaternion.identity);
+                    DroppedAmmo droppedAmmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
+                    droppedAmmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
                 }
 
             }
