@@ -132,7 +132,13 @@ public class Player : Character
                 Destroy(other.gameObject);
             }
         }
-        else if(other.CompareTag("OB"))
+        else if (other.CompareTag("Ammo"))
+        {
+            Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
+            HUDController.instance.UpdateAmmo(this);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("OB"))
         {
             //We'll need to figure out a way to decouple scene loading from player
             SceneManager.LoadScene(0);
@@ -190,6 +196,9 @@ public class Player : Character
 
     public void Switch()
     {
+        SetActiveAbility(Enemy.GetActiveAbility());
+        SetPassiveAbility(Enemy.GetPassiveAbility());
+
         Destroy(RotationPoint);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;

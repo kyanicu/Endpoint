@@ -9,6 +9,7 @@ TagManager:
   - HackProjectile
   - PushableObject
   - OB
+  - Ammo
   layers:
   - Default
   - TransparentFX

@@ -67,7 +67,7 @@ public class KeyboardInputManager : InputManager
         {
             Player.instance.Fire();
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Player.instance.Reload();
         }
@@ -81,6 +81,17 @@ public class KeyboardInputManager : InputManager
         {
             // Toggle Diagnostic Panels
             HUDController.instance.toggleDiagnosticPanels();
+        }
+
+        // Toggles/deals with Pause Menu.
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // If the pause menu isn't already open...
+            if (!PauseMenuManager.instance.PauseMenuPanelIsActive)
+            {
+                // Open the pause menu.
+                PauseMenuManager.instance.OpenPauseMenu();
+            } 
         }
 
         Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
@@ -100,7 +111,18 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunMainMenuFrameInput()
     {
-
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            MainMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            MainMenuManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            MainMenuManager.instance.SelectButton();
+        }
     }
 
     /// <summary>
@@ -130,7 +152,28 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunPauseFrameInput()
     {
-
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            PauseMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            PauseMenuManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            PauseMenuManager.instance.SelectButton();
+        }
+        // Toggles/deals with Pause Menu.
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // If the pause menu is already open...
+            if (PauseMenuManager.instance.PauseMenuPanelIsActive)
+            {
+                // Close the pause menu.
+                PauseMenuManager.instance.ClosePauseMenu();
+            }
+        }
     }
 
     /// <summary>
