@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DestructibleWall : MonoBehaviour
 {
-    private int Health;
+    public int Health;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
