@@ -1,8 +1,14 @@
 ﻿using System;
 using UnityEngine;
-using automaticStats = WeaponGenerationInfo.AutomaticStats;
-using precisionStats = WeaponGenerationInfo.PrecisionStats;
-using spreadStats = WeaponGenerationInfo.SpreadStats;
+
+#region Weapon Namespaces
+using Jakkaru = WeaponGenerationInfo.Jakkaru;
+using Matsya = WeaponGenerationInfo.Matsya;
+using SnipeyBoi = WeaponGenerationInfo.SnipeyBoi;
+//using Thor = WeaponGenerationInfo.Thor;
+//using Bestafera = WeaponGenerationInfo.Bestafera;
+//using Tributar = WeaponGenerationInfo.Tributar;
+#endregion
 
 /// <summary>
 /// This class will generate a random weapon
@@ -20,114 +26,214 @@ public static class WeaponGenerator
     /// <returns></returns>
     public static GameObject GenerateWeapon(Transform parent)
     {
-        //get number of weapons that can be generated
-        int num = Enum.GetValues(typeof(Weapon.WeaponType)).Length;
-
         //parse into a weapon type
         int rngVal = UnityEngine.Random.Range(0, Weapon.WeaponsList.Count);
-        Weapon.WeaponType weaponType = Weapon.WeaponsList[rngVal].Item2;
-        string weaponName = Weapon.WeaponsList[rngVal].Item1;
+
+        //Load the randomly picked weapon's name
+        string weaponName = Weapon.WeaponsList[rngVal];
+
+        //Create empty object to load generated weapon into
         GameObject weapon = new GameObject();
+
+       //Create empty string to load generated prefix into
         string prefix = "";
 
-        //Switch on the weapon type
-        switch(weaponType)
+        //Generate a weaon specified by its name
+        switch(weaponName)
         {
-            case Weapon.WeaponType.Automatic:
-                weapon = BuildAutomaticWeapon(parent);
-                Automatic a = weapon.GetComponent<Automatic>();
-                prefix = automaticStats.GenerateAutomaticName(a);
+            case "Jakkaru":
+                //Load generated Jakkaru stats onto weapon
+                weapon = BuildJakkaru(parent);
+                prefix = Jakkaru.GenerateAutomaticName(weapon.GetComponent<Weapon>());
                 break;
 
-            case Weapon.WeaponType.Spread:
-                weapon = BuildSpreadWeapon(parent);
-                Spread s = weapon.GetComponent<Spread>();
-                prefix = spreadStats.GenerateSpreadName(s);
+            /*case "Thor":
+                //Load generated Thor stats onto weapon
+                weapon = BuildThor(parent);
+                prefix = Thor.GenerateAutomaticName(weapon.GetComponent<Weapon>());
+                break;
+                */
+
+            case "Matsya":
+                //Load generated Matsya stats onto weapon
+                weapon = BuildMatsya(parent);
+                prefix = Matsya.GenerateSpreadName(weapon.GetComponent<Weapon>());
                 break;
 
-            case Weapon.WeaponType.Precision:
-                weapon = BuildPrecisionWeapon(parent);
-                Precision p = weapon.GetComponent<Precision>();
-                prefix = precisionStats.GeneratePrecisionName(p);
+            /*case "Bestafera":
+                //Load generated Bestafera stats onto weapon
+                weapon = BuilBestafera(parent);
+                prefix = Matsya.GenerateSpreadName(weapon.GetComponent<Weapon>());
+                break;*/
+
+            case "SnipeyBoi":
+                //Load generated SnipeyBoi stats onto weapon
+                weapon = BuildSnipeyBoi(parent);
+                prefix = SnipeyBoi.GeneratePrecisionName(weapon.GetComponent<Weapon>());
                 break;
+
+            /*case "Tributar":
+                //Load generated Tributar stats onto weapon
+                weapon = BuildTributar(parent);
+                prefix = SnipeyBoi.GeneratePrecisionName(weapon.GetComponent<Weapon>());
+                break;*/
 
             default:
                 return weapon;
         }
+
+        //Apply the newly generated prefix to the weapon name
         Weapon wep = weapon.GetComponent<Weapon>();
         wep.Name = prefix + weaponName;
         return weapon;
     }
 
+    #region Automatic Weapons
     /// <summary>
-    /// This function will generate a randomly made automatic weapon base on stats from
-    /// automatic stats.
+    /// This function will generate a random Jakkaru
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
-    private static GameObject BuildAutomaticWeapon(Transform parent)
+    private static GameObject BuildJakkaru(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Automatic");
+        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Jakkaru");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Automatic automatic = weaponObject.GetComponent<Automatic>();
-        automatic.SpreadFactor = UnityEngine.Random.Range(automaticStats.MinSpread, automaticStats.MaxSpread);
-        automatic.Damage = UnityEngine.Random.Range(automaticStats.MinDamage, automaticStats.MaxDamage);
-        automatic.ClipSize = UnityEngine.Random.Range(automaticStats.MinClipSize, automaticStats.MaxClipSize);
+        automatic.SpreadFactor = UnityEngine.Random.Range(Jakkaru.MinSpread, Jakkaru.MaxSpread);
+        automatic.Damage = UnityEngine.Random.Range(Jakkaru.MinDamage, Jakkaru.MaxDamage);
+        automatic.ClipSize = UnityEngine.Random.Range(Jakkaru.MinClipSize, Jakkaru.MaxClipSize);
         automatic.AmmoInClip = automatic.ClipSize;
         automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
-        automatic.RateOfFire = UnityEngine.Random.Range(automaticStats.MinRateOfFire, automaticStats.MaxRateOfFire);
-        automatic.ReloadTime = UnityEngine.Random.Range(automaticStats.MinReloadTime, automaticStats.MaxReloadTime);
-        automatic.Range = UnityEngine.Random.Range(automaticStats.MinRange, automaticStats.MaxRange);
-        automatic.BulletVeloc = UnityEngine.Random.Range(automaticStats.MinBulletVeloc, automaticStats.MaxBulletVeloc);
+        automatic.RateOfFire = UnityEngine.Random.Range(Jakkaru.MinRateOfFire, Jakkaru.MaxRateOfFire);
+        automatic.ReloadTime = UnityEngine.Random.Range(Jakkaru.MinReloadTime, Jakkaru.MaxReloadTime);
+        automatic.Range = UnityEngine.Random.Range(Jakkaru.MinRange, Jakkaru.MaxRange);
+        automatic.BulletVeloc = UnityEngine.Random.Range(Jakkaru.MinBulletVeloc, Jakkaru.MaxBulletVeloc);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
         return weaponObject;
     }
+
     /// <summary>
-    /// This function will generate a randomly made precision weapon base on stats from
-    /// automatic stats.
+    /// This function will generate a random Thor
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
-    private static GameObject BuildPrecisionWeapon(Transform parent)
+    /*private static GameObject BuildThor(Transform parent)
+    {
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Thor");
+        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
+        Automatic automatic = weaponObject.GetComponent<Automatic>();
+        automatic.SpreadFactor = UnityEngine.Random.Range(Thor.MinSpread, Thor.MaxSpread);
+        automatic.Damage = UnityEngine.Random.Range(Thor.MinDamage, Thor.MaxDamage);
+        automatic.ClipSize = UnityEngine.Random.Range(Thor.MinClipSize, Thor.MaxClipSize);
+        automatic.AmmoInClip = automatic.ClipSize;
+        automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
+        automatic.RateOfFire = UnityEngine.Random.Range(Thor.MinRateOfFire, Thor.MaxRateOfFire);
+        automatic.ReloadTime = UnityEngine.Random.Range(Thor.MinReloadTime, Thor.MaxReloadTime);
+        automatic.Range = UnityEngine.Random.Range(Thor.MinRange, Thor.MaxRange);
+        automatic.BulletVeloc = UnityEngine.Random.Range(Thor.MinBulletVeloc, Thor.MaxBulletVeloc);
+        automatic.TotalAmmo = automatic.MaxAmmoCapacity;
+        return weaponObject;
+    }*/
+    #endregion
+
+    #region Scatter Weapons
+    /// <summary>
+    /// This function will generate a random Matsya
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
+    private static GameObject BuildMatsya(Transform parent)
+    {
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Spread");
+        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Matsya");
+        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
+        Spread spread = weaponObject.GetComponent<Spread>();
+        spread.SpreadFactor = UnityEngine.Random.Range(Matsya.MinSpread, Matsya.MaxSpread);
+        spread.Damage = UnityEngine.Random.Range(Matsya.MinDamage, Matsya.MaxDamage);
+        spread.ClipSize = UnityEngine.Random.Range(Matsya.MinClipSize, Matsya.MaxClipSize);
+        spread.AmmoInClip = spread.ClipSize;
+        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
+        spread.RateOfFire = UnityEngine.Random.Range(Matsya.MinRateOfFire, Matsya.MaxRateOfFire);
+        spread.ReloadTime = UnityEngine.Random.Range(Matsya.MinReloadTime, Matsya.MaxReloadTime);
+        spread.NumPellets = UnityEngine.Random.Range(Matsya.MinNumPellets, Matsya.MaxNumPellets);
+        spread.Range = UnityEngine.Random.Range(Matsya.MinRange, Matsya.MaxRange);
+        spread.BulletVeloc = UnityEngine.Random.Range(Matsya.MinBulletVeloc, Matsya.MaxBulletVeloc);
+        spread.TotalAmmo = spread.MaxAmmoCapacity;
+        return weaponObject;
+    }
+
+    /// <summary>
+    /// This function will generate a random Bestafera
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
+    /*private static GameObject BuildBestafera(Transform parent)
+    {
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Bestafera");
+        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
+        Spread spread = weaponObject.GetComponent<Spread>();
+        spread.SpreadFactor = UnityEngine.Random.Range(Bestafera.MinSpread, Bestafera.MaxSpread);
+        spread.Damage = UnityEngine.Random.Range(Matsya.Bestafera, Bestafera.MaxDamage);
+        spread.ClipSize = UnityEngine.Random.Range(Bestafera.MinClipSize, Bestafera.MaxClipSize);
+        spread.AmmoInClip = spread.ClipSize;
+        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
+        spread.RateOfFire = UnityEngine.Random.Range(Bestafera.MinRateOfFire, Bestafera.MaxRateOfFire);
+        spread.ReloadTime = UnityEngine.Random.Range(Bestafera.MinReloadTime, Bestafera.MaxReloadTime);
+        spread.NumPellets = UnityEngine.Random.Range(Bestafera.MinNumPellets, Bestafera.MaxNumPellets);
+        spread.Range = UnityEngine.Random.Range(Bestafera.MinRange, Bestafera.MaxRange);
+        spread.BulletVeloc = UnityEngine.Random.Range(Bestafera.MinBulletVeloc, Bestafera.MaxBulletVeloc);
+        spread.TotalAmmo = spread.MaxAmmoCapacity;
+        return weaponObject;
+    }*/
+    #endregion
+
+    #region Precision Weapons
+    /// <summary>
+    /// This function will generate a random SnipeyBoi
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <returns>new weapon gameobject</returns>
+    private static GameObject BuildSnipeyBoi(Transform parent)
     {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Precision");
+        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/SnipeyBoi");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Precision precision = weaponObject.GetComponent<Precision>();
-        precision.SpreadFactor = precisionStats.MinSpread;
-        precision.Damage = UnityEngine.Random.Range(precisionStats.MinDamage, precisionStats.MaxDamage);
-        precision.ClipSize = UnityEngine.Random.Range(precisionStats.MinClipSize, precisionStats.MaxClipSize);
+        precision.SpreadFactor = SnipeyBoi.MinSpread;
+        precision.Damage = UnityEngine.Random.Range(SnipeyBoi.MinDamage, SnipeyBoi.MaxDamage);
+        precision.ClipSize = UnityEngine.Random.Range(SnipeyBoi.MinClipSize, SnipeyBoi.MaxClipSize);
         precision.AmmoInClip = precision.ClipSize;
         precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
-        precision.RateOfFire = UnityEngine.Random.Range(precisionStats.MinRateOfFire, precisionStats.MaxRateOfFire);
-        precision.ReloadTime = UnityEngine.Random.Range(precisionStats.MinReloadTime, precisionStats.MaxReloadTime);
-        precision.Range = UnityEngine.Random.Range(precisionStats.MinRange, precisionStats.MaxRange);
-        precision.BulletVeloc = UnityEngine.Random.Range(precisionStats.MinBulletVeloc, precisionStats.MaxBulletVeloc);
+        precision.RateOfFire = UnityEngine.Random.Range(SnipeyBoi.MinRateOfFire, SnipeyBoi.MaxRateOfFire);
+        precision.ReloadTime = UnityEngine.Random.Range(SnipeyBoi.MinReloadTime, SnipeyBoi.MaxReloadTime);
+        precision.Range = UnityEngine.Random.Range(SnipeyBoi.MinRange, SnipeyBoi.MaxRange);
+        precision.BulletVeloc = UnityEngine.Random.Range(SnipeyBoi.MinBulletVeloc, SnipeyBoi.MaxBulletVeloc);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
         return weaponObject;
     }
 
     /// <summary>
-    /// This function will generate a randomly made spread weapon base on stats from
-    /// automatic stats.
+    /// This function will generate a random Tributar
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
-    private static GameObject BuildSpreadWeapon(Transform parent)
+    /*private static GameObject BuildTributar(Transform parent)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Spread");
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Tributar");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
-        Spread spread = weaponObject.GetComponent<Spread>();
-        spread.SpreadFactor = UnityEngine.Random.Range(spreadStats.MinSpread, spreadStats.MaxSpread);
-        spread.Damage = UnityEngine.Random.Range(spreadStats.MinDamage, spreadStats.MaxDamage);
-        spread.ClipSize = UnityEngine.Random.Range(spreadStats.MinClipSize, spreadStats.MaxClipSize);
-        spread.AmmoInClip = spread.ClipSize;
-        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
-        spread.RateOfFire = UnityEngine.Random.Range(spreadStats.MinRateOfFire, spreadStats.MaxRateOfFire);
-        spread.ReloadTime = UnityEngine.Random.Range(spreadStats.MinReloadTime, spreadStats.MaxReloadTime);
-        spread.NumPellets = UnityEngine.Random.Range(spreadStats.MinNumPellets, spreadStats.MaxNumPellets);
-        spread.Range = UnityEngine.Random.Range(spreadStats.MinRange, spreadStats.MaxRange);
-        spread.BulletVeloc = UnityEngine.Random.Range(spreadStats.MinBulletVeloc, spreadStats.MaxBulletVeloc);
-        spread.TotalAmmo = spread.MaxAmmoCapacity;
+        Precision precision = weaponObject.GetComponent<Precision>();
+        precision.SpreadFactor = Tributar.MinSpread;
+        precision.Damage = UnityEngine.Random.Range(Tributar.MinDamage, Tributar.MaxDamage);
+        precision.ClipSize = UnityEngine.Random.Range(Tributar.MinClipSize, Tributar.MaxClipSize);
+        precision.AmmoInClip = precision.ClipSize;
+        precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
+        precision.RateOfFire = UnityEngine.Random.Range(Tributar.MinRateOfFire, Tributar.MaxRateOfFire);
+        precision.ReloadTime = UnityEngine.Random.Range(Tributar.MinReloadTime, Tributar.MaxReloadTime);
+        precision.Range = UnityEngine.Random.Range(Tributar.MinRange, Tributar.MaxRange);
+        precision.BulletVeloc = UnityEngine.Random.Range(Tributar.MinBulletVeloc, Tributar.MaxBulletVeloc);
+        precision.TotalAmmo = precision.MaxAmmoCapacity;
         return weaponObject;
-    }
+    }*/
+    #endregion 
 }

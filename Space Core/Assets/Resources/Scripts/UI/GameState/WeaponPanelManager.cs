@@ -5,6 +5,7 @@ using TMPro; // TextMesh Pro
 using DG.Tweening; // Tweening Library (smooth animations/transitions)
 using UnityEngine.UI;
 
+using MaxRange = WeaponGenerationInfo.TotalRangeStats;
 public class WeaponPanelManager : MonoBehaviour
 {
     #region Ammo
@@ -157,11 +158,11 @@ public class WeaponPanelManager : MonoBehaviour
             };
 
         float[] weaponDiagnosticMaxs = {
-            WeaponGenerationInfo.TotalRangeStats.MaxDamage,
-            WeaponGenerationInfo.TotalRangeStats.MaxRateOfFire,
-            WeaponGenerationInfo.TotalRangeStats.MaxReloadTime,
-            WeaponGenerationInfo.TotalRangeStats.MaxClipSize,
-            WeaponGenerationInfo.TotalRangeStats.MaxClipSize * 5
+            MaxRange.MaxValues[(int)Category.Damage],
+            MaxRange.MaxValues[(int)Category.FireRate],
+            MaxRange.MaxValues[(int)Category.ReloadTime],
+            MaxRange.MaxValues[(int)Category.MagazineSize],
+            MaxRange.MaxValues[(int)Category.MagazineSize] * 5
             };
 
         //Loop through each stat and update value and fill amount for bar

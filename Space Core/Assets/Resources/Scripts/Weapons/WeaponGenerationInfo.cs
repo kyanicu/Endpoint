@@ -18,13 +18,13 @@ public static class WeaponGenerationInfo
     //Set to false if you want names to be static
     private static bool generateNames = true;
 
+    #region Automatic Weapons
     /// <summary>
-    /// Stat ranges for Automatic Weapons
+    /// Stat ranges for Jakkaru (Automatic)
     /// </summary>
-    public static class AutomaticStats
+    public static class Jakkaru
     {
-        public static Weapon.WeaponType type = Weapon.WeaponType.Automatic;
-        public static string name = "Automatic";
+        public static string name = "Jakkaru";
 
         public static float MinSpread = 0f;
         public static float MaxSpread = 3f;
@@ -41,27 +41,44 @@ public static class WeaponGenerationInfo
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;
 
-        public static float MaxRange = 15f;
-        public static float MinRange = 23f;
+        public static float MinRange = 15f;
+        public static float MaxRange = 23f;
 
         public static float MaxBulletVeloc = 8f;
         public static float MinBulletVeloc = 14f;
 
+        /// <summary>
+        /// Generate a random Jakkaru given its stat ranges
+        /// </summary>
+        /// <param name="wep"></param>
+        /// <returns></returns>
         public static string GenerateAutomaticName(Weapon wep)
         {
             if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
+
+        /// <summary>
+        /// Pass its max stats to be compared later
+        /// </summary>
+        /// <returns></returns>
+        public static float[] PassMaxValues()
+        {
+            float[] maxValues = { MaxDamage, MaxRateOfFire, MaxReloadTime, MaxClipSize, MaxRange, MaxBulletVeloc };
+            return maxValues;
+        }
     }
 
+    #endregion
+
+    #region Scatter Weapons
     /// <summary>
-    /// Stat ranges for Spread Weapons
+    /// Stat ranges for a Matsya (Spread)
     /// </summary>
-    public static class SpreadStats
+    public static class Matsya
     {
-        public static Weapon.WeaponType type = Weapon.WeaponType.Spread;
-        public static string name = "Spread";
+        public static string name = "Matsya";
 
         public static float MinSpread = 7f;
         public static float MaxSpread = 14f;
@@ -81,28 +98,45 @@ public static class WeaponGenerationInfo
         public static int MinNumPellets = 4;
         public static int MaxNumPellets = 8;
 
-        public static float MaxRange = 17f;
-        public static float MinRange = 22f;
+        public static float MinRange = 17f;
+        public static float MaxRange = 22f;
 
         public static float MaxBulletVeloc = 6f;
         public static float MinBulletVeloc = 12f;
 
+        /// <summary>
+        /// Generate a random Matsya given its stat ranges
+        /// </summary>
+        /// <param name="wep"></param>
+        /// <returns></returns>
         public static string GenerateSpreadName(Weapon wep)
         {
             if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire, 
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
+
+        /// <summary>
+        /// Pass its max stats to be compared later
+        /// </summary>
+        /// <returns></returns>
+        public static float[] PassMaxValues()
+        {
+            float[] maxValues = { MaxDamage, MaxRateOfFire, MaxReloadTime, MaxClipSize, MaxRange, MaxBulletVeloc };
+            return maxValues;
+        }
     }
 
+    #endregion
+
+    #region Precision Weapons
     /// <summary>
-    /// Stat ranges for Precision Weapons
+    /// Stat ranges for a snipeyBoi (Precision)
     /// </summary>
 
-    public static class PrecisionStats
+    public static class SnipeyBoi
     {
-        public static Weapon.WeaponType type = Weapon.WeaponType.Precision;
-        public static string name = "Precision";
+        public static string name = "SnipeyBoi";
 
         public static float MinSpread = 0.0f;
         public static float MaxSpread = 0.0f;
@@ -119,43 +153,94 @@ public static class WeaponGenerationInfo
         public static float MinReloadTime = 0.5f;
         public static float MaxReloadTime = 3.0f;
 
-        public static float MaxRange = 45f;
-        public static float MinRange = 100f;
+        public static float MinRange = 45f;
+        public static float MaxRange = 100f;
 
         public static float MaxBulletVeloc = 20f;
         public static float MinBulletVeloc = 30f;
 
+
+        /// <summary>
+        /// Generate a random snipeyBoi given its stat ranges
+        /// </summary>
+        /// <param name="wep"></param>
+        /// <returns></returns>
         public static string GeneratePrecisionName(Weapon wep)
         {
             if (!generateNames) return "";
             return generateNewWeaponName(wep, MaxDamage, MinDamage, MaxClipSize, MinClipSize, MaxRateOfFire, MinRateOfFire,
                                          MaxReloadTime, MaxReloadTime, MaxRange, MinRange, MaxBulletVeloc, MinBulletVeloc);
         }
+
+        /// <summary>
+        /// Pass its max stats to be compared later
+        /// </summary>
+        /// <returns></returns>
+        public static float[] PassMaxValues()
+        {
+            float[] maxValues = { MaxDamage, MaxRateOfFire, MaxReloadTime, MaxClipSize, MaxRange, MaxBulletVeloc };
+            return maxValues;
+        }
     }
 
+    #endregion
 
-
+    #region Total Range Stats
     /// <summary>
     /// Lowest and highest for each of all Weapons
     /// </summary>
-
     public static class TotalRangeStats
     {
-        public static float MinSpread = 0.0f;
-        public static float MaxSpread = 0.14f;
+        public enum MaxStat
+        {
+            Damage,
+            FireRate,
+            ReloadTime,
+            MagazineSize,
+            Range,
+            BulletVeloc
+        };
 
-        public static int MinDamage = 5;
-        public static int MaxDamage = 50;
+        public static float[] MaxValues = { 0, 0, 0, 0, 0 };
 
-        public static int MinClipSize = 1;
-        public static int MaxClipSize = 15;
+        /// <summary>
+        /// One time call to load max values for all weapon stats, used when calculating diagnostic bar fill
+        /// </summary>
+        public static void LoadMaxStats()
+        {
+            //Load max Jakkaru stats
+            float[] loadedStats = Jakkaru.PassMaxValues();
+            for (int x = 0; x < (int) MaxStat.ReloadTime; x++)
+            {
+                if (MaxValues[x] < loadedStats[x])
+                {
+                    MaxValues[x] = loadedStats[x];
+                }
+            }
 
-        public static float MinRateOfFire = 0.07f;
-        public static float MaxRateOfFire = 1f;
+            //Compare max Jakkaru stats to max Matsya stats
+            loadedStats = Matsya.PassMaxValues();
+            for (int x = 0; x < (int)MaxStat.ReloadTime; x++)
+            {
+                if (MaxValues[x] < loadedStats[x])
+                {
+                    MaxValues[x] = loadedStats[x];
+                }
+            }
 
-        public static float MinReloadTime = 0.5f;
-        public static float MaxReloadTime = 4.0f;
+            //Compare max SnipeyBoi stats to previous max stats
+            loadedStats = SnipeyBoi.PassMaxValues();
+            for (int x = 0; x < (int)MaxStat.ReloadTime; x++)
+            {
+                if (MaxValues[x] < loadedStats[x])
+                {
+                    MaxValues[x] = loadedStats[x];
+                }
+            }
+        }
     }
+
+    #endregion
 
     /// <summary>
     /// Loop through created weapon's stats and return a name appendment

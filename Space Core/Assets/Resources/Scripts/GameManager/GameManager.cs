@@ -8,11 +8,26 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
+        WeaponGenerationInfo.TotalRangeStats.LoadMaxStats();
     }
 
-    // Update is called once per frame
-    void Update()
+    /*
+    private static GameManager _instance = null;
+    public static GameManager instance
     {
-        
-    }
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameManager>();
+                // fallback, might not be necessary.
+                if (_instance == null)
+                    _instance = new GameObject(typeof(GameManager).Name).AddComponent<GameManager>();
+
+                // This breaks scene reloading
+                // DontDestroyOnLoad(m_Instance.gameObject);
+            }
+            return _instance;
+        }
+    }*/
 }
