@@ -96,8 +96,7 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildJakkaru(Transform parent)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Automatic");
-        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Jakkaru");
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Jakkaru");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Automatic automatic = weaponObject.GetComponent<Automatic>();
         automatic.SpreadFactor = UnityEngine.Random.Range(Jakkaru.MinSpread, Jakkaru.MaxSpread);
@@ -145,8 +144,7 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildMatsya(Transform parent)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Spread");
-        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Matsya");
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Matsya");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Spread spread = weaponObject.GetComponent<Spread>();
         spread.SpreadFactor = UnityEngine.Random.Range(Matsya.MinSpread, Matsya.MaxSpread);
@@ -196,8 +194,7 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildSnipeyBoi(Transform parent)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/Precision");
-        //GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/SnipeyBoi");
+        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/SnipeyBoi");
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Precision precision = weaponObject.GetComponent<Precision>();
         precision.SpreadFactor = SnipeyBoi.MinSpread;
