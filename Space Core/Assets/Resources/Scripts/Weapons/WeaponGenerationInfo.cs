@@ -15,9 +15,7 @@ public abstract class WeaponGenerationInfo
     protected const float MIN_RANGE_CHECK = .15f;
     #endregion
 
-    //Set to false if you want names to be static
-    private static bool generateNames = true;
-
+    #region Weapon Stat Ranges
     public string name;
 
     public float MinSpread;
@@ -43,9 +41,10 @@ public abstract class WeaponGenerationInfo
 
     public int MinNumPellets = 0;
     public int MaxNumPellets = 0;
+    #endregion 
 
     /// <summary>
-    /// Pass its max stats to be compared later
+    /// Pass its max stats to be compared in GameManager.cs
     /// </summary>
     /// <returns></returns>
     public float[] PassMaxValues()

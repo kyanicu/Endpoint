@@ -63,9 +63,8 @@ public static class WeaponGenerator
         return weapon;
     }
 
-    #region Automatic Weapons
     /// <summary>
-    /// This function will generate a random Jakkaru
+    /// This function will generate a specified Automatic Weapon with random stats
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
@@ -86,11 +85,9 @@ public static class WeaponGenerator
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
         return weaponObject;
     }
-    #endregion
 
-    #region Scatter Weapons
     /// <summary>
-    /// This function will generate a random Matsya
+    /// This function will generate a specified Spread Weapon with random stats
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
@@ -112,11 +109,9 @@ public static class WeaponGenerator
         spread.TotalAmmo = spread.MaxAmmoCapacity;
         return weaponObject;
     }
-    #endregion
 
-    #region Precision Weapons
     /// <summary>
-    /// This function will generate a random SnipeyBoi
+    /// This function will generate a specified Precision Weapon with random stats
     /// </summary>
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
@@ -137,5 +132,4 @@ public static class WeaponGenerator
         precision.TotalAmmo = precision.MaxAmmoCapacity;
         return weaponObject;
     }
-    #endregion 
 }
