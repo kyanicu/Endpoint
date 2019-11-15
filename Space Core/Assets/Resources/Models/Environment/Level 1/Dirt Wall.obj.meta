@@ -3,17 +3,7 @@ guid: 069729bc6e5ba964a87c88de61d520f9
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: DirtWall_DirtWall_leftMat
-    second: {fileID: 2100000, guid: ce21afbe031be8b4388c917b8ee4e8e4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: DirtWall_right_DirtWallMat
-    second: {fileID: 2100000, guid: ce21afbe031be8b4388c917b8ee4e8e4, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
