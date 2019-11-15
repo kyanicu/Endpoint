@@ -36,19 +36,19 @@ public class ControllerInputManager : InputManager
             return null;
         }
 
-        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Released)
         {
             return (QTEButton.KeyNames) 0;
         }
-        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
         {
             return (QTEButton.KeyNames) 1;
         }
-        else if (state.Value.DPad.Left == ButtonState.Pressed && prevState.Value.DPad.Left == ButtonState.Released)
+        else if (state.Value.Buttons.X == ButtonState.Pressed && prevState.Value.Buttons.X == ButtonState.Released)
         {
             return (QTEButton.KeyNames) 2;
         }
-        else if (state.Value.DPad.Right == ButtonState.Pressed && prevState.Value.DPad.Right == ButtonState.Released)
+        else if (state.Value.Buttons.Y == ButtonState.Pressed && prevState.Value.Buttons.Y == ButtonState.Released)
         {
             return (QTEButton.KeyNames) 3;
         }
@@ -75,25 +75,27 @@ public class ControllerInputManager : InputManager
             Player.instance.Fire();
         }
 
-        /*
         if (state.Value.Triggers.Left > 0.3f)
         {
-            //no plans yet
+            Player.instance.Jump();
         }
-        */
+        else if (state.Value.Triggers.Left == 0)
+        {
+            Player.instance.JumpCancel();
+        }
 
         #endregion
 
         #region ABXY Buttons
 
-        if (state.Value.Buttons.A == ButtonState.Pressed)
+        if (state.Value.Buttons.A == ButtonState.Pressed && state.Value.Buttons.A == ButtonState.Pressed)
         {
-            Player.instance.Jump();
+            //Inspect environmental element
         }
 
-        if (state.Value.Buttons.A == ButtonState.Released)
+        if (state.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
         {
-            Player.instance.JumpCancel();
+            //TBD
         }
 
         if (prevState.Value.Buttons.X == ButtonState.Released && state.Value.Buttons.X == ButtonState.Pressed)
@@ -101,17 +103,10 @@ public class ControllerInputManager : InputManager
             Player.instance.Reload();
         }
 
-        if (prevState.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
-        {
-            Player.instance.HackSelector();
-        }
-
-        /*
         if (prevState.Value.Buttons.Y == ButtonState.Released && state.Value.Buttons.Y == ButtonState.Pressed)
         {
-            //Have Player Inspect Object/Interact with environment
+            //TBD
         }
-        */
 
         #endregion
 
@@ -123,68 +118,120 @@ public class ControllerInputManager : InputManager
             Player.instance.AimWeapon(angle);
         }
 
-        if (prevState.Value.Buttons.LeftStick == ButtonState.Released && state.Value.Buttons.LeftStick == ButtonState.Pressed)
+        if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
         {
             // Toggle Diagnostic Panels
             HUDController.instance.toggleDiagnosticPanels();
         }
 
-        /*
-        if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
+        if (prevState.Value.Buttons.LeftStick == ButtonState.Released && state.Value.Buttons.LeftStick == ButtonState.Pressed)
         {
             //Deselect Hack Target
         }
-        */
 
         #endregion
 
         #region Guide Buttons
 
-        /*
         if (prevState.Value.Buttons.Start == ButtonState.Released && state.Value.Buttons.Start == ButtonState.Pressed)
         {
-            //Pause Game
+            // If the pause menu isn't already open...
+            if (!PauseMenuManager.instance.PauseMenuPanelIsActive)
+            {
+                // Open the pause menu.
+                PauseMenuManager.instance.OpenPauseMenu();
+            }
         }
-        */
 
-        /*
         if (prevState.Value.Buttons.Guide == ButtonState.Released && state.Value.Buttons.Guide == ButtonState.Pressed)
         {
-            //No plans yet
+            //Bring up overlay
         }
-        */
 
         #endregion
 
         #region Shoulder Buttons
 
-        /*
         if (prevState.Value.Buttons.RightShoulder == ButtonState.Released && state.Value.Buttons.RightShoulder == ButtonState.Pressed)
         {
-            //Use Ability 2
+            //Use Ability
         }
-        */
 
-        /*
         if (prevState.Value.Buttons.LeftShoulder == ButtonState.Released && state.Value.Buttons.LeftShoulder == ButtonState.Pressed)
         {
-            //Use Ability 2
+            Player.instance.HackSelector();
         }
-        */
 
         #endregion
 
-        //TODO: Remove me
-        if (Input.GetKeyDown(KeyCode.Return))
-            Player.instance.transform.position = new Vector2(0, 0);
+        #region D-Pad
+
+        if (state.Value.DPad.Right == ButtonState.Pressed)
+        {
+            float horiz = 1f;
+            Player.instance.Move(horiz);
+        }
+        else if (state.Value.DPad.Left == ButtonState.Pressed)
+        {
+            float horiz = -1f;
+            Player.instance.Move(horiz);
+        }
+        #endregion
     }
 
     /// <summary>
-    /// Runs the frame input intended while in the menu InputState
+    /// Runs the frame input intended while in the main menu InputState
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    protected override void RunMenuFrameInput()
+    protected override void RunMainMenuFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+
+        //Check vertical movement through menu with D-Pad
+        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseMenu(1);
+        }
+        //Check vertical movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            MainMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            MainMenuManager.instance.SelectButton();
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player panel InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerPanelFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the in-game player menu InputState
+    /// Called only on an update frame through Update() function
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunPlayerMenuFrameInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
@@ -229,7 +276,35 @@ public class ControllerInputManager : InputManager
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    protected override void RunMenuFixedInput()
+    protected override void RunMainMenuFixedInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player panel InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerPanelFixedInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Runs the fixed input intended while in the in-game player menu InputState
+    /// Called only on an physics tick through FixedUpdate() function
+    /// Should only handle things physics related
+    /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
+    /// </summary>
+    protected override void RunPlayerMenuFixedInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
@@ -248,6 +323,27 @@ public class ControllerInputManager : InputManager
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
             return;
+        }
+
+        //Check vertical movement through menu with D-Pad
+        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        {
+            PauseMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        {
+            PauseMenuManager.instance.TraverseMenu(1);
+        }
+        //Check vertical movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            PauseMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            PauseMenuManager.instance.SelectButton();
         }
     }
 

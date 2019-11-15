@@ -12,7 +12,9 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
-    private Vector2 startPos;
+    Vector2 newPos;
+
+    const float HACK_AREA_LENGTH = 22.5f;
     public string Class { get; private set; }
 
     private const float COOLDOWN_TIME = 2.5f;
@@ -25,13 +27,24 @@ public class Player : Character
             movement = gameObject.AddComponent<PlayerMovement>();
     }
 
+    /// <summary>
+    /// Update HUD after successfully swapping into a new enemy
+    /// Start called on new Player component enabled
+    /// </summary>
+    private new void Start()
+    {
+        base.Start();
+        HUDController.instance.UpdateHUD(this);
+        Weapon.ControlledByPlayer = true;
+
+    }
+
     private void Awake()
     {
         startPos = transform.position;
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true;
-        startPos = transform.position;
         if (Class == null)
         {
             Class = "medium";
@@ -50,7 +63,6 @@ public class Player : Character
         if (WeaponTransform.childCount == 0)
         {
             Weapon = WeaponGenerator.GenerateWeapon(WeaponTransform).GetComponent<Weapon>();
-            HUDController.instance.UpdateDiagnosticPanels();
         }
         else
         {
@@ -59,10 +71,7 @@ public class Player : Character
         Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<PlayerMovement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateWeapon(Weapon);
-        HUDController.instance.updateCharacterClass();
+        HUDController.instance.UpdateHUD(this);
     }
 
     public override void Jump()
@@ -78,12 +87,19 @@ public class Player : Character
     public override void Fire()
     {
         Weapon.Fire();
-        HUDController.instance.UpdateAmmo(Weapon);
+        HUDController.instance.UpdateAmmo(this);
     }
 
     public override void Reload()
     {
-        StartCoroutine(Weapon.Reload());
+        //If player is not in hack circle, reload
+        if (Enemy == null || Vector3.Distance(transform.position, Enemy.transform.position) > HACK_AREA_LENGTH)
+        {
+            Weapon.Reload();
+
+            //update hud
+            HUDController.instance.UpdateAmmo(this);
+        }
     }
 
     public override void Move(float axis)
@@ -102,7 +118,7 @@ public class Player : Character
         else
         {
             Health -= damage / 5;
-            HUDController.instance.UpdateHealth(MaxHealth, Health);
+            HUDController.instance.UpdatePlayer(this);
         }
         HUDController.instance.UpdateHealth(MaxHealth, Health);
 
@@ -118,7 +134,13 @@ public class Player : Character
                 Destroy(other.gameObject);
             }
         }
-        else if(other.CompareTag("OB"))
+        else if (other.CompareTag("Ammo"))
+        {
+            Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
+            HUDController.instance.UpdateAmmo(this);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("OB"))
         {
             //We'll need to figure out a way to decouple scene loading from player
             SceneManager.LoadScene(0);
@@ -171,25 +193,20 @@ public class Player : Character
         // Disables Swapping for the duration specified in COOLDOWN_TIME.
         StartCoroutine(implementSwapCooldown());
         // Begins HUD animation loop for swapping bar.
-        HUDController.instance.RechargeSwap(COOLDOWN_TIME);
+        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
     }
 
     public void Switch()
     {
+        SetActiveAbility(Enemy.GetActiveAbility());
+        SetPassiveAbility(Enemy.GetPassiveAbility());
+
         Destroy(RotationPoint);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
-        Camera cam = Camera.main;
         Class = Enemy.Class;
-
-        cam.transform.parent = Enemy.transform;
-        float camZ = cam.transform.position.z;
-        cam.transform.position = Enemy.transform.position;
-        cam.transform.position = new Vector3(cam.transform.position.x, 
-                                             cam.transform.position.y, 
-                                             camZ);
 
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
@@ -198,15 +215,14 @@ public class Player : Character
         Enemy.gameObject.AddComponent<CharacterController2D>();
         Enemy.gameObject.AddComponent<PlayerMovement>();
         Enemy.gameObject.AddComponent<Player>();
+        Camera.main.transform.parent = Enemy.transform;
+        Reload();
+        HUDController.instance.UpdateAmmo(this);
         Enemy.tag = "Player";
         Enemy.name = "Player";
         Destroy(Enemy);
         Enemy = null;
         Destroy(gameObject);
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
-        HUDController.instance.UpdateWeapon(Weapon);
-        HUDController.instance.UpdateDiagnosticPanels();
-        HUDController.instance.updateCharacterClass();
     }
 
     /// <summary>

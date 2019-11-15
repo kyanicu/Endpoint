@@ -97,6 +97,7 @@ public class RangeFinder : MonoBehaviour
             //Wait 1/16th of the upload time before updating bar again
             yield return new WaitForSeconds(uploadTime / 16);
         }
+        StopCoroutine(UpdateBar());
         yield return null;
     }
 }

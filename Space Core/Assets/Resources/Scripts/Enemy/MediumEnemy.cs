@@ -6,7 +6,7 @@ public class MediumEnemy : Enemy
 {
     new void Awake()
     {
-        PatrolRange = 6.0f;
+        PatrolRange = 4.0f;
         base.Awake();
     }
 }

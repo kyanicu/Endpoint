@@ -10,18 +10,17 @@ public class Bullet : MonoBehaviour
 
     public int Damage { get; set; }
     public float Range { get; set; }
+    public float Velocity { get; set; }
     public BulletSource Source { get; set; }
     private float startX;
     private float lowRange;
     private float highRange;
-    private float movement;
 
     /// <summary>
     /// Initialize start x to the base x position of the bullet
     /// </summary>
     public void Start()
     {
-        movement = 20f;
         startX = transform.position.x;
         highRange = startX + Range;
         lowRange = startX - Range;
@@ -38,6 +37,6 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-        transform.position += (transform.right * movement * Time.deltaTime);
+        transform.position += (transform.right * Velocity * Time.deltaTime);
     }
 }

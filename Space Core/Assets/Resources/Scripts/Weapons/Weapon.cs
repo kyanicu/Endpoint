@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,9 +13,24 @@ public abstract class Weapon : MonoBehaviour
     {
         Automatic,
         Spread,
-        Precision
+        Precision,
+        //Heavy,
     }
 
+    /// <summary>
+    /// Dictionary that holds all weapon names and their weapon types
+    /// </summary>
+    public static Dictionary<int, Tuple<string, WeaponType>> WeaponsList = new Dictionary<int, Tuple<string, WeaponType>>()
+    {
+        { 0, Tuple.Create("Okamoto", WeaponType.Spread) },
+        { 1, Tuple.Create("Thor", WeaponType.Automatic) },
+        { 2, Tuple.Create("Tributar", WeaponType.Precision) },
+        { 3, Tuple.Create("Bestafera", WeaponType.Spread) },
+        //{ "Korvus", WeaponType.Heavy },
+        //{ "Tsar Tsarevich", WeaponType.Heavy },
+    };
+    
+    public string Name { get; set; }
     public bool IsReloading { get; set; }
     public Bullet.BulletSource BulletSource { get; set; }
     public int AmmoInClip { get; set; }
@@ -26,7 +42,9 @@ public abstract class Weapon : MonoBehaviour
     public float RateOfFire { get; set; }
     public float FireTimer { get; set; }
     public float Range { get; set; }
+    public float BulletVeloc { get; set; }
     public float ReloadTime { get; set; }
+    public bool ControlledByPlayer { get; set; }
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected GameObject Bullet;
@@ -37,68 +55,18 @@ public abstract class Weapon : MonoBehaviour
     /// </summary>
     public abstract void Fire();
 
-    /// <summary>
-    /// Main coroutine used to reload the weapon
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator Reload()
+    public void Reload()
     {
-        //if already reloading, return
-        if (IsReloading)
+        StartCoroutine(ReloadRoutine());
+
+        //Give enemy back ammo so they don't run out
+        if (!ControlledByPlayer)
         {
-            yield return null;
+            TotalAmmo += ClipSize;
         }
-
-        //if we have max ammo in our clip, return
-        if (AmmoInClip == ClipSize)
-        {
-            yield return null;
-        }
-
-        IsReloading = true;
-
-        //Wait until reaload timer is up.
-        yield return new WaitForSeconds(ReloadTime);
-
-        //lock the reload object so no concurrent reloads happen
-        lock (ReloadLock)
-        {
-            //if our total ammo is above zero
-            if (TotalAmmo > 0)
-            {
-                //if the amount of ammo in the clip plus the ammo size is greater than the clipsize
-                if (TotalAmmo + AmmoInClip > ClipSize)
-                {
-                    //if we already had ammo in our clip, subtract the difference from total ammo
-                    if (AmmoInClip > 0)
-                    {
-                        TotalAmmo -= ClipSize - AmmoInClip;
-                    }
-                    //otherwise remove clipsize from the ammo pool
-                    else
-                    {
-                        TotalAmmo -= ClipSize;
-                    }
-                    //reset ammo in clip
-                    AmmoInClip = ClipSize;
-                }
-                //if we are going to run out of total ammo on this reload
-                else
-                {
-                    //set ammo in clip to total ammo and set total ammo to zero
-                    AmmoInClip = TotalAmmo;
-                    TotalAmmo = 0;
-                }
-            }
-        }
-
-        //update hud
-        GameObject parent = transform.parent.gameObject;
-        if (parent.tag == "Player")
-            HUDController.instance.UpdateAmmo(this);
-        IsReloading = false;
-        yield return null;
     }
+
+    protected abstract IEnumerator ReloadRoutine();
 
     /// <summary>
     /// Main update function decrementing fire timer
@@ -126,6 +94,4 @@ public abstract class Weapon : MonoBehaviour
             TotalAmmo += num;
         }
     }
-
-
 }
