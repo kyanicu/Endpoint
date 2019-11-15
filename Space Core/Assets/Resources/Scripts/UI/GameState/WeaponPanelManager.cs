@@ -157,11 +157,11 @@ public class WeaponPanelManager : MonoBehaviour
             };
 
         float[] weaponDiagnosticMaxs = {
-            WeaponGenerationInfo.TotalRangeStats.MaxDamage,
-            WeaponGenerationInfo.TotalRangeStats.MaxRateOfFire,
-            WeaponGenerationInfo.TotalRangeStats.MaxReloadTime,
-            WeaponGenerationInfo.TotalRangeStats.MaxClipSize,
-            WeaponGenerationInfo.TotalRangeStats.MaxClipSize * 5
+            GameManager.MaxValues[(int)Category.Damage],
+            GameManager.MaxValues[(int)Category.FireRate],
+            GameManager.MaxValues[(int)Category.ReloadTime],
+            GameManager.MaxValues[(int)Category.MagazineSize],
+            GameManager.MaxValues[(int)Category.MagazineSize] * 5
             };
 
         //Loop through each stat and update value and fill amount for bar
