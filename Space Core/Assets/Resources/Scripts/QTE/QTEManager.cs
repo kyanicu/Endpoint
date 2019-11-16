@@ -89,7 +89,6 @@ public class QTEManager : MonoBehaviour
             //Initialize a new random button
             buttons[i].gameObject.SetActive(true);
             buttons[i].Randomize();
-            //buttons[i].SetColor(Color.gray);
 
             //Add the button to our stack
             buttonStack.Add(buttons[i]);
@@ -111,9 +110,6 @@ public class QTEManager : MonoBehaviour
 
         //Make sure it is active
         activeButton.Active = true;
-
-        //Set it to active color (white)
-        //activeButton.SetColor(Color.white);
 
         // Set the matching chevron to visible and white.
         HackDialogChevrons[listIndex % 3].color = new Color32(0xff, 0xff, 0xff, 0xff);
@@ -142,22 +138,15 @@ public class QTEManager : MonoBehaviour
                     listening = false;
                     yield return null;
 
-                    //Change button color to green
-                    // activeButton.SetColor(Color.green);
-
                     // Set the matching chevron to green.
                     HackDialogChevrons[listIndex % 3].color = Color.green;
 
                     //Remove it from stack
                     listIndex++;
 
-                    Debug.Log("listIndex" + listIndex);
-                    Debug.Log("listSize" + listSize);
-
                     //If player has completed all QTE buttons in panel
                     if (listIndex == listSize)
                     {
-                        Debug.Log("entered qte finish");
                         listening = false;
                         successfulHack();
                         Destroy(gameObject);
@@ -179,8 +168,6 @@ public class QTEManager : MonoBehaviour
                 else //Misinput
                 {
                     listening = false;
-                    //Set misinput button color to red
-                    //activeButton.SetColor(Color.red);
 
                     // Set the matching chevron to red.
                     HackDialogChevrons[listIndex % 3].color = Color.red;
@@ -210,7 +197,6 @@ public class QTEManager : MonoBehaviour
     {
         if (listIndex == buttonStack.Count)
         {
-            Debug.Log("entered hack finish");
             StopCoroutine(Listener());
             listening = false;
             Player player = Player.instance.gameObject.GetComponent<Player>();

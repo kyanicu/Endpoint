@@ -87,7 +87,7 @@ public class PauseMenuManager : MonoBehaviour {
         TraverseMenu(0);
 
         // Set gameplay timescale to 0 to pause the gameplay.
-        //Time.timeScale = 0;
+        Time.timeScale = 0;
     }
 
     // This function is called when the pause menu is closed.
@@ -101,7 +101,7 @@ public class PauseMenuManager : MonoBehaviour {
         InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
 
         // Set gameplay timescale to 1 to resume the gameplay.
-        //Time.timeScale = 1;
+        Time.timeScale = 1;
     }
 
     /// <summary>

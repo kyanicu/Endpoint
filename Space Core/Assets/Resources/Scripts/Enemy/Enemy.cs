@@ -146,7 +146,8 @@ public class Enemy : Character
             if (EnemyScale.x < 0)
             {
                 Vector3 newScale = gameObject.transform.localScale;
-                newScale.x *= -1;
+                // Removed so that panel does not mirror
+                // newScale.x *= -1;
                 QTEPanel.transform.localScale = newScale;
                 QTEPanel.transform.position = QTEPointRight.position;
             }

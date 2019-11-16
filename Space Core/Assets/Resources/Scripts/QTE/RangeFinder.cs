@@ -51,6 +51,7 @@ public class RangeFinder : MonoBehaviour
         {
             if (hackStart == false)
             {
+                // Animate the loading bar in.
                 float fadeTime = 0.1f;
 
                 LoadingBarPanel.gameObject.SetActive(true);
@@ -93,6 +94,7 @@ public class RangeFinder : MonoBehaviour
             // Check which element is visible to play appropriate fade out animation.
             if (loadingBarActive)
             {
+                // Fade out the loading bar.
                 // Set the loading bar element alphas to 1.
                 changeAlphaTo(LoadingBar, 1f);
                 changeAlphaTo(LoadingBarSpin, 1f);
@@ -109,6 +111,7 @@ public class RangeFinder : MonoBehaviour
             } 
             else if (hackDialogActive)
             {
+                // Fade out the hack dialog.
                 // Set dialog's alpha to 1.
                 changeAlphaTo(HackDialogBG, 1f);
                 changeAlphaTo(QTEButton1, 1f);
@@ -149,7 +152,7 @@ public class RangeFinder : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Swap the loading bar with the hack dialog through an animation.
     /// </summary>
     /// <returns></returns>
     private IEnumerator QTEStartAnimation()
@@ -194,6 +197,10 @@ public class RangeFinder : MonoBehaviour
         QTEManager.onActivate(QTEButtonsAmt);
     }
 
+    /// <summary>
+    /// Changes the Alpha value of a given element to the given float.
+    /// </summary>
+    /// <returns></returns>
     private void changeAlphaTo(Image element, float newAlpha)
     {
         Color newColor = element.color;
@@ -201,6 +208,10 @@ public class RangeFinder : MonoBehaviour
         element.color = newColor;
     }
 
+    /// <summary>
+    /// Changes the Alpha value of a given element to the given float. (Text version)
+    /// </summary>
+    /// <returns></returns>
     private void changeAlphaTo(TextMeshProUGUI element, float newAlpha)
     {
         Color newColor = element.color;
@@ -209,7 +220,7 @@ public class RangeFinder : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Function which triggers the hack dialog QTE once the loading bar is finished.
     /// </summary>
     /// <returns></returns>
     private IEnumerator Uploading()
@@ -224,7 +235,7 @@ public class RangeFinder : MonoBehaviour
     }
 
     /// <summary>
-    /// continues filling bar while player is in hack area
+    /// Continues incrementing percentage while player is in hack area.
     /// </summary>
     /// <returns></returns>
     private IEnumerator UpdatePercentage()
@@ -241,6 +252,10 @@ public class RangeFinder : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Resets the loading bar and associated elements to 0. Cancels the tween of the loading bar fill amount.
+    /// </summary>
+    /// <returns></returns>
     private void resetHackLoadingBar()
     {
         // Stop the tween.
@@ -253,6 +268,10 @@ public class RangeFinder : MonoBehaviour
         LoadingPercent.text = "0%";
     }
 
+    /// <summary>
+    /// Triggers the start of the loading bar tween.
+    /// </summary>
+    /// <returns></returns>
     private void startHackLoadingBar()
     {
         // Start the tween.
