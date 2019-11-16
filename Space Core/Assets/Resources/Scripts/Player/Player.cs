@@ -41,7 +41,6 @@ public class Player : Character
 
     private void Awake()
     {
-        startPos = transform.position;
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true;
@@ -120,7 +119,6 @@ public class Player : Character
             Health -= damage / 5;
             HUDController.instance.UpdatePlayer(this);
         }
-        HUDController.instance.UpdateHealth(MaxHealth, Health);
 
     }
 
