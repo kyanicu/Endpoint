@@ -41,7 +41,7 @@ public class Player : Character
 
     private void Awake()
     {
-        MaxHealth = 100;
+        MaxHealth = 100000;
         Health = MaxHealth;
         canSwap = true;
         if (Class == null)
