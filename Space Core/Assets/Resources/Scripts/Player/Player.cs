@@ -128,7 +128,7 @@ public class Player : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
             {
-                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage/5);
                 Destroy(other.gameObject);
             }
         }
