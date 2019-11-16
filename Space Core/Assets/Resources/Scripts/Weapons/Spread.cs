@@ -91,11 +91,12 @@ public class Spread : Weapon
             IsReloading = false;
             AmmoInClip -= 1;
             //pellet rotation will be used for determining the spread of each bullet
-            Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
+            Vector3 pelletRotation;
 
             //for the number of pellets we are firing, initalize a new bullet, update rotation and lunch it.
             for (int i = 0; i < NumPellets; i++)
             {
+                pelletRotation = RotationPoint.rotation.eulerAngles;
                 pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
                 GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
                 bullet.transform.Rotate(pelletRotation);
