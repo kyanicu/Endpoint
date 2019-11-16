@@ -8,26 +8,17 @@ using UnityEngine;
 /// </summary>
 public abstract class Weapon : MonoBehaviour
 {
-    //Enum for the different weapon types
-    public enum WeaponType
-    {
-        Automatic,
-        Spread,
-        Precision,
-        //Heavy,
-    }
-
     /// <summary>
     /// Dictionary that holds all weapon names and their weapon types
     /// </summary>
-    public static Dictionary<int, Tuple<string, WeaponType>> WeaponsList = new Dictionary<int, Tuple<string, WeaponType>>()
+    public static Dictionary<int, string> WeaponsList = new Dictionary<int, string>()
     {
-        { 0, Tuple.Create("Okamoto", WeaponType.Spread) },
-        { 1, Tuple.Create("Thor", WeaponType.Automatic) },
-        { 2, Tuple.Create("Tributar", WeaponType.Precision) },
-        { 3, Tuple.Create("Bestafera", WeaponType.Spread) },
-        //{ "Korvus", WeaponType.Heavy },
-        //{ "Tsar Tsarevich", WeaponType.Heavy },
+        { 0, "Matsya" },
+        { 1, "Jakkaru" },
+        { 2, "SnipeyBoi" },
+        //{ 3, "Tributar" },
+        //{ 4, "Bestafera" },
+        //{ 5, "Thor" },
     };
     
     public string Name { get; set; }
