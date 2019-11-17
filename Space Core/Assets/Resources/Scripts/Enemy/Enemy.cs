@@ -66,7 +66,7 @@ public class Enemy : Character
 
         if (IsPlayerInRange())
         {
-            UpdateQTEManagerPosition();
+            //UpdateQTEManagerPosition();
             Vector3 playerPosition = Player.instance.transform.position;
             Vector3 myPosition = transform.position;
             Vector3 diff = playerPosition - myPosition;
@@ -111,19 +111,51 @@ public class Enemy : Character
 
     protected void UpdateQTEManagerPosition()
     {
+        //Grab player Position
         Vector2 pos = Player.instance.transform.position;
-        float distToLeft = Vector2.Distance(pos, QTEPointLeft.position);
-        float distToRight = Vector2.Distance(pos, QTEPointRight.position);
-        if (distToLeft < distToRight)
+
+        //Check player distance from right and left side of enemy
+        float playerDistanceToLeftSide = Vector2.Distance(pos, QTEPointLeft.position);
+        float playerDistanceToRightSide = Vector2.Distance(pos, QTEPointRight.position);
+
+        //Retrieve enemy local scale
+        Vector2 EnemyScale = transform.localScale;
+
+        //If player is closer to left side of enemy
+        if (playerDistanceToLeftSide < playerDistanceToRightSide)
         {
-            QTEPanel.transform.position = QTEPointLeft.position;
-            Vector3 newScale = gameObject.transform.localScale;
-            newScale.x *= -1;
-            QTEPanel.transform.localScale = newScale;
-            QTEPanel.transform.position = QTEPointRight.position;
+            //If enemy is facing to the left, left position is now right position
+            //Unswap panel
+            if (EnemyScale.x < 0)
+            {
+                Vector3 newScale = gameObject.transform.localScale;
+                newScale.x *= -1;
+                QTEPanel.transform.localScale = newScale;
+                QTEPanel.transform.position = QTEPointLeft.position;
+            }
+            //Enemy is facing right so panel goes to QTERight Position
+            else
+            {
+                QTEPanel.transform.position = QTEPointRight.position;
+            } 
         }
-        else
+        else //Player is closer to the right side of enemy
         {
+            //If enemy is facing to the left, right position is now left position
+            //Unswap panel
+            if (EnemyScale.x < 0)
+            {
+                Vector3 newScale = gameObject.transform.localScale;
+                // Removed so that panel does not mirror
+                // newScale.x *= -1;
+                QTEPanel.transform.localScale = newScale;
+                QTEPanel.transform.position = QTEPointRight.position;
+            }
+            //Enemy is facing right so panel goes to QTELeft Position
+            else
+            {
+                QTEPanel.transform.position = QTEPointLeft.position;
+            }
         }
     }
 

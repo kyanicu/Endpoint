@@ -8,6 +8,9 @@ public class QTEManager : MonoBehaviour
     //An array holding the 3 buttons used in the QTE panel
     public QTEButton[] buttons;
 
+    // Array containing the chevrons next to the hack buttons
+    public Image[] HackDialogChevrons;
+
     //returns whether or not QTE buttons are listening for input
     private bool listening = false;
 
@@ -32,7 +35,7 @@ public class QTEManager : MonoBehaviour
         listening = false;
         listIndex = 0;
         //Loop through space on panel
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             buttons[i].Initialize();
             buttons[i].gameObject.SetActive(false);
@@ -70,14 +73,15 @@ public class QTEManager : MonoBehaviour
     /// <param name="numItems"></param>
     private void stackCreate()
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             buttons[i].gameObject.SetActive(false);
+            HackDialogChevrons[i].color = new Color32(0xff, 0xff, 0xff, 0x00);
         }
         buttonStack = new List<QTEButton>();
 
         //Loop through space on panel
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             //No buttons left to generate
             if (i >= listSize - listIndex)   break;
@@ -85,7 +89,6 @@ public class QTEManager : MonoBehaviour
             //Initialize a new random button
             buttons[i].gameObject.SetActive(true);
             buttons[i].Randomize();
-            buttons[i].SetColor(Color.gray);
 
             //Add the button to our stack
             buttonStack.Add(buttons[i]);
@@ -103,13 +106,13 @@ public class QTEManager : MonoBehaviour
     private void activateButton()
     {
         //Set active button to first button in stack
-        activeButton = buttonStack[listIndex % 4];
+        activeButton = buttonStack[listIndex % 3];
 
         //Make sure it is active
         activeButton.Active = true;
 
-        //Set it to active color (white)
-        activeButton.SetColor(Color.white);
+        // Set the matching chevron to visible and white.
+        HackDialogChevrons[listIndex % 3].color = new Color32(0xff, 0xff, 0xff, 0xff);
 
         //begin listening again
         listening = true;
@@ -121,7 +124,7 @@ public class QTEManager : MonoBehaviour
         if (buttonStack.Count == 0 || listIndex == listSize) yield return null;
         
         //If first button in stack is active
-        while (activeButton.Active && listIndex % 4 < buttonStack.Count)
+        while (activeButton.Active && listIndex % 3 < buttonStack.Count)
         {
             if (!listening) break;
 
@@ -135,8 +138,8 @@ public class QTEManager : MonoBehaviour
                     listening = false;
                     yield return null;
 
-                    //Change button color to green
-                    activeButton.SetColor(Color.green);
+                    // Set the matching chevron to green.
+                    HackDialogChevrons[listIndex % 3].color = Color.green;
 
                     //Remove it from stack
                     listIndex++;
@@ -151,7 +154,7 @@ public class QTEManager : MonoBehaviour
                     }
                     //If player has no more QTE buttons but listIndex isn't at last button
                     //Create a new set of QTE buttons
-                    if (listIndex != 0 && listIndex % 4 == 0)
+                    if (listIndex != 0 && listIndex % 3 == 0)
                     {
                         stackCreate();
                         yield return null;
@@ -165,11 +168,12 @@ public class QTEManager : MonoBehaviour
                 else //Misinput
                 {
                     listening = false;
-                    //Set misinput button color to red
-                    activeButton.SetColor(Color.red);
+
+                    // Set the matching chevron to red.
+                    HackDialogChevrons[listIndex % 3].color = Color.red;
 
                     //Update ListIndex, player must reset set of QTEs
-                    listIndex -= (listIndex % 4);
+                    listIndex -= (listIndex % 3);
 
                     //Pause so player knows they done goofed
                     yield return new WaitForSeconds(WaitTime);
