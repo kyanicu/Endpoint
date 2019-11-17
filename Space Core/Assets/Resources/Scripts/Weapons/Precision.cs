@@ -15,6 +15,7 @@ public class Precision : Weapon
     public void Start()
     {
         Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        var asdfas = transform.Find("Laser");
         lineRenderer = transform.Find("Laser").gameObject.GetComponent<LineRenderer>();
         FireLocation = transform.Find("FirePoint").gameObject;
         RotationPoint = transform.parent.transform.parent;
@@ -28,19 +29,31 @@ public class Precision : Weapon
     new void Update()
     {
         lineRenderer.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, transform.right);
 
         //If we hit another object that does not share the same tag as this object's bullet source then set line position
         //to that object's x and y position
-        if (hit && hit.collider && hit.collider.gameObject.tag != BulletSource.ToString())
+        if (hits.Length > 0)
         {
-            lineRenderer.SetPosition(1, new Vector3(hit.point.x, hit.point.y));
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider.tag == "Terrain" || (hit && hit.collider && (hit.collider.gameObject.tag != BulletSource.ToString()) && (hit.collider.tag != "Bullet")))
+                {
+                    lineRenderer.SetPosition(1, new Vector3(hit.point.x, hit.point.y));
+                    break;
+                }
+                else
+                {
+                    lineRenderer.SetPosition(1, FireLocation.transform.right * Range);
+                }
+            }
         }
         else
         {
             lineRenderer.SetPosition(1, FireLocation.transform.right * Range);
         }
-
+        
+        
         //If we have fired, set the color of the line to red, otherwise make it yellow
         if (FireTimer > 0)
         {
