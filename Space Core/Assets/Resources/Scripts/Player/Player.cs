@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Player : Character
 {
     public Enemy Enemy { get; set; }
-    private PlayerMovement movement;
+    private Movement movement;
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
@@ -23,8 +23,8 @@ public class Player : Character
     {
         //Const Values
 
-       if(!(movement = GetComponent<PlayerMovement>()))
-            movement = gameObject.AddComponent<PlayerMovement>();
+       if(!(movement = GetComponent<Movement>()))
+            movement = gameObject.AddComponent<BasicMovement>();
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class Player : Character
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
         Weapon.BulletSource = Bullet.BulletSource.Player;
-        movement = GetComponent<PlayerMovement>();
+        movement = GetComponent<Movement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         HUDController.instance.UpdateHUD(this);
     }
@@ -208,7 +208,7 @@ public class Player : Character
         rigidBody.simulated = true;
         Enemy.gameObject.AddComponent<ObjectMover>();
         Enemy.gameObject.AddComponent<CharacterController2D>();
-        Enemy.gameObject.AddComponent<PlayerMovement>();
+        Enemy.gameObject.AddComponent<BasicMovement>();
         Enemy.gameObject.AddComponent<Player>();
         Camera.main.transform.parent = Enemy.transform;
         Reload();

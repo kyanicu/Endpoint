@@ -1,48 +1,91 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class PlayerMovement : MonoBehaviour
+
+public abstract class Movement : MonoBehaviour
 {
 
-    CharacterController2D charCont;
+    /// <summary>
+    /// Have the default values been set?
+    /// </summary>
+    protected bool defaultValuesSet;
+
+    protected CharacterController2D charCont;
 
     private Vector2 _velocity;
-    public Vector2 velocity { get { return _velocity; } private set { _velocity = value;  } }
+    public Vector2 velocity { get { return _velocity; } protected set { _velocity = value; } }
 
+    /// <summary>
+    /// Are we forcing the character controller off the ground this frame?
+    /// </summary>
     private bool _forceUnground;
-    public bool forceUnground { private get { return _forceUnground; } set { _forceUnground = value; } }
+    public bool forceUnground { protected get { return _forceUnground; } set { _forceUnground = value; } }
 
+    /// <summary>
+    /// Character movement values
+    /// </summary>
     [SerializeField]
-    private float runMax = 7, runAccel = 40, runDecel = 40,
-        jumpVelocity = 15, gravityScale = 1, jumpCancelMinVel = 12, jumpCancelVel = 2,
-        airAccel = 50, airDecel = 25, airMax = 9,
-        pushForce = 14;
+    protected float runMax, runAccel, runDecel,
+        jumpVelocity, gravityScale, jumpCancelMinVel, jumpCancelVel,
+        airAccel, airDecel, airMax,
+        pushForce;
 
-    private bool isJumping, isJumpCanceling;
+    /// <summary>
+    /// Current jump values
+    /// </summary>
+    protected bool isJumping, isJumpCanceling;
 
-    private float pushingDirection;
+    /// <summary>
+    /// direction the character is moving if into a wall/object,
+    /// 0 == none,
+    /// -1 == left,
+    /// +1 == right
+    /// </summary>
+    protected float pushingDirection;
+    
+    /// <summary>
+    /// Use to set default values for concrete classes
+    /// </summary>
+    protected abstract void SetDefaultValues();
 
     private void OnValidate()
     {
         //Const Values
 
-        if(!GetComponent<CharacterController2D>())
+        if (!GetComponent<CharacterController2D>())
             gameObject.AddComponent<CharacterController2D>();
 
     }
 
-    private void Awake()
+    /// <summary>
+    /// Used in editor on component add, and when manually reset
+    /// </summary>
+    private void Reset()
     {
+        SetDefaultValues();
+        defaultValuesSet = true;
+    }
+
+    protected void Awake()
+    {
+        // used incase component was added outside of editor (such as via instatiate)
+        if (!defaultValuesSet)
+        {
+            SetDefaultValues();
+            defaultValuesSet = true;
+        }
+
         charCont = GetComponent<CharacterController2D>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        charCont = GetComponent<CharacterController2D>();
-    }
-
-    public void Run(float direction)
+    /// <summary>
+    /// Default run method
+    /// </summary>
+    /// <param name="direction">direction the character of movement,
+    /// 0 == none,
+    /// -1 == left,
+    /// +1 == right</param>
+    public virtual void Run(float direction)
     {
 
         if (charCont.isTouchingRightWall && direction == +1)
@@ -104,7 +147,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void Jump()
+    /// <summary>
+    /// Default jump method
+    /// </summary>
+    public virtual void Jump()
     {
         if (charCont.isTouchingCeiling)
             return;
@@ -117,7 +163,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void JumpCancel()
+    /// <summary>
+    /// default jump cancel method
+    /// </summary>
+    public virtual void JumpCancel()
     {
 
         if (isJumping)
@@ -133,22 +182,12 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    public void CancelDirectionalVelocity(Vector2 direction)
-    {
-
-        Vector2 proj = Vector3.Project(velocity, direction);
-
-        velocity -= proj;
-
-
-        if (direction.normalized != proj.normalized)
-            return;
-
-        //velocity -= proj;
-
-    }
-
-    private void HandleContacts(ContactData[] contacts, int contactCount)
+    /// <summary>
+    /// Default contact handling method, called every frame where character is touching a collider
+    /// </summary>
+    /// <param name="contacts">Contact data</param>
+    /// <param name="contactCount">size of contact data</param>
+    protected virtual void HandleContacts(ContactData[] contacts, int contactCount)
     {
         if (!charCont.isGrounded)
         {
@@ -202,18 +241,39 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Push(ContactData contact)
+    /// <summary>
+    /// Default push method when running into a wall
+    /// </summary>
+    /// <param name="contact">point of contact where pushing is occuring</param>
+    protected virtual void Push(ContactData contact)
     {
         contact.collider.attachedRigidbody.AddForceAtPosition(pushForce * Vector2.right * pushingDirection, contact.point);
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Zeroes out velocity along given direction
+    /// </summary>
+    /// <param name="direction">direction of velocity to zero out</param>
+    public void CancelDirectionalVelocity(Vector2 direction)
     {
-        
+
+        Vector2 proj = Vector3.Project(velocity, direction);
+
+        velocity -= proj;
+
+
+        if (direction.normalized != proj.normalized)
+            return;
+
+        //velocity -= proj;
+
     }
 
-    private void FixedUpdate()
+    /// <summary>
+    /// Main function where velocity is handled appropriately
+    /// Virtual incase child class wishes to handle velocity differently
+    /// </summary>
+    protected virtual void FixedUpdate()
     {
 
         bool prevGroundedState = charCont.isGrounded;
@@ -241,7 +301,7 @@ public class PlayerMovement : MonoBehaviour
         {
             int moveCount;
             MoveData[] moveDatas = charCont.Move(velocity * Time.fixedDeltaTime, out moveCount, forceUnground);
-            
+
             for (int i = 0; i < moveCount; i++)
                 HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
             if (charCont.isGrounded)
@@ -256,4 +316,5 @@ public class PlayerMovement : MonoBehaviour
         forceUnground = false;
         pushingDirection = 0;
     }
+
 }
