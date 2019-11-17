@@ -250,6 +250,27 @@ public class ControllerInputManager : InputManager
         {
             return;
         }
+
+        //Check vertical movement through menu with D-Pad
+        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        {
+            PauseMenuManager.instance.TraverseMenu(-1);
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        {
+            PauseMenuManager.instance.TraverseMenu(1);
+        }
+        //Check vertical movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            PauseMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            PauseMenuManager.instance.SelectButton();
+        }
     }
 
     /// <summary>
@@ -323,27 +344,6 @@ public class ControllerInputManager : InputManager
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
             return;
-        }
-
-        //Check vertical movement through menu with D-Pad
-        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
-        {
-            PauseMenuManager.instance.TraverseMenu(-1);
-        }
-        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
-        {
-            PauseMenuManager.instance.TraverseMenu(1);
-        }
-        //Check vertical movement through menu with Left Stick
-        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
-        {
-            PauseMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
-        }
-
-        //If player selects the currently highlighted button, invoke it
-        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
-        {
-            PauseMenuManager.instance.SelectButton();
         }
     }
 
