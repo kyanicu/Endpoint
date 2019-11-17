@@ -1,13 +1,9 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 34fb749c326fe8f4995833884c0f8da1
-=======
 <<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Abilities.meta
 guid: 6007abf967b1a3e4da5d8cac7a154c54
 =======
 guid: 34fb749c326fe8f4995833884c0f8da1
 >>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1:Space Core/Assets/Resources/Prefabs/Movement.meta
->>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

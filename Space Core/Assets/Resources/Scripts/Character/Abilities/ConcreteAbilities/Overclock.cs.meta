@@ -1,13 +1,9 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 5733448870a4bfd48b3ca34ac0b58b42
-=======
 <<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Abilities/ConcreteAbilities/Overclock.cs.meta
 guid: 62c0f5ea316272442ba4c35e65671202
 =======
 guid: 5733448870a4bfd48b3ca34ac0b58b42
 >>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1:Space Core/Assets/Resources/Scripts/Character/Movement/Movement.cs.meta
->>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

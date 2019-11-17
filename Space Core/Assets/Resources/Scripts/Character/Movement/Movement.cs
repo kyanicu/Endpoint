@@ -25,10 +25,39 @@ public abstract class Movement : MonoBehaviour
     /// Character movement values
     /// </summary>
     [SerializeField]
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Movement/Movement.cs
+    private float _runMax, _runAccel, _runDecel,
+        _jumpVelocity, _gravityScale, _jumpCancelMinVel, _jumpCancelVel,
+        _airAccel, _airDecel, _airMax,
+        _pushForce;
+
+    /// <summary>
+    /// Used to temporarily modify movement values,
+    /// stackable,
+    /// use * to add modification (mod *= 2)
+    /// use / to remove modification (mod /= 2)
+    /// </summary>
+    public float mod = 1;
+    
+    // The following values return the encapsulated value with the current set modifier  
+
+    protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
+    protected float runAccel { get { return _runAccel * mod; } set { _runAccel = value; } }
+    protected float runDecel { get { return _runDecel * mod; } set { _runDecel = value; } }
+    protected float jumpVelocity { get { return _jumpVelocity * mod; } set { _jumpVelocity = value; } }
+    protected float gravityScale { get { return _gravityScale * mod; } set { _gravityScale = value; } }
+    protected float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } set { _jumpCancelMinVel = value; } }
+    protected float jumpCancelVel { get { return _jumpCancelVel / mod; } set { _jumpCancelVel = value; } }
+    protected float airAccel { get { return _airAccel * mod; } set { _airAccel = value; } }
+    protected float airDecel { get { return _airDecel * mod; } set { _airDecel = value; } }
+    protected float airMax { get { return _airMax * mod; } set { _airMax = value; } }
+    protected float pushForce { get { return _pushForce * mod; } set { _pushForce = value; } }
+=======
     protected float runMax, runAccel, runDecel,
         jumpVelocity, gravityScale, jumpCancelMinVel, jumpCancelVel,
         airAccel, airDecel, airMax,
         pushForce;
+>>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1:Space Core/Assets/Resources/Scripts/Player/PlayerMovement.cs
 
     /// <summary>
     /// Current jump values
@@ -280,7 +309,7 @@ public abstract class Movement : MonoBehaviour
 
         if (isJumpCanceling)
         {
-            if (velocity.y <= jumpCancelMinVel)
+            if (velocity.y <= _jumpCancelMinVel)
             {
                 isJumpCanceling = false;
                 JumpCancel();
@@ -295,7 +324,7 @@ public abstract class Movement : MonoBehaviour
         }
 
         if (!charCont.isGrounded)
-            velocity += Physics2D.gravity * gravityScale * Time.fixedDeltaTime;
+            velocity += Physics2D.gravity * _gravityScale * Time.fixedDeltaTime;
 
         if (velocity != Vector2.zero)
         {
