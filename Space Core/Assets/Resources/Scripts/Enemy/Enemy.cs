@@ -101,6 +101,15 @@ public class Enemy : Character
                 Destroy(other.gameObject);
             }
         }
+        //Handle piercing shot interaction
+        else if (other.CompareTag("PiercingBullet"))
+        {
+            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
+            {
+                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                other.gameObject.GetComponent<PiercingBullet>().NumPassed++;
+            }
+        }
         else if (other.CompareTag("HackProjectile"))
         {
             IsSelected = true;

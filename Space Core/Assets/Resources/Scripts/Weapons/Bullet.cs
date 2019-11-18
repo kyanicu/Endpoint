@@ -12,9 +12,9 @@ public class Bullet : MonoBehaviour
     public float Range { get; set; }
     public float Velocity { get; set; }
     public BulletSource Source { get; set; }
-    private float startX;
-    private float lowRange;
-    private float highRange;
+    protected float startX;
+    protected float lowRange;
+    protected float highRange;
 
     /// <summary>
     /// Initialize start x to the base x position of the bullet
