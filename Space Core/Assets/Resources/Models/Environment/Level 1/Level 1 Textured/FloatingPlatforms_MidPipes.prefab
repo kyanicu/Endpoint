@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 385078075277762838}
   m_Layer: 0
   m_Name: FloatingPlatforms_MidPipes
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8955667873405735688}
   - component: {fileID: 1598614112073623787}
+  - component: {fileID: 3354380335962455618}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -167,6 +168,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 81.105125, y: 28.621536}
   m_EdgeRadius: 0
+--- !u!114 &3354380335962455618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4335470978531671159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e7622d404f7d54db946ba6bfb4c5e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7830525767261390863
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,9 +190,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9351703557183518}
   - component: {fileID: 6784447097565611132}
+  - component: {fileID: 1916792331486388154}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,3 +238,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 19.589806, y: 33.9837}
   m_EdgeRadius: 0
+--- !u!114 &1916792331486388154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7830525767261390863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e7622d404f7d54db946ba6bfb4c5e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

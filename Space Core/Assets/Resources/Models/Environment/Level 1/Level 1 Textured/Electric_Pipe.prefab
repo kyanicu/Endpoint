@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 3299285361762978582}
   m_Layer: 0
   m_Name: Electric_Pipe
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,9 +119,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4244723878483942738}
   - component: {fileID: 8227074456257132406}
+  - component: {fileID: 1484377248039031173}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,3 +227,15 @@ PolygonCollider2D:
       - {x: 7.2280145, y: 9.058207}
       - {x: 6.407703, y: 12.040126}
       - {x: 4.207222, y: 14.233699}
+--- !u!114 &1484377248039031173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7600460954202512919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e7622d404f7d54db946ba6bfb4c5e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

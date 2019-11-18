@@ -221,8 +221,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0e19648c8bdc9409dfdf65a064df58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeAbility: {fileID: 0}
-  passiveAbility: {fileID: 0}
   MovePoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -410,7 +408,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3822046569068034423}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.009492874, y: -0.93, z: -0.08053423}
+  m_LocalPosition: {x: -0.009492874, y: -0.93, z: 0}
   m_LocalScale: {x: 1.35, y: 1.35, z: 1.35}
   m_Children: []
   m_Father: {fileID: 2162099692501074394}
@@ -468,16 +466,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2162099692501074394}
     m_Modifications:
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_Name
-      value: QTE_Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -583,64 +571,74 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_Name
+      value: QTE_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: b135591d57f07a74bafc2b1b9ee48afd,
+        type: 3}
+    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0878df0a732db254aa5bdfe64163bb5b,
+        type: 3}
+    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7b53794a2b5676c4aa4b98376d1551d3,
+        type: 3}
+    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0245825245174fc4b97aeaa14d8a3c8a,
+        type: 3}
+    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: b135591d57f07a74bafc2b1b9ee48afd,
+        type: 3}
+    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0878df0a732db254aa5bdfe64163bb5b,
+        type: 3}
+    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7b53794a2b5676c4aa4b98376d1551d3,
+        type: 3}
+    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: ABXYButtons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0245825245174fc4b97aeaa14d8a3c8a,
+        type: 3}
     - target: {fileID: 3743230465167003770, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[0]
-      value: 
-      objectReference: {fileID: 21300000, guid: b135591d57f07a74bafc2b1b9ee48afd,
-        type: 3}
-    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[1]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0878df0a732db254aa5bdfe64163bb5b,
-        type: 3}
-    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[2]
-      value: 
-      objectReference: {fileID: 21300000, guid: 7b53794a2b5676c4aa4b98376d1551d3,
-        type: 3}
-    - target: {fileID: 4865815280075956937, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[3]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0245825245174fc4b97aeaa14d8a3c8a,
-        type: 3}
-    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[0]
-      value: 
-      objectReference: {fileID: 21300000, guid: b135591d57f07a74bafc2b1b9ee48afd,
-        type: 3}
-    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[1]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0878df0a732db254aa5bdfe64163bb5b,
-        type: 3}
-    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[2]
-      value: 
-      objectReference: {fileID: 21300000, guid: 7b53794a2b5676c4aa4b98376d1551d3,
-        type: 3}
-    - target: {fileID: 8487487914676325737, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: ABXYButtons.Array.data[3]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0245825245174fc4b97aeaa14d8a3c8a,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7ffcbef2272aab41afb4d82c43cd727, type: 3}
 --- !u!114 &4195778842455408685 stripped

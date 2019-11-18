@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 6923258467772200078}
   m_Layer: 0
   m_Name: Floor Panel
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

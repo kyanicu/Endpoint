@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4382265372580830014}
   m_Layer: 0
   m_Name: WallModel_Level1_1
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,9 +88,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1664856385488093481}
   - component: {fileID: 7486888094252194242}
+  - component: {fileID: 3563802380987004366}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,3 +136,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 24.243103, y: 100.51577}
   m_EdgeRadius: 0
+--- !u!114 &3563802380987004366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9019459326845161129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e7622d404f7d54db946ba6bfb4c5e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
