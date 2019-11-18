@@ -83,6 +83,12 @@ public class KeyboardInputManager : InputManager
             HUDController.instance.toggleDiagnosticPanels();
         }
 
+        if (Input.GetKey(KeyCode.Z))
+        {
+            // use player ability
+            Player.instance.ActivateActiveAbility();
+        }
+
         // Toggles/deals with Pause Menu.
         if (Input.GetKeyDown(KeyCode.Escape))
         {

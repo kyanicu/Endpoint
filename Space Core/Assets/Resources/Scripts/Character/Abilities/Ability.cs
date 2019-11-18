@@ -19,7 +19,7 @@ public abstract class Ability : MonoBehaviour
 
     private void Awake()
     {
-        owner = transform.parent.GetComponent<Character>();
+        // owner = transform.parent.GetComponent<Character>();
     }
 
     public void resetOwner(Character character)

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : Character
 {
     public bool IsSelected { get; set; }
+    private bool disabled { get; set; }
     public float PatrolRange { get; set; }
     public GameObject HackArea { get; protected set; }
     private GameObject DropAmmo { get; set; }
@@ -28,6 +29,7 @@ public class Enemy : Character
         HackArea = transform.Find("HackArea").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
+        disabled = false;
 
         // Instantiate left, right movement boundaries
         GameObject left = new GameObject();
@@ -64,25 +66,28 @@ public class Enemy : Character
             UpdateQTEManagerPosition();
         }
 
-        if (IsPlayerInRange())
+        if (!disabled)
         {
-            //UpdateQTEManagerPosition();
-            Vector3 playerPosition = Player.instance.transform.position;
-            Vector3 myPosition = transform.position;
-            Vector3 diff = playerPosition - myPosition;
-            AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
-            Fire();
-        }
-        else
-        {
-            Vector2 pos = new Vector2(transform.position.x, 0);
-            float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
-            float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
-            if (Dist0 < .5 || Dist1 < .5)
+            if (IsPlayerInRange())
             {
-                moveLeft = !moveLeft;
+                //UpdateQTEManagerPosition();
+                Vector3 playerPosition = Player.instance.transform.position;
+                Vector3 myPosition = transform.position;
+                Vector3 diff = playerPosition - myPosition;
+                AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+                Fire();
             }
-            Move(Speed);
+            else
+            {
+                Vector2 pos = new Vector2(transform.position.x, 0);
+                float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
+                float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
+                if (Dist0 < .5 || Dist1 < .5)
+                {
+                    moveLeft = !moveLeft;
+                }
+                Move(Speed);
+            }
         }
     }
 
@@ -222,5 +227,17 @@ public class Enemy : Character
     {
         Vector3 playerPos = Player.instance.transform.position;
         return (Vector3.Distance(playerPos, transform.position) < 20);
+    }
+
+    public void Freeze()
+    {
+        StartCoroutine(FreezeTimer());
+    }
+
+    private IEnumerator FreezeTimer()
+    {
+        disabled = true;
+        yield return new WaitForSeconds(5);
+        disabled = false;
     }
 }

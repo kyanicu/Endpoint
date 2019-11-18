@@ -154,7 +154,7 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.RightShoulder == ButtonState.Released && state.Value.Buttons.RightShoulder == ButtonState.Pressed)
         {
-            //Use Ability
+            Player.instance.ActivateActiveAbility();
         }
 
         if (prevState.Value.Buttons.LeftShoulder == ButtonState.Released && state.Value.Buttons.LeftShoulder == ButtonState.Pressed)

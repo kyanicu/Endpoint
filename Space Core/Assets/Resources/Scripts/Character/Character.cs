@@ -11,17 +11,15 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// The Prefab or current child object reference to the Character's active Ability
     /// </summary>
-    [SerializeField] private ActiveAbility activeAbility;
+    [SerializeField] protected ActiveAbility activeAbility;
     /// <summary>
     /// The Prefab or current child object reference to the Character's passive Ability
     /// </summary>
-    [SerializeField] private PassiveAbility passiveAbility;
+    [SerializeField] protected PassiveAbility passiveAbility;
 
     protected void Start()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
-        if(activeAbility) activeAbility = Instantiate(activeAbility, transform);
-        if (passiveAbility) passiveAbility = Instantiate(passiveAbility, transform);
     }
 
     /// <summary>
