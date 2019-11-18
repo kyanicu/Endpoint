@@ -1,0 +1,4 @@
+Version: 0.89 (Alpha)
+Dependencies: None
+
+Network Jump is a sophisticated set of tools designed to take advantage of several exploits within the Algorithm. To trigger the program, run the command “njmp” with the passcode and target device address as parameters. The program will construct a worm consisting of its host’s software while simultaneously breaking the target device’s security. A final command sequence will deploy the worm onto the target device.

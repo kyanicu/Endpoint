@@ -143,9 +143,11 @@ public class ControllerInputManager : InputManager
             }
         }
 
-        if (prevState.Value.Buttons.Guide == ButtonState.Released && state.Value.Buttons.Guide == ButtonState.Pressed)
+        if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
-            //Bring up overlay
+            OverlayManager.instance.ToggleOverlayVisibility();
+            Time.timeScale = 0;
+            currentState = InputState.OVERLAY;
         }
 
         #endregion
@@ -214,16 +216,34 @@ public class ControllerInputManager : InputManager
     }
 
     /// <summary>
-    /// Runs the frame input intended while in the in-game player panel InputState
+    /// Runs the frame input intended while in the in-game player Overlay InputState
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    protected override void RunPlayerPanelFrameInput()
+    protected override void RunPlayerOverlayFrameInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {
             return;
         }
+
+        if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
+        {
+            OverlayManager.instance.ToggleOverlayVisibility();
+            Time.timeScale = 1;
+            currentState = InputState.GAMEPLAY;
+        }
+
+        if (prevState.Value.Buttons.RightShoulder == ButtonState.Released && state.Value.Buttons.RightShoulder == ButtonState.Pressed)
+        {
+            OverlayManager.instance.NavigateOverlay(-1);
+        }
+
+        if (prevState.Value.Buttons.LeftShoulder == ButtonState.Released && state.Value.Buttons.LeftShoulder == ButtonState.Pressed)
+        {
+            OverlayManager.instance.NavigateOverlay(1);
+        }
+
     }
 
     /// <summary>
@@ -306,12 +326,12 @@ public class ControllerInputManager : InputManager
     }
 
     /// <summary>
-    /// Runs the fixed input intended while in the in-game player panel InputState
+    /// Runs the fixed input intended while in the in-game player Overlay InputState
     /// Called only on an physics tick through FixedUpdate() function
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    protected override void RunPlayerPanelFixedInput()
+    protected override void RunPlayerOverlayFixedInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)
         {

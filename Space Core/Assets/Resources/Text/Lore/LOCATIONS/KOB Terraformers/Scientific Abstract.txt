@@ -1,0 +1,8 @@
+“KOB: A Practical Solution to Terraformation on H-Worlds”
+By Chett Patel, Research Director at TerraCore Sciences
+
+Measurements and models generated during Earth’s climate crisis in the 21st century provided the foundation for the study and application of terraformation. Terraformation, defined as the process of deliberately modifying the properties of a world, was first practically achieved on Europa by intentionally applying the techniques that destroyed Earth’s biosphere to a positive effect on what would later be classified as a B-world.
+
+Venus is classified as a H-world. That is to say, it is the complete opposite of Europa - extremely hot and packed with greenhouse gasses. In some aspects, Venus represents what may have been the end result of Earth’s climate crisis. As such, it requires a radically different solution. Unfortunately for the Union, this is a solution which is untested and far more difficult.
+
+While the Union has reluctantly dealt with aerostat colonies for now, TerraCore Sciences believes it can provide a long term solution for Venus. This paper outlines the principles and design for a machine based on Krane’s Negative Feedback Principle...

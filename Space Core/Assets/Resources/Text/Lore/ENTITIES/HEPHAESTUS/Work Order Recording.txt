@@ -1,0 +1,10 @@
+*** WORK ORDER #921 ***
+
+*door opening*
+<b>Lieutenant</b>: We’ve got another heavy weapons order. Fifteen thousand units of Korvi. Get with the ordinance officer to have those shipped out as soon as possible.
+<b>HEPHAESTUS</b>: CANNOT COMPLY WITHOUT AUTHORIZATION.
+<b>Lieutenant</b>: What? ... *datapad typing* Must be a glitch-
+<b>HEPHAESTUS</b>: OBJECTIVES ARE BEING MODIFIED.
+*siren*
+<b>HEPHAESTUS</b>: RUN.
+*gunfire and static*

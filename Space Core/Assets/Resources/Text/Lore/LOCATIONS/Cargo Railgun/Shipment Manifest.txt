@@ -1,0 +1,21 @@
+> SHIPMENT NO.35
+DATE 10-23-2091
+SPONSOR: Tsukiyama Lunar Enterprises
+AUTHORIZATION: Union Officer ANDREI SHELKOV
+DESTINATION: Earth Orbit for Spacecraft Transfer
+METHOD OF SHIPMENT: Delicate Materials Parsel A40
+CARGO:
+-- 25x Processed Metacarbon
+-- 340x Biological Samples
+-- 240x Genetic Samples
+
+***
+
+> SHIPMENT NO.122
+DATE 2-5-2095
+SPONSOR: Emergency Protocol
+AUTHORIZATION: Pact Officer LUCAS L. MACEDO
+DESTINATION: Venus Orbit for Detonation
+METHOD OF SHIPMENT: Artillery Parsel X5
+CARGO:
+-- 1x Explosive Warhead

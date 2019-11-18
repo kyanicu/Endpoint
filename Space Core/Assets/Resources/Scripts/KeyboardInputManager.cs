@@ -79,7 +79,7 @@ public class KeyboardInputManager : InputManager
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            // Toggle Diagnostic Panels
+            // Toggle Diagnostic Overlays
             HUDController.instance.toggleDiagnosticPanels();
         }
 
@@ -132,11 +132,11 @@ public class KeyboardInputManager : InputManager
     }
 
     /// <summary>
-    /// Runs the frame input intended while in the in-game player panel InputState
+    /// Runs the frame input intended while in the in-game player Overlay InputState
     /// Called only on an update frame through Update() function
     /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
     /// </summary>
-    protected override void RunPlayerPanelFrameInput()
+    protected override void RunPlayerOverlayFrameInput()
     {
 
     }
@@ -207,12 +207,12 @@ public class KeyboardInputManager : InputManager
     }
 
     /// <summary>
-    /// Runs the fixed input intended while in the in-game player panel InputState
+    /// Runs the fixed input intended while in the in-game player Overlay InputState
     /// Called only on an physics tick through FixedUpdate() function
     /// Should only handle things physics related
     /// Never use "Input.Get___Down/Up" in this function as fixed updates may mix it
     /// </summary>
-    protected override void RunPlayerPanelFixedInput()
+    protected override void RunPlayerOverlayFixedInput()
     {
 
     }

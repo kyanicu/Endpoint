@@ -5,17 +5,17 @@ using UnityEngine;
 public abstract class InputManager : MonoBehaviour
 {
     /// <summary> enum type used to keep track of how the input from user should be handled </summary>
-    public enum InputState { MAIN_MENU, PLAYER_PANEL, PLAYER_MENU, GAMEPLAY, PAUSE }
+    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE }
     /// <summary> The current state of how input should be handled </summary>
     public InputState currentState { get; set; }
 
     protected abstract void RunGameplayFrameInput();
     protected abstract void RunMainMenuFrameInput();
-    protected abstract void RunPlayerPanelFrameInput();
+    protected abstract void RunPlayerOverlayFrameInput();
     protected abstract void RunPlayerMenuFrameInput();
     protected abstract void RunPauseFrameInput();
     protected abstract void RunMainMenuFixedInput();
-    protected abstract void RunPlayerPanelFixedInput();
+    protected abstract void RunPlayerOverlayFixedInput();
     protected abstract void RunPlayerMenuFixedInput();
     protected abstract void RunGameplayFixedInput();
     protected abstract void RunPauseFixedInput();
@@ -29,8 +29,8 @@ public abstract class InputManager : MonoBehaviour
             case (InputState.MAIN_MENU):
                 RunMainMenuFixedInput();
                 break;
-            case (InputState.PLAYER_PANEL):
-                RunPlayerPanelFixedInput();
+            case (InputState.OVERLAY):
+                RunPlayerOverlayFixedInput();
                 break;
             case (InputState.PLAYER_MENU):
                 RunPlayerMenuFixedInput();
@@ -54,8 +54,8 @@ public abstract class InputManager : MonoBehaviour
             case (InputState.MAIN_MENU):
                 RunMainMenuFrameInput();
                 break;
-            case (InputState.PLAYER_PANEL):
-                RunPlayerPanelFrameInput();
+            case (InputState.OVERLAY):
+                RunPlayerOverlayFrameInput();
                 break;
             case (InputState.PLAYER_MENU):
                 RunPlayerMenuFrameInput();
