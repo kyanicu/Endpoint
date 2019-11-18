@@ -53,7 +53,7 @@ public class Player : Character
         ResetSwap();
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
-        
+
         RotationPoint.transform.localScale = new Vector3(1, 1, 1);
         
         transform.localScale = new Vector3(1, 1, 1);

@@ -20,7 +20,7 @@ public abstract class Weapon : MonoBehaviour
         //{ 4, "Bestafera" },
         //{ 5, "Thor" },
     };
-    
+
     public string Name { get; set; }
     public bool IsReloading { get; set; }
     public Bullet.BulletSource BulletSource { get; set; }
@@ -36,9 +36,9 @@ public abstract class Weapon : MonoBehaviour
     public float BulletVeloc { get; set; }
     public float ReloadTime { get; set; }
     public bool ControlledByPlayer { get; set; }
+    public GameObject Bullet { get; set; }
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
-    protected GameObject Bullet;
     protected Transform RotationPoint;
 
     /// <summary>
