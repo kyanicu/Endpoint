@@ -42,7 +42,7 @@ public class Spread : Weapon
 
         IsReloading = true;
 
-        //Wait until reaload timer is up.
+        //Wait until reload timer is up.
         yield return new WaitForSeconds(ReloadTime);
 
         //lock the reload object so no concurrent reloads happen

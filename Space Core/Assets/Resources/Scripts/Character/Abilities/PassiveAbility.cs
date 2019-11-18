@@ -11,7 +11,7 @@ public abstract class PassiveAbility : Ability
     /// <summary>
     /// Checks every frame for the ability to be activated based on the activation condition
     /// </summary>
-    void Update()
+    protected void Update()
     {
         if (activationCondition)
             Activate();

@@ -12,6 +12,7 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
+    public bool isImmortal;
     Vector2 newPos;
 
     const float HACK_AREA_LENGTH = 22.5f;
@@ -44,6 +45,7 @@ public class Player : Character
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true;
+        isImmortal = false;
         if (Class == null)
         {
             Class = "medium";
@@ -106,18 +108,19 @@ public class Player : Character
 
     public override void TakeDamage(int damage)
     {
-
-        if (Health - damage <= 0)
+        if (!isImmortal)
         {
-            //We'll need to figure out a way to decouple scene loading from player
-            SceneManager.LoadScene(0);
+            if (Health - damage <= 0)
+            {
+                //We'll need to figure out a way to decouple scene loading from player
+                SceneManager.LoadScene(0);
+            }
+            else
+            {
+                Health -= damage;
+                HUDController.instance.UpdatePlayer(this);
+            }
         }
-        else
-        {
-            Health -= damage / 5;
-            HUDController.instance.UpdatePlayer(this);
-        }
-
     }
 
     public void OnTriggerEnter2D(Collider2D other)
