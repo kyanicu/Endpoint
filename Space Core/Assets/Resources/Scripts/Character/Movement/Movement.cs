@@ -25,7 +25,6 @@ public abstract class Movement : MonoBehaviour
     /// Character movement values
     /// </summary>
     [SerializeField]
-<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Movement/Movement.cs
     private float _runMax, _runAccel, _runDecel,
         _jumpVelocity, _gravityScale, _jumpCancelMinVel, _jumpCancelVel,
         _airAccel, _airDecel, _airMax,
@@ -52,12 +51,6 @@ public abstract class Movement : MonoBehaviour
     protected float airDecel { get { return _airDecel * mod; } set { _airDecel = value; } }
     protected float airMax { get { return _airMax * mod; } set { _airMax = value; } }
     protected float pushForce { get { return _pushForce * mod; } set { _pushForce = value; } }
-=======
-    protected float runMax, runAccel, runDecel,
-        jumpVelocity, gravityScale, jumpCancelMinVel, jumpCancelVel,
-        airAccel, airDecel, airMax,
-        pushForce;
->>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1:Space Core/Assets/Resources/Scripts/Player/PlayerMovement.cs
 
     /// <summary>
     /// Current jump values
