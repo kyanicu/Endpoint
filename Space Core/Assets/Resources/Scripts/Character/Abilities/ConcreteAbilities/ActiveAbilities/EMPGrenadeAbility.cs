@@ -16,8 +16,8 @@ public class EMPGrenadeAbility : ActiveAbility
 
     protected override void Activate()
     {
-        GameObject empGrenadeObject = Instantiate(EMPGrenade, Player.instance.Weapon.FireLocation.transform.position, Quaternion.identity);
-        empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(Player.instance.Weapon.FireLocation.transform.right * force);
+        GameObject empGrenadeObject = Instantiate(EMPGrenade, owner.Weapon.FireLocation.transform.position, Quaternion.identity);
+        empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(owner.Weapon.FireLocation.transform.right * force);
         activationTimer = 15f;
     }
 

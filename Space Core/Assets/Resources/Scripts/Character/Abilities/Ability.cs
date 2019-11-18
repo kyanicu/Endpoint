@@ -15,16 +15,16 @@ public abstract class Ability : MonoBehaviour
     /// <summary>
     /// Reference to the owning character
     /// </summary>
-    private Character owner;
+    protected Character owner;
 
     private void Awake()
     {
-        // owner = transform.parent.GetComponent<Character>();
+        owner = transform.GetComponent<Character>();
     }
 
     public void resetOwner(Character character)
     {
-        owner = transform.parent.GetComponent<Character>();
+        owner = character;
     }
 
     // The method that runs the Ability

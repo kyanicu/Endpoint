@@ -14,15 +14,16 @@ public class PiercingShotAbility : PassiveAbility
     /// </summary>
     protected override void Activate()
     {
-        Player.instance.Weapon.Bullet = Resources.Load<GameObject>("Prefabs/Weapons/PiercingBullet");
+        owner.Weapon.Bullet = Resources.Load<GameObject>("Prefabs/Weapons/PiercingBullet");
         NeedsActivation = false;
     }
 
     /// <summary>
     /// Needs activation set to true sp activate will be called after start
     /// </summary>
-    void Start()
+    protected new void Start()
     {
+        base.Start();
         NeedsActivation = true;
     }
 }

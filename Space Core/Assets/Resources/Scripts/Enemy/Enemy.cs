@@ -22,6 +22,7 @@ public class Enemy : Character
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
+        AbilityGenerator.AddAbilitiesToCharacter(gameObject);
         Weapon.BulletSource = Bullet.BulletSource.Enemy;
         DropAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
         QTEPointLeft = transform.Find("QTEPointLeft");

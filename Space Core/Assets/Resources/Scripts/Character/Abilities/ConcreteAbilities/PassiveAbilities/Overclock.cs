@@ -16,17 +16,13 @@ public class Overclock : PassiveAbility
     /// <summary>
     /// On start, add the modifier to the character movement
     /// </summary>
-    private void Start()
+    private new void Start()
     {
-        GetComponentInParent<Movement>().mod *= mod;
-    }
-
-    /// <summary>
-    /// on destroy, remove modifier from the character movement
-    /// </summary>
-    private void OnDestroy()
-    {
-        GetComponentInParent<Movement>().mod /= mod;
+        base.Start();
+        if (!isEnemy)
+        {
+            GetComponentInParent<Movement>().mod *= mod;
+        }
     }
 
     /// <summary>

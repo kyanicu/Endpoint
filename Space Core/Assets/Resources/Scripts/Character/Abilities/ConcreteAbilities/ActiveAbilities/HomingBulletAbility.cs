@@ -21,18 +21,20 @@ public class HomingBulletAbility : ActiveAbility
     protected override bool activationCondition => activationTimer <= 0;
 
     /// <summary>
-    /// Activate method sets the player's bullet to the homing bullet
+    /// Activate method sets the owner's bullet to the homing bullet
     /// </summary>
     protected override void Activate()
     {
-        Player.instance.Weapon.Bullet = homingBullet;
+        //get the owner's bullet type. Could be different from standard bullet if they have a
+        //passive ability that changes their bullet type.
+        owner.Weapon.Bullet = homingBullet;
         StartCoroutine(ResetBullets());
     }
 
     // Set all resources
     void Start()
     {
-        bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        bullet = owner.Weapon.Bullet;
         homingBullet = Resources.Load<GameObject>("Prefabs/Weapons/HomingBullet");
         activeTime = 5f;
         activationTimer = 0f;
@@ -44,6 +46,11 @@ public class HomingBulletAbility : ActiveAbility
     /// </summary>
     void Update()
     {
+        //if we failed to get the bullet at start, do it in update
+        if (bullet == null)
+        {
+            bullet = owner.Weapon.Bullet;
+        }
         if (activationTimer > 0)
         {
             activationTimer -= Time.deltaTime;
@@ -56,6 +63,7 @@ public class HomingBulletAbility : ActiveAbility
     IEnumerator ResetBullets()
     {
         yield return new WaitForSeconds(activeTime);
-        Player.instance.Weapon.Bullet = bullet;
+        owner.Weapon.Bullet = bullet;
+        activationTimer = cooldown;
     }
 }

@@ -7,15 +7,10 @@ public abstract class Character : MonoBehaviour
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public Weapon Weapon { get; set; }
+    public bool isImmortal { get; set; }
     public GameObject RotationPoint { get; set; }
-    /// <summary>
-    /// The Prefab or current child object reference to the Character's active Ability
-    /// </summary>
-    [SerializeField] protected ActiveAbility activeAbility;
-    /// <summary>
-    /// The Prefab or current child object reference to the Character's passive Ability
-    /// </summary>
-    [SerializeField] protected PassiveAbility passiveAbility;
+    public ActiveAbility ActiveAbility { get; set; }
+    public PassiveAbility PassiveAbility { get; set; }
 
     protected void Start()
     {
@@ -28,43 +23,8 @@ public abstract class Character : MonoBehaviour
     /// <returns>Was the ability activated</returns>
     public bool ActivateActiveAbility()
     {
-        return activeAbility.AttemptActivation();
-    }
-
-    /// <summary>
-    /// Set the passive ability
-    /// </summary>
-    /// <param name="ability">the ability object or prefab to be copied and instatiated, without effecting the original</param>
-    public void SetPassiveAbility(PassiveAbility ability)
-    {
-        passiveAbility = Instantiate(ability, transform);
-    }
-
-    /// <summary>
-    /// Set the passive ability
-    /// </summary>
-    /// <param name="ability">the ability object or prefab to be copied and instatiated, without effecting the original</param>
-    public void SetActiveAbility(ActiveAbility ability)
-    {
-        activeAbility = Instantiate(ability, transform);
-    }
-    /// <summary>
-    /// returns a reference to the active ability
-    /// </summary>
-    /// <returns>reference to the active ability</returns>
-    public ActiveAbility GetActiveAbility()
-    {
-        return activeAbility;
-    }
-    /// <summary>
-    /// returns a reference to the passive ability
-    /// </summary>
-    /// <returns>reference to the passive ability</returns>
-    public PassiveAbility GetPassiveAbility()
-    {
-        return passiveAbility;
-    }
-    
+        return ActiveAbility.AttemptActivation();
+    }    
 
     public abstract void TakeDamage(int damage);
     public abstract void Fire();

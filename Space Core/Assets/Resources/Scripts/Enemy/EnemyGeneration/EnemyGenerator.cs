@@ -31,6 +31,7 @@ public class EnemyGenerator : MonoBehaviour
                 GenerateLargeEnemy();
                 break;
         }
+        Destroy(gameObject);
     }
 
     /// <summary>

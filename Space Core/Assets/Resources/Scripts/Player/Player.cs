@@ -12,7 +12,6 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
-    public bool isImmortal;
     Vector2 newPos;
 
     const float HACK_AREA_LENGTH = 22.5f;
@@ -67,6 +66,21 @@ public class Player : Character
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
         }
+
+        ActiveAbility = gameObject.GetComponent<ActiveAbility>();
+        PassiveAbility = gameObject.GetComponent<PassiveAbility>();
+
+        if (ActiveAbility == null && PassiveAbility == null)
+        {
+            AbilityGenerator.AddAbilitiesToCharacter(gameObject);
+        }
+        else
+        {
+            
+            ActiveAbility.resetOwner(this);
+            PassiveAbility.resetOwner(this);
+        }
+
         Weapon.BulletSource = Bullet.BulletSource.Player;
         movement = GetComponent<Movement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
@@ -197,7 +211,9 @@ public class Player : Character
 
     public void Switch()
     {
-                Destroy(RotationPoint);
+        Destroy(RotationPoint);
+        Destroy(ActiveAbility);
+        Destroy(PassiveAbility);
         MaxHealth = Enemy.MaxHealth;
         Health = Enemy.Health;
         Destroy(Enemy.HackArea.gameObject);

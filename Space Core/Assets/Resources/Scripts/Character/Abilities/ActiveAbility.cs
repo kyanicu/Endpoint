@@ -7,6 +7,13 @@ using UnityEngine;
 /// </summary>
 public abstract class ActiveAbility : Ability
 {
+    //List that holds the names of all active abilities
+    public static List<string> ActiveAbilityList = new List<string>()
+    {
+        "HomingBulletAbility",
+        "EMPGrenadeAbility",
+    };
+
     /// <summary>
     /// Allows the powner Character to attempt activation of the ability
     /// </summary>
