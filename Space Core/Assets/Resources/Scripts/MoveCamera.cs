@@ -4,7 +4,8 @@ using System.Collections;
 public class MoveCamera : MonoBehaviour
 {
     //Lerp speed of camera
-    public float speed = 2.0f;
+    public float speed = 2000000f;
+    private const float yMod = .15f;
 
     void Update()
     {
@@ -12,9 +13,12 @@ public class MoveCamera : MonoBehaviour
         float interpolation = speed * Time.deltaTime;
 
         Vector3 position = transform.position;
-        position.y = Mathf.Lerp(transform.position.y, player.position.y, interpolation);
+        if (position != new Vector3(player.position.x, player.position.y + yMod, transform.position.z))
+        {
+        position.y = Mathf.Lerp(transform.position.y + yMod, player.position.y + yMod, interpolation);
         position.x = Mathf.Lerp(transform.position.x, player.position.x, interpolation);
 
         transform.position = position;
+        }
     }
 }
