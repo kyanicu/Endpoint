@@ -7,10 +7,6 @@ using UnityEngine;
 /// </summary>
 public class HomingBulletAbility : ActiveAbility
 {
-    //timer that indicates when the timer can be active
-    private float activationTimer;
-    //timer for the cooldown of the ability
-    private float cooldown;
     //timer for how long the homing bullet will be active for
     private float activeTime;
     //base bullet object
@@ -38,7 +34,7 @@ public class HomingBulletAbility : ActiveAbility
         homingBullet = Resources.Load<GameObject>("Prefabs/Weapons/HomingBullet");
         activeTime = 5f;
         activationTimer = 0f;
-        cooldown = 15f;
+        Cooldown = 15f;
     }
 
     /// <summary>
@@ -64,6 +60,6 @@ public class HomingBulletAbility : ActiveAbility
     {
         yield return new WaitForSeconds(activeTime);
         owner.Weapon.Bullet = bullet;
-        activationTimer = cooldown;
+        activationTimer = Cooldown;
     }
 }

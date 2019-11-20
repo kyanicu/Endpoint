@@ -7,6 +7,11 @@ using UnityEngine;
 /// </summary>
 public abstract class ActiveAbility : Ability
 {
+    //timer that indicates when the timer can be active
+    protected float activationTimer;
+    //timer for the cooldown of the ability
+    public float Cooldown { get; set; }
+
     //List that holds the names of all active abilities
     public static List<string> ActiveAbilityList = new List<string>()
     {

@@ -41,6 +41,10 @@ public class HUDController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates every section of the HUD
+    /// </summary>
+    /// <param name="p"></param>
     public void UpdateHUD(Player p)
     {
         UpdateAmmo(p);
@@ -50,24 +54,49 @@ public class HUDController : MonoBehaviour
         CharacterPM.UpdateCharacterClass(p);
     }
 
+    /// <summary>
+    /// Updates the ammo section of the HUD
+    /// </summary>
+    /// <param name="p"></param>
     public void UpdateAmmo(Player p)
     {
         WeaponPM.UpdateAmmo(p.Weapon);
     }
 
+    /// <summary>
+    /// Updates the weapon section of the HUD
+    /// </summary>
+    /// <param name="p"></param>
     public void UpdateWeapon(Player p)
     {
         WeaponPM.UpdateWeapon(p);
     }
 
+    /// <summary>
+    /// Updates the character section of the HUD
+    /// </summary>
+    /// <param name="p"></param>
     public void UpdatePlayer(Player p)
     {
         CharacterPM.UpdateHealth(p.MaxHealth, p.Health);
     }
 
+    /// <summary>
+    /// Updates the swap section of the HUD
+    /// </summary>
+    /// <param name="rechargeTime"></param>
     public void UpdateSwap(float rechargeTime)
     {
         SwapPM.RechargeSwap(rechargeTime);
+    }
+
+    /// <summary>
+    /// Updates the ability image in the character section of the HUD
+    /// </summary>
+    /// <param name="seconds"></param>
+    public void StartAbilityCooldown(float seconds)
+    {
+        StartCoroutine(CharacterPM.UpdateAbilityCooldownUI(seconds));
     }
 
     private void Start()

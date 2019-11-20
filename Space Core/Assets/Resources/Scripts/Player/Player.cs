@@ -12,7 +12,6 @@ public class Player : Character
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
-    Vector2 newPos;
 
     const float HACK_AREA_LENGTH = 22.5f;
     public string Class { get; private set; }
@@ -243,12 +242,7 @@ public class Player : Character
     /// <returns></returns>
     private IEnumerator implementSwapCooldown()
     {
-        float timer = 0;
-        while (timer < COOLDOWN_TIME)
-        {
-            timer += .05f;
-            yield return new WaitForSeconds(.05f);
-        }
+        yield return new WaitForSeconds(COOLDOWN_TIME);
         canSwap = true;
     }
 

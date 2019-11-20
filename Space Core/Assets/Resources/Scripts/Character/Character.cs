@@ -23,6 +23,7 @@ public abstract class Character : MonoBehaviour
     /// <returns>Was the ability activated</returns>
     public bool ActivateActiveAbility()
     {
+        HUDController.instance.StartAbilityCooldown(ActiveAbility.Cooldown);
         return ActiveAbility.AttemptActivation();
     }    
 

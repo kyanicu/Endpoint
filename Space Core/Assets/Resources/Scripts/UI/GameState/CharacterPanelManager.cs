@@ -35,6 +35,12 @@ public class CharacterPanelManager : MonoBehaviour
     #endregion
 
     public GameObject CharacterDiagnosticInfoPanel;
+    public Image CharacterAbilityFill, CharacterAbilityEmpty;
+
+    public void Start()
+    {
+        CharacterAbilityFill.fillAmount = 1f;
+    }
 
     /// <summary>
     /// Updates healthbar and text ui element in Player HUD Canvas
@@ -73,5 +79,26 @@ public class CharacterPanelManager : MonoBehaviour
             CharacterClassClassText.color = colorCharacterMedium;
             CharacterClassNameText.text = "Ivan";
         }
+    }
+
+    /// <summary>
+    /// Coroutine to slowly refill ability meter
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns></returns>
+    public IEnumerator UpdateAbilityCooldownUI(float seconds)
+    {
+        //Counter should start at 0 and continue until cooldown amount has passed
+        float counter = 0;
+        
+        //Continue loop while bar is still refilling
+        while (counter < seconds)
+        {
+            //Fill the bar with how much time has passed
+            CharacterAbilityFill.fillAmount = counter / seconds;
+            counter += .1f;
+            yield return new WaitForSeconds(.1f);
+        }
+        yield return null;
     }
 }
