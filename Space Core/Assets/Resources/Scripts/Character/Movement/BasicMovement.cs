@@ -4,16 +4,6 @@ using UnityEngine;
 public class BasicMovement : Movement
 {
 
-
-    private void OnValidate()
-    {
-        //Const Values
-
-        if(!GetComponent<CharacterController2D>())
-            gameObject.AddComponent<CharacterController2D>();
-
-    }
-
     /// <summary>
     /// Sets the basic default values
     /// </summary>

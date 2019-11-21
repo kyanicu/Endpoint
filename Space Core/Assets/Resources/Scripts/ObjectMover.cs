@@ -60,7 +60,7 @@ public class ObjectMover : MonoBehaviour
     Rigidbody2D rb;
     Collider2D col;
 
-    private void OnValidate()
+    private void Reset()
     {
         //Const Values
 
@@ -77,8 +77,18 @@ public class ObjectMover : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        if (!(rb = GetComponent<Rigidbody2D>()))
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        else
+            rb = GetComponent<Rigidbody2D>();
+
         col = GetComponent<Collider2D>();
+
+        if (rb.bodyType != RigidbodyType2D.Kinematic)
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        if (!rb.simulated)
+            rb.simulated = true;
+
     }
 
     /*private ContactData[] HandleDiscreteCollision(Vector2 moveDirection, out int contactCount)
@@ -242,7 +252,7 @@ public class ObjectMover : MonoBehaviour
             loops++;
             if (loops > maxSize && stuck)
             {
-                Debug.LogError("Possible Infinite Loop. Exiting");
+                //Debug.LogError("Possible Infinite Loop. Exiting");
                 break;
             }
             
@@ -558,7 +568,7 @@ public class ObjectMover : MonoBehaviour
             loops++;
             if (loops > maxSize)
             {
-                Debug.LogError("Possible Infinite Loop. Exiting");
+                //Debug.LogError("Possible Infinite Loop. Exiting");
                 break;
             }
             moveCount++;

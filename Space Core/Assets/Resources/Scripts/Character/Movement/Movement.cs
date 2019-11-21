@@ -10,7 +10,7 @@ public abstract class Movement : MonoBehaviour
     /// </summary>
     protected bool defaultValuesSet;
 
-    protected CharacterController2D charCont;
+    public CharacterController2D charCont;
 
     private Vector2 _velocity;
     public Vector2 velocity { get { return _velocity; } protected set { _velocity = value; } }
@@ -37,7 +37,7 @@ public abstract class Movement : MonoBehaviour
     /// use / to remove modification (mod /= 2)
     /// </summary>
     public float mod = 1;
-    
+
     // The following values return the encapsulated value with the current set modifier  
 
     protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
@@ -64,20 +64,11 @@ public abstract class Movement : MonoBehaviour
     /// +1 == right
     /// </summary>
     protected float pushingDirection;
-    
+
     /// <summary>
     /// Use to set default values for concrete classes
     /// </summary>
     protected abstract void SetDefaultValues();
-
-    private void OnValidate()
-    {
-        //Const Values
-
-        if (!GetComponent<CharacterController2D>())
-            gameObject.AddComponent<CharacterController2D>();
-
-    }
 
     /// <summary>
     /// Used in editor on component add, and when manually reset
@@ -86,9 +77,11 @@ public abstract class Movement : MonoBehaviour
     {
         SetDefaultValues();
         defaultValuesSet = true;
+        if (!(charCont = GetComponent<CharacterController2D>()))
+            charCont = gameObject.AddComponent<CharacterController2D>();
     }
 
-    protected void Awake()
+    private void Awake()
     {
         // used incase component was added outside of editor (such as via instatiate)
         if (!defaultValuesSet)
@@ -97,7 +90,10 @@ public abstract class Movement : MonoBehaviour
             defaultValuesSet = true;
         }
 
-        charCont = GetComponent<CharacterController2D>();
+        if (!(charCont = GetComponent<CharacterController2D>()))
+            charCont = gameObject.AddComponent<CharacterController2D>();
+        else
+            charCont = GetComponent<CharacterController2D>();
     }
 
     /// <summary>
@@ -254,7 +250,6 @@ public abstract class Movement : MonoBehaviour
                     break;
                 }
             }
-
             if (charCont.isTouchingRightWall && !(pushing && pushingDirection == +1))
                 CancelDirectionalVelocity(Vector2.right);
             else if (charCont.isTouchingLeftWall && !(pushing && pushingDirection == -1))

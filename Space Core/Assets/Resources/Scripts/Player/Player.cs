@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class Player : Character
 {
     public Enemy Enemy { get; set; }
-    private Movement movement;
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
@@ -18,27 +17,27 @@ public class Player : Character
 
     private const float COOLDOWN_TIME = 2.5f;
 
-    private void OnValidate()
-    {
-        //Const Values
-
-       if(!(movement = GetComponent<Movement>()))
-            movement = gameObject.AddComponent<BasicMovement>();
-    }
-
     /// <summary>
     /// Update HUD after successfully swapping into a new enemy
     /// Start called on new Player component enabled
     /// </summary>
-    private new void Start()
+    protected override void Start()
     {
         base.Start();
         HUDController.instance.UpdateHUD(this);
         Weapon.ControlledByPlayer = true;
     }
 
-    private void Awake()
+    protected override void Reset()
     {
+        base.Reset();
+    }
+
+    protected override void Awake()
+    {
+
+        base.Awake();
+
         MaxHealth = 100;
         Health = MaxHealth;
         canSwap = true;
@@ -80,19 +79,24 @@ public class Player : Character
         }
 
         Weapon.BulletSource = Bullet.BulletSource.Player;
-        movement = GetComponent<Movement>();
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         HUDController.instance.UpdateHUD(this);
     }
-
-    public override void Jump()
+    public override void TakeDamage(int damage)
     {
-        movement.Jump();
-    }
-
-    public override void JumpCancel()
-    {
-        movement.JumpCancel();
+        if (!isImmortal)
+        {
+            if (Health - damage <= 0)
+            {
+                //We'll need to figure out a way to decouple scene loading from player
+                SceneManager.LoadScene(0);
+            }
+            else
+            {
+                Health -= damage;
+                HUDController.instance.UpdatePlayer(this);
+            }
+        }
     }
 
     public override void Fire()
@@ -118,28 +122,6 @@ public class Player : Character
 
             //update hud
             HUDController.instance.UpdateAmmo(this);
-        }
-    }
-
-    public override void Move(float axis)
-    {
-        movement.Run(axis);
-    }
-
-    public override void TakeDamage(int damage)
-    {
-        if (!isImmortal)
-        {
-            if (Health - damage <= 0)
-            {
-                //We'll need to figure out a way to decouple scene loading from player
-                SceneManager.LoadScene(0);
-            }
-            else
-            {
-                Health -= damage;
-                HUDController.instance.UpdatePlayer(this);
-            }
         }
     }
 
@@ -225,13 +207,11 @@ public class Player : Character
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
         Class = Enemy.Class;
+        movement = Enemy.movement;
 
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
         rigidBody.simulated = true;
-        Enemy.gameObject.AddComponent<ObjectMover>();
-        Enemy.gameObject.AddComponent<CharacterController2D>();
-        Enemy.gameObject.AddComponent<BasicMovement>();
         Enemy.gameObject.AddComponent<Player>();
         Camera.main.transform.parent = Enemy.transform;
         Reload();

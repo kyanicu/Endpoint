@@ -98,7 +98,7 @@ public class CharacterController2D : MonoBehaviour
     public ObjectMover mover;
     public CapsuleCollider2D capCol;
 
-    private void OnValidate()
+    private void Reset()
     {
         //Const Values
 
@@ -107,15 +107,23 @@ public class CharacterController2D : MonoBehaviour
         if (!(mover = GetComponent<ObjectMover>()))
             mover = gameObject.AddComponent<ObjectMover>();
 
+        capCol.isTrigger = false;
 
-        if (!capCol.isTrigger)
-            capCol.isTrigger = true;
     }
 
     private void Awake()
     {
-        mover = GetComponent<ObjectMover>();
-        capCol = GetComponent<CapsuleCollider2D>();
+        if (!(capCol = GetComponent<CapsuleCollider2D>()))
+            capCol = gameObject.AddComponent<CapsuleCollider2D>();
+        else
+            mover = GetComponent<ObjectMover>();
+
+        if (!(mover = GetComponent<ObjectMover>()))
+            mover = gameObject.AddComponent<ObjectMover>();
+        else
+            capCol = GetComponent<CapsuleCollider2D>();
+
+        capCol.isTrigger = false;
     }
 
     // Start is called before the first frame update

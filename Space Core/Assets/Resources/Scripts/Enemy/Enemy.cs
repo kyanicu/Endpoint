@@ -13,7 +13,7 @@ public class Enemy : Character
     protected Transform QTEPointRight;
     public GameObject QTEPanel { get; protected set; }
     protected bool lookingLeft = false;
-    protected bool moveLeft = false;
+    protected int moveDirection = +1;
     public float Speed { get; set; }
     public GameObject[] MovePoints;
     public string Class { get; set; }
@@ -29,8 +29,10 @@ public class Enemy : Character
         } 
     }
 
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         AbilityGenerator.AddAbilitiesToCharacter(gameObject);
@@ -87,17 +89,22 @@ public class Enemy : Character
                 Vector3 diff = playerPosition - myPosition;
                 AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
                 Fire();
+                Move(0);
             }
             else
             {
+
+
+
                 Vector2 pos = new Vector2(transform.position.x, 0);
                 float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
                 float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);
-                if (Dist0 < .5 || Dist1 < .5)
-                {
-                    moveLeft = !moveLeft;
-                }
-                Move(Speed);
+                if (Dist1 < .5 || movement.charCont.isTouchingLeftWall)
+                    moveDirection = +1;
+                else if (Dist0 < .5 || movement.charCont.isTouchingRightWall)
+                    moveDirection = -1;
+
+                Move(moveDirection);
             }
         }
     }
@@ -189,18 +196,6 @@ public class Enemy : Character
     public override void Reload()
     {
         Weapon.Reload(this);
-    }
-
-    public override void Move(float speed)
-    {
-        if (moveLeft)
-        {
-            transform.position -= new Vector3(speed * Time.deltaTime, 0, 0);
-        }
-        else
-        {
-            transform.position += new Vector3(speed * Time.deltaTime, 0, 0);
-        }
     }
 
     public override void AimWeapon(float angle)
