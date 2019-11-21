@@ -4200,8 +4200,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 92e2ba0dd018f1242a51cca472952a1a, type: 3}
   - {fileID: 21300000, guid: 9b3c1f1a7aa9e884e96cf00f1764ed78, type: 3}
   CharacterDiagnosticInfoPanel: {fileID: 4533930366820072344}
-  CharacterAbilityFill: {fileID: 0}
-  CharacterAbilityEmpty: {fileID: 0}
+  CharacterAbilityFill: {fileID: 3898807662088147871}
+  CharacterAbilityEmpty: {fileID: 3729048160341805474}
 --- !u!1 &9053953551586979918
 GameObject:
   m_ObjectHideFlags: 0

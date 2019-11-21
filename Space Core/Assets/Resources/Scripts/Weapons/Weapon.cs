@@ -46,18 +46,75 @@ public abstract class Weapon : MonoBehaviour
     /// </summary>
     public abstract void Fire();
 
-    public void Reload()
+    public void Reload(Character c)
     {
-        StartCoroutine(ReloadRoutine());
+        if (!IsReloading)
+        { 
+            StartCoroutine(ReloadRoutine(c));
 
-        //Give enemy back ammo so they don't run out
-        if (!ControlledByPlayer)
-        {
-            TotalAmmo += ClipSize;
+            //Give enemy back ammo so they don't run out
+            if (!ControlledByPlayer)
+            {
+                TotalAmmo += ClipSize;
+            }
         }
     }
 
-    protected abstract IEnumerator ReloadRoutine();
+    /// <summary>
+    /// Main coroutine used to reload the weapons
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ReloadRoutine(Character c)
+    {
+        //if already reloading, return
+        if (IsReloading)
+        {
+            yield return null;
+        }
+
+        //if we have max ammo in our clip, return
+        if (AmmoInClip == ClipSize)
+        {
+            yield return null;
+        }
+
+        IsReloading = true;
+
+        //Stall reload for reloading with empty mag
+        if (AmmoInClip == 0)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        //Retrieve what inherited memeber of character is doing the reloading
+        bool isPlayer = c.gameObject.GetComponent<Player>();
+        Player p = null;
+
+        if (isPlayer)
+        {
+            p = c.gameObject.GetComponent<Player>();
+        }
+
+        //Begin reloading loop
+        while (TotalAmmo > 0 && AmmoInClip < ClipSize)
+        {
+            //Wait until reload timer is up.
+            yield return new WaitForSeconds(ReloadTime / ClipSize);
+
+            //Fill mag with remaining ammo
+            TotalAmmo--;
+            AmmoInClip++;
+
+            //Check if player is reloading to update HUD
+            if (isPlayer)
+            {
+                HUDController.instance.UpdateAmmo(p);
+            }
+        }
+           
+        IsReloading = false;
+        yield return null;
+    }
 
     /// <summary>
     /// Main update function decrementing fire timer

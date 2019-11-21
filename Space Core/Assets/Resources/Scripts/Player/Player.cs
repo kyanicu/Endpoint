@@ -35,7 +35,6 @@ public class Player : Character
         base.Start();
         HUDController.instance.UpdateHUD(this);
         Weapon.ControlledByPlayer = true;
-
     }
 
     private void Awake()
@@ -98,7 +97,15 @@ public class Player : Character
 
     public override void Fire()
     {
-        Weapon.Fire();
+        //reload if out of ammo
+        if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
+        {
+            Reload();
+        }
+        else
+        {
+            Weapon.Fire();
+        }
         HUDController.instance.UpdateAmmo(this);
     }
 
@@ -107,7 +114,7 @@ public class Player : Character
         //If player is not in hack circle, reload
         if (Enemy == null || Vector3.Distance(transform.position, Enemy.transform.position) > HACK_AREA_LENGTH)
         {
-            Weapon.Reload();
+            Weapon.Reload(this);
 
             //update hud
             HUDController.instance.UpdateAmmo(this);

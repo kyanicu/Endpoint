@@ -175,12 +175,20 @@ public class Enemy : Character
 
     public override void Fire()
     {
-        Weapon.Fire();
+        //reload if out of ammo
+        if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
+        {
+            Reload();
+        }
+        else
+        {
+            Weapon.Fire();
+        }
     }
 
     public override void Reload()
     {
-        Weapon.Reload();
+        Weapon.Reload(this);
     }
 
     public override void Move(float speed)
