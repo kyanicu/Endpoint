@@ -11,6 +11,13 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         LoadMaxStats();
+
+        //If DB hasn't been initialized yet, do that
+        if (!LoadDataBaseEntries.AllLogsLoaded)
+        {
+            LoadDataBaseEntries.LoadAllDataEntries();
+            LoadDataBaseEntries.AllLogsLoaded = true;
+        }
     }
 
     #region Total Range Stats
@@ -53,8 +60,6 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-
-    /*
     private static GameManager _instance = null;
     public static GameManager instance
     {
@@ -72,5 +77,5 @@ public class GameManager : MonoBehaviour
             }
             return _instance;
         }
-    }*/
+    }
 }

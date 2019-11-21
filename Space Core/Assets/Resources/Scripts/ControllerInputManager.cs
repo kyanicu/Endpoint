@@ -227,13 +227,16 @@ public class ControllerInputManager : InputManager
             return;
         }
 
+        #region Back Button
         if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
             OverlayManager.instance.ToggleOverlayVisibility();
             Time.timeScale = 1;
             currentState = InputState.GAMEPLAY;
         }
+        #endregion
 
+        #region Shoulder Buttons
         if (prevState.Value.Buttons.RightShoulder == ButtonState.Released && state.Value.Buttons.RightShoulder == ButtonState.Pressed)
         {
             OverlayManager.instance.NavigateOverlay(-1);
@@ -243,6 +246,40 @@ public class ControllerInputManager : InputManager
         {
             OverlayManager.instance.NavigateOverlay(1);
         }
+        #endregion
+
+        #region Thumbsticks
+        if (state.Value.ThumbSticks.Left.X != 0 && prevState.Value.ThumbSticks.Left.X == 0 ||
+            state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            OverlayManager.instance.ReceiveLeftStickInput(state.Value.ThumbSticks.Left.X, state.Value.ThumbSticks.Left.Y);
+        }
+
+        if (state.Value.ThumbSticks.Right.X != 0 && prevState.Value.ThumbSticks.Right.X == 0 ||
+            state.Value.ThumbSticks.Right.Y != 0 && prevState.Value.ThumbSticks.Right.Y == 0)
+        {
+            OverlayManager.instance.ReceiveRightStickInput(state.Value.ThumbSticks.Right.X, state.Value.ThumbSticks.Right.Y);
+        }
+        #endregion
+
+        #region ABXY
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Released)
+        {
+            OverlayManager.instance.ReceiveFaceButtonInput("a");
+        }
+        if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
+        {
+            OverlayManager.instance.ReceiveFaceButtonInput("b");
+        }
+        if (state.Value.Buttons.X == ButtonState.Pressed && prevState.Value.Buttons.X == ButtonState.Released)
+        {
+            OverlayManager.instance.ReceiveFaceButtonInput("x");
+        }
+        if (state.Value.Buttons.Y == ButtonState.Pressed && prevState.Value.Buttons.Y == ButtonState.Released)
+        {
+            OverlayManager.instance.ReceiveFaceButtonInput("y");
+        }
+        #endregion
 
     }
 

@@ -5,10 +5,14 @@ using UnityEngine.UI;
 
 public class OverlayManager : MonoBehaviour
 {
-    public ButtonInfo[] MenuOptionButtons;
+    public ButtonElementSetup[] MenuOptionButtons;
     public GameObject[] OverlayPanels;
     private Canvas overlay;
     private bool overlayVisible = true;
+
+    #region Overlay Scripts
+    public DataBaseOverlayManager DBManager;
+    #endregion
 
     private int activeButtonID;
 
@@ -101,4 +105,73 @@ public class OverlayManager : MonoBehaviour
         MenuOptionButtons[activeButtonID].SwapSelect();
         OverlayPanels[(int)ActivePanel].SetActive(true);
     }
+
+    #region RECEIVE INPUT FROM INPUT MANAGER
+
+    /// <summary>
+    /// Directs controller left stick input to correct overlay panel manager
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void ReceiveLeftStickInput(float x, float y)
+    {
+        switch(ActivePanel)
+        {
+            case Panels.Database:
+                DBManager.NavigateLeftPanel(y);
+                break;
+            case Panels.SkillTree:
+                break;
+            case Panels.Map:
+                break;
+            case Panels.Objectives:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Directs controller right stick input to correct overlay panel manager
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void ReceiveRightStickInput(float x, float y)
+    {
+        switch(ActivePanel)
+        {
+            case Panels.Database:
+                DBManager.NavigateArticleButtons(x);
+                //DBManager.ScrollEntryInfo(y);
+                break;
+            case Panels.SkillTree:
+                break;
+            case Panels.Map:
+                break;
+            case Panels.Objectives:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Directs controller face button input to correct overlay panel manager
+    /// </summary>
+    /// <param name="buttonName"></param>
+    public void ReceiveFaceButtonInput(string buttonName)
+    {
+        switch (ActivePanel)
+        {
+            case Panels.Database:
+                if (buttonName.Equals("a"))
+                {
+                    DBManager.SelectLeftPanelItem();
+                }
+                break;
+            case Panels.SkillTree:
+                break;
+            case Panels.Map:
+                break;
+            case Panels.Objectives:
+                break;
+        }
+    }
+    #endregion
 }
