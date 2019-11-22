@@ -240,6 +240,6 @@ public class PauseMenuManager : MonoBehaviour {
     }
     public void QuitGameToDesktop()
     {
-        Debug.Log("clicked quit 2");
+        Application.Quit();
     }
 }

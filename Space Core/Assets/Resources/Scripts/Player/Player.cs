@@ -114,6 +114,7 @@ public class Player : Character
 
     protected override void Die()
     {
+        InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
         SceneManager.LoadScene(0);
     }
 
@@ -230,14 +231,15 @@ public class Player : Character
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
         rigidBody.simulated = true;
-        Enemy.gameObject.AddComponent<Player>();
         Camera.main.transform.parent = Enemy.transform;
         Reload();
         HUDController.instance.UpdateAmmo(this);
         Enemy.tag = "Player";
         Enemy.name = "Player";
+        GameObject enemyObject = Enemy.gameObject;
         Destroy(Enemy);
         Enemy = null;
+        enemyObject.gameObject.AddComponent<Player>();
         Destroy(gameObject);
     }
 

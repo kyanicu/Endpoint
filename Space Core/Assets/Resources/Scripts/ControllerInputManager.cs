@@ -328,6 +328,10 @@ public class ControllerInputManager : InputManager
         {
             PauseMenuManager.instance.SelectButton();
         }
+        else if (prevState.Value.Buttons.Start == ButtonState.Released && state.Value.Buttons.Start == ButtonState.Pressed)
+        {
+            PauseMenuManager.instance.ClosePauseMenu();
+        }
     }
 
     /// <summary>

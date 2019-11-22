@@ -42,6 +42,7 @@ public abstract class Weapon : MonoBehaviour
     public GameObject FireLocation { get; set; }
     protected object ReloadLock = new object();
     protected Transform RotationPoint;
+    protected float playerBulletVelocMod = 1.5f;
 
     /// <summary>
     /// Function that must be implemented to control firing behavior

@@ -35,7 +35,7 @@ public abstract class PassiveAbility : Ability
 
     public new void resetOwner(Character character)
     {
-        if (owner.GetComponent<Enemy>() != null)
+        if (!character.gameObject.CompareTag("Player"))
         {
             isEnemy = true;
         }

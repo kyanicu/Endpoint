@@ -48,7 +48,14 @@ public class Spread : Weapon
                 bulletScript.StunTime = StunTime;
                 bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;
-                bulletScript.Velocity = BulletVeloc;
+                if (ControlledByPlayer)
+                {
+                    bulletScript.Velocity = BulletVeloc * playerBulletVelocMod;
+                }
+                else
+                {
+                    bulletScript.Velocity = BulletVeloc;
+                }
             }
             FireTimer = RateOfFire;
         }

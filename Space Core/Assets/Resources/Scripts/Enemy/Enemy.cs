@@ -7,6 +7,7 @@ public class Enemy : Character
     public bool IsSelected { get; set; }
     private bool disabled { get; set; }
     public float PatrolRange { get; set; }
+    public bool PlayerInRange { get; set; }
     public GameObject HackArea { get; protected set; }
     private GameObject DropAmmo { get; set; }
     protected Transform QTEPointLeft;
@@ -69,6 +70,7 @@ public class Enemy : Character
         {
             if (IsPlayerInRange())
             {
+                PlayerInRange = true;
                 Vector3 playerPosition = Player.instance.transform.position;
                 Vector3 myPosition = transform.position;
                 Vector3 diff = playerPosition - myPosition;
@@ -78,9 +80,7 @@ public class Enemy : Character
             }
             else
             {
-
-
-
+                PlayerInRange = false;
                 Vector2 pos = new Vector2(transform.position.x, 0);
                 float Dist0 = Vector2.Distance(pos, MovePoints[0].transform.position);
                 float Dist1 = Vector2.Distance(pos, MovePoints[1].transform.position);

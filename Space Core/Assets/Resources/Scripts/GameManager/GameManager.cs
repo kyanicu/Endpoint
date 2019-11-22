@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static float[] MaxValues = { 0, 0, 0, 0, 0 };
+    public static List<GameObject> Enemies;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +20,17 @@ public class GameManager : MonoBehaviour
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadDataBaseEntries.AllLogsLoaded = true;
         }
+
+        Enemies = null;
+    }
+
+    public void Update()
+    {
+        if (Enemies == null)
+        {
+            Enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        }
+        Enemies.RemoveAll(enemy => enemy == null || enemy.CompareTag("Player"));
     }
 
     #region Total Range Stats
