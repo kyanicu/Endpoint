@@ -20,6 +20,7 @@ public class BasicMovement : Movement
         airDecel = 25;
         airMax = 9;
         pushForce = 14;
+        mass = 1;
     }
 
     

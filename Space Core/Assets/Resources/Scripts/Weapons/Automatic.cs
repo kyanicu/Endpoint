@@ -32,6 +32,8 @@ public class Automatic : Weapon
             bullet.transform.Rotate(pelletRotation);
             Bullet bulletScript = bullet.GetComponent<Bullet>();
             bulletScript.Damage = Damage;
+            bulletScript.KnockbackImpulse = KnockbackImpulse;
+            bulletScript.StunTime = StunTime;
             bulletScript.Source = BulletSource;
             bulletScript.Range = Range;
             bulletScript.Velocity = BulletVeloc;

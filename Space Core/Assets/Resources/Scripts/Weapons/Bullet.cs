@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour
     public enum BulletSource { Player, Enemy }
 
     public int Damage { get; set; }
+    public float StunTime { get; set; }
+    public float KnockbackImpulse { get; set; }
     public float Range { get; set; }
     public float Velocity { get; set; }
     public BulletSource Source { get; set; }

@@ -58,21 +58,6 @@ public class Enemy : Character
     // Update is called once per frame
     void Update()
     {
-        if (Health <= 0)
-        {
-            // Drop ammo upon death
-            if (Weapon.TotalAmmo > 0)
-            {
-                if (Random.Range(0,10) % 2 == 0)
-                {
-                    GameObject instantiatedDroppedAmmo = GameObject.Instantiate(DropAmmo, transform.position, Quaternion.identity);
-                    DroppedAmmo droppedAmmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
-                    droppedAmmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
-                }
-
-            }
-            Destroy(gameObject);
-        }
 
         if (IsSelected)
         {
@@ -115,7 +100,7 @@ public class Enemy : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
             {
-                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
                 Destroy(other.gameObject);
             }
         }
@@ -124,7 +109,7 @@ public class Enemy : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
             {
-                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
                 other.gameObject.GetComponent<PiercingBullet>().NumPassed++;
             }
         }
@@ -220,19 +205,20 @@ public class Enemy : Character
         RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
-    public override void Jump()
+    protected override void Die()
     {
-        throw new System.NotImplementedException();
-    }
+        // Drop ammo upon death
+        if (Weapon.TotalAmmo > 0)
+        {
+            if (Random.Range(0, 10) % 2 == 0)
+            {
+                GameObject instantiatedDroppedAmmo = GameObject.Instantiate(DropAmmo, transform.position, Quaternion.identity);
+                DroppedAmmo droppedAmmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
+                droppedAmmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
+            }
 
-    public override void JumpCancel()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void TakeDamage(int damage)
-    {
-        Health -= damage;
+        }
+        Destroy(gameObject);
     }
 
     public bool IsPlayerInRange()

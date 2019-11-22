@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class Movement : MonoBehaviour
 {
 
+    Character owner;
+
     /// <summary>
     /// Have the default values been set?
     /// </summary>
@@ -28,7 +30,8 @@ public abstract class Movement : MonoBehaviour
     private float _runMax, _runAccel, _runDecel,
         _jumpVelocity, _gravityScale, _jumpCancelMinVel, _jumpCancelVel,
         _airAccel, _airDecel, _airMax,
-        _pushForce;
+        _pushForce,
+        _mass;
 
     /// <summary>
     /// Used to temporarily modify movement values,
@@ -51,7 +54,7 @@ public abstract class Movement : MonoBehaviour
     protected float airDecel { get { return _airDecel * mod; } set { _airDecel = value; } }
     protected float airMax { get { return _airMax * mod; } set { _airMax = value; } }
     protected float pushForce { get { return _pushForce * mod; } set { _pushForce = value; } }
-
+    protected float mass { get { return _mass * mod; } set { _mass = value; } }
     /// <summary>
     /// Current jump values
     /// </summary>
@@ -83,6 +86,8 @@ public abstract class Movement : MonoBehaviour
 
     private void Awake()
     {
+        owner = GetComponent<Character>();
+
         // used incase component was added outside of editor (such as via instatiate)
         if (!defaultValuesSet)
         {
@@ -201,6 +206,14 @@ public abstract class Movement : MonoBehaviour
     }
 
     /// <summary>
+    /// Applies knockback velocity to the player
+    /// </summary>
+    public void TakeKnockback(Vector2 impulse)
+    {
+        velocity += impulse / mass;
+    }
+
+    /// <summary>
     /// Default contact handling method, called every frame where character is touching a collider
     /// </summary>
     /// <param name="contacts">Contact data</param>
@@ -285,6 +298,8 @@ public abstract class Movement : MonoBehaviour
         //velocity -= proj;
 
     }
+
+    
 
     /// <summary>
     /// Main function where velocity is handled appropriately

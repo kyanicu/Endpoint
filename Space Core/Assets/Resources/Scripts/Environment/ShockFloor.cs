@@ -10,14 +10,8 @@ public class ShockFloor : MonoBehaviour
         if(collision.CompareTag("Player") && !(shock))
         {
             shock = true;
-            StartCoroutine(Damage());
+            Player.instance.ReceiveAttack(new AttackInfo(15, Vector2.zero, 0));
+            shock = false;
         }
-    }
-
-    private IEnumerator Damage()
-    {
-        yield return new WaitForSeconds(1f);
-        Player.instance.TakeDamage(15);
-        shock = false;
     }
 }

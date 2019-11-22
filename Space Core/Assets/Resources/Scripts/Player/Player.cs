@@ -15,7 +15,12 @@ public class Player : Character
     const float HACK_AREA_LENGTH = 22.5f;
     public string Class { get; private set; }
 
-    private const float COOLDOWN_TIME = 2.5f;
+    private const float COOLDOWN_TIME = 2.5f; 
+
+    [SerializeField]
+    private float iFrameTime = 2;
+
+    private bool hasIFrames;
 
     /// <summary>
     /// Update HUD after successfully swapping into a new enemy
@@ -35,7 +40,6 @@ public class Player : Character
 
     protected override void Awake()
     {
-
         base.Awake();
 
         MaxHealth = 100;
@@ -82,21 +86,35 @@ public class Player : Character
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         HUDController.instance.UpdateHUD(this);
     }
-    public override void TakeDamage(int damage)
+    public override void ReceiveAttack(AttackInfo attackInfo)
     {
-        if (!isImmortal)
+        if (isImmortal || hasIFrames)
+            return;
+
+        base.ReceiveAttack(attackInfo);
+        StartCoroutine(RunIFrames());
+
+    }
+    protected override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+
+        if (!isImmortal && Health - damage > 0)
         {
-            if (Health - damage <= 0)
-            {
-                //We'll need to figure out a way to decouple scene loading from player
-                SceneManager.LoadScene(0);
-            }
-            else
-            {
-                Health -= damage;
-                HUDController.instance.UpdatePlayer(this);
-            }
+            HUDController.instance.UpdatePlayer(this);
         }
+    }
+
+    private IEnumerator RunIFrames()
+    {
+        hasIFrames = true;
+        yield return new WaitForSeconds(iFrameTime);
+        hasIFrames = false;
+    }
+
+    protected override void Die()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public override void Fire()
@@ -131,7 +149,7 @@ public class Player : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
             {
-                TakeDamage(other.gameObject.GetComponent<Bullet>().Damage/5);
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage/5, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
                 Destroy(other.gameObject);
             }
         }

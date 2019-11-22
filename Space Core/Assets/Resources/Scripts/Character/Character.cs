@@ -13,6 +13,7 @@ public abstract class Character : MonoBehaviour
     public PassiveAbility PassiveAbility { get; set; }
     public Movement movement { get; protected set; }
 
+    public bool isStunned { get; private set; }
 
     protected virtual void Start()
     {
@@ -49,23 +50,58 @@ public abstract class Character : MonoBehaviour
 
     public virtual void Move(float axis)
     {
+        if (isStunned)
+            axis = 0;
         movement.Run(axis);
     }
 
     public virtual void Jump()
     {
-        movement.Jump();
+        if (!isStunned)
+            movement.Jump();
     }
 
     public virtual void JumpCancel()
     {
-        movement.JumpCancel();
+        if (!isStunned)
+            movement.JumpCancel();
     }
 
+
+    public virtual void ReceiveAttack(AttackInfo attackInfo)
+    {
+        if (isImmortal)
+            return;
+
+        TakeDamage(attackInfo.damage);
+        StartCoroutine(Stun(attackInfo.stunTime));
+        movement.TakeKnockback(attackInfo.knockbackImpulse);
+    }
+
+    public IEnumerator Stun(float time)
+    {
+        isStunned = true;
+        yield return new WaitForSeconds(time);
+        isStunned = false;
+    }
+
+    protected virtual void TakeDamage(int damage)
+    {
+        
+        if (Health - damage <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            Health -= damage;
+        }
+    }
+
+    protected abstract void Die();
 
     public abstract void Fire();
     public abstract void Reload();
     public abstract void AimWeapon(float angle);
-    public abstract void TakeDamage(int damage);
 
 }

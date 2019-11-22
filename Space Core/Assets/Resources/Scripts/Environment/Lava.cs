@@ -26,7 +26,7 @@ public class Lava : MonoBehaviour
                 Vector3 spawn = RespawnPointRight.position;
                 Player.instance.transform.position = spawn;
             }
-            Player.instance.TakeDamage(Player.instance.MaxHealth / 4);
+            Player.instance.ReceiveAttack(new AttackInfo(Player.instance.MaxHealth / 4, Vector2.zero, 0 ));
         }
     }
 }
