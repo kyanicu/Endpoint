@@ -52,6 +52,8 @@ public class Player : Character
         }
         ResetSwap();
 
+        MinimapIcon = transform.Find("PlayerMinimapIcon").gameObject;
+
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
         RotationPoint.transform.localScale = new Vector3(1, 1, 1);
@@ -237,7 +239,9 @@ public class Player : Character
         //Change the enemy's minimap icon to a player's and remove the enemy's
         MinimapIcon.transform.position = Enemy.MinimapIcon.transform.position;
         MinimapIcon.transform.SetParent(Enemy.transform);
-        Destroy(Enemy.MinimapIcon);
+        Destroy(Enemy.MinimapIcon.gameObject);
+
+
 
         //Update rigidbody
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();

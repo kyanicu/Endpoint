@@ -24,8 +24,8 @@ TagManager:
   - PostProcessing
   - 
   - Minimap
-  - 
-  - 
+  - MapScreen
+  - Minimap/Mapscreen
   - 
   - 
   - 
