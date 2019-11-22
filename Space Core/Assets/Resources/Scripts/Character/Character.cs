@@ -12,6 +12,7 @@ public abstract class Character : MonoBehaviour
     public ActiveAbility ActiveAbility { get; set; }
     public PassiveAbility PassiveAbility { get; set; }
     public Movement movement { get; protected set; }
+    public GameObject MinimapIcon;
 
     public bool isStunned { get; private set; }
 

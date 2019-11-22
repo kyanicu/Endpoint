@@ -216,27 +216,43 @@ public class Player : Character
         HUDController.instance.UpdateSwap(COOLDOWN_TIME);
     }
 
+    /// <summary>
+    /// Swaps the player into a new body after a successful hack
+    /// </summary>
     public void Switch()
     {
+        //Remove attached game objects and components
         Destroy(RotationPoint);
         Destroy(ActiveAbility);
         Destroy(PassiveAbility);
-        MaxHealth = Enemy.MaxHealth;
-        Health = Enemy.Health;
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
+
+        //Update player's stats to enemy's 
+        MaxHealth = Enemy.MaxHealth;
+        Health = Enemy.Health;
         Class = Enemy.Class;
         movement = Enemy.movement;
 
+        //Change the enemy's minimap icon to a player's and remove the enemy's
+        MinimapIcon.transform.position = Enemy.MinimapIcon.transform.position;
+        MinimapIcon.transform.SetParent(Enemy.transform);
+        Destroy(Enemy.MinimapIcon);
+
+        //Update rigidbody
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
         rigidBody.simulated = true;
-        Camera.main.transform.parent = Enemy.transform;
-        Reload();
+
+        //Update HUD with new weapon
         HUDController.instance.UpdateAmmo(this);
+
+        //Rename enemy to player
         Enemy.tag = "Player";
         Enemy.name = "Player";
         GameObject enemyObject = Enemy.gameObject;
+
+        //Remove enemy component from new body
         Destroy(Enemy);
         Enemy = null;
         enemyObject.gameObject.AddComponent<Player>();
