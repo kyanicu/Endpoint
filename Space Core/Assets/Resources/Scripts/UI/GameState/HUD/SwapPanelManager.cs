@@ -67,6 +67,17 @@ public class SwapPanelManager : MonoBehaviour
 
         while (timer < rechargeTime)
         {
+            //Check that player is not in a menu
+            if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            {
+                SwappingBarLeft.DOPause();
+                SwappingBarRight.DOPause();
+                yield return null;
+            }
+            else
+            {
+                SwappingBarLeft.DOPlay();
+                SwappingBarRight.DOPlay();
 
             // Update bar positions according to values set during tweening.
             SwappingBarFrame.rectTransform.sizeDelta = new Vector2(frameWidth, frameHeight);
@@ -115,6 +126,7 @@ public class SwapPanelManager : MonoBehaviour
             // Increment timer and continue loop.
             timer += .05f;
             yield return new WaitForSeconds(.05f);
+            }
         }
     }
 }

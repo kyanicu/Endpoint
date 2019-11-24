@@ -33,6 +33,10 @@ public class Bullet : MonoBehaviour
     /// </summary>
     public void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         //if we have travelled outside the range, destroy the bullet
         if (transform.position.x > highRange || transform.position.x < lowRange)
         {

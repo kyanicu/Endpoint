@@ -23,6 +23,9 @@ public class DynamicMusic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
 
         //check if any enemies are in range
         bool InRangeOfEnemy = CheckInRange();

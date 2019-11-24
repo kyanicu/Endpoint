@@ -26,6 +26,10 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         if (Enemies == null)
         {
             Enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();

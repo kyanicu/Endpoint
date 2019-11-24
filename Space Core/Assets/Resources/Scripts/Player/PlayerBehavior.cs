@@ -42,6 +42,10 @@ public class PlayerBehavior : MonoBehaviour
 
     void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         if (Input.GetKey(KeyCode.Space))
         {
             HackSelector();

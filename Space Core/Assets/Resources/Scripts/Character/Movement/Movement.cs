@@ -307,6 +307,9 @@ public abstract class Movement : MonoBehaviour
     /// </summary>
     protected virtual void FixedUpdate()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
 
         bool prevGroundedState = charCont.isGrounded;
 

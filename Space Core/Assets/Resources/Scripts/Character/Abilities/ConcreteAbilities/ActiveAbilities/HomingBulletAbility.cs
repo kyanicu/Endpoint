@@ -42,6 +42,10 @@ public class HomingBulletAbility : ActiveAbility
     /// </summary>
     void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         //if we failed to get the bullet at start, do it in update
         if (bullet == null)
         {

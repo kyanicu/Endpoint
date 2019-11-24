@@ -26,6 +26,10 @@ public class HackBullet : MonoBehaviour
 
     public void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         transform.position += transform.right * Speed * Time.deltaTime;
     }
 }

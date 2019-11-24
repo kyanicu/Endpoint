@@ -10,14 +10,17 @@ using DataEntry = LoadDataBaseEntries.DataEntry;
 public class DataBaseOverlayManager : MonoBehaviour
 {
     #region Attached UI Objects
+    [Header("Attached UI Objects")]
     public TextMeshProUGUI[] CategoryHeaders;
     public ButtonElementSetup[] ArticleButtons;
     public Image EntryImage;
     public TextMeshProUGUI EntryHeader, EntryCategory, EntryInfo;
     public List<Text> ArticleButtonText;
+    [Space]
     #endregion
 
     [Tooltip("Drag prefab into inspector from resources")]
+    [Header("From Resources")]
     public GameObject BlankTextInsert;
 
     private List<TextMeshProUGUI> ActiveLeftSideElements;
@@ -39,18 +42,13 @@ public class DataBaseOverlayManager : MonoBehaviour
     void Awake()
     {
         ActiveLeftSideElements = new List<TextMeshProUGUI>();
-        foreach (TextMeshProUGUI txt in CategoryHeaders)
-        {
-            ActiveLeftSideElements.Add(txt);
-        }
 
         //Populate headers list with all category types
-        headersList.Add("WEAPONS", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-        headersList.Add("UPGRADES", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-        headersList.Add("LOCATIONS", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-        headersList.Add("ENTITIES", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-        headersList.Add("ARTIFACTS", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-        headersList.Add("UNSORTED", new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
+        foreach (TextMeshProUGUI header in CategoryHeaders)
+        {
+            ActiveLeftSideElements.Add(header);
+            headersList.Add(header.text.Substring(2), new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
+        }
 
         Y_MODIFIER = BlankTextInsert.GetComponent<TextMeshProUGUI>().rectTransform.rect.height + 5;
         X_MODIFIER = 40f;

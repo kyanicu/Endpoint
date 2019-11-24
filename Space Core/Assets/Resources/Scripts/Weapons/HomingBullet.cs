@@ -22,6 +22,10 @@ public class HomingBullet : Bullet
     /// </summary>
     new void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         if (LockedEnemy == null)
         {
             //calculate vector 2 positon because OverlapCircleAll uses WorldSpace, not local

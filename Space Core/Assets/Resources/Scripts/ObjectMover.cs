@@ -581,7 +581,10 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         if (Input.GetKey(KeyCode.Return))
             transform.position = new Vector2(0, 2);
 

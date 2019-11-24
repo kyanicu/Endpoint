@@ -51,6 +51,10 @@ public abstract class PassiveAbility : Ability
     /// </summary>
     protected void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
+
         if (!isEnemy && activationCondition)
             Activate();
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 //We'll need to figure out a way to decouple scene loading from player
 using UnityEngine.SceneManagement;
 
-
 public class Player : Character
 {
     public Enemy Enemy { get; set; }
@@ -95,7 +94,6 @@ public class Player : Character
 
         base.ReceiveAttack(attackInfo);
         StartCoroutine(RunIFrames());
-
     }
     protected override void TakeDamage(int damage)
     {
@@ -269,6 +267,24 @@ public class Player : Character
     /// <returns></returns>
     private IEnumerator implementSwapCooldown()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            yield return null;
+
+        float counter = 0;
+        while (counter < COOLDOWN_TIME)
+        {
+            //Check that player is not in a menu
+            if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            {
+                yield return null;
+            }
+            else
+            {
+                counter += .1f;
+                yield return new WaitForSeconds(.1f);
+            }
+        }
         yield return new WaitForSeconds(COOLDOWN_TIME);
         canSwap = true;
     }

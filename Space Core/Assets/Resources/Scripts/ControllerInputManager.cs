@@ -146,7 +146,6 @@ public class ControllerInputManager : InputManager
         if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
             OverlayManager.instance.ToggleOverlayVisibility();
-            Time.timeScale = 0;
             currentState = InputState.OVERLAY;
         }
 
@@ -231,7 +230,6 @@ public class ControllerInputManager : InputManager
         if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
             OverlayManager.instance.ToggleOverlayVisibility();
-            Time.timeScale = 1;
             currentState = InputState.GAMEPLAY;
         }
         #endregion
@@ -249,12 +247,19 @@ public class ControllerInputManager : InputManager
         #endregion
 
         #region Thumbsticks
+        //Check for left stick flick movement
         if (state.Value.ThumbSticks.Left.X != 0 && prevState.Value.ThumbSticks.Left.X == 0 ||
             state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
         {
-            OverlayManager.instance.ReceiveLeftStickInput(state.Value.ThumbSticks.Left.X, state.Value.ThumbSticks.Left.Y);
+            OverlayManager.instance.ReceiveLeftStickFlickInput(state.Value.ThumbSticks.Left.X, state.Value.ThumbSticks.Left.Y);
         }
-
+        //Check if player is still holding left stick
+        else if (state.Value.ThumbSticks.Left.X != 0 && prevState.Value.ThumbSticks.Left.X != 0 ||
+            state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y != 0)
+        {
+            OverlayManager.instance.ReceiveLeftStickDragInput(state.Value.ThumbSticks.Left.X, state.Value.ThumbSticks.Left.Y);
+        }
+        //Check if player is still holding right stick
         if (state.Value.ThumbSticks.Right.X != 0 && prevState.Value.ThumbSticks.Right.X == 0 ||
             state.Value.ThumbSticks.Right.Y != 0 && prevState.Value.ThumbSticks.Right.Y == 0)
         {
@@ -263,31 +268,47 @@ public class ControllerInputManager : InputManager
         #endregion
 
         #region ABXY
+        //Check for A button press
         if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Released)
         {
             OverlayManager.instance.ReceiveFaceButtonInput("a");
         }
+        //Check for B button press
         if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
         {
             OverlayManager.instance.ReceiveFaceButtonInput("b");
         }
+        //Check for X button press
         if (state.Value.Buttons.X == ButtonState.Pressed && prevState.Value.Buttons.X == ButtonState.Released)
         {
             OverlayManager.instance.ReceiveFaceButtonInput("x");
         }
+        //Check for Y button press
         if (state.Value.Buttons.Y == ButtonState.Pressed && prevState.Value.Buttons.Y == ButtonState.Released)
         {
             OverlayManager.instance.ReceiveFaceButtonInput("y");
         }
         #endregion
 
+        #region Triggers
+        //Check for right trigger press
+        if (state.Value.Triggers.Right > 0.3f)
+        {
+            OverlayManager.instance.ReceiveTriggerInput(true);
+        }
+        //Check for left trigger press
+        if (state.Value.Triggers.Left > 0.3f)
+        {
+            OverlayManager.instance.ReceiveTriggerInput(false);
+        }
+        #endregion
     }
 
-    /// <summary>
-    /// Runs the frame input intended while in the in-game player menu InputState
-    /// Called only on an update frame through Update() function
-    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
-    /// </summary>
+        /// <summary>
+        /// Runs the frame input intended while in the in-game player menu InputState
+        /// Called only on an update frame through Update() function
+        /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+        /// </summary>
     protected override void RunPlayerMenuFrameInput()
     {
         if (!CheckControllerConnected() || state == null || prevState == null)

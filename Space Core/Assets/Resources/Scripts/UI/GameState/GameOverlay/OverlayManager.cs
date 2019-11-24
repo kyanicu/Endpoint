@@ -5,13 +5,20 @@ using UnityEngine.UI;
 
 public class OverlayManager : MonoBehaviour
 {
+    #region Attached UI Objects
+    [Header("Attached UI Objects")]
     public ButtonElementSetup[] MenuOptionButtons;
     public GameObject[] OverlayPanels;
     private Canvas overlay;
     private bool overlayVisible = true;
+    [Space]
+    #endregion
 
     #region Overlay Scripts
+    [Header("Overlay Scripts")]
     public DataBaseOverlayManager DBManager;
+    public MapOverlayManager MapManager;
+    [Space]
     #endregion
 
     private int activeButtonID;
@@ -67,6 +74,18 @@ public class OverlayManager : MonoBehaviour
     /// </summary>
     public void ToggleOverlayVisibility()
     {
+        //Hide currently active panel
+        OverlayPanels[(int)ActivePanel].SetActive(false);
+        MenuOptionButtons[activeButtonID].SwapSelect();
+
+        //reset active panel
+        ActivePanel = Panels.Map;
+        activeButtonID = (int)ActivePanel;
+
+        //Hide currently active panel
+        OverlayPanels[(int)ActivePanel].SetActive(true);
+
+        //Toggle overlay visibility
         overlayVisible = !overlayVisible;
         overlay.gameObject.SetActive(overlayVisible);
     }
@@ -108,12 +127,13 @@ public class OverlayManager : MonoBehaviour
 
     #region RECEIVE INPUT FROM INPUT MANAGER
 
+    #region Left Stick
     /// <summary>
-    /// Directs controller left stick input to correct overlay panel manager
+    /// Directs controller left stick flick input to correct overlay panel manager
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    public void ReceiveLeftStickInput(float x, float y)
+    public void ReceiveLeftStickFlickInput(float x, float y)
     {
         switch(ActivePanel)
         {
@@ -128,6 +148,20 @@ public class OverlayManager : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// Directs controller left stick drag input to correct overlay panel manager
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void ReceiveLeftStickDragInput(float x, float y)
+    {
+        if (ActivePanel == Panels.Map)
+        {
+            MapManager.MoveCamera(x, y);
+        }
+    }
+    #endregion
 
     /// <summary>
     /// Directs controller right stick input to correct overlay panel manager
@@ -168,6 +202,26 @@ public class OverlayManager : MonoBehaviour
             case Panels.SkillTree:
                 break;
             case Panels.Map:
+                break;
+            case Panels.Objectives:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Directs controller face button input to correct overlay panel manager
+    /// </summary>
+    /// <param name="buttonName"></param>
+    public void ReceiveTriggerInput(bool isRightTrigger)
+    {
+        switch (ActivePanel)
+        {
+            case Panels.Database:
+                break;
+            case Panels.SkillTree:
+                break;
+            case Panels.Map:
+                MapManager.ZoomCamera(isRightTrigger);
                 break;
             case Panels.Objectives:
                 break;

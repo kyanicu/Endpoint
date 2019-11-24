@@ -59,6 +59,9 @@ public class Enemy : Character
     // Update is called once per frame
     void Update()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
+            return;
 
         if (IsSelected)
         {
