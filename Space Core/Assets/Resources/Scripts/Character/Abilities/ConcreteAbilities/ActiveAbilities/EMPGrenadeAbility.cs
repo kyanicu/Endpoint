@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EMPGrenadeAbility : ActiveAbility
 {
@@ -12,6 +13,15 @@ public class EMPGrenadeAbility : ActiveAbility
         force = 17500f;
         EMPGrenade = Resources.Load<GameObject>("Prefabs/Abilities/EMPGrenade");
         Cooldown = 15f;
+    }
+
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Stun Grenade";
+        AbilityShortName = "STUN";
+        AbilityDescription = "Push RB to fire a grenade that stuns enemies within a radius.";
+        AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-stun-grenade@1x");
     }
 
     protected override void Activate()

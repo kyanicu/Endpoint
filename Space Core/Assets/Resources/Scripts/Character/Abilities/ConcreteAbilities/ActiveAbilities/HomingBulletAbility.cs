@@ -37,6 +37,16 @@ public class HomingBulletAbility : ActiveAbility
         Cooldown = 15f;
     }
 
+    // Initialize all of the data needed for the Ability UI.
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Homing Bullets";
+        AbilityShortName = "HOME";
+        AbilityDescription = "Push RB to fire bullets that guide themselves for a limited time.";
+        AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-homing-bullets@1x");
+    }
+
     /// <summary>
     /// Update checks the activation timer and updates it
     /// </summary>

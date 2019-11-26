@@ -41,14 +41,32 @@ public class Player : Character
     {
         base.Awake();
 
-        MaxHealth = 100;
-        Health = MaxHealth;
-        canSwap = true;
-        isImmortal = false;
-        if (Class == null)
+        //Remove enemy component from new body
+        Enemy e = GetComponent<Enemy>();
+
+        //Update player's stats to enemy's 
+        if (e == null)
         {
+            MaxHealth = 100;
+            Health = 100;
             Class = "medium";
         }
+        else
+        {
+            MaxHealth = e.MaxHealth;
+            Health = e.Health;
+            Class = e.Class;
+            movement = e.movement;
+        }
+
+        Destroy(e);
+
+        //MaxHealth = 100;
+        //Health = MaxHealth;
+
+        canSwap = true;
+        isImmortal = false;
+
         ResetSwap();
 
         MinimapIcon = transform.Find("PlayerMinimapIcon").gameObject;
@@ -78,7 +96,6 @@ public class Player : Character
         }
         else
         {
-            
             ActiveAbility.resetOwner(this);
             PassiveAbility.resetOwner(this);
         }
@@ -228,35 +245,22 @@ public class Player : Character
         Destroy(Enemy.HackArea.gameObject);
         Destroy(Enemy.QTEPanel.gameObject);
 
-        //Update player's stats to enemy's 
-        MaxHealth = Enemy.MaxHealth;
-        Health = Enemy.Health;
-        Class = Enemy.Class;
-        movement = Enemy.movement;
-
         //Change the enemy's minimap icon to a player's and remove the enemy's
         MinimapIcon.transform.position = Enemy.MinimapIcon.transform.position;
         MinimapIcon.transform.SetParent(Enemy.transform);
         Destroy(Enemy.MinimapIcon.gameObject);
-
-
 
         //Update rigidbody
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
         rigidBody.isKinematic = true;
         rigidBody.simulated = true;
 
-        //Update HUD with new weapon
-        HUDController.instance.UpdateAmmo(this);
-
         //Rename enemy to player
         Enemy.tag = "Player";
         Enemy.name = "Player";
         GameObject enemyObject = Enemy.gameObject;
 
-        //Remove enemy component from new body
-        Destroy(Enemy);
-        Enemy = null;
+        //Remove add player component from new body
         enemyObject.gameObject.AddComponent<Player>();
         Destroy(gameObject);
     }

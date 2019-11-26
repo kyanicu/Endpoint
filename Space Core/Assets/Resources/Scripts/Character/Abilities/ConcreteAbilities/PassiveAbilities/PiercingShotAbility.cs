@@ -26,4 +26,14 @@ public class PiercingShotAbility : PassiveAbility
         base.Start();
         NeedsActivation = true;
     }
+
+    // Initialize all of the data needed for the Ability UI.
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Pierce Shot";
+        AbilityShortName = "PSHOT";
+        AbilityDescription = "Your bullets can pass through an enemy to damage another.";
+        AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-pierce-shot@1x");
+    }
 }

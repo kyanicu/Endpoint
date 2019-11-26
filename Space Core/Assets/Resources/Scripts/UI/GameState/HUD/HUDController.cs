@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System.Collections;
+using UnityEngine;
 
 public class HUDController : MonoBehaviour
 {
@@ -20,7 +22,11 @@ public class HUDController : MonoBehaviour
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
 
+    // Stores the current HUD highlight color (set by the class the player is occupying)
+    public Color activeClassColor;
+
     private bool diagnosticPanelsVisible = true;
+    private bool firstRun = true;
 
     private static HUDController _instance = null;
     public static HUDController instance
@@ -52,6 +58,16 @@ public class HUDController : MonoBehaviour
         UpdatePlayer(p);
         WeaponPM.UpdateWeaponDiagnostic(p);
         CharacterPM.UpdateCharacterClass(p);
+        CharacterPM.UpdateCharacterAbilities(p);
+        RecolorHUD();
+
+        if (firstRun)
+        {
+            // This needs to be run at the start only once, but after the player's class has been extracted.
+            // Close the diagnostic panels and set boolean to false.
+            toggleDiagnosticPanelsInitial();
+            firstRun = false;
+        }
     }
 
     /// <summary>
@@ -90,28 +106,71 @@ public class HUDController : MonoBehaviour
         SwapPM.RechargeSwap(rechargeTime);
     }
 
+    private IEnumerator updateAbilityCooldownUIRoutine;
+
     /// <summary>
     /// Updates the ability image in the character section of the HUD
     /// </summary>
     /// <param name="seconds"></param>
     public void StartAbilityCooldown(float seconds)
     {
-        StartCoroutine(CharacterPM.UpdateAbilityCooldownUI(seconds));
+        if (updateAbilityCooldownUIRoutine != null)
+        {
+            StopCoroutine(updateAbilityCooldownUIRoutine);
+        }
+        updateAbilityCooldownUIRoutine = CharacterPM.UpdateAbilityCooldownUI(seconds);
+        StartCoroutine(updateAbilityCooldownUIRoutine);
     }
 
-    private void Start()
+    // Recolors all elements within the HUD to match the current character's class.
+    public void RecolorHUD()
     {
-        // Close the diagnostic panels and set boolean to false.
-        toggleDiagnosticPanels();
+        CharacterPM.RecolorCharacterHUD();
+        SwapPM.RecolorSwapHUD();
     }
+
+    // Function that initializes the diagnostic panel visibility at start.
+    public void toggleDiagnosticPanelsInitial()
+    {
+        diagnosticPanelsVisible = false;
+        CharacterPM.CharacterDiagnosticInfoPanel.SetActive(false);
+        WeaponPM.WeaponDiagnosticInfoPanel.SetActive(false);
+        CharacterPM.hideDiagnosticPanelCharInitial();
+    }
+
+    private IEnumerator charDiagnosticPanel;
 
     /// <summary>
-    /// Toggles the visibility for diagnostic panels
+    /// Toggles the visibility for diagnostic panels.
     /// </summary>
     public void toggleDiagnosticPanels()
     {
         diagnosticPanelsVisible = !diagnosticPanelsVisible;
-        WeaponPM.WeaponDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
-        CharacterPM.CharacterDiagnosticInfoPanel.SetActive(diagnosticPanelsVisible);
+
+        // If the bool is now true, play the show animations.
+        if (diagnosticPanelsVisible)
+        {
+            //slideAnimator.Play("DiagnosticLeftIn");
+            if (charDiagnosticPanel != null)
+            {
+                StopCoroutine(charDiagnosticPanel);
+            }
+            charDiagnosticPanel = CharacterPM.showDiagnosticPanelChar();
+            StartCoroutine(charDiagnosticPanel);
+
+            WeaponPM.WeaponDiagnosticInfoPanel.SetActive(true);
+        }
+        // If the bool is now false, play the hide animations. 
+        else
+        {
+            if (charDiagnosticPanel != null)
+            {
+                StopCoroutine(charDiagnosticPanel);
+            }
+            charDiagnosticPanel = CharacterPM.hideDiagnosticPanelChar();
+            StartCoroutine(charDiagnosticPanel);
+
+            WeaponPM.WeaponDiagnosticInfoPanel.SetActive(false);
+        }
     }
 }
