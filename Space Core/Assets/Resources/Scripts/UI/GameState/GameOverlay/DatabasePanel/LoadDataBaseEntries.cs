@@ -96,10 +96,6 @@ public static class LoadDataBaseEntries
                 }
             }
         }
-
-        //Unlock stuff for testing purposes
-        UnlockDataEntry("GREENHOUSE 10-1", "NEWS ARTICLE");
-        UnlockDataEntry("GREENHOUSE 10-1", "OBSERVATION");
     }
 
     /// <summary>

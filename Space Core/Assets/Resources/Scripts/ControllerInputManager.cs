@@ -90,7 +90,7 @@ public class ControllerInputManager : InputManager
 
         if (state.Value.Buttons.A == ButtonState.Pressed && state.Value.Buttons.A == ButtonState.Pressed)
         {
-            //Inspect environmental element
+            Player.instance.ActivateEnvironmentObj();
         }
 
         if (state.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)

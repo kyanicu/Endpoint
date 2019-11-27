@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class Player : Character
 {
     public Enemy Enemy { get; set; }
+    public InteractableEnv InteractableObject { private get; set; }
     private bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
@@ -177,11 +178,6 @@ public class Player : Character
             HUDController.instance.UpdateAmmo(this);
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("OB"))
-        {
-            //We'll need to figure out a way to decouple scene loading from player
-            SceneManager.LoadScene(0);
-        }
     }
 
     public override void AimWeapon(float angle)
@@ -235,18 +231,6 @@ public class Player : Character
     }
 
     /// <summary>
-    /// Starts cooldown for use of hacking
-    /// </summary>
-    private void ResetSwap()
-    {
-        canSwap = false;
-        // Disables Swapping for the duration specified in COOLDOWN_TIME.
-        StartCoroutine(implementSwapCooldown());
-        // Begins HUD animation loop for swapping bar.
-        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
-    }
-
-    /// <summary>
     /// Swaps the player into a new body after a successful hack
     /// </summary>
     public void Switch()
@@ -282,6 +266,26 @@ public class Player : Character
     {
         Enemy.DeselectHackTarget();
         Enemy = null;
+    }
+
+    /// <summary>
+    /// Active environment obj if player is near one
+    /// </summary>
+    public void ActivateEnvironmentObj()
+    {
+        if (InteractableObject != null)
+        {
+            InteractableObject.ActivateFunctionality();
+        }
+    }
+
+    private void ResetSwap()
+    {
+        canSwap = false;
+        // Disables Swapping for the duration specified in COOLDOWN_TIME.
+        StartCoroutine(implementSwapCooldown());
+        // Begins HUD animation loop for swapping bar.
+        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
     }
 
     /// <summary>

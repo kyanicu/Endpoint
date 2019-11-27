@@ -8,7 +8,6 @@ TagManager:
   - Bullet
   - HackProjectile
   - PushableObject
-  - OB
   - Ammo
   - Terrain
   - PiercingBullet
