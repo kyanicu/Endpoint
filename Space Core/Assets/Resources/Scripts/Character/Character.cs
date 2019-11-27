@@ -104,4 +104,6 @@ public abstract class Character : MonoBehaviour
     public abstract void Reload();
     public abstract void AimWeapon(float angle);
 
+    public abstract void DeselectHackTarget();
+
 }

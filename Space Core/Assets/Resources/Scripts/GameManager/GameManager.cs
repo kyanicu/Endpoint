@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
         Damage,
         FireRate,
         ReloadTime,
-        MagazineSize,
         Range,
         BulletVeloc
     };
@@ -64,7 +63,7 @@ public class GameManager : MonoBehaviour
             float[] loadedStats = allWeaponsList[i].PassMaxValues();
 
             //Loop through each weapon in the list to get the highest possible stats
-            for (int x = 0; x < (int)MaxStat.ReloadTime; x++)
+            for (int x = 0; x <= (int)MaxStat.BulletVeloc; x++)
             {
                 //Compare the curent to the max
                 if (MaxValues[x] < loadedStats[x])
@@ -74,6 +73,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        HUDController.instance.UpdateHUD(Player.instance);
     }
     #endregion
 

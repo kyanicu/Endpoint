@@ -61,9 +61,6 @@ public class Player : Character
 
         Destroy(e);
 
-        //MaxHealth = 100;
-        //Health = MaxHealth;
-
         canSwap = true;
         isImmortal = false;
 
@@ -104,6 +101,8 @@ public class Player : Character
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         HUDController.instance.UpdateHUD(this);
     }
+
+    #region Inherited Methods 
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
         if (isImmortal || hasIFrames)
@@ -160,6 +159,7 @@ public class Player : Character
             HUDController.instance.UpdateAmmo(this);
         }
     }
+    #endregion
 
     public void OnTriggerEnter2D(Collider2D other)
     {
@@ -213,17 +213,30 @@ public class Player : Character
         RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
+    /// <summary>
+    /// Function responsible for instantiating hack projectile
+    /// </summary>
     public void HackSelector()
     {
-        if (canSwap)
+        if (Enemy == null)
         {
-            Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
-            GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-            hackAttempt.transform.Rotate(launchRotation);
-            ResetSwap();
+            if (canSwap)
+            {
+                Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
+                GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
+                hackAttempt.transform.Rotate(launchRotation);
+                ResetSwap();
+            }
+        }
+        else
+        {
+            DeselectHackTarget();
         }
     }
 
+    /// <summary>
+    /// Starts cooldown for use of hacking
+    /// </summary>
     private void ResetSwap()
     {
         canSwap = false;
@@ -263,6 +276,12 @@ public class Player : Character
         //Remove add player component from new body
         enemyObject.gameObject.AddComponent<Player>();
         Destroy(gameObject);
+    }
+
+    public override void DeselectHackTarget()
+    {
+        Enemy.DeselectHackTarget();
+        Enemy = null;
     }
 
     /// <summary>

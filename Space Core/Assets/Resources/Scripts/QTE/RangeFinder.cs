@@ -140,6 +140,17 @@ public class RangeFinder : MonoBehaviour
     }
 
     /// <summary>
+    /// Function called by enemy to hide and undo hack progress
+    /// </summary>
+    public void CancelHack()
+    {
+        hackStart = false;
+        loadingBarActive = false;
+        hackDialogActive = false;
+        QTEPanel.gameObject.SetActive(false);
+    }
+
+    /// <summary>
     /// Activate the qte panel and populate it with new buttons
     /// </summary>
     private void startQTE()

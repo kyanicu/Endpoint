@@ -85,6 +85,7 @@ public static class WeaponGenerator
         automatic.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         automatic.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
+        automatic.Description = wgi.description;
         return weaponObject;
     }
 
@@ -109,6 +110,7 @@ public static class WeaponGenerator
         spread.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         spread.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
+        spread.Description = wgi.description;
         return weaponObject;
     }
 
@@ -132,6 +134,7 @@ public static class WeaponGenerator
         precision.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         precision.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
+        precision.Description = wgi.description;
         return weaponObject;
     }
 }

@@ -32,17 +32,18 @@ public class QTEManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        listening = false;
-        listIndex = 0;
         //Loop through space on panel
         for (int i = 0; i < 3; i++)
         {
             buttons[i].Initialize();
             buttons[i].gameObject.SetActive(false);
         }
+    }
 
-        Vector3 defaultScale = new Vector3(1, 1, 1);
-        gameObject.transform.localScale = defaultScale;
+    private void OnEnable()
+    {
+        listening = false;
+        listIndex = 0;
     }
 
     /// <summary>

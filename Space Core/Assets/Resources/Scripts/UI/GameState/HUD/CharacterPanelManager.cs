@@ -8,13 +8,18 @@ using DG.Tweening; // Tweening Library (smooth animations/transitions)
 public class CharacterPanelManager : MonoBehaviour
 {
     #region CharacterHealth
-    public Image HealthBar, HealthBarDamage;
+    [Header("Character Health")]
+    public Image HealthBar;
+    public Image HealthBarDamage;
+
     public TextMeshProUGUI HealthAmountText;
     #endregion
 
     #region CharacterClass
-    public TextMeshProUGUI CharacterClassClassText, CharacterClassNameText;
+    [Header("Character Class")]
     public Image CharacterClassImage;
+    public TextMeshProUGUI CharacterClassClassText;
+    public TextMeshProUGUI CharacterClassNameText;
 
     [SerializeField]
     private Sprite[] CharacterClassImages = { };
@@ -38,17 +43,35 @@ public class CharacterPanelManager : MonoBehaviour
     #endregion
 
     #region CharacterAbility
-    public Image CharacterActiveAbilityFill, CharacterActiveAbilityEmpty, CharacterPassiveAbilityFill, CharacterPassiveAbilityEmpty;
-    public TextMeshProUGUI CharacterActiveAbilityText, CharacterPassiveAbilityText;
+    [Header("Character Ability")]
+    public Image CharacterActiveAbilityFill;
+    public Image CharacterActiveAbilityEmpty;
+    public Image CharacterPassiveAbilityFill;
+    public Image CharacterPassiveAbilityEmpty;
+
+    public TextMeshProUGUI CharacterActiveAbilityText;
+    public TextMeshProUGUI CharacterPassiveAbilityText;
     #endregion
 
     #region CharacterDiagnostic
+    [Header("Character Diagnostic")]
     public GameObject CharacterDiagnosticInfoPanel;
-    public Image CharDiagnosticClassIcon, CharDiagnosticActiveAbilityIcon, CharDiagnosticPassiveAbilityIcon;
-    public TextMeshProUGUI CharDiagnosticClassTitle, CharDiagnosticClassText, 
-        CharDiagnosticActiveAbilityAbbr, CharDiagnosticActiveAbilityTitle, CharDiagnosticActiveAbilityText,
-        CharDiagnosticPassiveAbilityAbbr, CharDiagnosticPassiveAbilityTitle, CharDiagnosticPassiveAbilityText;
-    public Image CharDiagnosticAnimFrame, CharDiagnosticBG;
+
+    public Image CharDiagnosticClassIcon;
+    public Image CharDiagnosticActiveAbilityIcon;
+    public Image CharDiagnosticPassiveAbilityIcon;
+    public Image CharDiagnosticAnimFrame;
+    public Image CharDiagnosticBG;
+
+    [Space]
+    public TextMeshProUGUI CharDiagnosticClassTitle;
+    public TextMeshProUGUI CharDiagnosticClassText;
+    public TextMeshProUGUI CharDiagnosticActiveAbilityAbbr;
+    public TextMeshProUGUI CharDiagnosticActiveAbilityTitle;
+    public TextMeshProUGUI CharDiagnosticActiveAbilityText;
+    public TextMeshProUGUI CharDiagnosticPassiveAbilityAbbr;
+    public TextMeshProUGUI CharDiagnosticPassiveAbilityTitle;
+    public TextMeshProUGUI CharDiagnosticPassiveAbilityText;
     #endregion
 
     #region CharacterUIDetails

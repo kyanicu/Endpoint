@@ -65,7 +65,6 @@ public class Enemy : Character
 
         if (IsSelected)
         {
-            QTEPanel.SetActive(true);
             UpdateQTEManagerPosition();
         }
 
@@ -119,13 +118,8 @@ public class Enemy : Character
         else if (other.CompareTag("HackProjectile"))
         {
             IsSelected = true;
-            HackArea.SetActive(true);
-            UpdateQTEManagerPosition();
-        }
-        if (IsSelected)
-        {
-            QTEPanel.SetActive(true);
-            UpdateQTEManagerPosition();
+            QTEPanel.SetActive(IsSelected);
+            HackArea.SetActive(IsSelected);
         }
     }
 
@@ -233,6 +227,14 @@ public class Enemy : Character
     public void Freeze()
     {
         StartCoroutine(FreezeTimer());
+    }
+
+    public override void DeselectHackTarget()
+    {
+        HackArea.GetComponent<RangeFinder>().CancelHack();
+        IsSelected = false;
+        QTEPanel.SetActive(IsSelected);
+        HackArea.SetActive(IsSelected);
     }
 
     private IEnumerator FreezeTimer()

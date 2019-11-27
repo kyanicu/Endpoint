@@ -22,6 +22,7 @@ public abstract class Weapon : MonoBehaviour
     };
 
     public string Name { get; set; }
+    public string Description { get; set; }
     public bool IsReloading { get; set; }
     public Bullet.BulletSource BulletSource { get; set; }
     public int AmmoInClip { get; set; }

@@ -555,7 +555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 82.5, y: -49.288}
+  m_AnchoredPosition: {x: 81.5, y: -35.9}
   m_SizeDelta: {x: 2.2814178, y: 2.5646973}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &190097500009231242
@@ -587,13 +587,13 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 14b6d4510426f7d40b6f07c6050e6fa7, type: 3}
     m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 100
-    m_Alignment: 6
+    m_MaxSize: 120
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
@@ -826,12 +826,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2477,7 +2477,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 131.51, y: -72.32}
+  m_AnchoredPosition: {x: 131.51, y: -66.9}
   m_SizeDelta: {x: 1128.91, y: 146.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2394531042973500289
@@ -2509,8 +2509,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 60
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -2521,7 +2521,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem '
+  m_Text: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum '
 --- !u!1 &3838341881851697525
 GameObject:
   m_ObjectHideFlags: 0
@@ -6670,6 +6670,7 @@ MonoBehaviour:
   WeaponNameText: {fileID: 3558923324469535183}
   WeaponClassText: {fileID: 6525356445622534099}
   DiagnosticWeaponName: {fileID: 190097500009231241}
+  DiagnosticWeaponDescription: {fileID: 3028903240293021345}
   WeaponClassImages:
   - {fileID: 21300000, guid: dbf7647e51525154cb0dc79c3bcfc094, type: 3}
   - {fileID: 21300000, guid: baaa2963c9734bd498e6c8af32ef0eca, type: 3}
@@ -6724,7 +6725,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 48.410034, y: 22.193115}
+  m_AnchoredPosition: {x: 48.410156, y: 22.193115}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9040348328767726068
@@ -6742,9 +6743,9 @@ MonoBehaviour:
   HealthBar: {fileID: 190097500891263631}
   HealthBarDamage: {fileID: 5926792410323644485}
   HealthAmountText: {fileID: 5926792409950654563}
+  CharacterClassImage: {fileID: 5926792411574328449}
   CharacterClassClassText: {fileID: 5926792411485793831}
   CharacterClassNameText: {fileID: 5926792409682759260}
-  CharacterClassImage: {fileID: 5926792411574328449}
   CharacterClassImages:
   - {fileID: 21300000, guid: 92e2ba0dd018f1242a51cca472952a1a, type: 3}
   - {fileID: 21300000, guid: 9b3c1f1a7aa9e884e96cf00f1764ed78, type: 3}
@@ -6763,6 +6764,8 @@ MonoBehaviour:
   CharDiagnosticClassIcon: {fileID: 7504632875250404613}
   CharDiagnosticActiveAbilityIcon: {fileID: 5719009842153579603}
   CharDiagnosticPassiveAbilityIcon: {fileID: 504705495397709892}
+  CharDiagnosticAnimFrame: {fileID: 6210586849752141270}
+  CharDiagnosticBG: {fileID: 1417027469973442053}
   CharDiagnosticClassTitle: {fileID: 6190521613242863470}
   CharDiagnosticClassText: {fileID: 1058723889516472377}
   CharDiagnosticActiveAbilityAbbr: {fileID: 3525883053264829412}
@@ -6771,8 +6774,6 @@ MonoBehaviour:
   CharDiagnosticPassiveAbilityAbbr: {fileID: 2147504498168713050}
   CharDiagnosticPassiveAbilityTitle: {fileID: 6390339510147629668}
   CharDiagnosticPassiveAbilityText: {fileID: 5964216540577077104}
-  CharDiagnosticAnimFrame: {fileID: 6210586849752141270}
-  CharDiagnosticBG: {fileID: 1417027469973442053}
 --- !u!95 &5682848724071853457
 Animator:
   serializedVersion: 3
@@ -6783,7 +6784,7 @@ Animator:
   m_GameObject: {fileID: 9040348328767726070}
   m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2f56517a7f95f674a9a82fc5ca572983, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6858,12 +6859,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 8
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -6957,7 +6958,7 @@ GameObject:
   - component: {fileID: 9053953551881843895}
   - component: {fileID: 9053953551881843892}
   m_Layer: 5
-  m_Name: MagazineSizeValueText
+  m_Name: ReloadTimeValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7011,12 +7012,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 8
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7108,7 +7109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9053953552037627359}
   m_Layer: 0
-  m_Name: AmmoTotalGroup
+  m_Name: BulletVelocGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7144,7 +7145,7 @@ GameObject:
   - component: {fileID: 9053953552222710182}
   - component: {fileID: 9053953552222710183}
   m_Layer: 5
-  m_Name: ReloadTimeText
+  m_Name: RangeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7198,19 +7199,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Reload Time
+  m_Text: Range
 --- !u!1 &9053953552425182316
 GameObject:
   m_ObjectHideFlags: 0
@@ -7223,7 +7224,7 @@ GameObject:
   - component: {fileID: 9053953552425182313}
   - component: {fileID: 9053953552425182318}
   m_Layer: 5
-  m_Name: ReloadTimeBar
+  m_Name: RangeBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7295,7 +7296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9053953552426539492}
   m_Layer: 0
-  m_Name: ReloadTimeGroup
+  m_Name: RangeGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7331,7 +7332,7 @@ GameObject:
   - component: {fileID: 9053953552489487087}
   - component: {fileID: 9053953552489487084}
   m_Layer: 5
-  m_Name: MagazineSizeImage
+  m_Name: ReloadTimeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7459,12 +7460,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 8
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7484,7 +7485,7 @@ GameObject:
   - component: {fileID: 9053953552648653057}
   - component: {fileID: 9053953552648653062}
   m_Layer: 5
-  m_Name: MagazineSizeBar
+  m_Name: ReloadTimeBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7558,7 +7559,7 @@ GameObject:
   - component: {fileID: 9053953552727157946}
   - component: {fileID: 9053953552727157947}
   m_Layer: 5
-  m_Name: ReloadTimeValueText
+  m_Name: RangeValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7612,12 +7613,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 8
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7671,7 +7672,7 @@ GameObject:
   - component: {fileID: 9053953552831329216}
   - component: {fileID: 9053953552831329217}
   m_Layer: 5
-  m_Name: AmmoTotalValueText
+  m_Name: BulletVelocValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7725,12 +7726,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 8
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7750,7 +7751,7 @@ GameObject:
   - component: {fileID: 9053953552853711779}
   - component: {fileID: 9053953552853711776}
   m_Layer: 5
-  m_Name: AmmoTotalBar
+  m_Name: BulletVelocBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7912,12 +7913,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -8011,7 +8012,7 @@ GameObject:
   - component: {fileID: 9053953553218185074}
   - component: {fileID: 9053953553218185075}
   m_Layer: 5
-  m_Name: AmmoTotalText
+  m_Name: BulletVelocText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8065,19 +8066,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Total Ammo
+  m_Text: Bullet Velocity
 --- !u!1 &9053953553291002235
 GameObject:
   m_ObjectHideFlags: 0
@@ -8088,7 +8089,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9053953553291002234}
   m_Layer: 0
-  m_Name: MagazineSizeGroup
+  m_Name: ReloadTimeGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8159,7 +8160,7 @@ GameObject:
   - component: {fileID: 9053953553414697279}
   - component: {fileID: 9053953553414697276}
   m_Layer: 5
-  m_Name: AmmoTotalImage
+  m_Name: BulletVelocImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8233,7 +8234,7 @@ GameObject:
   - component: {fileID: 9053953553489485433}
   - component: {fileID: 9053953553489485438}
   m_Layer: 5
-  m_Name: MagazineSizeText
+  m_Name: ReloadTimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8287,19 +8288,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_Font: {fileID: 12800000, guid: fb740812e344e314fa1aeef638505e90, type: 3}
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Magazine Size
+  m_Text: Reload Time
 --- !u!1 &9053953553518374611
 GameObject:
   m_ObjectHideFlags: 0
@@ -8312,7 +8313,7 @@ GameObject:
   - component: {fileID: 9053953553518374636}
   - component: {fileID: 9053953553518374637}
   m_Layer: 5
-  m_Name: ReloadTimeImage
+  m_Name: RangeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

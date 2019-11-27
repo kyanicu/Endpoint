@@ -8,24 +8,28 @@ using UnityEngine.UI;
 public class WeaponPanelManager : MonoBehaviour
 {
     #region Ammo
-    public Image AmmoBar, AmmoBarFrame;
+    [Header("Ammo")]
+    public Image AmmoBar;
+    public Image AmmoBarFrame;
     public RawImage AmmoBarTiled;
     public TextMeshProUGUI AmmoAmountText, AmmoBarLabel;
     #endregion
 
     #region Weapon
-    public Image WeaponImage, WeaponClassImage, WeaponClassFrame;
+    [Header("Weapon")]
+    public Image WeaponImage;
+    public Image WeaponClassImage;
+    public Image WeaponClassFrame;
     public TextMeshProUGUI WeaponNameText, WeaponClassText;
-    public Text DiagnosticWeaponName;
+    public Text DiagnosticWeaponName, DiagnosticWeaponDescription;
 
-    [SerializeField]
-    private Sprite[] WeaponClassImages = { };
 
     private Color ColorWeaponClassAutomatic = new Color32(0xe5, 0x2a, 0xfb, 0xff);
     private Color ColorWeaponClassScatter = new Color32(0x2a, 0xf9, 0xfb, 0xff);
     private Color ColorWeaponClassPrecision = new Color32(0xea, 0xfb, 0x2a, 0xff);
     private Color currentWeaponClassColor;
     private string currentWeaponClassText;
+    [Space]
     #endregion
 
     #region Custom Colors
@@ -46,13 +50,15 @@ public class WeaponPanelManager : MonoBehaviour
         Damage,
         FireRate,
         ReloadTime,
-        MagazineSize,
-        AmmoTotal
+        Range,
+        BulletSpeed
     }
 
+    [Header("Diagnostic GameObjects")]
+    [SerializeField]
+    private Sprite[] WeaponClassImages = { };
     public Image[] WeaponDiagnosticBars;
     public Text[] WeaponDiagnosticValues;
-
     public GameObject WeaponDiagnosticInfoPanel;
 
     /// <summary>
@@ -106,6 +112,8 @@ public class WeaponPanelManager : MonoBehaviour
         WeaponClassText.text = currentWeaponClassText;
         // Update Diagnostic weapon name text
         DiagnosticWeaponName.text = p.Weapon.Name;
+        // Update Diagnostic weapon description text
+        DiagnosticWeaponDescription.text = p.Weapon.Description;
 
         // Update current ammo.
         UpdateAmmo(weapon);
@@ -152,16 +160,16 @@ public class WeaponPanelManager : MonoBehaviour
             p.Weapon.Damage,
             Mathf.Round(p.Weapon.RateOfFire * 100f) / 100f,
             Mathf.Round(p.Weapon.ReloadTime * 100f) / 100f,
-            p.Weapon.ClipSize,
-            p.Weapon.TotalAmmo
+            (int) p.Weapon.Range,
+            (int) p.Weapon.BulletVeloc
             };
 
         float[] weaponDiagnosticMaxs = {
             GameManager.MaxValues[(int)Category.Damage],
             GameManager.MaxValues[(int)Category.FireRate],
             GameManager.MaxValues[(int)Category.ReloadTime],
-            GameManager.MaxValues[(int)Category.MagazineSize],
-            GameManager.MaxValues[(int)Category.MagazineSize] * 5
+            GameManager.MaxValues[(int)Category.Range],
+            GameManager.MaxValues[(int)Category.BulletSpeed] 
             };
 
         //Loop through each stat and update value and fill amount for bar
