@@ -11,13 +11,13 @@ public class OverlayManager : MonoBehaviour
     public GameObject[] OverlayPanels;
     private Canvas overlay;
     private bool overlayVisible = true;
-    [Space]
     #endregion
 
     #region Overlay Scripts
     [Header("Overlay Scripts")]
     public DataBaseOverlayManager DBManager;
     public MapOverlayManager MapManager;
+    public ObjectivesOverlayManager OOManager;
     [Space]
     #endregion
 
@@ -178,10 +178,6 @@ public class OverlayManager : MonoBehaviour
                 break;
             case Panels.SkillTree:
                 break;
-            case Panels.Map:
-                break;
-            case Panels.Objectives:
-                break;
         }
     }
 
@@ -203,8 +199,6 @@ public class OverlayManager : MonoBehaviour
                 break;
             case Panels.Map:
                 break;
-            case Panels.Objectives:
-                break;
         }
     }
 
@@ -216,14 +210,10 @@ public class OverlayManager : MonoBehaviour
     {
         switch (ActivePanel)
         {
-            case Panels.Database:
-                break;
             case Panels.SkillTree:
                 break;
             case Panels.Map:
                 MapManager.ZoomCamera(isRightTrigger);
-                break;
-            case Panels.Objectives:
                 break;
         }
     }

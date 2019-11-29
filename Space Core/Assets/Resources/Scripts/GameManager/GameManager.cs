@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static float[] MaxValues = { 0, 0, 0, 0, 0 };
     public static List<GameObject> Enemies;
+    public static string Section;
 
     // Start is called before the first frame update
     void Start()
@@ -17,8 +18,9 @@ public class GameManager : MonoBehaviour
         //If DB hasn't been initialized yet, do that
         if (!LoadDataBaseEntries.AllLogsLoaded)
         {
+            Section = "CENTRAL PROCESSING";
             LoadDataBaseEntries.LoadAllDataEntries();
-            LoadDataBaseEntries.AllLogsLoaded = true;
+            LoadObjectives.LoadAllObjectives();
         }
 
         Enemies = null;
@@ -76,6 +78,17 @@ public class GameManager : MonoBehaviour
         HUDController.instance.UpdateHUD(Player.instance);
     }
     #endregion
+
+    /// <summary>
+    /// Pulls the end most item from a directory path
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public string PullDirectoryEndPoint(string path)
+    {
+        int pos = path.LastIndexOf("\\") + 1;
+        return path.Substring(pos, path.Length - pos);
+    }
 
     private static GameManager _instance = null;
     public static GameManager instance

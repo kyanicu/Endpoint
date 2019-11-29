@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.IO;
 
 public static class LoadDataBaseEntries
@@ -55,6 +54,9 @@ public static class LoadDataBaseEntries
         //If logs have already been loaded, don't load them again
         if (AllLogsLoaded) return;
 
+        //Update bool because now we're loading
+        AllLogsLoaded = true;
+
         //Get the directionary holding the category folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
         string[] categoryFolders = Directory.GetDirectories(dir.FullName);
@@ -71,7 +73,7 @@ public static class LoadDataBaseEntries
                 DirectoryInfo logDir = new DirectoryInfo(logPath);
                 FileInfo[] Files = logDir.GetFiles("*.txt");
 
-                string logName = pullDirectoryEndPoint(logPath);
+                string logName = GameManager.instance.PullDirectoryEndPoint(logPath);
 
                 //Load all text assets from resources
                 TextAsset[] dataFolders = Resources.LoadAll<TextAsset>("Text/Lore/" + catDir.Name + "/" + logName);
@@ -81,7 +83,7 @@ public static class LoadDataBaseEntries
                 for (int ii = 0; ii < dataFolders.Length; ii++)
                 {
                     //Format filename appropriately 
-                    string logFileType = pullDirectoryEndPoint(Files[ii].Name);
+                    string logFileType = GameManager.instance.PullDirectoryEndPoint(Files[ii].Name);
                     logFileType = logFileType.Substring(0, logFileType.Length - 4);
 
                     //Compile the data entry
@@ -143,17 +145,6 @@ public static class LoadDataBaseEntries
 
         //Return loaded entry
         return entry;
-    }
-
-    /// <summary>
-    /// Pulls the end most item from a directory path
-    /// </summary>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    private static string pullDirectoryEndPoint(string path)
-    {
-        int pos = path.LastIndexOf("\\") + 1;
-        return path.Substring(pos, path.Length - pos);
     }
 
     /// <summary>

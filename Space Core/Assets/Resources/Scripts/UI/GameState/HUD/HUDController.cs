@@ -21,6 +21,7 @@ public class HUDController : MonoBehaviour
     public CharacterPanelManager CharacterPM;
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
+    public MinimapController Minimap;
 
     // Stores the current HUD highlight color (set by the class the player is occupying)
     public Color activeClassColor;
@@ -138,8 +139,6 @@ public class HUDController : MonoBehaviour
         CharacterPM.hideDiagnosticPanelCharInitial();
     }
 
-    private IEnumerator charDiagnosticPanel;
-
     /// <summary>
     /// Toggles the visibility for diagnostic panels.
     /// </summary>
@@ -173,4 +172,19 @@ public class HUDController : MonoBehaviour
             WeaponPM.WeaponDiagnosticInfoPanel.SetActive(false);
         }
     }
+
+    public void UpdateMinimap(string section, string area)
+    {
+        if (section == "")
+        {
+            section = GameManager.Section;
+        }
+        else
+        {
+            GameManager.Section = section;
+        }
+        Minimap.UpdateLocation(section, area);
+    }
+
+    private IEnumerator charDiagnosticPanel;
 }
