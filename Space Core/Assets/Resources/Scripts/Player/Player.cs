@@ -13,7 +13,7 @@ public class Player : Character
     private GameObject hackProj;
 
     const float HACK_AREA_LENGTH = 22.5f;
-    public string Class { get; private set; }
+    public string Class { get; set; }
 
     private const float COOLDOWN_TIME = 2.5f; 
 
@@ -29,7 +29,6 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
-        HUDController.instance.UpdateHUD(this);
         Weapon.ControlledByPlayer = true;
     }
 
@@ -67,7 +66,7 @@ public class Player : Character
 
         ResetSwap();
 
-        MinimapIcon = transform.Find("PlayerMinimapIcon").gameObject;
+        MinimapIcon = transform.Find("MinimapIcon").gameObject;
 
         RotationPoint = transform.Find("RotationPoint").gameObject;
 

@@ -15,8 +15,8 @@ public abstract class ActiveAbility : Ability
     //List that holds the names of all active abilities
     public static List<string> ActiveAbilityList = new List<string>()
     {
-        "HomingBulletAbility",
-        "EMPGrenadeAbility",
+        "Homing Bullet",
+        "EMP Grenade",
     };
 
     /// <summary>

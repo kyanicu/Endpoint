@@ -5,18 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro; // TextMesh Pro
+using System.IO;
 
 public class MainMenuManager : MonoBehaviour
 {
-    /// <summary>
-    /// Used to load specific scenes based on add order in build settings
-    /// </summary>
-    private enum Scenes
-    {
-        MainMenu,
-        DemoScene
-    }
-
     /// <summary>
     /// The enum id for each button in the main menu list
     /// </summary>
@@ -32,6 +24,7 @@ public class MainMenuManager : MonoBehaviour
     private const int TOTAL_MENU_ITEMS = 5;
     private MenuItemID selectedID;
     public Button[] MenuButtons;
+    public GameObject MainMenuButtonsGroup;
 
     [SerializeField]
     private Sprite[] MenuButtonImages = { };
@@ -44,6 +37,15 @@ public class MainMenuManager : MonoBehaviour
     Color colorMenuButtonUnselectedImage = new Color32(0xff, 0xff, 0xff, 255);
 
     public MainMenuAnimations MainMenuAnims;
+
+    #region Loading Stuff
+    private bool onLoadingFileScreen;
+    public GameObject LoadingFilePanel;
+    private int[] selectedFileIDHolders = { 0, 1, 2, 3 };
+    private int selectedFileID = 0;
+    public Button[] FileButtons;
+    public TextMeshProUGUI[] FileButtonsText;
+    #endregion
 
     private static MainMenuManager _instance = null;
     public static MainMenuManager instance
@@ -83,6 +85,24 @@ public class MainMenuManager : MonoBehaviour
 
         // Run the helper function for animating the text of the tinybits around the logo.
         MainMenuAnims.AnimationTinybitTextHelper();
+
+        int maxcount = 0;
+        if (GameManager.SaveFileID >= 4)
+            maxcount = 4;
+        else
+            maxcount = GameManager.SaveFileID - 1;
+
+        for (int y = 0; y < maxcount ; y++)
+        {
+            FileButtons[y].gameObject.SetActive(true);
+        }
+
+        //Update load button texts
+        for (int x = 0; x < selectedFileIDHolders.Length; x++)
+        {
+            FileButtonsText[x].text = "File " + selectedFileIDHolders[x];
+        }
+        LoadingFilePanel.SetActive(onLoadingFileScreen);
     }
 
     /// <summary>
@@ -91,36 +111,77 @@ public class MainMenuManager : MonoBehaviour
     /// <param name="vert"></param>
     public void TraverseMenu(float vert)
     {
-        // Find out the previously selected button.
-        int selected = (int)selectedID;
-
-        // Change style of previously selected button to regular.
-        changeButtonToUnselected(MenuButtons[selected]);
-
-        // Based on input vert, change the current selected button ID.
-        if (vert > 0)
+        if (!onLoadingFileScreen)
         {
-            selected++;
-        }
-        else if (vert < 0)
-        {
-            selected--;
-        }
-        if(selected < 0)
-        {
-            selected = TOTAL_MENU_ITEMS - 1;
-        }
-        else if (selected == TOTAL_MENU_ITEMS)
-        {
-            selected = 0;
-        }
-        selectedID = (MenuItemID)selected;
+            // Find out the previously selected button.
+            int selected = (int)selectedID;
 
-        // Change style of newly selected button to selected.
-        changeButtonToSelected(MenuButtons[selected]);
+            // Change style of previously selected button to regular.
+            changeButtonToUnselected(MenuButtons[selected]);
 
-        // Set the tag text based on the selected button.
-        changeTag();
+            // Based on input vert, change the current selected button ID.
+            if (vert > 0)
+            {
+                selected++;
+            }
+            else if (vert < 0)
+            {
+                selected--;
+            }
+            if (selected < 0)
+            {
+                selected = TOTAL_MENU_ITEMS - 1;
+            }
+            else if (selected == TOTAL_MENU_ITEMS)
+            {
+                selected = 0;
+            }
+            selectedID = (MenuItemID)selected;
+
+            // Change style of newly selected button to selected.
+            changeButtonToSelected(MenuButtons[selected]);
+
+            // Set the tag text based on the selected button.
+            changeTag();
+        }
+        else
+        {
+            // Change style of previously selected button to regular.
+            changeButtonToUnselected(FileButtons[selectedFileID]);
+
+            // Based on input vert, change the current selected button ID.
+            if (vert > 0 && selectedFileID < GameManager.SaveFileID - 1)
+            {
+                selectedFileID++;
+                if (selectedFileID > selectedFileIDHolders[3])
+                {
+                    for (int x = 0; x < selectedFileIDHolders.Length; x++)
+                    {
+                        selectedFileIDHolders[x]++;
+                    }
+                }
+            }
+            else if (vert < 0 && selectedFileID > 0)
+            {
+                selectedFileID--;
+                if (selectedFileID < selectedFileIDHolders[0])
+                {
+                    for (int x = 0; x < selectedFileIDHolders.Length; x++)
+                    {
+                        selectedFileIDHolders[x]--;
+                    }
+                }
+            }
+
+            for (int x = 0; x < selectedFileIDHolders.Length; x++)
+            {
+                FileButtonsText[x].text = "File " + selectedFileIDHolders[x];
+            }
+
+            // Change style of newly selected button to selected.
+            changeButtonToSelected(FileButtons[selectedFileID]);
+        }
+        
     }
 
     public void InteractionPointerEnterButton(Button thisButton)
@@ -204,7 +265,25 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void SelectButton()
     {
-        MenuButtons[(int)selectedID].onClick.Invoke();
+        if (!onLoadingFileScreen)
+        {
+            MenuButtons[(int)selectedID].onClick.Invoke();
+        }
+        else
+        {
+            FileButtons[selectedFileID].onClick.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// Called when player presses B returning them to main menu button group
+    /// </summary>
+    public void ReturnToMainMenu()
+    {
+        if (onLoadingFileScreen)
+        {
+            ToggleLoadingFileMenu();
+        }
     }
 
     /// <summary>
@@ -212,6 +291,12 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void ResumeGame()
     {
+        //If there is a game to resume
+        if (GameManager.SaveFileID > 0)
+        {
+            //Load the most previously saved file
+            LoadGame(GameManager.SaveFileID - 1);
+        }
     }
 
     /// <summary>
@@ -220,12 +305,48 @@ public class MainMenuManager : MonoBehaviour
     public void StartNewGame()
     {
         InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
-        SceneManager.LoadScene((int)Scenes.DemoScene);
+        GameManager.currentScene = GameManager.Scenes.CentralProcessing;
+        SceneManager.LoadScene((int)GameManager.currentScene);
     }
 
-    public void LoadGame()
+    public void ToggleLoadingFileMenu()
     {
+        //Reset starting menu item indexer for main menu buttons
+        changeButtonToUnselected(MenuButtons[(int)MenuItemID.LoadButton]);
+        selectedID = MenuItemID.ResumeButton;
+        changeButtonToSelected(MenuButtons[(int)selectedID]);
 
+        onLoadingFileScreen = !onLoadingFileScreen;
+
+        //Reset starting menu item indexer for load file buttons
+        changeButtonToUnselected(FileButtons[selectedFileID]);
+        selectedFileID = 0;
+        changeButtonToSelected(FileButtons[selectedFileID]);
+
+        MainMenuButtonsGroup.SetActive(!onLoadingFileScreen);
+        LoadingFilePanel.SetActive(onLoadingFileScreen);
+    }
+
+    /// <summary>
+    /// Loads a savefile given its file ID
+    /// </summary>
+    /// <param name="saveID"></param>
+    public void LoadGame(int saveID)
+    {
+        //If file wasn't loaded from resume, updated the saveID
+        if (saveID == -1)
+        {
+            saveID = selectedFileID;
+        }
+        string path = $"{GameManager.FILE_PATH}{saveID}.sav";
+        if (File.Exists(path))
+        {
+            SaveSystem.loadedData = SaveSystem.LoadPlayer(saveID);
+            GameManager.SaveFileID = saveID;
+            GameManager.Section = SaveSystem.loadedData.Location;
+            GameManager.currentScene = (GameManager.Scenes)SaveSystem.loadedData.Scene;
+            SceneManager.LoadScene((int)GameManager.currentScene);
+        }
     }
 
     /// <summary>

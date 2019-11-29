@@ -31,7 +31,7 @@ public class ImmortalReloading : PassiveAbility
     private new void Awake()
     {
         base.Awake();
-        AbilityName = "Immortal Reload";
+        AbilityName = "Immortal Reloading";
         AbilityShortName = "IRLD";
         AbilityDescription = "When reloading, your chassis is shielded for a limited time.";
         AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-immortal-reload@1x");

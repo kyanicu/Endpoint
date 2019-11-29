@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+[System.Serializable]
 public static class LoadDataBaseEntries
 {
     public static Dictionary<string, DataEntry> Logs = new Dictionary<string, DataEntry>();
-    public static bool AllLogsLoaded = false;
 
     /// <summary>
     /// DataEntry holds all database panel info and must be unlocked to be displayed in the panel
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public struct DataEntry
     {
         [Tooltip("The name of the data entry log")]
@@ -21,13 +21,13 @@ public static class LoadDataBaseEntries
         public string LogCategory;
 
         [Tooltip("The image associated with the data entry log")]
-        public Sprite LogImage;
+        public string LogImagePath;
         
         [Tooltip("Returns whether or not the log has been unlocked")]
         public bool Visible;
 
         [Tooltip("All entries associated with this log")]
-        public Dictionary<string, Tuple<string, bool>> LogEntries;        
+        public Dictionary<string, Tuple<string, bool>> LogEntries;
 
         /// <summary>
         /// Data entry constructor. All entries start as locked
@@ -36,10 +36,10 @@ public static class LoadDataBaseEntries
         /// <param name="info"></param>
         /// <param name="img"></param>
         /// <param name="cat"></param>
-        public DataEntry(string name, Dictionary<string, Tuple<string, bool>> info, Sprite img, string cat)
+        public DataEntry(string name, Dictionary<string, Tuple<string, bool>> info, string img, string cat)
         {
             LogName = name;
-            LogImage = img;
+            LogImagePath = img;
             LogEntries = info;
             LogCategory = cat;
             Visible = false;
@@ -51,12 +51,6 @@ public static class LoadDataBaseEntries
     /// </summary>
     public static void LoadAllDataEntries()
     {
-        //If logs have already been loaded, don't load them again
-        if (AllLogsLoaded) return;
-
-        //Update bool because now we're loading
-        AllLogsLoaded = true;
-
         //Get the directionary holding the category folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
         string[] categoryFolders = Directory.GetDirectories(dir.FullName);
@@ -124,14 +118,13 @@ public static class LoadDataBaseEntries
             entry.Visible = false;
 
             //Load the respective image from resources/images using the pulled name
-            Sprite img = Resources.Load<Sprite>("Images/DataEntryImages/" + logName);
-            if (img == null)
+            string img = "Images/DataEntryImages/" + logName;
+            if (logName == null)
             {
-                Debug.LogWarning("No image with name " + logName + " found");
-                img = Resources.Load<Sprite>("Images/DataEntryImages/GREENHOUSE 10-2");
-                entry.LogImage = img;
+                img ="Images/DataEntryImages/GREENHOUSE 10-2";
+                entry.LogImagePath = img;
             }
-            entry.LogImage = img;
+            entry.LogImagePath = img;
             entry.LogCategory = category;
             entry.LogName = logName;
             entry.LogEntries = new Dictionary<string, Tuple<string, bool>>();

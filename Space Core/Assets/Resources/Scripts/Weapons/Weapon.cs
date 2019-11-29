@@ -41,7 +41,6 @@ public abstract class Weapon : MonoBehaviour
     public bool ControlledByPlayer { get; set; }
     public GameObject Bullet { get; set; }
     public GameObject FireLocation { get; set; }
-    protected object ReloadLock = new object();
     protected Transform RotationPoint;
     protected float playerBulletVelocMod = 1.5f;
 

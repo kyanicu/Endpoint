@@ -148,7 +148,7 @@ public class DataBaseOverlayManager : MonoBehaviour
             DataEntry entry = LoadDataBaseEntries.Logs[selectedItemName];
 
             //Populate the entry image, header, and category
-            EntryImage.sprite = entry.LogImage;
+            EntryImage.sprite = Resources.Load<Sprite>(entry.LogImagePath);
             EntryImage.gameObject.SetActive(true);
             EntryHeader.text = entry.LogName;
             EntryCategory.text = entry.LogCategory;

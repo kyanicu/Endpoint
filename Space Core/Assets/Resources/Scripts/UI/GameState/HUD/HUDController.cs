@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class HUDController : MonoBehaviour
 {
@@ -18,10 +20,16 @@ public class HUDController : MonoBehaviour
     Color colorCharacterMedium = new Color(.94921875f, .15234375f, .2265625f, 1);
     // Color characterHeavy = new Color(.94921875f, .15234375f, .2265625f, 1);
     #endregion
+    [Header("HUD Component Managers")]
     public CharacterPanelManager CharacterPM;
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
     public MinimapController Minimap;
+    
+    [Header("Loading Screen")]
+    public Image LoadingScreen;
+    public MainMenuAnimations MainMenuAnims;
+    public TextMeshProUGUI LoadingText;
 
     // Stores the current HUD highlight color (set by the class the player is occupying)
     public Color activeClassColor;
@@ -47,6 +55,40 @@ public class HUDController : MonoBehaviour
             return _instance;
         }
     }
+    private void Start()
+    {
+        LoadingText.text = "LOADING";
+        StartCoroutine(FadeOutLoadingScreen());
+    }
+
+    private IEnumerator FadeOutLoadingScreen()
+    {
+        // Run the main menu logo's glitching image animation.
+        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
+
+        // Run the helper function for animating the tinybits around the logo.
+        MainMenuAnims.AnimationTinybitHelper();
+
+        // Run the helper function for animating the text of the tinybits around the logo.
+        MainMenuAnims.AnimationTinybitTextHelper();
+        for (int x = 0; x < 3; x++)
+        {
+            yield return new WaitForSeconds(.5f);
+            LoadingText.text += ".";
+        }
+        Destroy(LoadingText, .25f);
+        float timer = 1f;
+        float counter = 0;
+        while (counter < timer)
+        {
+            counter += .025f;
+            Color updatedAlpa = LoadingScreen.color;
+            updatedAlpa.a = timer - counter;
+            LoadingScreen.color = updatedAlpa;
+            yield return null;
+        }
+        Destroy(LoadingScreen.gameObject);
+    }
 
     /// <summary>
     /// Updates every section of the HUD
@@ -54,20 +96,24 @@ public class HUDController : MonoBehaviour
     /// <param name="p"></param>
     public void UpdateHUD(Player p)
     {
-        UpdateAmmo(p);
-        UpdateWeapon(p);
-        UpdatePlayer(p);
-        WeaponPM.UpdateWeaponDiagnostic(p);
-        CharacterPM.UpdateCharacterClass(p);
-        CharacterPM.UpdateCharacterAbilities(p);
-        RecolorHUD();
-
-        if (firstRun)
+        //Can only update HUD if not currently reloading a save file
+        if (SaveSystem.loadedData == null)
         {
-            // This needs to be run at the start only once, but after the player's class has been extracted.
-            // Close the diagnostic panels and set boolean to false.
-            toggleDiagnosticPanelsInitial();
-            firstRun = false;
+            UpdateAmmo(p);
+            UpdateWeapon(p);
+            UpdatePlayer(p);
+            WeaponPM.UpdateWeaponDiagnostic(p);
+            CharacterPM.UpdateCharacterClass(p);
+            CharacterPM.UpdateCharacterAbilities(p);
+            RecolorHUD();
+
+            if (firstRun)
+            {
+                // This needs to be run at the start only once, but after the player's class has been extracted.
+                // Close the diagnostic panels and set boolean to false.
+                toggleDiagnosticPanelsInitial();
+                firstRun = false;
+            }
         }
     }
 

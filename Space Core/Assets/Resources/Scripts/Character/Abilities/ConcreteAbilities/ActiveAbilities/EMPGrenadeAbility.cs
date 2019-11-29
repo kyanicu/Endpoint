@@ -18,7 +18,7 @@ public class EMPGrenadeAbility : ActiveAbility
     private new void Awake()
     {
         base.Awake();
-        AbilityName = "Stun Grenade";
+        AbilityName = "EMP Grenade";
         AbilityShortName = "STUN";
         AbilityDescription = "Push RB to fire a grenade that stuns enemies within a radius.";
         AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-stun-grenade@1x");

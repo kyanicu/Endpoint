@@ -1,28 +1,64 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static float[] MaxValues = { 0, 0, 0, 0, 0 };
     public static List<GameObject> Enemies;
     public static string Section;
+    public static int SaveFileID = 0;
+    public static string FILE_PATH;
+    public static bool Initialized;
+
+    public static Scenes currentScene;
+
+    public enum Scenes
+    {
+        MainMenu,
+        CentralProcessing,
+        ShipmentFacility,
+        scene3,
+        scene4,
+        scene5,
+        scene6,
+        scene7,
+        scene8,
+        scene9,
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        FILE_PATH = $"{Application.dataPath}/Save Files/Endpoint";
         Application.targetFrameRate = 60;
         LoadMaxStats();
 
         //If DB hasn't been initialized yet, do that
-        if (!LoadDataBaseEntries.AllLogsLoaded)
+        if (!Initialized)
         {
+            Initialized = true;
+            currentScene = (Scenes) SceneManager.GetActiveScene().buildIndex;
             Section = "CENTRAL PROCESSING";
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadObjectives.LoadAllObjectives();
         }
+        //Create a directory for save files if one doesn't exist
+        if(!Directory.Exists(Application.dataPath + "/Save Files"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Save Files");
+        }
 
+        //Retrieve updated new SaveFileID
+        string path = $"{FILE_PATH}{SaveFileID}.sav";
+        while (File.Exists(path))
+        {
+            SaveFileID++;
+            path = $"{FILE_PATH}{SaveFileID}.sav";
+        }
         Enemies = null;
     }
 
@@ -75,7 +111,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        HUDController.instance.UpdateHUD(Player.instance);
     }
     #endregion
 

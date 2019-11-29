@@ -29,7 +29,7 @@ public class Overclock : PassiveAbility
     private new void Awake()
     {
         base.Awake();
-        AbilityName = "Overclocked";
+        AbilityName = "Overclock";
         AbilityShortName = "OCLCK";
         AbilityDescription = "Your chassis has a passive 10% increase to movement speed.";
         AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-overclock@1x");

@@ -41,7 +41,7 @@ public class HomingBulletAbility : ActiveAbility
     private new void Awake()
     {
         base.Awake();
-        AbilityName = "Homing Bullets";
+        AbilityName = "Homing Bullet";
         AbilityShortName = "HOME";
         AbilityDescription = "Push RB to fire bullets that guide themselves for a limited time.";
         AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-homing-bullets@1x");

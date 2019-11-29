@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using System;
 
+[System.Serializable]
 public static class LoadObjectives
 {
     //List<Tuple<hasBeenCompleted, Objective>>
@@ -10,8 +11,7 @@ public static class LoadObjectives
 
     //Dictionary<Location Name, List<Objectives>>
     public static Dictionary<string, List<Objective>> SecondaryObjectives = new Dictionary<string, List<Objective>>();
-
-    public static bool AllObjectivesLoaded = false;
+    
     public static int currentPrimaryObjective;
 
     public enum SideObjectiveID
@@ -29,12 +29,13 @@ public static class LoadObjectives
         SubDescription
     };
 
+    [Serializable]
     public struct Objective
     {
         public string Name;
         public string Description;
         public string SubDescription;
-        public Sprite Icon;
+        public string IconPath;
         private int CurrentlyCompleted;
         private int NumToComplete;
 
@@ -52,17 +53,7 @@ public static class LoadObjectives
             SubDescription = subdescr;
             NumToComplete = ntc;
             CurrentlyCompleted = 0;
-
-            //Check if Icon could be correctly loaded
-            try
-            {
-                Icon = Resources.Load<Sprite>("Images/ObjectiveIcons/" + iconType);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning(iconType + " is not a valid icon type!");
-                Icon = null;
-            }
+            IconPath = "Images/ObjectiveIcons/" + iconType;
         }
 
         /// <summary>
@@ -102,10 +93,7 @@ public static class LoadObjectives
     /// </summary>
     public static void LoadAllObjectives()
     {
-        //If logs have already been loaded, don't load them again
-        if (AllObjectivesLoaded) return;
         currentPrimaryObjective = 0;
-
         LoadPrimaryObjectives();
         LoadSecondaryObjectives();
     }

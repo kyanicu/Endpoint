@@ -212,6 +212,10 @@ public class ControllerInputManager : InputManager
         {
             MainMenuManager.instance.SelectButton();
         }
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Pressed)
+        {
+            MainMenuManager.instance.ReturnToMainMenu();
+        }
     }
 
     /// <summary>

@@ -242,6 +242,7 @@ GameObject:
   - component: {fileID: 8365995121211671604}
   - component: {fileID: 7739413453140312579}
   - component: {fileID: 8578582866189733339}
+  - component: {fileID: 4207505430929957285}
   m_Layer: 0
   m_Name: LargeEnemy
   m_TagString: Enemy
@@ -323,6 +324,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!70 &4207505430929957285
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.5, y: 1}
+  m_Direction: 0
 --- !u!1 &7322906655973482887
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +441,7 @@ PrefabInstance:
     - target: {fileID: 5643924824791071755, guid: 522ed5a898b59104bbdf1131e6d42716,
         type: 3}
       propertyPath: m_Name
-      value: EnemyMinimapIcon
+      value: MinimapIcon
       objectReference: {fileID: 0}
     - target: {fileID: 4293517707782190663, guid: 522ed5a898b59104bbdf1131e6d42716,
         type: 3}

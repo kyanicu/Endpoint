@@ -15,6 +15,52 @@ public static class WeaponGenerator
     /// </summary>
     /// <param name="parent"></param>
     /// <returns></returns>
+    public static GameObject GenerateWeapon(Transform parent, string weaponName)
+    {
+        //Create empty object to load generated weapon into
+        GameObject weapon = new GameObject();
+
+       //Create empty string to load generated prefix into
+        string prefix = "";
+
+        //Generate a weaon specified by its name
+        switch(weaponName)
+        {
+            case "Jakkaru":
+                //Load generated Jakkaru stats onto weapon
+                WeaponGenerationInfo newJakkaru = new Jakkaru();
+                weapon = BuildAutomatic(parent, newJakkaru);
+                prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "Matsya":
+                //Load generated Matsya stats onto weapon
+                WeaponGenerationInfo newMatsya = new Matsya();
+                weapon = BuildSpread(parent, newMatsya);
+                prefix = newMatsya.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "SnipeyBoi":
+                //Load generated SnipeyBoi stats onto weapon
+                WeaponGenerationInfo newSnipeyBoi = new SnipeyBoi();
+                weapon = BuildPrecision(parent, newSnipeyBoi);
+                prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            default:
+                return weapon;
+        }
+
+        //Apply the newly generated prefix to the weapon name
+        Weapon wep = weapon.GetComponent<Weapon>();
+        return weapon;
+    }
+
+    /// <summary>
+    /// Main function to generate a weapon
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static GameObject GenerateWeapon(Transform parent)
     {
         //parse into a weapon type

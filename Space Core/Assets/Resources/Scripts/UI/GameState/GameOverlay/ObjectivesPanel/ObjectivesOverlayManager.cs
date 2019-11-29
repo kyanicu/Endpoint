@@ -69,9 +69,10 @@ public class ObjectivesOverlayManager : MonoBehaviour
             }
             Tuple<bool, LO.Objective> currentObjective = LO.PrimaryObjectives[LO.currentPrimaryObjective];
             LO.Objective PrimaryObjective = currentObjective.Item2;
-            if (PrimaryObjective.Icon != null)
+            
+            if (PrimaryObjective.IconPath != null)
             {
-                PrimaryIcon.sprite = PrimaryObjective.Icon;
+                PrimaryIcon.sprite = Resources.Load<Sprite>(PrimaryObjective.IconPath);
             }
             PrimaryHeader.text = PrimaryObjective.Name;
             PrimaryDescription.text = PrimaryObjective.Description;
@@ -95,9 +96,9 @@ public class ObjectivesOverlayManager : MonoBehaviour
                 LO.Objective tempObjective = secondaries[index];
                 if (tempObjective.Name != "")
                 {
-                    if (tempObjective.Icon != null)
+                    if (tempObjective.IconPath != null)
                     {
-                        SecondaryIcons[index].sprite = tempObjective.Icon;
+                        SecondaryIcons[index].sprite = Resources.Load<Sprite>(tempObjective.IconPath);
                     }
                     SecondaryHeaders[index].text = tempObjective.Name + tempObjective.CheckCompletion();
                     SecondaryDescriptions[index].text = tempObjective.Description;
