@@ -21,6 +21,14 @@ public class MainMenuManager : MonoBehaviour
         ExitButton
     }
 
+    private enum activeScreenName
+    {
+        MainMenu,
+        LoadingFiles,
+        Settings
+    }
+    private activeScreenName activeScreen;
+
     private const int TOTAL_MENU_ITEMS = 5;
     private MenuItemID selectedID;
     public Button[] MenuButtons;
@@ -39,7 +47,6 @@ public class MainMenuManager : MonoBehaviour
     public MainMenuAnimations MainMenuAnims;
 
     #region Loading Stuff
-    private bool onLoadingFileScreen;
     public GameObject LoadingFilePanel;
     private int[] selectedFileIDHolders = { 0, 1, 2, 3 };
     private int selectedFileID = 0;
@@ -71,6 +78,9 @@ public class MainMenuManager : MonoBehaviour
         // Set current state to Main Menu.
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
 
+        //Make main menu group the active starting screen
+        activeScreen = activeScreenName.MainMenu;
+
         // Set selected button ID to the resume button.
         selectedID = MenuItemID.ResumeButton;
 
@@ -86,12 +96,15 @@ public class MainMenuManager : MonoBehaviour
         // Run the helper function for animating the text of the tinybits around the logo.
         MainMenuAnims.AnimationTinybitTextHelper();
 
+
+        //Check how many of the 4 load buttons we'll need to activate
         int maxcount = 0;
         if (GameManager.SaveFileID >= 4)
             maxcount = 4;
         else
             maxcount = GameManager.SaveFileID - 1;
 
+        //Then activate that amount
         for (int y = 0; y < maxcount ; y++)
         {
             FileButtons[y].gameObject.SetActive(true);
@@ -102,7 +115,7 @@ public class MainMenuManager : MonoBehaviour
         {
             FileButtonsText[x].text = "File " + selectedFileIDHolders[x];
         }
-        LoadingFilePanel.SetActive(onLoadingFileScreen);
+        LoadingFilePanel.SetActive(false);
     }
 
     /// <summary>
@@ -111,7 +124,8 @@ public class MainMenuManager : MonoBehaviour
     /// <param name="vert"></param>
     public void TraverseMenu(float vert)
     {
-        if (!onLoadingFileScreen)
+        //There are different buttons to navigate if player is on menu button group
+        if (activeScreen == activeScreenName.MainMenu)
         {
             // Find out the previously selected button.
             int selected = (int)selectedID;
@@ -144,7 +158,8 @@ public class MainMenuManager : MonoBehaviour
             // Set the tag text based on the selected button.
             changeTag();
         }
-        else
+        //There are different buttons to navigate if player is on load file button group
+        else if (activeScreen == activeScreenName.LoadingFiles)
         {
             // Change style of previously selected button to regular.
             changeButtonToUnselected(FileButtons[selectedFileID]);
@@ -153,8 +168,11 @@ public class MainMenuManager : MonoBehaviour
             if (vert > 0 && selectedFileID < GameManager.SaveFileID - 1)
             {
                 selectedFileID++;
+                
+                //If player has gone past the bottom, we need to update the buttons
                 if (selectedFileID > selectedFileIDHolders[3])
                 {
+                    //Increment each button's text's file ID
                     for (int x = 0; x < selectedFileIDHolders.Length; x++)
                     {
                         selectedFileIDHolders[x]++;
@@ -164,8 +182,11 @@ public class MainMenuManager : MonoBehaviour
             else if (vert < 0 && selectedFileID > 0)
             {
                 selectedFileID--;
+
+                //If player has gone past the top, we need to update the buttons
                 if (selectedFileID < selectedFileIDHolders[0])
                 {
+                    //Decrement each button's text's file ID
                     for (int x = 0; x < selectedFileIDHolders.Length; x++)
                     {
                         selectedFileIDHolders[x]--;
@@ -173,6 +194,7 @@ public class MainMenuManager : MonoBehaviour
                 }
             }
 
+            //Update file button text now that selectedFileIDHolders values 
             for (int x = 0; x < selectedFileIDHolders.Length; x++)
             {
                 FileButtonsText[x].text = "File " + selectedFileIDHolders[x];
@@ -181,7 +203,10 @@ public class MainMenuManager : MonoBehaviour
             // Change style of newly selected button to selected.
             changeButtonToSelected(FileButtons[selectedFileID]);
         }
-        
+        else if (activeScreen == activeScreenName.Settings)
+        {
+            //TO DO - Settings screen item traversal
+        }
     }
 
     public void InteractionPointerEnterButton(Button thisButton)
@@ -236,6 +261,10 @@ public class MainMenuManager : MonoBehaviour
         rightAnimator.Play("RightArrowOut");
     }
 
+    /// <summary>
+    /// Updates the text above the menu button group depending on which 
+    /// button is currently highlighted
+    /// </summary>
     private void changeTag()
     {
         if (selectedID == MenuItemID.ResumeButton)
@@ -265,13 +294,17 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void SelectButton()
     {
-        if (!onLoadingFileScreen)
+        if (activeScreen == activeScreenName.MainMenu)
         {
             MenuButtons[(int)selectedID].onClick.Invoke();
         }
-        else
+        else if(activeScreen == activeScreenName.LoadingFiles)
         {
             FileButtons[selectedFileID].onClick.Invoke();
+        }
+        else if(activeScreen == activeScreenName.Settings)
+        {
+            //TO DO - Implements settings functionality
         }
     }
 
@@ -280,9 +313,10 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void ReturnToMainMenu()
     {
-        if (onLoadingFileScreen)
+        if (activeScreen == activeScreenName.LoadingFiles ||
+            activeScreen == activeScreenName.Settings)
         {
-            ToggleLoadingFileMenu();
+            ToggleLoadingFileMenu((int)activeScreenName.MainMenu);
         }
     }
 
@@ -309,22 +343,25 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene((int)GameManager.currentScene);
     }
 
-    public void ToggleLoadingFileMenu()
+    public void ToggleLoadingFileMenu(int screenID)
     {
+        //Update active screen to id passed as argument
+        activeScreen = (activeScreenName)screenID;
+
         //Reset starting menu item indexer for main menu buttons
         changeButtonToUnselected(MenuButtons[(int)MenuItemID.LoadButton]);
         selectedID = MenuItemID.ResumeButton;
         changeButtonToSelected(MenuButtons[(int)selectedID]);
-
-        onLoadingFileScreen = !onLoadingFileScreen;
 
         //Reset starting menu item indexer for load file buttons
         changeButtonToUnselected(FileButtons[selectedFileID]);
         selectedFileID = 0;
         changeButtonToSelected(FileButtons[selectedFileID]);
 
-        MainMenuButtonsGroup.SetActive(!onLoadingFileScreen);
-        LoadingFilePanel.SetActive(onLoadingFileScreen);
+        //Toggle button groups' visiblity depending on active screen
+        MainMenuButtonsGroup.SetActive(activeScreen == activeScreenName.MainMenu);
+        LoadingFilePanel.SetActive(activeScreen == activeScreenName.LoadingFiles);
+        //SettingsPanel.SetActive(activeScreen == activeScreenName.Settings); <-- uncomment when settings done
     }
 
     /// <summary>
@@ -338,7 +375,11 @@ public class MainMenuManager : MonoBehaviour
         {
             saveID = selectedFileID;
         }
+
+        //Get file path with specified file ID
         string path = $"{GameManager.FILE_PATH}{saveID}.sav";
+
+        //Only load the file if the file at specified path exists
         if (File.Exists(path))
         {
             SaveSystem.loadedData = SaveSystem.LoadPlayer(saveID);
@@ -354,7 +395,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void OpenSettings()
     {
-
+        //ToggleLoadingFileMenu((int)activeScreenName.Settings); <-- uncomment when settings done
     }
 
     /// <summary>

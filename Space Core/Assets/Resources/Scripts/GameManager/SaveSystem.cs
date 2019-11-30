@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -13,14 +12,20 @@ public static class SaveSystem
     /// <param name="p"></param>
     public static void SavePlayer (Player p)
     {
+        //Retrieve most up to date FileID
         int saveFileID = GameManager.SaveFileID;
         BinaryFormatter formatter = new BinaryFormatter();
+
+        //Retrieve path of file to load
         string path = $"{GameManager.FILE_PATH}{saveFileID}.sav";
+
+        //Open or create new file at path and save data
         FileStream stream = new FileStream(path, FileMode.OpenOrCreate);
         PlayerData data = new PlayerData(p);
         formatter.Serialize(stream, data);
         stream.Close();
 
+        #region Overwriting Files (not sure if needed)
         //Check if file already exists and we'll need to overwrite
         /*if (File.Exists(path))
         {
@@ -36,15 +41,19 @@ public static class SaveSystem
             formatter.Serialize(stream, data);
             stream.Close();
         }*/
+        #endregion
     }
 
     /// <summary>
     /// Deserializes save data from a binary file given a file ID
     /// </summary>
-    /// <param name="p"></param>
+    /// <param name="SaveFileID"></param>
     public static PlayerData LoadPlayer(int SaveFileID)
     {
+        //Retrieve path of file to load
         string path = $"{GameManager.FILE_PATH}{SaveFileID}.sav";
+
+        //Check if file at that path actually exists
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -55,6 +64,7 @@ public static class SaveSystem
 
             return data;
         }
+        //If file at specified path doesn't exist, log an error
         else
         {
             Debug.LogError("Save file not found in " + path);

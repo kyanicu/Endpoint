@@ -41,7 +41,7 @@ public class Enemy : Character
         DropAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
-        HackArea = transform.Find("HackArea").gameObject;
+        HackArea = transform.Find("PS_Hack Sphere").gameObject;
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
         disabled = false;
@@ -220,8 +220,12 @@ public class Enemy : Character
 
     public bool IsPlayerInRange()
     {
-        Vector3 playerPos = Player.instance.transform.position;
-        return (Vector3.Distance(playerPos, transform.position) < 20);
+        if (Player.instance != null)
+        {
+            Vector3 playerPos = Player.instance.transform.position;
+            return (Vector3.Distance(playerPos, transform.position) < 20);
+        }
+        return false;
     }
 
     public void Freeze()

@@ -4821,6 +4821,8 @@ GameObject:
   - component: {fileID: 4779100436801372}
   - component: {fileID: 198440865886713884}
   - component: {fileID: 199292160546940692}
+  - component: {fileID: 8530807881161471891}
+  - component: {fileID: 6653838502461353352}
   m_Layer: 0
   m_Name: PS_Hack Sphere
   m_TagString: Untagged
@@ -9565,6 +9567,50 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8530807881161471891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547153050576274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13be664d6483f694f81480570eb3b4fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadingBar: {fileID: 0}
+  LoadingBarSpin: {fileID: 0}
+  LoadingFrame: {fileID: 0}
+  LoadingBG: {fileID: 0}
+  LoadingPercent: {fileID: 0}
+  LoadingBarPanel: {fileID: 0}
+  HackDialogBG: {fileID: 0}
+  QTEButton1: {fileID: 0}
+  QTEButton2: {fileID: 0}
+  QTEButton3: {fileID: 0}
+  HackDialogChevron1: {fileID: 0}
+  HackDialogChevron2: {fileID: 0}
+  HackDialogChevron3: {fileID: 0}
+  QTEManager: {fileID: 0}
+  QTEPanel: {fileID: 0}
+  QTEButtonsAmt: 3
+--- !u!70 &6653838502461353352
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547153050576274}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 22.1, y: 1}
+  m_Direction: 0
 --- !u!1 &1625336311509298
 GameObject:
   m_ObjectHideFlags: 0
@@ -9787,7 +9833,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.697}
+      maxColor: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0.697}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9849,7 +9895,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 15
+      scalar: 22
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -14334,7 +14380,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4661519052183770
 Transform:
   m_ObjectHideFlags: 0
@@ -14601,7 +14647,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 18
+      scalar: 50
       minScalar: 1
       maxCurve:
         serializedVersion: 2

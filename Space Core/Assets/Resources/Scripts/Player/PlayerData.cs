@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
 using LDB = LoadDataBaseEntries;
 using LO = LoadObjectives;
 
@@ -68,12 +65,13 @@ public class PlayerData
         DatabaseEntries = LDB.Logs;
 
 
-        //Retrieve Player info
+        //Retrieve Player position
         Position = new float[3];
         Position[0] = p.transform.position.x;
         Position[1] = p.transform.position.y;
         Position[2] = p.transform.position.z;
 
+        //Retrieve Player info
         Health = p.Health;
         MaxHealth = p.MaxHealth;
         Class = p.Class;

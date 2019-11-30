@@ -21,6 +21,8 @@ public class Player : Character
     private float iFrameTime = 2;
 
     private bool hasIFrames;
+    private static Player _instance;
+    public static Player instance { get { return _instance; } }
 
     /// <summary>
     /// Update HUD after successfully swapping into a new enemy
@@ -40,6 +42,15 @@ public class Player : Character
     protected override void Awake()
     {
         base.Awake();
+
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
 
         //Remove enemy component from new body
         Enemy e = GetComponent<Enemy>();
@@ -313,25 +324,5 @@ public class Player : Character
         }
         yield return new WaitForSeconds(COOLDOWN_TIME);
         canSwap = true;
-    }
-
-    private static Player _instance = null;
-
-    public static Player instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<Player>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(Player).Name).AddComponent<Player>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
     }
 }
