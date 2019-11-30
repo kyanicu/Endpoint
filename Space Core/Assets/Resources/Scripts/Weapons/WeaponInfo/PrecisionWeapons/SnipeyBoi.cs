@@ -7,7 +7,7 @@ public class SnipeyBoi : WeaponGenerationInfo
     public SnipeyBoi()
     {
         name = "SnipeyBoi";
-        description = "A prototype sniper rifle that never received a proper name";
+        description = "Typical ranged weapon with no special features.";
 
         MinSpread = 0.0f;
         MaxSpread = 0.0f;

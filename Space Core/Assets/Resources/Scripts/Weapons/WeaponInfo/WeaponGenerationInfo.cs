@@ -16,6 +16,7 @@ public abstract class WeaponGenerationInfo
     #endregion
 
     public string name;
+    public string baseName;
     public string description;
 
     #region Weapon Stat Ranges

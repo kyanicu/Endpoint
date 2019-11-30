@@ -183,7 +183,12 @@ public class HUDController : MonoBehaviour
         CharacterPM.CharacterDiagnosticInfoPanel.SetActive(false);
         WeaponPM.WeaponDiagnosticInfoPanel.SetActive(false);
         CharacterPM.hideDiagnosticPanelCharInitial();
+        WeaponPM.hideDiagnosticPanelWeaponInitial();
     }
+
+    // Stores the coroutines for the diagnostic panel animations.
+    private IEnumerator charDiagnosticPanel;
+    private IEnumerator weaponDiagnosticPanel;
 
     /// <summary>
     /// Toggles the visibility for diagnostic panels.
@@ -203,7 +208,12 @@ public class HUDController : MonoBehaviour
             charDiagnosticPanel = CharacterPM.showDiagnosticPanelChar();
             StartCoroutine(charDiagnosticPanel);
 
-            WeaponPM.WeaponDiagnosticInfoPanel.SetActive(true);
+            if (weaponDiagnosticPanel != null)
+            {
+                StopCoroutine(weaponDiagnosticPanel);
+            }
+            weaponDiagnosticPanel = WeaponPM.showDiagnosticPanelWeapon();
+            StartCoroutine(weaponDiagnosticPanel);
         }
         // If the bool is now false, play the hide animations. 
         else
@@ -215,7 +225,12 @@ public class HUDController : MonoBehaviour
             charDiagnosticPanel = CharacterPM.hideDiagnosticPanelChar();
             StartCoroutine(charDiagnosticPanel);
 
-            WeaponPM.WeaponDiagnosticInfoPanel.SetActive(false);
+            if (weaponDiagnosticPanel != null)
+            {
+                StopCoroutine(weaponDiagnosticPanel);
+            }
+            weaponDiagnosticPanel = WeaponPM.hideDiagnosticPanelWeapon();
+            StartCoroutine(weaponDiagnosticPanel);
         }
     }
 
@@ -231,6 +246,4 @@ public class HUDController : MonoBehaviour
         }
         Minimap.UpdateLocation(section, area);
     }
-
-    private IEnumerator charDiagnosticPanel;
 }

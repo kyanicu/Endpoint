@@ -10,7 +10,7 @@ public class Matsya : WeaponGenerationInfo
     public Matsya()
     {
         name = "Matsya";
-        description = "A shotgun that make things go boom";
+        description = "Pump shotgun with a powerful punch.";
 
          MinSpread = 7f;
          MaxSpread = 14f;

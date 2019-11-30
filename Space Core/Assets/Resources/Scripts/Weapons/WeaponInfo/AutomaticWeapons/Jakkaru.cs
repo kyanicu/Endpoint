@@ -7,7 +7,7 @@ public class Jakkaru : WeaponGenerationInfo
     public Jakkaru()
     {
         name = "Jakkaru";
-        description = "The ting goes skrrrra! Pah cah cah cah gah!";
+        description = "A light carbine with high rate of fire.";
 
         MinSpread = 0f;
         MaxSpread = 3f;

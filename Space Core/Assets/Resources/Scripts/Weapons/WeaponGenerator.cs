@@ -105,7 +105,8 @@ public static class WeaponGenerator
 
         //Apply the newly generated prefix to the weapon name
         Weapon wep = weapon.GetComponent<Weapon>();
-        wep.Name = prefix + weaponName;
+        wep.FullName = prefix + weaponName;
+        wep.Name = weaponName;
         return weapon;
     }
 
