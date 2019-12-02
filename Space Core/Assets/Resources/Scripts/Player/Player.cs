@@ -242,14 +242,11 @@ public class Player : Character
         //Remove attached game objects and components
         Destroy(RotationPoint);
         Destroy(ActiveAbility);
-        Destroy(PassiveAbility);
-        Destroy(Enemy.HackArea.gameObject);
-        Destroy(Enemy.QTEPanel.gameObject);
+        Destroy(PassiveAbility);    
 
         //Change the enemy's minimap icon to a player's and remove the enemy's
         MinimapIcon.transform.position = Enemy.transform.position;
         MinimapIcon.transform.SetParent(Enemy.transform);
-        Destroy(Enemy.MinimapIcon.gameObject);
 
         //Update rigidbody
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
@@ -265,6 +262,11 @@ public class Player : Character
         //Remove add player component from new body
         enemyObject.gameObject.AddComponent<Player>();
         _instance = enemyObject.gameObject.GetComponent<Player>();
+        Enemy.MinimapIcon.gameObject.SetActive(false);
+        Enemy.HackArea.gameObject.SetActive(false);
+        Enemy.QTEPanel.gameObject.SetActive(false);
+        Destroy(Enemy);
+        
         Destroy(gameObject);
     }
 
