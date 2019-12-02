@@ -86,6 +86,7 @@ public class Player : Character
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
+            Weapon.owner = this;
         }
 
         ActiveAbility = gameObject.GetComponent<ActiveAbility>();
