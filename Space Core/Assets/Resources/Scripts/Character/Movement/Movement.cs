@@ -101,6 +101,56 @@ public abstract class Movement : MonoBehaviour
             charCont = GetComponent<CharacterController2D>();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+        {
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = -collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = -(transform.position - collision.transform.position).normalized;
+
+            CancelDirectionalVelocity(dist.normalized);
+
+        }
+    }
+
+        private void OnTriggerStay2D(Collider2D collision)
+    {
+        
+        float maxPushbackVel = 5;
+        float accel = (tag == "Player") ? 50 : 0;
+
+        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+        {
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = (transform.position - collision.transform.position).normalized;
+
+            if (Vector3.Project(velocity, dist).magnitude < maxPushbackVel)
+                velocity += (Vector2)Vector3.Project(dist, Vector2.right).normalized * accel * Time.deltaTime;
+
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+        {
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = (transform.position - collision.transform.position).normalized;
+
+            CancelDirectionalVelocity(dist.normalized);
+
+        }
+    }
+
     /// <summary>
     /// Default run method
     /// </summary>
@@ -220,11 +270,12 @@ public abstract class Movement : MonoBehaviour
     /// <param name="contactCount">size of contact data</param>
     protected virtual void HandleContacts(ContactData[] contacts, int contactCount)
     {
+
         if (!charCont.isGrounded)
         {
 
-            if (charCont.isTouchingCeiling)
-                CancelDirectionalVelocity(Vector2.up);
+            //if (charCont.isTouchingCeiling)
+                //CancelDirectionalVelocity(Vector2.up);
 
             if (charCont.isTouchingRightWall)
                 CancelDirectionalVelocity(Vector2.right);
@@ -232,15 +283,33 @@ public abstract class Movement : MonoBehaviour
                 CancelDirectionalVelocity(Vector2.left);
 
             // Need to figure out why this acts weird, for now use the less accurate code up top
-            /* 
+            
             for (int i = 0; i < contactCount; i++)
             {
-                if (contacts[i].wasHit)
-                { 
+                if (contacts[i].isCorner)
+                {
+                    float x;
+                    float y;
+
+                    if (Mathf.Sign(contacts[i].normal.x) != Mathf.Sign(velocity.x))
+                        x = 0;
+                    else
+                        x = velocity.x;
+
+                    if (Mathf.Sign(contacts[i].normal.y) != Mathf.Sign(velocity.y) && velocity.y > 0)
+                        y = 0;
+                    else
+                        y = velocity.y;
+
+                    velocity = new Vector2(x, y);
+                    
+                }
+                else if (contacts[i].wasHit)
+                {
                     CancelDirectionalVelocity(-contacts[i].normal);
                 }
             }
-            */
+            
         }
         else
         {
@@ -289,14 +358,11 @@ public abstract class Movement : MonoBehaviour
 
         Vector2 proj = Vector3.Project(velocity, direction);
 
-        velocity -= proj;
-
-
         if (direction.normalized != proj.normalized)
             return;
 
-        //velocity -= proj;
-
+        velocity -= proj;
+        
     }
 
     

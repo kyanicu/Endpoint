@@ -40,16 +40,54 @@ public struct MoveData
 public struct ContactData
 {
     public bool wasHit;
+    public bool isCorner;
     public Vector2 point;
     public Vector2 normal;
     public Collider2D collider;
 
-    public ContactData(bool _wasHit, Vector2 _point, Vector2 _normal, Collider2D _collider)
+    public ContactData(bool _wasHit, Vector2 _point, Vector2 _normal, Collider2D _collider, LayerMask layerMask)
     {
         wasHit = _wasHit;
         point = _point;
         normal = _normal;
         collider = _collider;
+        isCorner = false;
+        isCorner = CheckIfCorner(layerMask);
+    }
+
+    private bool CheckIfCorner(LayerMask layerMask)
+    {
+
+        Vector2 rightDirection = slopeFromNormal(normal);
+
+        //float distance = hit.distance + Physics2D.defaultContactOffset;
+
+        //Vector2 hitStartPoint = point + (normal * distance);
+        Vector2 leftPoint = point - (rightDirection * Physics2D.defaultContactOffset);
+        Vector2 rightPoint = point + (rightDirection * Physics2D.defaultContactOffset);
+
+        RaycastHit2D leftHit = Physics2D.Raycast(leftPoint, -normal, Physics2D.defaultContactOffset*2, layerMask);
+        RaycastHit2D rightHit = Physics2D.Raycast(rightPoint, -normal, Physics2D.defaultContactOffset*2, layerMask);
+
+        bool right = rightHit.collider != null;
+        bool left = leftHit.collider != null;
+
+        float angleRightToLeft = Vector2.SignedAngle(rightHit.normal, leftHit.normal);
+
+        //if (!(right && left))
+        //Debug.Break();
+
+        //vertexData = new VertexData(hit, leftHit, rightHit, angleRightToLeft);
+
+        //if (check if landed on a curved surface)
+            //return false;
+        if (!(right && left))
+            return true;
+        else if (angleRightToLeft > 0)
+            return true;
+        else
+            return false;
+
     }
 }
 
@@ -98,6 +136,7 @@ public class ObjectMover : MonoBehaviour
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(layerMask);
+        filter.useLayerMask = true;
         filter.useTriggers = false;
         int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
@@ -197,6 +236,7 @@ public class ObjectMover : MonoBehaviour
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(layerMask);
+        filter.useLayerMask = true;
         filter.useTriggers = false;
         int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
@@ -280,7 +320,7 @@ public class ObjectMover : MonoBehaviour
             //Debug.Log("Hit");
             for (int i = 0; i < numHits; i++)
             {
-                contacts[contactCount] = new ContactData(true, hits[i].point, hits[i].normal, hits[i].collider);
+                contacts[contactCount] = new ContactData(true, hits[i].point, hits[i].normal, hits[i].collider, layerMask);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -306,7 +346,7 @@ public class ObjectMover : MonoBehaviour
                 if (alreadyIn)
                     continue;
 
-                contacts[contactCount] = new ContactData((rotateVector(moveDirection, 90) != -hits[i].normal), hits[0].point, hits[i].normal, hits[i].collider);
+                contacts[contactCount] = new ContactData((rotateVector(moveDirection, 90) != -hits[i].normal), hits[0].point, hits[i].normal, hits[i].collider, layerMask);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -331,7 +371,7 @@ public class ObjectMover : MonoBehaviour
                 if (alreadyIn)
                     continue;
 
-                contacts[contactCount] = new ContactData(rotateVector(moveDirection, -90) != -hits[i].normal, hits[0].point, hits[i].normal, hits[i].collider);
+                contacts[contactCount] = new ContactData(rotateVector(moveDirection, -90) != -hits[i].normal, hits[0].point, hits[i].normal, hits[i].collider, layerMask);
                 contactCount++;
 
                 //Debug.Log(contacts[i].normal);
@@ -349,19 +389,19 @@ public class ObjectMover : MonoBehaviour
                 if (dists[i].distance < -Mathf.Epsilon)
                 {
 
-                    contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal, hits[i].collider);
+                    contacts[i] = new ContactData(Vector2.Dot(-dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, -dists[i].normal, hits[i].collider, layerMask);
 
                     //Debug.Log(contacts[i].normal);
                 }
                 else if (dists[i].distance > Mathf.Epsilon)
                 {
-                    contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal, hits[i].collider);
+                    contacts[i] = new ContactData(Vector2.Dot(dists[i].normal, moveDirection) < -Mathf.Epsilon, dists[i].pointB, dists[i].normal, hits[i].collider, layerMask);
                     //Debug.Log(contacts[i].normal);
 
                 }
                 else
                 {
-                    contacts[i] = new ContactData(true, dists[i].pointB, moveDirection, hits[i].collider);
+                    contacts[i] = new ContactData(true, dists[i].pointB, moveDirection, hits[i].collider, layerMask);
                     //Debug.Log(contacts[i].normal);
 
                 }
@@ -391,6 +431,7 @@ public class ObjectMover : MonoBehaviour
         return new MoveData(moveBy, moveMade, contacts, contactCount);
     }
 
+    /*
     private ContactData[] HandleContinuousCollision(RaycastHit2D[] hits, float moveDistance, Vector2 moveDirection, int  hitCount, out int contactCount)
     {
         
@@ -412,6 +453,7 @@ public class ObjectMover : MonoBehaviour
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(layerMask);
+        filter.useLayerMask = true;
         filter.useTriggers = false;
         int maxSize = 5;
         Collider2D[] colliders = new Collider2D[maxSize];
@@ -508,7 +550,7 @@ public class ObjectMover : MonoBehaviour
         return new MoveData(moveBy, moveMade, contacts, contactCount);
 
     }
-
+    */
     public MoveData Move(Vector2 moveBy)
     {
         if (moveBy == Vector2.zero)

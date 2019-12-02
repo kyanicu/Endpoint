@@ -44,6 +44,14 @@ public abstract class Weapon : MonoBehaviour
     public GameObject FireLocation { get; set; }
     protected Transform RotationPoint;
     protected float playerBulletVelocMod = 1.5f;
+    public Character owner;
+
+    public Vector2 aimingDirection { get { return transform.parent.parent.right; } }
+
+    private void Awake()
+    {
+        owner = transform.parent.parent.parent.GetComponent<Character>();
+    }
 
     /// <summary>
     /// Function that must be implemented to control firing behavior

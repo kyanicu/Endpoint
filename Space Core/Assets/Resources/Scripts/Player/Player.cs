@@ -265,6 +265,7 @@ public class Player : Character
         //Rename enemy to player
         Enemy.tag = "Player";
         Enemy.name = "Player";
+        Enemy.gameObject.layer = LayerMask.NameToLayer("Player");
         GameObject enemyObject = Enemy.gameObject;
 
         //Remove add player component from new body
