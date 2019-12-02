@@ -46,11 +46,11 @@ public abstract class Weapon : MonoBehaviour
     protected float playerBulletVelocMod = 1.5f;
     public Character owner;
 
-    public Vector2 aimingDirection { get { return transform.parent.parent.right; } }
+    public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
 
     private void Awake()
     {
-        owner = transform.parent.parent.parent.GetComponent<Character>();
+        owner = transform.root.GetComponent<Character>();
     }
 
     /// <summary>

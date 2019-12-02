@@ -27,10 +27,10 @@ public abstract class ActiveAbility : Ability
     {
         if (activationCondition)
         {
-            if (gameObject.GetComponent<Player>())
-            {
+            //if (GetComponent<Player>())
+            //{
                 HUDController.instance.StartAbilityCooldown(Cooldown);
-            }
+            //}
 
             Activate();
             return true;

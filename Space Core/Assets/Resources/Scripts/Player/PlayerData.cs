@@ -7,7 +7,7 @@ using LO = LoadObjectives;
 public class PlayerData
 {
     #region GameManager info
-    public string Location;
+    public string Sector;
     public int Scene;
     public int SaveFileID;
     #endregion
@@ -23,6 +23,7 @@ public class PlayerData
 
     #region Weapon Info
     public string WeaponName;
+    public string WeaponFullName;
     public string Description;
     public bool IsReloading;
     public int AmmoInClip;
@@ -54,7 +55,7 @@ public class PlayerData
     public PlayerData(Player p)
     {
         //Retrieve GameManager info
-        Location = GameManager.Section;
+        Sector = GameManager.Sector;
         Scene = (int)GameManager.currentScene;
         SaveFileID = GameManager.SaveFileID;
 
@@ -64,12 +65,11 @@ public class PlayerData
         currentPrimaryObjective = LO.currentPrimaryObjective;
         DatabaseEntries = LDB.Logs;
 
-
         //Retrieve Player position
         Position = new float[3];
         Position[0] = p.transform.position.x;
         Position[1] = p.transform.position.y;
-        Position[2] = p.transform.position.z;
+        Position[2] = p.transform.position.z;        
 
         //Retrieve Player info
         Health = p.Health;
@@ -81,6 +81,7 @@ public class PlayerData
         //Retrieve Weapon info
         Weapon w = p.Weapon;
         WeaponName = w.Name;
+        WeaponFullName = w.FullName;
         Description = w.Description;
         IsReloading = w.IsReloading;
         AmmoInClip = w.AmmoInClip;

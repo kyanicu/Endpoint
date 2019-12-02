@@ -52,9 +52,9 @@ public abstract class InteractableEnv : MonoBehaviour
 
     protected void OnTriggerExit2D(Collider2D col)
     {
-        col.gameObject.GetComponent<Player>().InteractableObject = null;
         if (col.gameObject.CompareTag("Player"))
         {
+            col.gameObject.GetComponent<Player>().InteractableObject = null;
             //If button is visible and currently not being animated, animate it
             if (!hidden && !isAnimatingButton)
             {

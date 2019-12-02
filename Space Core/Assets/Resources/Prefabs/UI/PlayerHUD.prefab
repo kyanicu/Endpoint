@@ -1234,7 +1234,7 @@ GameObject:
   - component: {fileID: 4560070383127353931}
   - component: {fileID: 6347867292497023134}
   m_Layer: 5
-  m_Name: SectionName
+  m_Name: SectorName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1848,7 +1848,7 @@ GameObject:
   - component: {fileID: 3231475930427736734}
   - component: {fileID: 6287403327852595413}
   m_Layer: 5
-  m_Name: AreaName
+  m_Name: RoomName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5942,8 +5942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936b0ac0c4b86c1489cf398345471396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SectionName: {fileID: 6347867292497023134}
-  AreaName: {fileID: 6287403327852595413}
+  SectorName: {fileID: 6347867292497023134}
+  RoomName: {fileID: 6287403327852595413}
 --- !u!1 &4668355865948746643
 GameObject:
   m_ObjectHideFlags: 0

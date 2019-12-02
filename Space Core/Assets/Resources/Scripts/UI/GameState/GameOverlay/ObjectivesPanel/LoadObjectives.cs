@@ -177,7 +177,7 @@ public static class LoadObjectives
         else
         {
             //Retrieve all secondary objectives for this location
-            List<Objective> secondaries = SecondaryObjectives[GameManager.Section];
+            List<Objective> secondaries = SecondaryObjectives[GameManager.Sector];
             List<Objective> update = new List<Objective>();
 
             //Iterate through secondary objectives
@@ -193,7 +193,7 @@ public static class LoadObjectives
             }
 
             //Save the updated list
-            SecondaryObjectives[GameManager.Section] = update;
+            SecondaryObjectives[GameManager.Sector] = update;
         }
     }
 

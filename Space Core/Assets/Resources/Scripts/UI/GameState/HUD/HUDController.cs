@@ -36,24 +36,32 @@ public class HUDController : MonoBehaviour
 
     private bool diagnosticPanelsVisible = true;
     private bool firstRun = true;
+    private static HUDController _instance;
+    public static HUDController instance { get { return _instance; } }
 
-    private static HUDController _instance = null;
-    public static HUDController instance
+    private void Awake()
     {
-        get
+        //Setup singleton
+        if (_instance != null && _instance != this)
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<HUDController>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(HUDController).Name).AddComponent<HUDController>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
+            Destroy(gameObject);
         }
+        else
+        {
+            _instance = this;
+        }
+
+        //If a game is being loaded, update minimap for save room
+        if(SaveSystem.loadedData != null)
+        {
+            HUDController.instance.UpdateMinimap(GameManager.Sector, "Save Room");
+        }
+
+        //Empty saved data cache as confirmation that data was successfully loaded
+        SaveSystem.loadedData = null;
+
+        //Update minimap with player's position and HUD
+        UpdateHUD(Player.instance);
     }
     private void Start()
     {
@@ -91,7 +99,7 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates every section of the HUD
+    /// Updates every Section of the HUD
     /// </summary>
     /// <param name="p"></param>
     public void UpdateHUD(Player p)
@@ -118,7 +126,7 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the ammo section of the HUD
+    /// Updates the ammo Section of the HUD
     /// </summary>
     /// <param name="p"></param>
     public void UpdateAmmo(Player p)
@@ -127,7 +135,7 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the weapon section of the HUD
+    /// Updates the weapon Section of the HUD
     /// </summary>
     /// <param name="p"></param>
     public void UpdateWeapon(Player p)
@@ -136,7 +144,7 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the character section of the HUD
+    /// Updates the character Section of the HUD
     /// </summary>
     /// <param name="p"></param>
     public void UpdatePlayer(Player p)
@@ -145,7 +153,7 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the swap section of the HUD
+    /// Updates the swap Section of the HUD
     /// </summary>
     /// <param name="rechargeTime"></param>
     public void UpdateSwap(float rechargeTime)
@@ -156,7 +164,7 @@ public class HUDController : MonoBehaviour
     private IEnumerator updateAbilityCooldownUIRoutine;
 
     /// <summary>
-    /// Updates the ability image in the character section of the HUD
+    /// Updates the ability image in the character Section of the HUD
     /// </summary>
     /// <param name="seconds"></param>
     public void StartAbilityCooldown(float seconds)
@@ -234,16 +242,16 @@ public class HUDController : MonoBehaviour
         }
     }
 
-    public void UpdateMinimap(string section, string area)
+    public void UpdateMinimap(string sector, string room)
     {
-        if (section == "")
+        if (sector == "")
         {
-            section = GameManager.Section;
+            sector = GameManager.Sector;
         }
         else
         {
-            GameManager.Section = section;
+            GameManager.Sector = sector;
         }
-        Minimap.UpdateLocation(section, area);
+        Minimap.UpdateLocation(sector, room);
     }
 }

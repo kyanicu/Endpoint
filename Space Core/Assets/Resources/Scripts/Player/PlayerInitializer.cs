@@ -26,7 +26,6 @@ public class PlayerInitializer : MonoBehaviour
             //Spawn in the default player
             GameObject player = Instantiate(PlayerObj);
             player.transform.position = transform.position;
-            HUDController.instance.UpdateHUD(player.GetComponent<Player>());
         }
         //Begin operation for loading a player from a save file
         else
@@ -58,9 +57,10 @@ public class PlayerInitializer : MonoBehaviour
                 playerComponent.MinimapIcon = player.transform.Find("MinimapIcon").gameObject;
                 playerComponent.MinimapIcon.GetComponent<SpriteRenderer>().color = Color.cyan;
                 player.name = "Player";
+                player.tag = "Player";
                 #endregion
 
-                Transform weaponParent = playerComponent.RotationPoint.transform;
+                Transform weaponParent = playerComponent.RotationPoint.transform.GetChild(0);
                 Vector2 weaponPos = playerComponent.Weapon.gameObject.transform.position;
                 Destroy(playerComponent.Weapon.gameObject);
                 playerComponent.Weapon = null;
@@ -72,25 +72,18 @@ public class PlayerInitializer : MonoBehaviour
                 //Load the player's saved abilities and attach components to player
                 AbilityGenerator.AddAbilitiesToCharacter
                 (
-                    player,
+                    playerComponent,
                     SaveSystem.loadedData.ActiveAbilityName,
                     SaveSystem.loadedData.PassiveAbilityName
                 );
-
-                //Retrieve the loaded components and attach them to player
-                playerComponent.ActiveAbility = player.GetComponent<ActiveAbility>();
-                playerComponent.PassiveAbility = player.GetComponent<PassiveAbility>();
                 #endregion
 
                 #region Load Weapon info
                 //Retrieve orignal weapon's name (need to remove prefix for weapon load)
-                string vanillaWeaponName = SaveSystem.loadedData.WeaponName;
-                int indexer = vanillaWeaponName.IndexOf(" ") + 1;
-                vanillaWeaponName = vanillaWeaponName.Substring(indexer);
-
+                string weaponName = SaveSystem.loadedData.WeaponName;
                 //Generate a weapon of the same type (stats added later)
-                GameObject tempWeapon = WeaponGenerator.GenerateWeapon(weaponParent, vanillaWeaponName);
-                tempWeapon.name = vanillaWeaponName;
+                GameObject tempWeapon = WeaponGenerator.GenerateWeapon(weaponParent, weaponName);
+                tempWeapon.name = weaponName;
                 tempWeapon.transform.position = weaponPos;
 
                 //Set player's weapon to loaded weapon
@@ -99,6 +92,7 @@ public class PlayerInitializer : MonoBehaviour
 
                 #region Load Weapon Stats
                 weaponComponent.Name = SaveSystem.loadedData.WeaponName;
+                weaponComponent.FullName = SaveSystem.loadedData.WeaponFullName;
                 weaponComponent.Description = SaveSystem.loadedData.Description;
                 weaponComponent.IsReloading = false;
                 weaponComponent.AmmoInClip = SaveSystem.loadedData.AmmoInClip;
@@ -126,13 +120,6 @@ public class PlayerInitializer : MonoBehaviour
 
                 //Load player's unlocked database entries
                 LDB.Logs = SaveSystem.loadedData.DatabaseEntries;
-
-                //Empty saved data cache as confirmation that data was successfully loaded
-                SaveSystem.loadedData = null;
-
-                //Update the HUD now that player has been updated from save file
-                HUDController.instance.UpdateHUD(playerComponent);
-                HUDController.instance.UpdateMinimap(GameManager.Section, "Save Room");
             }
         }
     }

@@ -8,7 +8,7 @@ public class Player : Character
 {
     public Enemy Enemy { get; set; }
     public InteractableEnv InteractableObject { private get; set; }
-    private bool lookingLeft;
+    public bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
 
@@ -42,12 +42,7 @@ public class Player : Character
     protected override void Awake()
     {
         base.Awake();
-
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
         }
@@ -74,8 +69,6 @@ public class Player : Character
 
         canSwap = true;
         isImmortal = false;
-
-        ResetSwap();
 
         MinimapIcon = transform.Find("MinimapIcon").gameObject;
 
@@ -110,7 +103,8 @@ public class Player : Character
 
         Weapon.BulletSource = Bullet.BulletSource.Player;
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-        HUDController.instance.UpdateHUD(this);
+
+        ResetSwap();
     }
 
     #region Inherited Methods 
@@ -253,7 +247,7 @@ public class Player : Character
         Destroy(Enemy.QTEPanel.gameObject);
 
         //Change the enemy's minimap icon to a player's and remove the enemy's
-        MinimapIcon.transform.position = Enemy.MinimapIcon.transform.position;
+        MinimapIcon.transform.position = Enemy.transform.position;
         MinimapIcon.transform.SetParent(Enemy.transform);
         Destroy(Enemy.MinimapIcon.gameObject);
 
@@ -270,6 +264,7 @@ public class Player : Character
 
         //Remove add player component from new body
         enemyObject.gameObject.AddComponent<Player>();
+        _instance = enemyObject.gameObject.GetComponent<Player>();
         Destroy(gameObject);
     }
 
@@ -292,6 +287,9 @@ public class Player : Character
 
     private void ResetSwap()
     {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            return;
         canSwap = false;
         // Disables Swapping for the duration specified in COOLDOWN_TIME.
         StartCoroutine(implementSwapCooldown());

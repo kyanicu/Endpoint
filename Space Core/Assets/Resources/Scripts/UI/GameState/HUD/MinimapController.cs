@@ -3,18 +3,18 @@ using TMPro;
 
 public class MinimapController : MonoBehaviour
 {
-    public TextMeshProUGUI SectionName;
-    public TextMeshProUGUI AreaName;
+    public TextMeshProUGUI SectorName;
+    public TextMeshProUGUI RoomName;
     
     /// <summary>
     /// Updates text elements on minimap
-    /// An area is a subsection
+    /// An area is a subSection
     /// </summary>
-    /// <param name="section"></param>
+    /// <param name="Section"></param>
     /// <param name="area"></param>
-    public void UpdateLocation(string section, string area)
+    public void UpdateLocation(string sector, string room)
     {
-        SectionName.text = section;
-        AreaName.text = area;
+        SectorName.text = sector;
+        RoomName.text = room;
     }
 }

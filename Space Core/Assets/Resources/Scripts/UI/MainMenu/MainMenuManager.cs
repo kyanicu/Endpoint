@@ -54,27 +54,21 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI[] FileButtonsText;
     #endregion
 
-    private static MainMenuManager _instance = null;
-    public static MainMenuManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<MainMenuManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(MainMenuManager).Name).AddComponent<MainMenuManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
-    }
+    private static MainMenuManager _instance;
+    public static MainMenuManager instance { get { return _instance; } }
 
     private void Start()
     {
+        //Setup Singleton
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+
         // Set current state to Main Menu.
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
 
@@ -102,7 +96,7 @@ public class MainMenuManager : MonoBehaviour
         if (GameManager.SaveFileID >= 4)
             maxcount = 4;
         else
-            maxcount = GameManager.SaveFileID - 1;
+            maxcount = GameManager.SaveFileID;
 
         //Then activate that amount
         for (int y = 0; y < maxcount ; y++)
@@ -300,7 +294,10 @@ public class MainMenuManager : MonoBehaviour
         }
         else if(activeScreen == activeScreenName.LoadingFiles)
         {
-            FileButtons[selectedFileID].onClick.Invoke();
+            if(GameManager.SaveFileID > 0)
+            {
+                FileButtons[selectedFileID].onClick.Invoke();
+            }
         }
         else if(activeScreen == activeScreenName.Settings)
         {
@@ -384,7 +381,7 @@ public class MainMenuManager : MonoBehaviour
         {
             SaveSystem.loadedData = SaveSystem.LoadPlayer(saveID);
             GameManager.SaveFileID = saveID;
-            GameManager.Section = SaveSystem.loadedData.Location;
+            GameManager.Sector = SaveSystem.loadedData.Sector;
             GameManager.currentScene = (GameManager.Scenes)SaveSystem.loadedData.Scene;
             SceneManager.LoadScene((int)GameManager.currentScene);
         }

@@ -85,7 +85,7 @@ public class ObjectivesOverlayManager : MonoBehaviour
     private void loadSecondaryObjectives()
     {
         //Retrieve list of secondary objectives for current location
-        List<LO.Objective> secondaries = LO.SecondaryObjectives[GameManager.Section];
+        List<LO.Objective> secondaries = LO.SecondaryObjectives[GameManager.Sector];
 
         //Only run if secondary objective list is populated
         if (LO.SecondaryObjectives.Count > 0)
@@ -119,7 +119,7 @@ public class ObjectivesOverlayManager : MonoBehaviour
     private void loadLocationalObjectives()
     {
         //Retrieve list of secondary objectives for current location
-        List<LO.Objective> secondaries = LO.SecondaryObjectives[GameManager.Section];
+        List<LO.Objective> secondaries = LO.SecondaryObjectives[GameManager.Sector];
         const int OFFSET = 2;
         foreach (SecondaryObjectives objectiveNum in Enum.GetValues(typeof(SecondaryObjectives)))
         {

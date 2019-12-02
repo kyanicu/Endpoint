@@ -271,7 +271,7 @@ public class CharacterPanelManager : MonoBehaviour
     private Tween DPFadeFrame;
     // Stores tween for dialog bg.
     private Tween DPFadeBG;
-    // Stores tweens for character class (first section in diagnostic).
+    // Stores tweens for character class (first Section in diagnostic).
     private Tween DPFadeClassIcon, DPFadeClassTitle, DPFadeClassText;
     // Stores tweens for active ability elements.
     private Tween DPFadeAAIcon, DPFadeAAAbbr, DPFadeAATitle, DPFadeAAText;

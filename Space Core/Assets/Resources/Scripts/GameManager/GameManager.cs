@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
 {
     public static float[] MaxValues = { 0, 0, 0, 0, 0 };
     public static List<GameObject> Enemies;
-    public static string Section;
+    public static string Sector;
     public static int SaveFileID = 0;
     public static string FILE_PATH;
     public static bool Initialized;
+
+    private static GameManager _instance;
+    public static GameManager instance { get { return _instance; } }
 
     public static Scenes currentScene;
 
@@ -33,6 +36,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
         FILE_PATH = $"{Application.dataPath}/Save Files/Endpoint";
         Application.targetFrameRate = 60;
         LoadMaxStats();
@@ -42,7 +53,7 @@ public class GameManager : MonoBehaviour
         {
             Initialized = true;
             currentScene = (Scenes) SceneManager.GetActiveScene().buildIndex;
-            Section = "CENTRAL PROCESSING";
+            Sector = "CENTRAL PROCESSING";
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadObjectives.LoadAllObjectives();
         }
@@ -123,24 +134,5 @@ public class GameManager : MonoBehaviour
     {
         int pos = path.LastIndexOf("\\") + 1;
         return path.Substring(pos, path.Length - pos);
-    }
-
-    private static GameManager _instance = null;
-    public static GameManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<GameManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(GameManager).Name).AddComponent<GameManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
     }
 }
