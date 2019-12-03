@@ -53,7 +53,7 @@ public static class LoadObjectives
             SubDescription = subdescr;
             NumToComplete = ntc;
             CurrentlyCompleted = 0;
-            IconPath = "Images/ObjectiveIcons/" + iconType;
+            IconPath = "Images/Icons/" + iconType;
         }
 
         /// <summary>
@@ -196,7 +196,6 @@ public static class LoadObjectives
             SecondaryObjectives[GameManager.Sector] = update;
         }
     }
-
 
     /// <summary>
     /// Reads and loads an objective given a text file

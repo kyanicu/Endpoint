@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
             Sector = "CENTRAL PROCESSING";
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadObjectives.LoadAllObjectives();
+            LoadDialogue.LoadDialogueItems();
         }
         //Create a directory for save files if one doesn't exist
         if(!Directory.Exists(Application.dataPath + "/Save Files"))

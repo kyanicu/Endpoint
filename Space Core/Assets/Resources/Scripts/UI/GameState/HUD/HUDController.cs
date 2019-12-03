@@ -25,6 +25,7 @@ public class HUDController : MonoBehaviour
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
     public MinimapController Minimap;
+    public DialogueManager DialogueManager;
     
     [Header("Loading Screen")]
     public Image LoadingScreen;
@@ -54,7 +55,7 @@ public class HUDController : MonoBehaviour
         //If a game is being loaded, update minimap for save room
         if(SaveSystem.loadedData != null)
         {
-            HUDController.instance.UpdateMinimap(GameManager.Sector, "Save Room");
+            instance.UpdateMinimap(GameManager.Sector, "Save Room");
         }
 
         //Empty saved data cache as confirmation that data was successfully loaded
@@ -242,6 +243,11 @@ public class HUDController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the minimap with the player's current sector/room
+    /// </summary>
+    /// <param name="sector"></param>
+    /// <param name="room"></param>
     public void UpdateMinimap(string sector, string room)
     {
         if (sector == "")
@@ -253,5 +259,19 @@ public class HUDController : MonoBehaviour
             GameManager.Sector = sector;
         }
         Minimap.UpdateLocation(sector, room);
+    }
+
+    /// <summary>
+    /// Contacts the dialogue manager to load dialogue into window
+    /// Call with: HUDController.instance.InitiateDialogue(nameOfDialogueItem);
+    /// </summary>
+    /// <param name="DialogueKey"></param>
+    public void InitiateDialogue(string DialogueKey)
+    {
+        //Unhide the dialogue window
+        DialogueManager.gameObject.SetActive(true);
+
+        //Call the manager's function to load the dialogue into the window
+        DialogueManager.LoadDialogue(DialogueKey);
     }
 }

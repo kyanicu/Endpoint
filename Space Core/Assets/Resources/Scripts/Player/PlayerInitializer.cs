@@ -2,6 +2,7 @@
 using UnityEngine;
 using LDB = LoadDataBaseEntries;
 using LO = LoadObjectives;
+using LD = LoadDialogue;
 
 public class PlayerInitializer : MonoBehaviour
 {
@@ -120,6 +121,8 @@ public class PlayerInitializer : MonoBehaviour
 
                 //Load player's unlocked database entries
                 LDB.Logs = SaveSystem.loadedData.DatabaseEntries;
+
+                LD.DialogueItems = SaveSystem.loadedData.DialogueItems;
             }
         }
     }
