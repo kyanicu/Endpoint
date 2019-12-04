@@ -151,10 +151,10 @@ public static class LoadObjectives
     /// Progresses an objective
     /// </summary>
     /// <param name="objName"></param>
-    /// <param name="isPrimary"></param>
-    public static void ProgressObjective(string progObjName, bool isPrimary)
+    public static void ProgressObjective(string objName)
     {
-        if (isPrimary)
+        //Check if the objective is primary or not
+        if (checkIfPrimary(objName))
         {
             int counter = 0;
             //Loop through all primaries
@@ -163,11 +163,12 @@ public static class LoadObjectives
                 Objective primaryObj = primary.Item2;
 
                 //If primary is the one to be completed
-                if (primaryObj.Name.Equals(progObjName.Substring(2)))
+                if (primaryObj.Name.Equals(objName.Substring(2)))
                 {
                     //Update its item1 to true confirming that its been completed
                     Tuple<bool, Objective> update = new Tuple<bool, Objective>(true, primary.Item2);
                     PrimaryObjectives[counter] = update;
+                    UpdateCurrentPrimaryObjectiveID();
                     //TODO-Make call to function that animates notification popup
                     break;
                 }
@@ -184,7 +185,7 @@ public static class LoadObjectives
             foreach (Objective obj in secondaries)
             {
                 //If objective to update is found
-                if (obj.Name.Equals(progObjName.Substring(2)))
+                if (obj.Name.Equals(objName.Substring(2)))
                 {
                     //Progress it
                     obj.IncrementProgress();
@@ -195,6 +196,50 @@ public static class LoadObjectives
             //Save the updated list
             SecondaryObjectives[GameManager.Sector] = update;
         }
+    }
+
+    /// <summary>
+    /// Loop through all primary objectives and retrieve first objective 
+    /// that hasn't been completed yet
+    /// </summary>
+    public static void UpdateCurrentPrimaryObjectiveID()
+    {
+        int counter = 0;
+
+        //Loop through all primaries
+        foreach (Tuple<bool, Objective> primary in PrimaryObjectives)
+        {
+            //If objective hasn't been completed yet
+            if(!primary.Item1)
+            {
+                //Update current p obj counter to its index
+                currentPrimaryObjective = counter;
+                break;
+            }
+            counter++;
+        }
+    }
+
+    /// <summary>
+    /// Returns whether or not an objective name belongs to a primary objective
+    /// </summary>
+    /// <returns></returns>
+    private static bool checkIfPrimary(string objName)
+    {
+        //Loop through all primary objectives
+        foreach (Tuple<bool, Objective> primary in PrimaryObjectives)
+        {
+            Objective primaryObj = primary.Item2;
+
+            //If primary is the one to be completed
+            if (primaryObj.Name.Equals(objName))
+            {
+                //Primary objective name matched, return true
+                return true;
+            }
+        }
+        //No primary with the given name was found, return false
+        return false;
     }
 
     /// <summary>

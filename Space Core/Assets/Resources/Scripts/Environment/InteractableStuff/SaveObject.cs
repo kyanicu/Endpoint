@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SaveObject : InteractableEnv
 {
+    private void Awake()
+    {
+        functionalityText = "save";
+    }
+
     /// <summary>
     /// Unlocks the lore entry provided through inspector
     /// </summary>

@@ -26,6 +26,7 @@ public class HUDController : MonoBehaviour
     public SwapPanelManager SwapPM;
     public MinimapController Minimap;
     public DialogueManager DialogueManager;
+    public PopupManager PopupManager;
     
     [Header("Loading Screen")]
     public Image LoadingScreen;
@@ -34,20 +35,19 @@ public class HUDController : MonoBehaviour
 
     // Stores the current HUD highlight color (set by the class the player is occupying)
     public Color activeClassColor;
+    public bool ObjectivesPopupIsActive;
+    public string[] RecentDataBaseEntry;
 
     private bool diagnosticPanelsVisible = true;
     private bool firstRun = true;
+    private bool visible;
     private static HUDController _instance;
     public static HUDController instance { get { return _instance; } }
 
     private void Awake()
     {
         //Setup singleton
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
         }
@@ -68,37 +68,10 @@ public class HUDController : MonoBehaviour
     {
         LoadingText.text = "LOADING";
         StartCoroutine(FadeOutLoadingScreen());
+        visible = true;
+        ToggleHUDVisibility();
     }
-
-    private IEnumerator FadeOutLoadingScreen()
-    {
-        // Run the main menu logo's glitching image animation.
-        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
-
-        // Run the helper function for animating the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitHelper();
-
-        // Run the helper function for animating the text of the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitTextHelper();
-        for (int x = 0; x < 3; x++)
-        {
-            yield return new WaitForSeconds(.5f);
-            LoadingText.text += ".";
-        }
-        Destroy(LoadingText, .25f);
-        float timer = 1f;
-        float counter = 0;
-        while (counter < timer)
-        {
-            counter += .025f;
-            Color updatedAlpa = LoadingScreen.color;
-            updatedAlpa.a = timer - counter;
-            LoadingScreen.color = updatedAlpa;
-            yield return null;
-        }
-        Destroy(LoadingScreen.gameObject);
-    }
-
+    
     /// <summary>
     /// Updates every Section of the HUD
     /// </summary>
@@ -274,4 +247,91 @@ public class HUDController : MonoBehaviour
         //Call the manager's function to load the dialogue into the window
         DialogueManager.LoadDialogue(DialogueKey);
     }
+
+    /// <summary>
+    /// Activates objectives popup on screen and loads content onto it
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="content"></param>
+    public void InitiateObjectivesPopup(string title, string content)
+    {
+        //If popup is currently inactive
+        if (!ObjectivesPopupIsActive)
+        {
+            ObjectivesPopupIsActive = true;
+            PopupManager.ObjectivesGroup.SetActive(true);
+            PopupManager.InitiateObjectivesPopup(title, content);
+        }
+    }
+
+    /// <summary>
+    /// Activates database popup on screen
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="content"></param>
+    public void InitiateDatabasePopup()
+    {
+        //If popup is currently inactive
+        if (RecentDataBaseEntry != null)
+        {
+            PopupManager.DatabaseGroup.SetActive(true);
+            PopupManager.InitiateDatabasePopup();
+        }
+    }
+
+    /// <summary>
+    /// Automatically closes an open database popup
+    /// </summary>
+    public void CloseDataBasePopup()
+    {
+        RecentDataBaseEntry = null;
+        PopupManager.DatabaseGroup.SetActive(false);
+    }
+
+    /// <summary>
+    /// Toggles the visibility of HUD upon closing/opening overlay
+    /// </summary>
+    public void ToggleHUDVisibility()
+    {   
+        CharacterPM.gameObject.SetActive(visible);
+        WeaponPM.gameObject.SetActive(visible);
+        SwapPM.gameObject.SetActive(visible);
+        Minimap.gameObject.SetActive(visible);
+        PopupManager.gameObject.SetActive(visible);
+        visible = !visible;
+    }
+
+    /// <summary>
+    /// Coroutine for fading out loading screen on scene start
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator FadeOutLoadingScreen()
+    {
+        // Run the main menu logo's glitching image animation.
+        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
+
+        // Run the helper function for animating the tinybits around the logo.
+        MainMenuAnims.AnimationTinybitHelper();
+
+        // Run the helper function for animating the text of the tinybits around the logo.
+        MainMenuAnims.AnimationTinybitTextHelper();
+        for (int x = 0; x < 3; x++)
+        {
+            yield return new WaitForSeconds(.5f);
+            LoadingText.text += ".";
+        }
+        Destroy(LoadingText, .25f);
+        float timer = 1f;
+        float counter = 0;
+        while (counter < timer)
+        {
+            counter += .025f;
+            Color updatedAlpa = LoadingScreen.color;
+            updatedAlpa.a = timer - counter;
+            LoadingScreen.color = updatedAlpa;
+            yield return null;
+        }
+        Destroy(LoadingScreen.gameObject);
+    }
+
 }

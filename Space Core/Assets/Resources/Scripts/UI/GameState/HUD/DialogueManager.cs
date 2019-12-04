@@ -11,7 +11,9 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI Content;
     public Image SpeakerIcon;
 
-    private const float typeTimer = .1f;
+    //Time for each character to be written
+    private const float typeTimer = .065f;
+    //Time between lines of dialogue
     private const float timeBetweenDialogue = 1.5f;
 
     /// <summary>
@@ -55,12 +57,18 @@ public class DialogueManager : MonoBehaviour
             int counter = 0;
             while(counter < line.Length)
             {
-                //Add the character to the text element
-                Content.text += line[counter];
-                counter++;
+                //Check that player is not in a menu
+                if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+                    yield return null;
+                else
+                {
+                    //Add the character to the text element
+                    Content.text += line[counter];
+                    counter++;
 
-                //Wait the brief time amount before typing next letter
-                yield return new WaitForSeconds(typeTimer);
+                    //Wait the brief time amount before typing next letter
+                    yield return new WaitForSeconds(typeTimer);
+                }
             }
             yield return new WaitForSeconds(timeBetweenDialogue);
         }

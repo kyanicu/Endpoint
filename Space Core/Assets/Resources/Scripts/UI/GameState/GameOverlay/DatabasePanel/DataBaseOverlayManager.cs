@@ -106,32 +106,34 @@ public class DataBaseOverlayManager : MonoBehaviour
     /// <param name="horiz"></param>
     public void NavigateLeftPanel(float vert)
     {
-        if (vert == 0) return;
-
-        //Reset the right panel
-        clearRightPanelData();
-
-        ActiveLeftSideElements[selectedTextID].color = deselectedColor;
-
-        //If user scrolls to the up
-        if (vert > 0)
+        //If player is actually moving stick, repopulate right panel
+        if (vert != 0)
         {
-            selectedTextID--;
-            if (selectedTextID < 0)
+            //Reset the right panel
+            clearRightPanelData();
+
+            ActiveLeftSideElements[selectedTextID].color = deselectedColor;
+
+            //If user scrolls to the up
+            if (vert > 0)
             {
-                selectedTextID = ActiveLeftSideElements.Count - 1;
+                selectedTextID--;
+                if (selectedTextID < 0)
+                {
+                    selectedTextID = ActiveLeftSideElements.Count - 1;
+                }
             }
-        }
-        //If user scrolls to the down
-        else if (vert < 0)
-        {
-            selectedTextID++;
-            if (selectedTextID == ActiveLeftSideElements.Count)
+            //If user scrolls to the down
+            else if (vert < 0)
             {
-                selectedTextID = 0;
+                selectedTextID++;
+                if (selectedTextID == ActiveLeftSideElements.Count)
+                {
+                    selectedTextID = 0;
+                }
             }
+            ActiveLeftSideElements[selectedTextID].color = selectedColor;
         }
-        ActiveLeftSideElements[selectedTextID].color = selectedColor;
 
         //If selected item is not a content header, populate the right side panel with its unlocked info
         if (!isHeader(selectedTextID))
@@ -329,6 +331,43 @@ public class DataBaseOverlayManager : MonoBehaviour
         headersList[item.text.Substring(2)] = content;
     }
 
+    public void OpenSpecificEntry(string entryName)
+    {
+        #region Reset Entire Overlay
+        selectedTextID = 0;
+        selectedArticleID = 0;
+        ActiveLeftSideElements[selectedTextID].color = selectedColor;
+        ResetLeftPanelData();
+        clearRightPanelData();
+        #endregion
+
+        //Deselect primary active element
+        ActiveLeftSideElements[selectedTextID].color = deselectedColor;
+
+        //Search through each log entry for specified entry
+        foreach (KeyValuePair<string, DataEntry> entry in LoadDataBaseEntries.Logs)
+        {
+            DataEntry de = entry.Value;
+
+            //If the category matches, set active ID to the header's ID
+            if (de.LogName.Equals(entryName))
+            {
+                selectedTextID = findItem(de.LogCategory);
+                break;
+            }
+        }
+
+        //Select the left panel item at the ID we want
+        SelectLeftPanelItem();
+        selectedTextID = findItem(entryName);
+
+        //Reload right hand panel
+        NavigateLeftPanel(0);
+
+        //Select new lore entry
+        ActiveLeftSideElements[selectedTextID].color = selectedColor;
+    }
+
     /// <summary>
     /// Moves all content based on which header was expanded/collapsed
     /// </summary>
@@ -377,6 +416,33 @@ public class DataBaseOverlayManager : MonoBehaviour
     /// </summary>
     private void ResetLeftPanelData()
     {
+        //If only headers (unedited list)
+        if (ActiveLeftSideElements.Count == 6)
+        {
+            Dictionary<string, Tuple<bool, List<TextMeshProUGUI>>> tempList =
+           new Dictionary<string, Tuple<bool, List<TextMeshProUGUI>>>();
+            //Search through each log entry for specified entry
+            foreach (KeyValuePair<string, Tuple<bool, List<TextMeshProUGUI>>> headerItem in headersList)
+            {
+                Tuple<bool, List<TextMeshProUGUI>> headerContent = headerItem.Value;
+
+                //If header is currently open
+                if(headerContent.Item1)
+                {
+                    //Create new Tuple which now says header is closed
+                    headerContent = new Tuple<bool, List<TextMeshProUGUI>>(false, headerContent.Item2);
+
+                    //Update value with new content
+                    tempList[headerItem.Key] = headerContent;
+                }
+            }
+
+            //Update headerlist if adjustments were made
+            if (tempList.Count > 0)
+            {
+                headersList = tempList;
+            }
+        }
         if (ActiveLeftSideElements.Count > 6)
         {
             ActiveLeftSideElements[selectedTextID].color = deselectedColor;
@@ -387,7 +453,11 @@ public class DataBaseOverlayManager : MonoBehaviour
                 //If it's not a header, destroy it
                 if (!isHeader(i))
                 {
-                    Destroy(ActiveLeftSideElements[i].gameObject);
+                    //Check that element hasn't already been destroyed
+                    if (ActiveLeftSideElements[i] != null)
+                    {
+                        Destroy(ActiveLeftSideElements[i].gameObject);
+                    }
                 }
                 else
                 {

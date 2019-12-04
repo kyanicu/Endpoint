@@ -10,6 +10,11 @@ public class Console : InteractableEnv
 
     private bool alreadyPressed;
 
+    private void Awake()
+    {
+        functionalityText = "access console";
+    }
+
     /// <summary>
     /// Unlocks the lore entry provided through inspector
     /// </summary>
@@ -18,6 +23,9 @@ public class Console : InteractableEnv
         if (!alreadyPressed)
         {
             LoadDataBaseEntries.UnlockDataEntry(EntryName, EntryArticle);
+            string[] unlockedData = { EntryName, EntryArticle };
+            HUDController.instance.RecentDataBaseEntry = unlockedData;
+            HUDController.instance.InitiateDatabasePopup();
             alreadyPressed = true;
         }
     }
