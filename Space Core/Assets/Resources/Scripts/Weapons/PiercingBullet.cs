@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+
+/// <summary>
 /// Script that controls the bullet object for the piercingShotAbility
 /// </summary>
 public class PiercingBullet : Bullet
@@ -29,5 +31,21 @@ public class PiercingBullet : Bullet
         }
 
         base.Update();
+    }
+
+    private new void OnTriggerEnter2D(UnityEngine.Collider2D collision)
+    {
+        if (collision.tag.Contains("Terrain"))
+        {
+            Destroy(gameObject);
+        }
+        else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
+        {
+            if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
+            {
+                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                NumPassed++;
+            }
+        }
     }
 }
