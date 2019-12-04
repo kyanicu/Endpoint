@@ -18,9 +18,10 @@ public class Player : Character
     private const float COOLDOWN_TIME = 2.5f; 
 
     [SerializeField]
-    private float iFrameTime = 2;
-
+    private float iFrameTime = 3f;
     private bool hasIFrames;
+
+
     private static Player _instance;
     public static Player instance { get { return _instance; } }
 
@@ -103,7 +104,7 @@ public class Player : Character
             PassiveAbility.resetOwner(this);
         }
 
-        Weapon.BulletSource = Bullet.BulletSource.Player;
+        Weapon.BulletSource = DamageSource.Player;
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         ResetSwap();
     }
@@ -114,9 +115,15 @@ public class Player : Character
         if (isImmortal || hasIFrames)
             return;
 
+        if (attackInfo.damageSource != DamageSource.Spread && !hasIFrames)
+        {
+            hasIFrames = true;
+            StartCoroutine(RunIFrames());
+        }
+
         base.ReceiveAttack(attackInfo);
-        StartCoroutine(RunIFrames());
     }
+
     protected override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
@@ -129,7 +136,6 @@ public class Player : Character
 
     private IEnumerator RunIFrames()
     {
-        hasIFrames = true;
         yield return new WaitForSeconds(iFrameTime);
         hasIFrames = false;
     }
@@ -140,18 +146,18 @@ public class Player : Character
         SceneManager.LoadScene(0);
     }
 
-    public override void Fire()
+    public override bool Fire()
     {
         //reload if out of ammo
         if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
         {
             Reload();
+            return false;
         }
         else
         {
-            Weapon.Fire();
+            return Weapon.Fire();
         }
-        HUDController.instance.UpdateAmmo(this);
     }
 
     public override void Reload()
@@ -169,15 +175,7 @@ public class Player : Character
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet"))
-        {
-            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
-            {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage/5, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().KnockbackTime, other.gameObject.GetComponent<Bullet>().StunTime));
-                Destroy(other.gameObject);
-            }
-        }
-        else if (other.CompareTag("Ammo"))
+        if (other.CompareTag("Ammo"))
         {
             Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
             HUDController.instance.UpdateAmmo(this);

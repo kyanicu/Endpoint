@@ -74,7 +74,7 @@ public class Precision : Weapon
     /// If the hit collides with an object that doesnt have the same tag as the the bulletsource
     /// then that object takes damage
     /// </summary>
-    public override void Fire()
+    public override bool Fire()
     {
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
@@ -94,15 +94,13 @@ public class Precision : Weapon
             bulletScript.StunTime = StunTime;
             bulletScript.Source = BulletSource;
             bulletScript.Range = Range;
-            if (ControlledByPlayer)
-            {
-                bulletScript.Velocity = BulletVeloc * playerBulletVelocMod;
-            }
-            else
-            {
-                bulletScript.Velocity = BulletVeloc;
-            }
+            bulletScript.Velocity = BulletVeloc;
             FireTimer = RateOfFire;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

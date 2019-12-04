@@ -66,6 +66,7 @@ public class KeyboardInputManager : InputManager
         if (Input.GetMouseButton(0))
         {
             Player.instance.Fire();
+            HUDController.instance.UpdateAmmo(Player.instance);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {

@@ -25,9 +25,8 @@ public abstract class WeaponGenerationInfo
 
     public int MinDamage;
     public int MaxDamage;
-
-    public float MinStunTime;
-    public float MaxStunTime;
+  
+    public float StunTime;
 
     public float MinKnockbackImpulse;
     public float MaxKnockbackImpulse;

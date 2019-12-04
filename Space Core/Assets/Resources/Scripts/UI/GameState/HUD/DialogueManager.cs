@@ -30,7 +30,7 @@ public class DialogueManager : MonoBehaviour
 
             SpeakerIcon.sprite = Resources.Load<Sprite>(dialogue.IconPath);
         }
-        catch(System.Exception e)
+        catch(System.Exception)
         {
             SpeakerIcon.sprite = null;
         }
