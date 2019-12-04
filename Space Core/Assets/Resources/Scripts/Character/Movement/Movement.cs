@@ -24,6 +24,11 @@ public abstract class Movement : MonoBehaviour
     public bool forceUnground { protected get { return _forceUnground; } set { _forceUnground = value; } }
 
     /// <summary>
+    /// Are we preventing Run() from being called?
+    /// </summary>
+    private bool freezeRun;
+
+    /// <summary>
     /// Character movement values
     /// </summary>
     [SerializeField]
@@ -160,6 +165,8 @@ public abstract class Movement : MonoBehaviour
     /// +1 == right</param>
     public virtual void Run(float direction)
     {
+        if (freezeRun)
+            return;
 
         if (charCont.isTouchingRightWall && direction == +1)
         {
@@ -258,9 +265,22 @@ public abstract class Movement : MonoBehaviour
     /// <summary>
     /// Applies knockback velocity to the player
     /// </summary>
-    public void TakeKnockback(Vector2 impulse)
+    public void TakeKnockback(Vector2 impulse, float time)
     {
-        velocity += impulse / mass;
+        if (impulse.y > 0.1)
+            forceUnground = true;
+        else
+            impulse = Vector3.Project(impulse, charCont.currentSlope);
+
+        StartCoroutine(FreezeRunFor(time));
+        velocity = impulse / mass;
+    }
+
+    public IEnumerator FreezeRunFor(float time)
+    {
+        freezeRun = true;
+        yield return new WaitForSeconds(time);
+        freezeRun = false;
     }
 
     /// <summary>

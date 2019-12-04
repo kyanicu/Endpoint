@@ -92,7 +92,7 @@ public abstract class Character : MonoBehaviour
 
         TakeDamage(attackInfo.damage);
         StartCoroutine(Stun(attackInfo.stunTime));
-        movement.TakeKnockback(attackInfo.knockbackImpulse);
+        movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
     }
 
     public IEnumerator Stun(float time)

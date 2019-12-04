@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
     public int Damage { get; set; }
     public float StunTime { get; set; }
     public float KnockbackImpulse { get; set; }
+    public float KnockbackTime { get; set; }
     public float Range { get; set; }
     public float Velocity { get; set; }
     public DamageSource Source { get; set; }

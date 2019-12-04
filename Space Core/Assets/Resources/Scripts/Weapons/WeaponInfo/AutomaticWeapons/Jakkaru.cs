@@ -16,6 +16,12 @@ public class Jakkaru : WeaponGenerationInfo
         MaxDamage = 20;
 
         StunTime = 0.3f;
+        
+        MinKnockbackImpulse = 5;
+        MaxKnockbackImpulse = 20;
+
+        MinKnockbackTime = 0.1f;
+        MaxKnockbackTime = 0.75f;
 
         MinClipSize = 12;
         MaxClipSize = 40;
