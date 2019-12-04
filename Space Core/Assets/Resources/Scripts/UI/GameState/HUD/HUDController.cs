@@ -292,13 +292,13 @@ public class HUDController : MonoBehaviour
     /// Toggles the visibility of HUD upon closing/opening overlay
     /// </summary>
     public void ToggleHUDVisibility()
-    {   
+    {
+        visible = !visible;
         CharacterPM.gameObject.SetActive(visible);
         WeaponPM.gameObject.SetActive(visible);
         SwapPM.gameObject.SetActive(visible);
         Minimap.gameObject.SetActive(visible);
         PopupManager.gameObject.SetActive(visible);
-        visible = !visible;
     }
 
     /// <summary>

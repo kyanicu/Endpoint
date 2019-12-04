@@ -45,4 +45,12 @@ public class Bullet : MonoBehaviour
 
         transform.position += (transform.right * Velocity * Time.deltaTime);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag.Contains("Terrain"))
+        {
+            Destroy(gameObject);
+        }
+    }
 }

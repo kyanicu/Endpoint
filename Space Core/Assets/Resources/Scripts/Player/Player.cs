@@ -32,6 +32,7 @@ public class Player : Character
     {
         base.Start();
         Weapon.ControlledByPlayer = true;
+        HUDController.instance.UpdateHUD(this);
     }
 
     protected override void Reset()
@@ -104,7 +105,6 @@ public class Player : Character
 
         Weapon.BulletSource = Bullet.BulletSource.Player;
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-
         ResetSwap();
     }
 
