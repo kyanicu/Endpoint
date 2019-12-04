@@ -32,6 +32,7 @@ public class Player : Character
     {
         base.Start();
         Weapon.ControlledByPlayer = true;
+        HUDController.instance.UpdateHUD(this);
     }
 
     protected override void Reset()
@@ -71,7 +72,7 @@ public class Player : Character
         isImmortal = false;
 
         MinimapIcon = transform.Find("MinimapIcon").gameObject;
-
+        animator = transform.Find("AnimatedCharacter").gameObject.GetComponent<Animator>();
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
         RotationPoint.transform.localScale = new Vector3(1, 1, 1);
@@ -86,6 +87,7 @@ public class Player : Character
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
+            Weapon.owner = this;
         }
 
         ActiveAbility = gameObject.GetComponent<ActiveAbility>();
@@ -103,7 +105,6 @@ public class Player : Character
 
         Weapon.BulletSource = Bullet.BulletSource.Player;
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-
         ResetSwap();
     }
 

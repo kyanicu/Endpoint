@@ -25,24 +25,8 @@ public class OverlayManager : MonoBehaviour
 
     public Panels ActivePanel;
 
-    private static OverlayManager _instance = null;
-    public static OverlayManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<OverlayManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(OverlayManager).Name).AddComponent<OverlayManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
-    }
+    private static OverlayManager _instance;
+    public static OverlayManager instance { get { return _instance; } }
 
     /// <summary>
     /// Enumerator for each of the 4 overlay panels
@@ -57,6 +41,12 @@ public class OverlayManager : MonoBehaviour
 
     private void Start()
     {
+        //Setup singleton
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+
         //Set the start button/panel values
         MenuOptionButtons[(int)Panels.Map].SwapSelect();
         ActivePanel = Panels.Map;
@@ -78,16 +68,43 @@ public class OverlayManager : MonoBehaviour
         OverlayPanels[(int)ActivePanel].SetActive(false);
         MenuOptionButtons[activeButtonID].SwapSelect();
 
-        //reset active panel
-        ActivePanel = Panels.Map;
-        activeButtonID = (int)ActivePanel;
+        HUDController.instance.ToggleHUDVisibility();
 
-        //Hide currently active panel
-        OverlayPanels[(int)ActivePanel].SetActive(true);
+        //If haven't recently unlocked lore entry
+        if (HUDController.instance.RecentDataBaseEntry == null ||
+            HUDController.instance.RecentDataBaseEntry.Length == 0)
+        {
+            //reset active panel
+            ActivePanel = Panels.Map;
+            activeButtonID = (int)ActivePanel;
 
-        //Toggle overlay visibility
-        overlayVisible = !overlayVisible;
-        overlay.gameObject.SetActive(overlayVisible);
+            //Hide currently active panel
+            OverlayPanels[(int)ActivePanel].SetActive(true);
+
+            //Toggle overlay visibility
+            overlayVisible = !overlayVisible;
+            overlay.gameObject.SetActive(overlayVisible);
+        }
+        //Otherwise go straight to database overlay
+        else
+        {
+            //update active panel to database overlay
+            ActivePanel = Panels.Database;
+            activeButtonID = (int)ActivePanel;
+
+            //Hide currently active panel
+            OverlayPanels[(int)ActivePanel].SetActive(true);
+
+            //Toggle overlay visibility
+            overlayVisible = !overlayVisible;
+            overlay.gameObject.SetActive(overlayVisible);
+
+            string entryName = HUDController.instance.RecentDataBaseEntry[0];
+            DBManager.OpenSpecificEntry(entryName);
+
+            //Close the popup notification
+            HUDController.instance.CloseDataBasePopup();
+        }
     }
 
     /// <summary>

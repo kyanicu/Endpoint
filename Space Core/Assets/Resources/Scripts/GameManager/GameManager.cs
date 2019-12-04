@@ -33,14 +33,9 @@ public class GameManager : MonoBehaviour
         scene9,
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
         }
@@ -52,13 +47,14 @@ public class GameManager : MonoBehaviour
         if (!Initialized)
         {
             Initialized = true;
-            currentScene = (Scenes) SceneManager.GetActiveScene().buildIndex;
+            currentScene = (Scenes)SceneManager.GetActiveScene().buildIndex;
             Sector = "CENTRAL PROCESSING";
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadObjectives.LoadAllObjectives();
+            LoadDialogue.LoadDialogueItems();
         }
         //Create a directory for save files if one doesn't exist
-        if(!Directory.Exists(Application.dataPath + "/Save Files"))
+        if (!Directory.Exists(Application.dataPath + "/Save Files"))
         {
             Directory.CreateDirectory(Application.dataPath + "/Save Files");
         }
@@ -70,6 +66,12 @@ public class GameManager : MonoBehaviour
             SaveFileID++;
             path = $"{FILE_PATH}{SaveFileID}.sav";
         }
+        LoadMaxStats();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
         Enemies = null;
     }
 

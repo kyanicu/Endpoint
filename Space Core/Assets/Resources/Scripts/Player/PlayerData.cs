@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LDB = LoadDataBaseEntries;
 using LO = LoadObjectives;
+using LD = LoadDialogue;
 
 [System.Serializable]
 public class PlayerData
@@ -42,11 +43,12 @@ public class PlayerData
     public bool ControlledByPlayer;
     #endregion
 
-    #region Objectives & Data Entries
+    #region Static Loaded Items
     public List<Tuple<bool, LO.Objective>> PrimaryObjectives;
     public Dictionary<string, List<LO.Objective>> SecondaryObjectives;
     public int currentPrimaryObjective;
     public Dictionary<string, LDB.DataEntry> DatabaseEntries;
+    public Dictionary<string, LD.DialogueItem> DialogueItems;
     #endregion
 
     /// <summary>
@@ -64,6 +66,7 @@ public class PlayerData
         SecondaryObjectives = LO.SecondaryObjectives;
         currentPrimaryObjective = LO.currentPrimaryObjective;
         DatabaseEntries = LDB.Logs;
+        DialogueItems = LD.DialogueItems;
 
         //Retrieve Player position
         Position = new float[3];

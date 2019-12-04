@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public abstract class InteractableEnv : MonoBehaviour
 {
     #region Attached Button Object
-    public GameObject ButtonToPress;
+    public TextMeshProUGUI displayText;
     private Image buttonImage;
     public bool hidden { get; protected set; }
     protected bool isAnimatingButton;
     protected RectTransform rectTransform;
     protected const float distToMove = 1f;
+    protected string functionalityText;
     #endregion
 
-    protected void Awake()
+    protected void Start()
     {
-        //Retrieve attached components
-        buttonImage = ButtonToPress.GetComponent<Image>();
-        rectTransform = ButtonToPress.GetComponent<RectTransform>();
+        rectTransform = displayText.GetComponent<RectTransform>();
         hidden = true;
     }
 
@@ -87,12 +87,13 @@ public abstract class InteractableEnv : MonoBehaviour
                 counter += step;
                 rectTransform.localPosition = new Vector2(rectTransform.localPosition.x, 
                                                           rectTransform.localPosition.y + step);
-                Color c = buttonImage.color;
+                Color c = displayText.color;
                 c.a += step;
-                buttonImage.color = c;
+                displayText.color = c;
                 yield return null;
             }
             isAnimatingButton = false;
+            displayText.text = $"Press  <sprite=0> to {functionalityText}";
             yield return null;
         }
     }
