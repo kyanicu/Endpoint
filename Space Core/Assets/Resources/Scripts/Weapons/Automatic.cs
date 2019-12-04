@@ -37,14 +37,7 @@ public class Automatic : Weapon
             bulletScript.StunTime = StunTime;
             bulletScript.Source = BulletSource;
             bulletScript.Range = Range;
-            if (ControlledByPlayer)
-            {
-                bulletScript.Velocity = BulletVeloc * playerBulletVelocMod;
-            }
-            else
-            {
-                bulletScript.Velocity = BulletVeloc * enemyBulletVelocMod;
-            }
+            bulletScript.Velocity = BulletVeloc;
             FireTimer = RateOfFire;
             return true;
         }

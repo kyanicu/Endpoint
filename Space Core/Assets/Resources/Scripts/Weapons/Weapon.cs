@@ -38,15 +38,22 @@ public abstract class Weapon : MonoBehaviour
     public float RateOfFire { get; set; }
     public float FireTimer { get; set; }
     public float Range { get; set; }
-    public float BulletVeloc { get; set; }
     public float ReloadTime { get; set; }
     public bool ControlledByPlayer { get; set; }
     public GameObject Bullet { get; set; }
     public GameObject FireLocation { get; set; }
+    public Character owner { get; set; };
+
+    public float BulletVeloc
+    {
+        get { return (ControlledByPlayer) ? _bulletVelocity * playerBulletVelocMod : _bulletVelocity * enemyBulletVelocMod; }
+        set { _bulletVelocity = value; }
+    }
+
     protected Transform RotationPoint;
-    protected float playerBulletVelocMod = 1.5f;
-    protected float enemyBulletVelocMod = .75f;
-    public Character owner;
+    private float playerBulletVelocMod = 1.5f;
+    private float enemyBulletVelocMod = .75f;
+    private float _bulletVelocity;
 
     public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
 
