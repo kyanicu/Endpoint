@@ -12,37 +12,38 @@ public class Matsya : WeaponGenerationInfo
         name = "Matsya";
         description = "Pump shotgun with a powerful punch.";
 
-         MinSpread = 7f;
-         MaxSpread = 14f;
+        MinSpread = 7f;
+        MaxSpread = 14f;
 
-         MinDamage = 20;
-         MaxDamage = 30;
+        MinDamage = 20;
+        MaxDamage = 30;
 
-         StunTime = 0.3f;
-         MinKnockbackImpulse = 5;
-         MaxKnockbackImpulse = 20;
+        StunTime = 0.1f;
 
-         MinKnockbackTime = 0.1f;
-         MaxKnockbackTime = 0.75f;
+        MinKnockbackImpulse = 10;
+        MaxKnockbackImpulse = 10;
+
+        MinKnockbackTime = 0.1f;
+        MaxKnockbackTime = 0.1f;
 
 
-         MinClipSize = 6;
-         MaxClipSize = 14;
+        MinClipSize = 6;
+        MaxClipSize = 14;
 
-         MinRateOfFire = 0.25f;
-         MaxRateOfFire = 1.0f;
+        MinRateOfFire = 0.25f;
+        MaxRateOfFire = 1.0f;
 
-         MinReloadTime = 1.0f;
-         MaxReloadTime = 4.0f;
+        MinReloadTime = 1.0f;
+        MaxReloadTime = 4.0f;
 
-         MinNumPellets = 4;
-         MaxNumPellets = 8;
+        MinNumPellets = 4;
+        MaxNumPellets = 8;
 
-         MinRange = 17f;
-         MaxRange = 22f;
+        MinRange = 17f;
+        MaxRange = 22f;
 
-         MaxBulletVeloc = 6f;
-         MinBulletVeloc = 12f;
+        MaxBulletVeloc = 6f;
+        MinBulletVeloc = 12f;
 
     }
 }

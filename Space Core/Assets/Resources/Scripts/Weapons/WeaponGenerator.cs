@@ -123,8 +123,8 @@ public static class WeaponGenerator
         automatic.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
         automatic.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         automatic.StunTime = wgi.StunTime;
-        automatic.KnockbackImpulse = UnityEngine.Random.Range(wgi.MinKnockbackImpulse, wgi.MaxKnockbackImpulse);
-        automatic.KnockbackTime = UnityEngine.Random.Range(wgi.MinKnockbackTime, wgi.MaxKnockbackTime);
+        automatic.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        automatic.KnockbackTime = wgi.MaxKnockbackTime; ;
         automatic.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         automatic.AmmoInClip = automatic.ClipSize;
         automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
@@ -152,6 +152,8 @@ public static class WeaponGenerator
         spread.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         spread.AmmoInClip = spread.ClipSize;
         spread.StunTime = wgi.StunTime;
+        spread.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        spread.KnockbackTime = wgi.MaxKnockbackTime;
         spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
         spread.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
         spread.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
@@ -178,6 +180,8 @@ public static class WeaponGenerator
         precision.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         precision.AmmoInClip = precision.ClipSize;
         precision.StunTime = wgi.StunTime;
+        precision.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        precision.KnockbackTime = wgi.MaxKnockbackTime;
         precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
         precision.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
         precision.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);

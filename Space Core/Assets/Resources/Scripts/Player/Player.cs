@@ -121,8 +121,7 @@ public class Player : Character
             StartCoroutine(RunIFrames());
         }
 
-        TakeDamage(attackInfo.damage);
-        movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
+        base.ReceiveAttack(attackInfo);
     }
 
     protected override void TakeDamage(int damage)
