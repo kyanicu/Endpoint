@@ -122,7 +122,7 @@ public class Player : Character
         }
 
         TakeDamage(attackInfo.damage);
-        movement.TakeKnockback(attackInfo.knockbackImpulse);
+        movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
     }
 
     protected override void TakeDamage(int damage)

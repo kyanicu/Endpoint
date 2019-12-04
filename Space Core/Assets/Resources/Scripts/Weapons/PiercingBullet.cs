@@ -43,7 +43,7 @@ public class PiercingBullet : Bullet
         {
             if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
             {
-                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, StunTime, Source));
+                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
                 NumPassed++;
             }
         }
