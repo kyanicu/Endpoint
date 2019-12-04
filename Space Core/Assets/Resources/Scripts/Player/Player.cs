@@ -71,7 +71,7 @@ public class Player : Character
         isImmortal = false;
 
         MinimapIcon = transform.Find("MinimapIcon").gameObject;
-
+        animator = transform.Find("AnimatedCharacter").gameObject.GetComponent<Animator>();
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
         RotationPoint.transform.localScale = new Vector3(1, 1, 1);

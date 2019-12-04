@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    public enum AnimationState { idle, running }
+
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public Weapon Weapon { get; set; }
@@ -13,8 +15,9 @@ public abstract class Character : MonoBehaviour
     public PassiveAbility PassiveAbility { get; set; }
     public Movement movement { get; protected set; }
     public GameObject MinimapIcon;
-
+    public AnimationState animationState { get; set; }
     public bool isStunned { get; private set; }
+    public Animator animator;
 
     protected virtual void Start()
     {
@@ -51,7 +54,21 @@ public abstract class Character : MonoBehaviour
     public virtual void Move(float axis)
     {
         if (isStunned)
+        {
             axis = 0;
+        }
+
+        if (axis != 0 && animationState != AnimationState.running)
+        {
+            animationState = AnimationState.running;
+            animator.SetInteger("AnimationState", (int) animationState);
+        }
+        else if (axis == 0 && animationState == AnimationState.running)
+        {
+            animationState = AnimationState.idle;
+            animator.SetInteger("AnimationState", (int)animationState);
+        }
+
         movement.Run(axis);
     }
 
