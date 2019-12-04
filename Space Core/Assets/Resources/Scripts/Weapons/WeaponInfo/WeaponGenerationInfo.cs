@@ -31,7 +31,10 @@ public abstract class WeaponGenerationInfo
 
     public float MinKnockbackImpulse;
     public float MaxKnockbackImpulse;
-    
+
+    public float MinKnockbackTime;
+    public float MaxKnockbackTime;
+
     public int MinClipSize;
     public int MaxClipSize;
 

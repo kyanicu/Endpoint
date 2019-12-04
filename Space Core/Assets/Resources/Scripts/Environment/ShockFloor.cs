@@ -10,7 +10,7 @@ public class ShockFloor : MonoBehaviour
         if(collision.CompareTag("Player") && !(shock))
         {
             shock = true;
-            Player.instance.ReceiveAttack(new AttackInfo(15, Vector2.zero, 0));
+            Player.instance.ReceiveAttack(new AttackInfo(15, Vector2.zero, 0, 0));
             shock = false;
         }
     }

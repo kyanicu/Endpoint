@@ -104,6 +104,7 @@ public class PlayerInitializer : MonoBehaviour
                 weaponComponent.Damage = SaveSystem.loadedData.Damage;
                 weaponComponent.StunTime = SaveSystem.loadedData.StunTime;
                 weaponComponent.KnockbackImpulse = SaveSystem.loadedData.KnockbackImpulse;
+                weaponComponent.KnockbackTime = SaveSystem.loadedData.KnockbackTime;
                 weaponComponent.RateOfFire = SaveSystem.loadedData.RateOfFire;
                 weaponComponent.FireTimer = SaveSystem.loadedData.FireTimer;
                 weaponComponent.Range = SaveSystem.loadedData.Range;

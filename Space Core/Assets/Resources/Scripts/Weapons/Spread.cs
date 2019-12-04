@@ -45,6 +45,7 @@ public class Spread : Weapon
                 Bullet bulletScript = bullet.GetComponent<Bullet>();
                 bulletScript.Damage = Damage;
                 bulletScript.KnockbackImpulse = KnockbackImpulse;
+                bulletScript.KnockbackTime = KnockbackTime;
                 bulletScript.StunTime = StunTime;
                 bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;

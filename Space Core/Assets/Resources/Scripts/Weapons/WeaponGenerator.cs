@@ -123,6 +123,7 @@ public static class WeaponGenerator
         automatic.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
         automatic.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         automatic.KnockbackImpulse = UnityEngine.Random.Range(wgi.MinKnockbackImpulse, wgi.MaxKnockbackImpulse);
+        automatic.KnockbackTime = UnityEngine.Random.Range(wgi.MinKnockbackTime, wgi.MaxKnockbackTime);
         automatic.StunTime = UnityEngine.Random.Range(wgi.MinStunTime, wgi.MaxStunTime);
         automatic.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         automatic.AmmoInClip = automatic.ClipSize;

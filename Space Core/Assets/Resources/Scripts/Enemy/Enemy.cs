@@ -102,7 +102,7 @@ public class Enemy : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
             {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().KnockbackTime, other.gameObject.GetComponent<Bullet>().StunTime));
                 Destroy(other.gameObject);
             }
         }
@@ -111,7 +111,7 @@ public class Enemy : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
             {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().KnockbackTime, other.gameObject.GetComponent<Bullet>().StunTime));
                 other.gameObject.GetComponent<PiercingBullet>().NumPassed++;
             }
         }

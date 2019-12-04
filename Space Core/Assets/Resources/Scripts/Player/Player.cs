@@ -173,7 +173,7 @@ public class Player : Character
         {
             if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
             {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage/5, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
+                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage/5, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().KnockbackTime, other.gameObject.GetComponent<Bullet>().StunTime));
                 Destroy(other.gameObject);
             }
         }

@@ -35,6 +35,7 @@ public class PlayerData
     public int Damage;
     public float StunTime;
     public float KnockbackImpulse;
+    public float KnockbackTime;
     public float RateOfFire;
     public float FireTimer;
     public float Range;
@@ -95,6 +96,7 @@ public class PlayerData
         Damage = w.Damage;
         StunTime = w.StunTime;
         KnockbackImpulse = w.KnockbackImpulse;
+        KnockbackTime = w.KnockbackTime;
         RateOfFire = w.RateOfFire;
         FireTimer = w.FireTimer;
         Range = w.Range;

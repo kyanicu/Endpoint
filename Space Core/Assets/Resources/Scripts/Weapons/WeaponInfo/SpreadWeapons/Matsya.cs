@@ -21,7 +21,10 @@ public class Matsya : WeaponGenerationInfo
          MinKnockbackImpulse = 5;
          MaxKnockbackImpulse = 20;
 
-         MinStunTime = 0;
+        MinKnockbackTime = 0.1f;
+        MaxKnockbackTime = 0.75f;
+
+        MinStunTime = 0;
          MinStunTime = 0.3f;
 
          MinClipSize = 6;
