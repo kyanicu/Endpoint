@@ -42,7 +42,7 @@ public abstract class Weapon : MonoBehaviour
     public bool ControlledByPlayer { get; set; }
     public GameObject Bullet { get; set; }
     public GameObject FireLocation { get; set; }
-    public Character owner { get; set; };
+    public Character owner { get; set; }
 
     public float BulletVeloc
     {
