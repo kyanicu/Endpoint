@@ -18,7 +18,7 @@ public class Player : Character
     private const float COOLDOWN_TIME = 2.5f; 
 
     [SerializeField]
-    private float iFrameTime = 1.25f;
+    private float iFrameTime = 3f;
     private bool hasIFrames;
 
 
