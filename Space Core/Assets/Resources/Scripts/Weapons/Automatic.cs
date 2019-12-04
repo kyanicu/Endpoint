@@ -19,7 +19,7 @@ public class Automatic : Weapon
     /// <summary>
     /// The fire function is used to launch a projectile from the tip of the automatic weapon
     /// </summary>
-    public override void Fire()
+    public override bool Fire()
     {
         //if we have ammo, are not reloading, and the timer will let us fire another shot. Fire a bullet
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
@@ -42,9 +42,14 @@ public class Automatic : Weapon
             }
             else
             {
-                bulletScript.Velocity = BulletVeloc;
+                bulletScript.Velocity = BulletVeloc * enemyBulletVelocMod;
             }
             FireTimer = RateOfFire;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -25,7 +25,7 @@ public abstract class Weapon : MonoBehaviour
     public string FullName { get; set; }
     public string Description { get; set; }
     public bool IsReloading { get; set; }
-    public Bullet.BulletSource BulletSource { get; set; }
+    public DamageSource BulletSource { get; set; }
     public int AmmoInClip { get; set; }
     public float SpreadFactor { get; set; }
     public int TotalAmmo { get; set; }
@@ -44,6 +44,7 @@ public abstract class Weapon : MonoBehaviour
     public GameObject FireLocation { get; set; }
     protected Transform RotationPoint;
     protected float playerBulletVelocMod = 1.5f;
+    protected float enemyBulletVelocMod = .75f;
     public Character owner;
 
     public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
@@ -56,7 +57,7 @@ public abstract class Weapon : MonoBehaviour
     /// <summary>
     /// Function that must be implemented to control firing behavior
     /// </summary>
-    public abstract void Fire();
+    public abstract bool Fire();
 
     public void Reload(Character c)
     {

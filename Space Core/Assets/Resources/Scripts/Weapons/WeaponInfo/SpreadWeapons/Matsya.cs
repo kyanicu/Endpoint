@@ -15,8 +15,8 @@ public class Matsya : WeaponGenerationInfo
          MinSpread = 7f;
          MaxSpread = 14f;
 
-         MinDamage = 3;
-         MaxDamage = 10;
+         MinDamage = 20;
+         MaxDamage = 30;
 
          StunTime = 0.3f;
 

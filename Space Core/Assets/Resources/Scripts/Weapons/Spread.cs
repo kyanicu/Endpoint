@@ -25,7 +25,7 @@ public class Spread : Weapon
     /// <summary>
     /// Fire out a bust of pellets in a random spread
     /// </summary>
-    public override void Fire()
+    public override bool Fire()
     {
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
@@ -34,6 +34,7 @@ public class Spread : Weapon
             AmmoInClip -= 1;
             //pellet rotation will be used for determining the spread of each bullet
             Vector3 pelletRotation;
+            int damagePerPellet = Damage / NumPellets;
 
             //for the number of pellets we are firing, initalize a new bullet, update rotation and lunch it.
             for (int i = 0; i < NumPellets; i++)
@@ -43,10 +44,10 @@ public class Spread : Weapon
                 GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
                 bullet.transform.Rotate(pelletRotation);
                 Bullet bulletScript = bullet.GetComponent<Bullet>();
-                bulletScript.Damage = Damage;
+                bulletScript.Damage = damagePerPellet;
                 bulletScript.KnockbackImpulse = KnockbackImpulse;
                 bulletScript.StunTime = StunTime;
-                bulletScript.Source = BulletSource;
+                bulletScript.Source = DamageSource.Spread;
                 bulletScript.Range = Range;
                 if (ControlledByPlayer)
                 {
@@ -54,10 +55,15 @@ public class Spread : Weapon
                 }
                 else
                 {
-                    bulletScript.Velocity = BulletVeloc;
+                    bulletScript.Velocity = BulletVeloc * enemyBulletVelocMod;
                 }
             }
             FireTimer = RateOfFire;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

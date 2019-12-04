@@ -18,6 +18,10 @@ public class Enemy : Character
     public float Speed { get; set; }
     public GameObject[] MovePoints;
     public string Class { get; set; }
+    private int bulletsToFire;
+    private int maxBulletsToFire;
+    private float fireWaitTime;
+    private bool finishedFiring;
 
     //Returns whether or not the enemy is facing left
     //Used in UpdateQTEManagerPosition()
@@ -37,7 +41,7 @@ public class Enemy : Character
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         AbilityGenerator.AddAbilitiesToCharacter(gameObject);
-        Weapon.BulletSource = Bullet.BulletSource.Enemy;
+        Weapon.BulletSource = DamageSource.Enemy;
         DropAmmo = Resources.Load<GameObject>("Prefabs/Enemy/DroppedAmmo/DroppedAmmo");
         QTEPointLeft = transform.Find("QTEPointLeft");
         QTEPointRight = transform.Find("QTEPointRight");
@@ -45,6 +49,9 @@ public class Enemy : Character
         QTEPanel = transform.Find("QTE_Canvas").gameObject;
         QTEPanel.SetActive(false);
         disabled = false;
+        maxBulletsToFire = 4;
+        fireWaitTime = 2f;
+        bulletsToFire = maxBulletsToFire;
 
         // Instantiate left, right movement boundaries
         GameObject left = new GameObject();
@@ -77,7 +84,19 @@ public class Enemy : Character
                 Vector3 myPosition = transform.position;
                 Vector3 diff = playerPosition - myPosition;
                 AimWeapon(Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg);
-                Fire();
+                if (bulletsToFire > 0)
+                {
+                    if (Fire())
+                    {
+                        bulletsToFire--;
+                    }
+                }
+                else if (bulletsToFire <= 0 && !finishedFiring)
+                {
+                    StartCoroutine(WaitToFireTimer());
+                    finishedFiring = true;
+                }
+
                 Move(0);
             }
             else
@@ -98,24 +117,7 @@ public class Enemy : Character
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet"))
-        {
-            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
-            {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
-                Destroy(other.gameObject);
-            }
-        }
-        //Handle piercing shot interaction
-        else if (other.CompareTag("PiercingBullet"))
-        {
-            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Player)
-            {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
-                other.gameObject.GetComponent<PiercingBullet>().NumPassed++;
-            }
-        }
-        else if (other.CompareTag("HackProjectile"))
+        if (other.CompareTag("HackProjectile"))
         {
             IsSelected = true;
             QTEPanel.SetActive(IsSelected);
@@ -162,16 +164,17 @@ public class Enemy : Character
         }
     }
 
-    public override void Fire()
+    public override bool Fire()
     {
         //reload if out of ammo
         if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
         {
             Reload();
+            return false;
         }
         else
         {
-            Weapon.Fire();
+            return Weapon.Fire();
         }
     }
 
@@ -246,5 +249,12 @@ public class Enemy : Character
         disabled = true;
         yield return new WaitForSeconds(5);
         disabled = false;
+    }
+
+    private IEnumerator WaitToFireTimer()
+    {
+        yield return new WaitForSeconds(fireWaitTime);
+        bulletsToFire = maxBulletsToFire;
+        finishedFiring = false;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Class that holds all information the bullet may need
@@ -6,14 +7,13 @@
 public class Bullet : MonoBehaviour
 {
     //enum source to let objects know who fired the bullet
-    public enum BulletSource { Player, Enemy }
 
     public int Damage { get; set; }
     public float StunTime { get; set; }
     public float KnockbackImpulse { get; set; }
     public float Range { get; set; }
     public float Velocity { get; set; }
-    public BulletSource Source { get; set; }
+    public DamageSource Source { get; set; }
     protected float startX;
     protected float lowRange;
     protected float highRange;
@@ -46,11 +46,19 @@ public class Bullet : MonoBehaviour
         transform.position += (transform.right * Velocity * Time.deltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag.Contains("Terrain"))
         {
             Destroy(gameObject);
+        }
+        else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
+        {
+            if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
+            {
+                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, StunTime, Source));
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -12,8 +12,8 @@ public class SnipeyBoi : WeaponGenerationInfo
         MinSpread = 0.0f;
         MaxSpread = 0.0f;
 
-        MinDamage = 10;
-        MaxDamage = 50;
+        MinDamage = 30;
+        MaxDamage = 40;
 
         StunTime = 0.3f;
 

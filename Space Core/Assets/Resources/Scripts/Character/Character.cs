@@ -104,20 +104,16 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void TakeDamage(int damage)
     {
-        
-        if (Health - damage <= 0)
+        Health -= damage;
+        if (Health <= 0)
         {
             Die();
-        }
-        else
-        {
-            Health -= damage;
         }
     }
 
     protected abstract void Die();
 
-    public abstract void Fire();
+    public abstract bool Fire();
     public abstract void Reload();
     public abstract void AimWeapon(float angle);
 
