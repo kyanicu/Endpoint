@@ -67,7 +67,7 @@ public class DashAttack : ActiveAbility
     {
         // While dashing, check collision with character
         if (isDashing && (other.tag == "Player" || other.tag == "Enemy"))
-            other.GetComponent<Character>().ReceiveAttack(new AttackInfo(damage, new Vector2(knockBackX * owner.facingDirection, knockBackY), knockbackTime, stunTime));
+            other.GetComponent<Character>().ReceiveAttack(new AttackInfo(damage, new Vector2(knockBackX * owner.facingDirection, knockBackY), knockbackTime, stunTime, DamageSource.Enemy));
     }
 
 }
