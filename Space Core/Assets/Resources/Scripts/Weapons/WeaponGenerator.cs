@@ -18,8 +18,7 @@ public static class WeaponGenerator
     public static GameObject GenerateWeapon(Transform parent, string weaponName)
     {
         //Create empty object to load generated weapon into
-        GameObject weapon = new GameObject();
-        weapon.transform.SetParent(parent);
+        GameObject weapon = null;
 
         //Create empty string to load generated prefix into
         string prefix = "";
@@ -72,8 +71,7 @@ public static class WeaponGenerator
         string weaponName = Weapon.WeaponsList[rngVal];
 
         //Create empty object to load generated weapon into
-        GameObject weapon = new GameObject();
-        weapon.transform.SetParent(parent);
+        GameObject weapon = null;
 
        //Create empty string to load generated prefix into
         string prefix = "";

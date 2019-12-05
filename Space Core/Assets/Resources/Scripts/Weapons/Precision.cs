@@ -15,7 +15,6 @@ public class Precision : Weapon
     public void Start()
     {
         BulletTag = "NormalBullet";
-        var asdfas = transform.Find("Laser");
         lineRenderer = transform.Find("Laser").gameObject.GetComponent<LineRenderer>();
         FireLocation = transform.Find("FirePoint").gameObject;
         RotationPoint = transform.parent.transform.parent;
