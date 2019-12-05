@@ -38,7 +38,7 @@ public abstract class Movement : MonoBehaviour
     /// Character movement values
     /// </summary>
     [SerializeField]
-    private float _runMax, _runAccel, _runDecel,
+    private float _runMax, _runAccel, _runDecel, _runBreak,
         _jumpVelocity, _gravityScale, _jumpCancelMinVel, _jumpCancelVel,
         _airAccel, _airDecel, _airMax,
         _pushForce,
@@ -57,6 +57,7 @@ public abstract class Movement : MonoBehaviour
     protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
     protected float runAccel { get { return _runAccel * mod; } set { _runAccel = value; } }
     protected float runDecel { get { return _runDecel * mod; } set { _runDecel = value; } }
+    protected float runBreak { get { return _runBreak * mod; } set { _runBreak = value; } }
     protected float jumpVelocity { get { return _jumpVelocity * mod; } set { _jumpVelocity = value; } }
     protected float gravityScale { get { return _gravityScale * mod; } set { _gravityScale = value; } }
     protected float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } set { _jumpCancelMinVel = value; } }
@@ -217,6 +218,7 @@ public abstract class Movement : MonoBehaviour
 
             float velSign = Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
 
+            // Deceleration
             if (direction == 0 || velocity.magnitude > runMax)
             {
                 if (velocity.magnitude - runDecel * Time.fixedDeltaTime <= 0)
@@ -224,6 +226,15 @@ public abstract class Movement : MonoBehaviour
                 else
                     velocity += charCont.currentSlope * runDecel * -velSign * Time.fixedDeltaTime;
             }
+            // Breaking
+            else if (velSign != direction && velocity.magnitude != 0)
+            {
+                if (velocity.magnitude - runDecel * Time.fixedDeltaTime <= 0)
+                    velocity = Vector2.zero;
+                else
+                    velocity += charCont.currentSlope * runBreak * direction * Time.fixedDeltaTime;
+            }
+            // Acceleration
             else
             {
                 if (Mathf.Abs((velocity.magnitude * velSign) + (runAccel * direction * Time.fixedDeltaTime)) >= runMax)
