@@ -27,7 +27,7 @@ public class PiercingBullet : Bullet
     {
         if (NumPassed > MaxPassed)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         base.Update();
@@ -37,7 +37,7 @@ public class PiercingBullet : Bullet
     {
         if (collision.tag.Contains("Terrain"))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {

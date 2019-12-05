@@ -216,7 +216,7 @@ public class Enemy : Character
         {
             if (Random.Range(0, 10) % 2 == 0)
             {
-                GameObject instantiatedDroppedAmmo = GameObject.Instantiate(DropAmmo, transform.position, Quaternion.identity);
+                GameObject instantiatedDroppedAmmo = ObjectPooler.instance.SpawnFromPool("DroppedAmmo", transform.position, Quaternion.identity);
                 DroppedAmmo droppedAmmo = instantiatedDroppedAmmo.GetComponent<DroppedAmmo>();
                 droppedAmmo.Ammo = (Weapon.TotalAmmo < 25) ? 25 : Weapon.TotalAmmo;
             }

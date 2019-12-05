@@ -40,7 +40,7 @@ public class EnemyGenerator : MonoBehaviour
     private void GenerateLargeEnemy()
     {
         GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/LargeEnemy");
-        GameObject instantiatedEnemy = GameObject.Instantiate(enemy, transform.position, Quaternion.identity);
+        GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
         LargeEnemy largeEnemy = instantiatedEnemy.GetComponent<LargeEnemy>();
         largeEnemy.MaxHealth = Random.Range(EnemyInfo.LargeEnemyHealthLo, EnemyInfo.LargeEnemyHealthHi);
         largeEnemy.Speed = Random.Range(EnemyInfo.LargeEnemySpeedLo, EnemyInfo.LargeEnemySpeedHi);
@@ -54,7 +54,7 @@ public class EnemyGenerator : MonoBehaviour
     private void GenerateMediumEnemy()
     {
         GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/MediumEnemy");
-        GameObject instantiatedEnemy = GameObject.Instantiate(enemy, transform.position, Quaternion.identity);
+        GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
         MediumEnemy mediumEnemy = instantiatedEnemy.GetComponent<MediumEnemy>();
         mediumEnemy.MaxHealth = Random.Range(EnemyInfo.MediumEnemyHealthLo, EnemyInfo.MediumEnemyHealthHi);
         mediumEnemy.Speed = Random.Range(EnemyInfo.MediumEnemySpeedLo, EnemyInfo.MediumEnemySpeedHi);
@@ -68,7 +68,7 @@ public class EnemyGenerator : MonoBehaviour
     private void GenerateSmallEnemy()
     {
         GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/SmallEnemy");
-        GameObject instantiatedEnemy = GameObject.Instantiate(enemy, transform.position, Quaternion.identity);
+        GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
         SmallEnemy smallEnemy = instantiatedEnemy.GetComponent<SmallEnemy>();
         smallEnemy.MaxHealth = Random.Range(EnemyInfo.SmallEnemyHealthLo, EnemyInfo.SmallEnemyHealthHi);
         smallEnemy.Speed = Random.Range(EnemyInfo.SmallEnemySpeedLo, EnemyInfo.SmallEnemySpeedHi);

@@ -14,7 +14,7 @@ public class Precision : Weapon
     /// </summary>
     public void Start()
     {
-        Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        BulletTag = "NormalBullet";
         var asdfas = transform.Find("Laser");
         lineRenderer = transform.Find("Laser").gameObject.GetComponent<LineRenderer>();
         FireLocation = transform.Find("FirePoint").gameObject;
@@ -79,24 +79,31 @@ public class Precision : Weapon
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
-            IsReloading = false;
-            AmmoInClip -= 1;
+            //Retrieve bullet from pooler
+            GameObject bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.identity);
 
-            //pellet rotation will be used for determining the spread of each bullet
-            Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
-            pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
-            GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
-            bullet.transform.Rotate(pelletRotation);
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.Damage = Damage;
-            bulletScript.KnockbackImpulse = KnockbackImpulse;
-            bulletScript.KnockbackTime = KnockbackTime;
-            bulletScript.StunTime = StunTime;
-            bulletScript.Source = BulletSource;
-            bulletScript.Range = Range;
-            bulletScript.Velocity = BulletVeloc;
-            FireTimer = RateOfFire;
-            return true;
+            //Check that bullet was loaded after pooler has been populated
+            if (bullet != null)
+            {
+                IsReloading = false;
+                AmmoInClip -= 1;
+
+                //pellet rotation will be used for determining the spread of each bullet
+                Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
+                pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
+                bullet.transform.Rotate(pelletRotation);
+                Bullet bulletScript = bullet.GetComponent<Bullet>();
+                bulletScript.Damage = Damage;
+                bulletScript.KnockbackImpulse = KnockbackImpulse;
+                bulletScript.KnockbackTime = KnockbackTime;
+                bulletScript.StunTime = StunTime;
+                bulletScript.Source = BulletSource;
+                bulletScript.Range = Range;
+                bulletScript.Velocity = BulletVeloc;
+                FireTimer = RateOfFire;
+                return true;
+            }
+            return false;
         }
         else
         {

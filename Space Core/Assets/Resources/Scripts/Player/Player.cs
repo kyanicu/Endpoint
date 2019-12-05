@@ -181,7 +181,7 @@ public class Player : Character
         {
             Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
             HUDController.instance.UpdateAmmo(this);
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
         }
     }
 
@@ -224,7 +224,7 @@ public class Player : Character
             if (canSwap)
             {
                 Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
-                GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
+                GameObject hackAttempt = ObjectPooler.instance.SpawnFromPool("HackProj", Weapon.FireLocation.transform.position, Quaternion.identity);
                 hackAttempt.transform.Rotate(launchRotation);
                 ResetSwap();
             }

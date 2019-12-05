@@ -30,7 +30,7 @@ public class EMPGrenadeAbility : ActiveAbility
         {
             EMPGrenade = Resources.Load<GameObject>("Prefabs/Abilities/EMPGrenade");
         }
-        GameObject empGrenadeObject = Instantiate(EMPGrenade, owner.Weapon.FireLocation.transform.position, Quaternion.identity);
+        GameObject empGrenadeObject = ObjectPooler.instance.SpawnFromPool("EMP", owner.Weapon.FireLocation.transform.position, Quaternion.identity);
         empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(owner.Weapon.FireLocation.transform.right * force);
         activationTimer = Cooldown;
     }

@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
         //if we have travelled outside the range, destroy the bullet
         if (transform.position.x > highRange || transform.position.x < lowRange)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         transform.position += (transform.right * Velocity * Time.deltaTime);
@@ -51,14 +51,14 @@ public class Bullet : MonoBehaviour
     {
         if (collision.tag.Contains("Terrain"))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {
             if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
             {
                 collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }

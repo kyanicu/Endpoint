@@ -14,7 +14,7 @@ public class PiercingShotAbility : PassiveAbility
     /// </summary>
     protected override void Activate()
     {
-        owner.Weapon.Bullet = Resources.Load<GameObject>("Prefabs/Weapons/PiercingBullet");
+        owner.Weapon.BulletTag = "PiercingBullet";
         NeedsActivation = false;
     }
 
