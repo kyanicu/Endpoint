@@ -5,22 +5,15 @@ using UnityEngine;
 public class HackBullet : MonoBehaviour
 {
     private float Speed = 45f;
-
-    public void Start()
-    {
-        Destroy(gameObject, 5f);
-    }
-    void OnBecameInvisible()
-    {
-        Destroy(gameObject);
-    }
-
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Enemy")
+        if (col.CompareTag("Enemy"))
         {
             Player.instance.Enemy = col.gameObject.GetComponent<Enemy>();
-            Destroy(gameObject);
+        }
+        if (col.CompareTag("Terrain"))
+        {
+            gameObject.SetActive(false);
         }
     }
 

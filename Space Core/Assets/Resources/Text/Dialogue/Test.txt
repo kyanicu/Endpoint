@@ -1,4 +1,4 @@
-Speaker: ADAM:
+Speaker: ADAM
 Icon type: null
 This is just a simple dialogue test.
 Hopefully this gets read on a separate line.

@@ -8,7 +8,7 @@ public class Terrain : MonoBehaviour
     {
         if (collision.tag.Contains("Bullet"))
         {
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
     }
 }

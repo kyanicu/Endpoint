@@ -13,7 +13,7 @@ public class DestructibleWall : MonoBehaviour
             if (other.gameObject.GetComponent<Bullet>().Source == DamageSource.Player)
             {
                 TakeDamage(other.gameObject.GetComponent<Bullet>().Damage);
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
             }
         }
     }

@@ -13,9 +13,9 @@ public class PiercingBullet : Bullet
     /// <summary>
     /// Setting NumPassed and MaxPassed to arbitrary values for now
     /// </summary>
-    private new void Start()
+    private new void Activate()
     {
-        base.Start();
+        base.Activate();
         NumPassed = 0;
         MaxPassed = 1;
     }
@@ -27,7 +27,7 @@ public class PiercingBullet : Bullet
     {
         if (NumPassed > MaxPassed)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         base.Update();
@@ -37,7 +37,7 @@ public class PiercingBullet : Bullet
     {
         if (collision.tag.Contains("Terrain"))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {

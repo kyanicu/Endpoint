@@ -40,7 +40,7 @@ public abstract class Weapon : MonoBehaviour
     public float Range { get; set; }
     public float ReloadTime { get; set; }
     public bool ControlledByPlayer { get; set; }
-    public GameObject Bullet { get; set; }
+    public string BulletTag { protected get; set; }
     public GameObject FireLocation { get; set; }
     public Character owner { get; set; }
 

@@ -29,7 +29,7 @@ public class EMPGrenade : MonoBehaviour
                     collider.gameObject.GetComponent<Enemy>().Freeze();
                 }
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }        
     }
 
@@ -45,7 +45,7 @@ public class EMPGrenade : MonoBehaviour
                     collider.gameObject.GetComponent<Enemy>().Freeze();
                 }
             }
-            Destroy(gameObject);
+            gameObject.gameObject.SetActive(false);
         }
     }
 }

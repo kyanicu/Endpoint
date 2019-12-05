@@ -5,13 +5,11 @@ using UnityEngine.UI;
 public class EMPGrenadeAbility : ActiveAbility
 {
     protected override bool activationCondition => activationTimer <= 0f;
-    private GameObject EMPGrenade;
     private float force;
 
     void Start()
     {
         force = 17500f;
-        EMPGrenade = Resources.Load<GameObject>("Prefabs/Abilities/EMPGrenade");
         Cooldown = 15f;
     }
 
@@ -26,11 +24,9 @@ public class EMPGrenadeAbility : ActiveAbility
 
     protected override void Activate()
     {
-        if(EMPGrenade == null)
-        {
-            EMPGrenade = Resources.Load<GameObject>("Prefabs/Abilities/EMPGrenade");
-        }
-        GameObject empGrenadeObject = Instantiate(EMPGrenade, owner.Weapon.FireLocation.transform.position, Quaternion.identity);
+        GameObject empGrenadeObject = ObjectPooler.instance.SpawnFromPool("EMP", 
+                                                                          owner.Weapon.FireLocation.transform.position, 
+                                                                          Quaternion.Euler(owner.Weapon.FireLocation.transform.right));
         empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(owner.Weapon.FireLocation.transform.right * force);
         activationTimer = Cooldown;
     }

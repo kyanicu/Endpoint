@@ -1,0 +1,10 @@
+Lore Files:
+	Lore Entryinstructions are not line specific so whatever you write in a file is what you will see on-screen. However, make sure to follow 
+	proper naming conventions and hierarchy placement:
+		The name of the entry file will appear on a button on the righthand side of the database overlay
+		The name of the folder of the entry file will be name of whatever entry this article belongs to
+		The name of the folder where the folder of this entry file is contained in will be the category that this type of entry falls into
+
+
+So for example, the article "Package Details" gives details about the NJMP Network Jump so it can be found in the "NJMP Network Jump" folder. 
+Since NJMP Network Jump is an upgrade, the "NJMP Network Jump" folder goes in the UPGRADES folder
