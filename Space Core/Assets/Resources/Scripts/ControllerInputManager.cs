@@ -96,7 +96,7 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
         {
-            //TBD
+            HUDController.instance.UpdateHUD(Player.instance);
         }
 
         if (prevState.Value.Buttons.X == ButtonState.Released && state.Value.Buttons.X == ButtonState.Pressed)

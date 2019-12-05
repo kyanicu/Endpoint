@@ -108,34 +108,40 @@ public abstract class Weapon : MonoBehaviour
             yield return new WaitForSeconds(.5f);
         }
 
-        //Retrieve what inherited memeber of character is doing the reloading
-        bool isPlayer = c.gameObject.GetComponent<Player>();
-        Player p = null;
-
-        if (isPlayer)
+        //Check that passed character still exists
+        if(c != null)
         {
-            p = c.gameObject.GetComponent<Player>();
-        }
+            //Retrieve what inherited memeber of character is doing the reloading
+            bool isPlayer = c.gameObject.GetComponent<Player>();
+            Player p = null;
 
-        //Begin reloading loop
-        while (TotalAmmo > 0 && AmmoInClip < ClipSize)
-        {
-            //Wait until reload timer is up.
-            yield return new WaitForSeconds(ReloadTime / ClipSize);
-
-            //Fill mag with remaining ammo
-            TotalAmmo--;
-            AmmoInClip++;
-
-            //Check if player is reloading to update HUD
             if (isPlayer)
             {
-                HUDController.instance.UpdateAmmo(p);
+                p = c.gameObject.GetComponent<Player>();
             }
+
+            //Begin reloading loop
+            while (TotalAmmo > 0 && AmmoInClip < ClipSize)
+            {
+                if (c == null) break;
+
+                //Wait until reload timer is up.
+                yield return new WaitForSeconds(ReloadTime / ClipSize);
+
+                //Fill mag with remaining ammo
+                TotalAmmo--;
+                AmmoInClip++;
+
+                //Check if player is reloading to update HUD
+                if (isPlayer)
+                {
+                    HUDController.instance.UpdateAmmo(p);
+                }
+            }
+
+            IsReloading = false;
+            yield return null;
         }
-           
-        IsReloading = false;
-        yield return null;
     }
 
     /// <summary>

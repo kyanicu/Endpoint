@@ -60,15 +60,12 @@ public class HUDController : MonoBehaviour
 
         //Empty saved data cache as confirmation that data was successfully loaded
         SaveSystem.loadedData = null;
-
-        //Update minimap with player's position and HUD
-        UpdateHUD(Player.instance);
     }
     private void Start()
     {
         LoadingText.text = "LOADING";
         StartCoroutine(FadeOutLoadingScreen());
-        visible = true;
+        visible = false;
         ToggleHUDVisibility();
     }
     
@@ -79,7 +76,7 @@ public class HUDController : MonoBehaviour
     public void UpdateHUD(Player p)
     {
         //Can only update HUD if not currently reloading a save file
-        if (SaveSystem.loadedData == null)
+        if (SaveSystem.loadedData == null && LoadingScreen == null)
         {
             UpdateAmmo(p);
             UpdateWeapon(p);
@@ -259,7 +256,6 @@ public class HUDController : MonoBehaviour
         if (!ObjectivesPopupIsActive)
         {
             ObjectivesPopupIsActive = true;
-            PopupManager.ObjectivesGroup.SetActive(true);
             PopupManager.InitiateObjectivesPopup(title, content);
         }
     }
@@ -269,12 +265,13 @@ public class HUDController : MonoBehaviour
     /// </summary>
     /// <param name="title"></param>
     /// <param name="content"></param>
-    public void InitiateDatabasePopup()
+    public void InitiateDatabasePopup(string title, string content)
     {
         //If popup is currently inactive
         if (RecentDataBaseEntry != null)
         {
-            PopupManager.DatabaseGroup.SetActive(true);
+            string[] arr = { title, content };
+            RecentDataBaseEntry = arr;
             PopupManager.InitiateDatabasePopup();
         }
     }
@@ -284,8 +281,7 @@ public class HUDController : MonoBehaviour
     /// </summary>
     public void CloseDataBasePopup()
     {
-        RecentDataBaseEntry = null;
-        PopupManager.DatabaseGroup.SetActive(false);
+        PopupManager.CloseDBPopup();
     }
 
     /// <summary>
@@ -299,6 +295,7 @@ public class HUDController : MonoBehaviour
         SwapPM.gameObject.SetActive(visible);
         Minimap.gameObject.SetActive(visible);
         PopupManager.gameObject.SetActive(visible);
+        UpdateHUD(Player.instance);
     }
 
     /// <summary>
@@ -331,7 +328,10 @@ public class HUDController : MonoBehaviour
             LoadingScreen.color = updatedAlpa;
             yield return null;
         }
-        Destroy(LoadingScreen.gameObject);
+        DestroyImmediate(LoadingScreen.gameObject);
+        yield return new WaitForSeconds(.1f);
+
+        ToggleHUDVisibility();
     }
 
 }

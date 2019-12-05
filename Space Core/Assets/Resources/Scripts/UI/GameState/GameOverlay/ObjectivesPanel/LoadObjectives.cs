@@ -169,7 +169,13 @@ public static class LoadObjectives
                     Tuple<bool, Objective> update = new Tuple<bool, Objective>(true, primary.Item2);
                     PrimaryObjectives[counter] = update;
                     UpdateCurrentPrimaryObjectiveID();
-                    //TODO-Make call to function that animates notification popup
+
+                    //Retrieve new primary objective
+                    Tuple<bool, Objective> nextPrimObjTuple = PrimaryObjectives[currentPrimaryObjective];
+                    Objective nextPrimObj = nextPrimObjTuple.Item2;
+
+                    //Send call to HUD Controller to animate Objective popup
+                    HUDController.instance.InitiateDatabasePopup(nextPrimObj.Name, nextPrimObj.Description);
                     break;
                 }
                 counter++;

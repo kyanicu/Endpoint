@@ -162,5 +162,8 @@ public static class LoadDataBaseEntries
         }
 
         Logs[entryName] = d;
+
+        //Initiate popp for new entry
+        HUDController.instance.InitiateDatabasePopup(entryName, entryArticle);
     }
 }

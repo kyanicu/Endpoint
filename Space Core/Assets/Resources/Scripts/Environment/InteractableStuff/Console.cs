@@ -23,9 +23,6 @@ public class Console : InteractableEnv
         if (!alreadyPressed)
         {
             LoadDataBaseEntries.UnlockDataEntry(EntryName, EntryArticle);
-            string[] unlockedData = { EntryName, EntryArticle };
-            HUDController.instance.RecentDataBaseEntry = unlockedData;
-            HUDController.instance.InitiateDatabasePopup();
             alreadyPressed = true;
         }
     }

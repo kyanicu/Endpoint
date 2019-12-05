@@ -200,21 +200,16 @@ public class WeaponPanelManager : MonoBehaviour
     /// </summary>
     public void UpdateWeaponDiagnostic(Player p)
     {
+        Weapon playerWeapon = p.Weapon;
         float[] weaponDiagnosticValues = {
-            p.Weapon.Damage,
+            playerWeapon.Damage,
             Mathf.Round(p.Weapon.RateOfFire * 100f) / 100f,
             Mathf.Round(p.Weapon.ReloadTime * 100f) / 100f,
             (int) p.Weapon.Range,
             (int) p.Weapon.BulletVeloc
             };
 
-        float[] weaponDiagnosticMaxs = {
-            GameManager.MaxValues[(int)Category.Damage],
-            GameManager.MaxValues[(int)Category.FireRate],
-            GameManager.MaxValues[(int)Category.ReloadTime],
-            GameManager.MaxValues[(int)Category.Range],
-            GameManager.MaxValues[(int)Category.BulletSpeed] 
-            };
+        float[] weaponDiagnosticMaxs = GameManager.MaxStats[playerWeapon.Name];
 
         // Loop through each stat and update value and fill amount for bar
         foreach (Category c in System.Enum.GetValues(typeof(Category)))

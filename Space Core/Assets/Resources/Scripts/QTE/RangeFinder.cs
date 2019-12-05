@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class RangeFinder : MonoBehaviour
 {
-
     #region Loading Bar
     //Loading bar depicting how much hack time is left
     public Image LoadingBar, LoadingBarSpin, LoadingFrame, LoadingBG;
@@ -133,8 +132,6 @@ public class RangeFinder : MonoBehaviour
 
             loadingBarActive = false;
             hackDialogActive = false;
-
-            QTEButtonsAmt = QTEManager.getButtonsLeft();
             LoadingBar.fillAmount = 0;
         }
     }
@@ -205,7 +202,7 @@ public class RangeFinder : MonoBehaviour
         hackDialogActive = true;
 
         // Run the QTE mechanisms. 
-        QTEManager.onActivate(QTEButtonsAmt);
+        QTEManager.gameObject.SetActive(true);
     }
 
     /// <summary>

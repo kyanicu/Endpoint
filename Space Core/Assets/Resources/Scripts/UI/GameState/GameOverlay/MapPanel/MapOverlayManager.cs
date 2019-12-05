@@ -15,6 +15,7 @@ public class MapOverlayManager : MonoBehaviour
     private const float MAX_ZOOM_IN = 15;
     private const float DEFAULT_ZOOM = 35;
     private const float ZOOM_INCREMENT = .5f;
+    private const float startingZ = -13;
     #endregion
 
     /// <summary>
@@ -23,7 +24,8 @@ public class MapOverlayManager : MonoBehaviour
     private void Awake()
     {
         mapCamera = MainCameraPrefab.transform.Find("MapOverlayCamera").GetComponent<Camera>();
-        startPos = mapCamera.transform.position;
+        startPos = Player.instance.transform.position;
+        startPos = new Vector3(startPos.x, startPos.y, startingZ);
     }
 
     private void OnEnable()

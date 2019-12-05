@@ -106,6 +106,7 @@ public class Player : Character
         }
 
         Weapon.BulletSource = DamageSource.Player;
+        MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         ResetSwap();
     }
@@ -247,6 +248,7 @@ public class Player : Character
         //Change the enemy's minimap icon to a player's and remove the enemy's
         MinimapIcon.transform.position = Enemy.transform.position;
         MinimapIcon.transform.SetParent(Enemy.transform);
+        MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
 
         //Update rigidbody
         Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
@@ -256,7 +258,6 @@ public class Player : Character
         //Rename enemy to player
         Enemy.tag = "Player";
         Enemy.name = "Player";
-        Enemy.gameObject.layer = LayerMask.NameToLayer("Player");
         GameObject enemyObject = Enemy.gameObject;
 
         //Remove add player component from new body

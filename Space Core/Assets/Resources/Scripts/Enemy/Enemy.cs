@@ -119,9 +119,13 @@ public class Enemy : Character
     {
         if (other.CompareTag("HackProjectile"))
         {
-            IsSelected = true;
-            QTEPanel.SetActive(IsSelected);
-            HackArea.SetActive(IsSelected);
+            //Extra check to avoid accidentally attempting double hack
+            if (Player.instance.Enemy == this)
+            {
+                IsSelected = true;
+                QTEPanel.SetActive(IsSelected);
+                HackArea.SetActive(IsSelected);
+            }
         }
     }
 

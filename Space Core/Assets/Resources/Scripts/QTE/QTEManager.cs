@@ -44,6 +44,8 @@ public class QTEManager : MonoBehaviour
     {
         listening = false;
         listIndex = 0;
+        listSize = 3;
+        stackCreate();
     }
 
     /// <summary>
@@ -53,19 +55,6 @@ public class QTEManager : MonoBehaviour
     public int getButtonsLeft()
     {
         return listSize - listIndex;
-    }
-
-    public void onActivate(int size)
-    {
-        if (size == 0)
-        {
-            successfulHack();
-            return;
-        }
-        listening = false;
-        listIndex = 0;
-        listSize = size;
-        stackCreate();
     }
 
     /// <summary>
