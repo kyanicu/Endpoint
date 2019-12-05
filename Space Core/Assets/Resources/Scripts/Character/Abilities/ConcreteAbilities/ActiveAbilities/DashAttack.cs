@@ -1,0 +1,73 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DashAttack : ActiveAbility
+{
+    protected override bool activationCondition { get { return owner.movement.charCont.isGrounded && !owner.isStunned && activationTimer <= 0f; } }
+
+    private bool isDashing;
+
+    private float dashTime = 1;
+    private float dashSpeed = 20;
+    private int damage = 5;
+    private float knockBackX = 20, knockBackY = 15;
+    private float knockbackTime = 0.2f;
+    private float stunTime = 0.5f;
+
+    public void Start()
+    {
+        Cooldown = 10f;
+    }
+
+    // The method that runs the Ability
+    protected override void Activate()
+    {
+        StartCoroutine(Dash());
+    }
+
+    /// <summary>
+    /// Initiates the dash, canceling when hitting a wall or ungrounding
+    /// </summary>
+    public IEnumerator Dash()
+    {
+        int facingDirection = owner.facingDirection;
+        
+        // Set dash values
+        isDashing = true;
+        owner.movement.collideWithCharacters = false;
+        owner.isStunned = true;
+        owner.movement.freezeRun = true;
+        owner.isImmortal = true;
+        owner.movement.velocity = owner.movement.charCont.currentSlope * facingDirection * dashSpeed;
+        
+        // Check conditional during dash
+        for (float i = 0; i < dashTime; i += Time.fixedDeltaTime)
+        {
+            // Is dash condition no longer valid?
+            if (!owner.movement.charCont.isGrounded || owner.movement.charCont.isTouchingRightWall || owner.movement.charCont.isTouchingLeftWall)
+            {
+                //owner.movement.TakeKnockback(new Vector2(knockBackX * -facingDirection, knockBackY));
+                break;
+            }
+
+            yield return new WaitForFixedUpdate();
+        }
+        
+        // Reset dash values
+        isDashing = false;
+        owner.movement.collideWithCharacters = true;
+        owner.isStunned = false;
+        owner.movement.freezeRun = false;
+        owner.isImmortal = false;
+        activationTimer = Cooldown;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // While dashing, check collision with character
+        if (isDashing && (other.tag == "Player" || other.tag == "Enemy"))
+            other.GetComponent<Character>().ReceiveAttack(new AttackInfo(damage, new Vector2(knockBackX * owner.facingDirection, knockBackY), knockbackTime, stunTime));
+    }
+
+}

@@ -88,7 +88,7 @@ public class KeyboardInputManager : InputManager
             HUDController.instance.toggleDiagnosticPanels();
         }
 
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             // use player ability
             Player.instance.ActivateActiveAbility();

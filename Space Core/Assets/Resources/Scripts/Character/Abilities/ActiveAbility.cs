@@ -17,6 +17,7 @@ public abstract class ActiveAbility : Ability
     {
         "Homing Bullet",
         "EMP Grenade",
+        "DashAttack",
     };
 
     /// <summary>
@@ -38,6 +39,18 @@ public abstract class ActiveAbility : Ability
         else
         {
             return false;
+        }
+    }
+
+    public virtual void Update()
+    {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            return;
+
+        if (activationTimer > 0)
+        {
+            activationTimer -= Time.deltaTime;
         }
     }
 

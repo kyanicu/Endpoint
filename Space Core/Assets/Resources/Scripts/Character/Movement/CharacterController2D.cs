@@ -136,7 +136,6 @@ public class CharacterController2D : MonoBehaviour
 
     private bool CheckStep(ContactData corner)
     {
-        Debug.Log("Hit");
         if (corner.point.y <= bottomPoint.y)
             return false;
         else if (corner.point.y - bottomPoint.y <= stepMax)

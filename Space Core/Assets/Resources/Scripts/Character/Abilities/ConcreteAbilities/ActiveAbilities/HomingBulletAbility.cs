@@ -50,20 +50,14 @@ public class HomingBulletAbility : ActiveAbility
     /// <summary>
     /// Update checks the activation timer and updates it
     /// </summary>
-    void Update()
+    public override void Update()
     {
-        //Check that player is not in a menu
-        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
-            return;
+        base.Update();
 
         //if we failed to get the bullet at start, do it in update
         if (bullet == null)
         {
             bullet = owner.Weapon.Bullet;
-        }
-        if (activationTimer > 0)
-        {
-            activationTimer -= Time.deltaTime;
         }
     }
 

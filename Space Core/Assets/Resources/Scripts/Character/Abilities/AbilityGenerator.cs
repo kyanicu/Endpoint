@@ -35,6 +35,9 @@ public static class AbilityGenerator
             case "EMP Grenade":
                 character.AddComponent<EMPGrenadeAbility>();
                 break;
+            case "DashAttack":
+                character.AddComponent<DashAttack>();
+                break;
         }
 
         character.GetComponent<Character>().ActiveAbility = character.GetComponent<ActiveAbility>();

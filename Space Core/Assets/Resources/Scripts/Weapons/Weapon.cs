@@ -55,6 +55,7 @@ public abstract class Weapon : MonoBehaviour
     private float enemyBulletVelocMod = .75f;
     private float _bulletVelocity;
 
+
     public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
 
     private void Awake()

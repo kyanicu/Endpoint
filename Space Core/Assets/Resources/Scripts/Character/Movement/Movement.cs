@@ -15,7 +15,7 @@ public abstract class Movement : MonoBehaviour
     public CharacterController2D charCont;
 
     private Vector2 _velocity;
-    public Vector2 velocity { get { return _velocity; } protected set { _velocity = value; } }
+    public Vector2 velocity { get { return _velocity; } set { _velocity = value; } }
 
     /// <summary>
     /// Are we forcing the character controller off the ground this frame?
@@ -26,7 +26,13 @@ public abstract class Movement : MonoBehaviour
     /// <summary>
     /// Are we preventing Run() from being called?
     /// </summary>
-    private bool freezeRun;
+    public bool freezeRun;
+
+    /// <summary>
+    /// Does the character collide with other characters (not pass through)?
+    /// </summary>
+    public bool collideWithCharacters = true;
+
 
     /// <summary>
     /// Character movement values
@@ -108,7 +114,8 @@ public abstract class Movement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
         {
             Vector2 dist;
             if (collision.tag == "Weapon")
@@ -121,14 +128,14 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-        private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        
-        float maxPushbackVel = 5;
-        float accel = (tag == "Player") ? 50 : 0;
 
-        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
         {
+            float maxPushbackVel = 5;
+            float accel = (tag == "Player") ? 50 : 0;
+
             Vector2 dist;
             if (collision.tag == "Weapon")
                 dist = collision.GetComponent<Weapon>().aimingDirection;
@@ -143,7 +150,7 @@ public abstract class Movement : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject))
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
         {
             Vector2 dist;
             if (collision.tag == "Weapon")
@@ -273,6 +280,7 @@ public abstract class Movement : MonoBehaviour
             impulse = Vector3.Project(impulse, charCont.currentSlope);
 
         StartCoroutine(FreezeRunFor(time));
+        StartCoroutine(PassThroughCharactersFor(time));
         velocity = impulse / mass;
     }
 
@@ -281,6 +289,13 @@ public abstract class Movement : MonoBehaviour
         freezeRun = true;
         yield return new WaitForSeconds(time);
         freezeRun = false;
+    }
+
+    public IEnumerator PassThroughCharactersFor(float time)
+    {
+        collideWithCharacters = false;
+        yield return new WaitForSeconds(time);
+        collideWithCharacters = true;
     }
 
     /// <summary>

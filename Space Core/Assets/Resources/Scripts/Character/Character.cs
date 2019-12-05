@@ -15,8 +15,11 @@ public abstract class Character : MonoBehaviour
     public PassiveAbility PassiveAbility { get; set; }
     public Movement movement { get; protected set; }
     public GameObject MinimapIcon;
+
+    public bool isStunned { get; set; }
+    public int facingDirection { get { return (int)Mathf.Sign(transform.localScale.x); } }
+
     public AnimationState animationState { get; set; }
-    public bool isStunned { get; private set; }
     public Animator animator;
 
     protected virtual void Start()

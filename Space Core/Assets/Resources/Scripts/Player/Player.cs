@@ -34,6 +34,7 @@ public class Player : Character
         base.Start();
         Weapon.ControlledByPlayer = true;
         HUDController.instance.UpdateHUD(this);
+
     }
 
     protected override void Reset()
