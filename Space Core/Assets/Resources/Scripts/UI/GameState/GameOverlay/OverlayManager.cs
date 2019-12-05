@@ -42,7 +42,7 @@ public class OverlayManager : MonoBehaviour
     private void Start()
     {
         //Setup singleton
-        if (_instance == null)
+        if (_instance == null || _instance != this)
         {
             _instance = this;
         }

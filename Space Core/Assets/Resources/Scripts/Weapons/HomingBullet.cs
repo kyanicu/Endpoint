@@ -11,9 +11,9 @@ public class HomingBullet : Bullet
     private Transform LockedEnemy;
 
     // Start is called before the first frame update
-    new void Start()
+    new void Activate()
     {
-        base.Start();
+        base.Activate();
         LockedEnemy = null;
     }
 

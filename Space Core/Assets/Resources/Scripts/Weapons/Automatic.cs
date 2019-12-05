@@ -45,6 +45,7 @@ public class Automatic : Weapon
                 bulletScript.Range = Range;
                 bulletScript.Velocity = BulletVeloc;
                 FireTimer = RateOfFire;
+                bulletScript.Activate();
                 return true;
             }
             return false;

@@ -13,9 +13,9 @@ public class PiercingBullet : Bullet
     /// <summary>
     /// Setting NumPassed and MaxPassed to arbitrary values for now
     /// </summary>
-    private new void Start()
+    private new void Activate()
     {
-        base.Start();
+        base.Activate();
         NumPassed = 0;
         MaxPassed = 1;
     }

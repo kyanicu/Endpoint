@@ -60,12 +60,12 @@ public class HUDController : MonoBehaviour
 
         //Empty saved data cache as confirmation that data was successfully loaded
         SaveSystem.loadedData = null;
+        visible = false;
     }
     private void Start()
     {
         LoadingText.text = "LOADING";
         StartCoroutine(FadeOutLoadingScreen());
-        visible = false;
         ToggleHUDVisibility();
     }
     
@@ -330,7 +330,6 @@ public class HUDController : MonoBehaviour
         }
         DestroyImmediate(LoadingScreen.gameObject);
         yield return new WaitForSeconds(.1f);
-
         ToggleHUDVisibility();
     }
 

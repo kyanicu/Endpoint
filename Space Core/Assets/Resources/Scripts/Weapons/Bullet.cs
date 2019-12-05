@@ -12,9 +12,9 @@ public class Bullet : MonoBehaviour
     public float StunTime { get; set; }
     public float KnockbackImpulse { get; set; }
     public float KnockbackTime { get; set; }
-    public float Range { get; set; }
     public float Velocity { get; set; }
     public DamageSource Source { get; set; }
+    public float Range { get; set; }
     protected float startX;
     protected float lowRange;
     protected float highRange;
@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// Initialize start x to the base x position of the bullet
     /// </summary>
-    public void Start()
+    public void Activate()
     {
         startX = transform.position.x;
         highRange = startX + Range;

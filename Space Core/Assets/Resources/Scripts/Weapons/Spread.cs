@@ -36,6 +36,9 @@ public class Spread : Weapon
             //Check that bullet was loaded after pooler has been populated
             if (bullet != null)
             {
+                //Remove bullet used to test status of pooler
+                bullet.SetActive(false);
+
                 IsReloading = false;
                 AmmoInClip -= 1;
                 //pellet rotation will be used for determining the spread of each bullet
@@ -47,7 +50,8 @@ public class Spread : Weapon
                 {
                     pelletRotation = RotationPoint.rotation.eulerAngles;
                     pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
-                    bullet.transform.Rotate(pelletRotation);
+                    bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.Euler(pelletRotation));
+                    //bullet.transform.Rotate(pelletRotation);
                     Bullet bulletScript = bullet.GetComponent<Bullet>();
                     bulletScript.Damage = damagePerPellet;
                     bulletScript.KnockbackImpulse = KnockbackImpulse;
@@ -56,6 +60,7 @@ public class Spread : Weapon
                     bulletScript.Source = DamageSource.Spread;
                     bulletScript.Range = Range;
                     bulletScript.Velocity = BulletVeloc;
+                    bulletScript.Activate();
                 }
                 FireTimer = RateOfFire;
                 return true;

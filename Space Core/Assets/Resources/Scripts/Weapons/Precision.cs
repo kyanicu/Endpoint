@@ -101,6 +101,7 @@ public class Precision : Weapon
                 bulletScript.Range = Range;
                 bulletScript.Velocity = BulletVeloc;
                 FireTimer = RateOfFire;
+                bulletScript.Activate();
                 return true;
             }
             return false;

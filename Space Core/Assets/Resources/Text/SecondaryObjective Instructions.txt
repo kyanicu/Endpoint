@@ -1,0 +1,20 @@
+Secondary Objectives:
+	Objective instructions are line specific so fill out the template below and paste everything below the dashes into a new file.
+	Start each secondary objective with an id and underscore like so: 1_tempObjective. The number denotes the order they'll get loaded
+	in the game and the name after the underscore is the name that will appear on the objectives screen. Numbers [1-2] are the main side 
+	objectives while [3-6] are the standard side objectives in each area (ie kill this many unique enemies).
+	Make sure only file numbers [1-2] have a description and icon type. Files [3-6] should have an objectives count but be sure to still
+	include all the lines. Because secondary objectives are Sector-specific, make sure they are placed in their correct folders
+
+
+-----------------------------------------------------SECONDARY MAIN OBJECTIVE TEMPLATE-----------------------------------------------------------
+Description: Understanding the reason for the Enigma's existence might prove useful.
+Number of Objectives: 2
+Icon Type: terminalIcon
+
+
+
+-----------------------------------------------------SECONDARY STANDARD OBJECTIVE TEMPLATE-----------------------------------------------------------
+Description: 
+Number of Objectives: 3
+Icon Type: 

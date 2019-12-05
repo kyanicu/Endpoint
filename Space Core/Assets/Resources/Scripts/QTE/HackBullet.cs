@@ -10,9 +10,11 @@ public class HackBullet : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             Player.instance.Enemy = col.gameObject.GetComponent<Enemy>();
+        }
+        if (col.CompareTag("Terrain"))
+        {
             gameObject.SetActive(false);
         }
-        gameObject.SetActive(false);
     }
 
     public void Update()

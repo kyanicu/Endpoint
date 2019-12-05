@@ -23,17 +23,23 @@ public class ObjectPooler : MonoBehaviour
 
         PoolDictionary = new Dictionary<string, Queue<GameObject>>();
 
+        //Loop through of our Pools
         foreach (Pool pool in Pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
+            GameObject poolParent = new GameObject();
+            poolParent.name = pool.Tag + "Group";
 
+            //Add each object one by one
             for (int i = 0; i < pool.Size; i++)
             {
                 GameObject obj = Instantiate(pool.Prefab);
                 obj.SetActive(false);
+                obj.transform.SetParent(poolParent.transform);
                 objectPool.Enqueue(obj);
             }
 
+            //Add the newly populated queues to our dictionary
             PoolDictionary.Add(pool.Tag, objectPool);
         }
     }

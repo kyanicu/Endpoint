@@ -1,0 +1,16 @@
+Primary Objectives:
+	Objective instructions are line specific so fill out the template below and paste everything below the dashes into a new file.
+	Start each primary objective with an id and underscore like so: 1_tempObjective. The number denotes the order they'll get loaded
+	in the game and the name after the underscore is the name that will appear on the objectives screen.
+	Anything you write after the icon type line will be treated as additional description and will be displayed under the objective 
+	description on the objectives overlay.
+	Put all of these folders in the Primary Objectives folder.
+
+
+-----------------------------------------------------PRIMARY OBJECTIVE TEMPLATE-----------------------------------------------------------
+Description: ACCESS THE TRAMLINER'S SIMULATION CLUSTER
+Number of Objectives: 1
+Icon Type: diamondIcon
+After confirming a plan of action with the Codex, you've set out to the Veneran Wastes to transmit yourself to the Enigma.
+
+Since the Enigma has safeguardsin place, you will have to acquire a network key from an Enigma drone to pass through its electronic barriers

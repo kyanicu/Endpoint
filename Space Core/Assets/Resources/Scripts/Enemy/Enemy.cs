@@ -55,7 +55,11 @@ public class Enemy : Character
 
         // Instantiate left, right movement boundaries
         GameObject left = new GameObject();
+        left.name = "Left";
+        left.transform.SetParent(transform);
         GameObject right = new GameObject();
+        right.name = "right";
+        right.transform.SetParent(transform);
         left.transform.position = new Vector3(transform.position.x - PatrolRange, 0, 0);
         right.transform.position = new Vector3(transform.position.x + PatrolRange, 0, 0);
         MovePoints = new GameObject[2];
@@ -125,6 +129,7 @@ public class Enemy : Character
                 IsSelected = true;
                 QTEPanel.SetActive(IsSelected);
                 HackArea.SetActive(IsSelected);
+                other.gameObject.SetActive(false);
             }
         }
     }

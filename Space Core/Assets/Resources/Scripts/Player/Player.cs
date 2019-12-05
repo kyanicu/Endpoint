@@ -73,7 +73,6 @@ public class Player : Character
         canSwap = true;
         isImmortal = false;
 
-        MinimapIcon = transform.Find("MinimapIcon").gameObject;
         animator = transform.Find("AnimatedCharacter").gameObject.GetComponent<Animator>();
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
@@ -105,8 +104,13 @@ public class Player : Character
             PassiveAbility.resetOwner(this);
         }
 
+        if (MinimapIcon == null)
+        {
+            MinimapIcon = transform.Find("MinimapIcon").gameObject;
+            MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
+        }
+
         Weapon.BulletSource = DamageSource.Player;
-        MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         ResetSwap();
     }
@@ -240,35 +244,40 @@ public class Player : Character
     /// </summary>
     public void Switch()
     {
-        //Remove attached game objects and components
-        Destroy(RotationPoint);
-        Destroy(ActiveAbility);
-        Destroy(PassiveAbility);    
+        //Check that enemy hasn't already been destroyed before starting switch
+        if(Enemy != null)
+        {
+            //Remove attached game objects and components
+            Destroy(RotationPoint);
+            Destroy(ActiveAbility);
+            Destroy(PassiveAbility);
+            Destroy(Enemy.MinimapIcon.gameObject);
 
-        //Change the enemy's minimap icon to a player's and remove the enemy's
-        MinimapIcon.transform.position = Enemy.transform.position;
-        MinimapIcon.transform.SetParent(Enemy.transform);
-        MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
+            //Change the enemy's minimap icon to a player's and remove the enemy's
+            GameObject mapIcon = MinimapIcon;
+            MinimapIcon.transform.position = Enemy.transform.position;
+            MinimapIcon.transform.SetParent(Enemy.transform);
 
-        //Update rigidbody
-        Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
-        rigidBody.isKinematic = true;
-        rigidBody.simulated = true;
+            //Update rigidbody
+            Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
+            rigidBody.isKinematic = true;
+            rigidBody.simulated = true;
 
-        //Rename enemy to player
-        Enemy.tag = "Player";
-        Enemy.name = "Player";
-        GameObject enemyObject = Enemy.gameObject;
+            //Rename enemy to player
+            Enemy.tag = "Player";
+            Enemy.name = "Player";
+            GameObject enemyObject = Enemy.gameObject;
 
-        //Remove add player component from new body
-        enemyObject.gameObject.AddComponent<Player>();
-        _instance = enemyObject.gameObject.GetComponent<Player>();
-        Enemy.MinimapIcon.gameObject.SetActive(false);
-        Enemy.HackArea.gameObject.SetActive(false);
-        Enemy.QTEPanel.gameObject.SetActive(false);
-        Destroy(Enemy);
-        
-        Destroy(gameObject);
+            //Remove add player component from new body
+            enemyObject.gameObject.AddComponent<Player>();
+            _instance = enemyObject.gameObject.GetComponent<Player>();
+            instance.MinimapIcon = mapIcon;
+            Enemy.HackArea.gameObject.SetActive(false);
+            Enemy.QTEPanel.gameObject.SetActive(false);
+            Destroy(Enemy);
+
+            Destroy(gameObject);
+        }
     }
 
     public override void DeselectHackTarget()

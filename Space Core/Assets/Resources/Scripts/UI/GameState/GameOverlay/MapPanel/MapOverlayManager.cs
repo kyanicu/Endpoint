@@ -8,7 +8,7 @@ public class MapOverlayManager : MonoBehaviour
     public GameObject MainCameraPrefab;
     private Camera mapCamera;
     private float cameraSpeed = 50f;
-    private Vector3 startPos;
+    private  Vector3 startPos; 
 
     #region map camera constants
     private const float MAX_ZOOM_OUT = 75;
@@ -24,13 +24,16 @@ public class MapOverlayManager : MonoBehaviour
     private void Awake()
     {
         mapCamera = MainCameraPrefab.transform.Find("MapOverlayCamera").GetComponent<Camera>();
-        startPos = Player.instance.transform.position;
-        startPos = new Vector3(startPos.x, startPos.y, startingZ);
     }
 
     private void OnEnable()
     {
-        ResetCamera();
+        if (Player.instance != null)
+        {
+            startPos = Player.instance.transform.position;
+            startPos = new Vector3(startPos.x, startPos.y, startingZ);
+            ResetCamera();
+        }
     }
 
     /// <summary>

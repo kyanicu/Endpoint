@@ -27,6 +27,8 @@ public class PlayerInitializer : MonoBehaviour
             //Spawn in the default player
             GameObject player = Instantiate(PlayerObj);
             player.transform.position = transform.position;
+            player.name = "Player";
+            player.tag = "Player";
         }
         //Begin operation for loading a player from a save file
         else
