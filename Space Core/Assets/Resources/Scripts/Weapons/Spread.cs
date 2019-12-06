@@ -53,6 +53,10 @@ public class Spread : Weapon
                     bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.Euler(pelletRotation));
                     //bullet.transform.Rotate(pelletRotation);
                     Bullet bulletScript = bullet.GetComponent<Bullet>();
+                    if (bulletScript == null)
+                    {
+                        bulletScript = bullet.GetComponentInChildren<Bullet>();
+                    }
                     bulletScript.Damage = damagePerPellet;
                     bulletScript.KnockbackImpulse = KnockbackImpulse;
                     bulletScript.KnockbackTime = KnockbackTime;

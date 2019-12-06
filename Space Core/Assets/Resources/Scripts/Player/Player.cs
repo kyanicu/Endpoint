@@ -333,7 +333,6 @@ public class Player : Character
                 yield return new WaitForSeconds(.1f);
             }
         }
-        yield return new WaitForSeconds(COOLDOWN_TIME);
         canSwap = true;
     }
 }

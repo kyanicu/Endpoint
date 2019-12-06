@@ -26,6 +26,14 @@ public class DashAttack : ActiveAbility
         StartCoroutine(Dash());
     }
 
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Dash Attack";
+        AbilityShortName = "DASH";
+        AbilityDescription = "Push RB to dash forward towards enemies and hit them.";
+    }
+
     /// <summary>
     /// Initiates the dash, canceling when hitting a wall or ungrounding
     /// </summary>

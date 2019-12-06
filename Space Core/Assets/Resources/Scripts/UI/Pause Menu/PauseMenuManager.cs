@@ -38,16 +38,19 @@ public class PauseMenuManager : MonoBehaviour {
     public bool PauseMenuPanelIsActive { get; set; }
 
     private static PauseMenuManager _instance = null;
-    public static PauseMenuManager instance;
+    public static PauseMenuManager instance { get { return _instance; } }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         if (_instance == null || _instance != this)
         {
             _instance = this;
         }
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         // Set selected button ID to the resume button.
         selectedID = MenuItemID.ResumeButton;
 

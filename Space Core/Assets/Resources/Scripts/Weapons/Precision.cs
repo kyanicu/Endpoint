@@ -92,6 +92,10 @@ public class Precision : Weapon
                 pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
                 bullet.transform.Rotate(pelletRotation);
                 Bullet bulletScript = bullet.GetComponent<Bullet>();
+                if (bulletScript == null)
+                {
+                    bulletScript = bullet.GetComponentInChildren<Bullet>();
+                }
                 bulletScript.Damage = Damage;
                 bulletScript.KnockbackImpulse = KnockbackImpulse;
                 bulletScript.KnockbackTime = KnockbackTime;

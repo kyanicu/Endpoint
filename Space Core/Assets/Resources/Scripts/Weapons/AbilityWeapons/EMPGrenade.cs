@@ -4,44 +4,46 @@ using UnityEngine;
 
 public class EMPGrenade : MonoBehaviour
 {
-    private float Radius;
+    public ParticleSystem psImplosion;
+    public ParticleSystem psExplosion;
+    public GameObject ExplosionRadius;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private float explosionTime;
+    private MeshRenderer meshRenderer;
+    private bool activated;
+
+    private void Start()
     {
-        Radius = 10;
+        activated = false;
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
     }
 
+    /// <summary>
+    /// When it collides with an enemy or terrain, then it will activate the emp damage area
+    /// </summary>
+    /// <param name="other"></param>
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("Terrain"))
+        if ((other.CompareTag("Enemy") || other.CompareTag("Terrain")) && !activated)
         {
+            activated = true;
+            ExplosionRadius.SetActive(true);
+            meshRenderer.enabled = false;
+            StartCoroutine(Explosion());
             ObjectPooler.instance.SpawnFromPool("EMPParticle", transform.position, Quaternion.identity);
-            Collider[] Colliders = Physics.OverlapSphere(transform.localPosition, Radius);
-            foreach (Collider collider in Colliders)
-            {
-                if (collider.CompareTag("Enemy"))
-                {
-                    collider.gameObject.GetComponent<Enemy>().Freeze();
-                }
-            }
-            gameObject.SetActive(false);
         }        
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    /// <summary>
+    /// Explosion released by the EMP grenade
+    /// </summary>
+    private IEnumerator Explosion()
     {
-        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Terrain")
-        {
-            Collider2D[] Colliders = Physics2D.OverlapCircleAll(transform.localPosition, Radius);
-            foreach (Collider2D collider in Colliders)
-            {
-                if (collider.CompareTag("Enemy"))
-                {
-                    collider.gameObject.GetComponent<Enemy>().Freeze();
-                }
-            }
-            gameObject.gameObject.SetActive(false);
-        }
+        yield return new WaitForSeconds(explosionTime);
+        ExplosionRadius.SetActive(false);
+        meshRenderer.enabled = true;
+        gameObject.SetActive(false);
+        activated = false;
     }
 }
