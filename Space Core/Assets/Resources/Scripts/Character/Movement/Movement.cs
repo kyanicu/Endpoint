@@ -417,7 +417,27 @@ public abstract class Movement : MonoBehaviour
         
     }
 
-    
+    public ContactData[] UpdateState(Vector2 simMoveDir, out int contactCount)
+    {
+        bool prevGroundedState = charCont.isGrounded;
+       
+        ContactData[] contactDatas = charCont.UpdateState(out contactCount, simMoveDir);
+
+        HandleContacts(contactDatas, contactCount);
+
+        if (charCont.isGrounded)
+        {
+            if (prevGroundedState != charCont.isGrounded)
+                velocity = Vector3.Project(velocity, charCont.currentSlope);
+            else
+                velocity = charCont.currentSlope * velocity.magnitude * Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
+        }
+
+        forceUnground = false;
+        pushingDirection = 0;
+
+        return contactDatas;
+    }
 
     /// <summary>
     /// Main function where velocity is handled appropriately
@@ -457,6 +477,7 @@ public abstract class Movement : MonoBehaviour
 
             for (int i = 0; i < moveCount; i++)
                 HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
+
             if (charCont.isGrounded)
             {
                 if (prevGroundedState != charCont.isGrounded)

@@ -53,7 +53,6 @@ public static class VectorLibrary
         float fromLeft = Vector2.Angle(Vector2.left, slope);
 
         return ((fromRight < fromLeft) ? fromRight : fromLeft);
-
     }
 
     public static Vector2 averageVector(Vector2[] vectors)
@@ -95,7 +94,7 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private float slopeMax = 45;
     [SerializeField] private float stepMax = 0.5f;
 
-    private Vector2 bottomPoint { get { return (Vector2)(capCol.bounds.center + (-transform.up * capCol.size.y / 2)); } }
+    public Vector2 bottomPoint { get { return (Vector2)(capCol.bounds.center + (-transform.up * capCol.size.y / 2)); } }
 
     public ObjectMover mover;
     public CapsuleCollider2D capCol;
@@ -117,13 +116,10 @@ public class CharacterController2D : MonoBehaviour
     {
         if (!(capCol = GetComponent<CapsuleCollider2D>()))
             capCol = gameObject.AddComponent<CapsuleCollider2D>();
-        else
-            mover = GetComponent<ObjectMover>();
 
         if (!(mover = GetComponent<ObjectMover>()))
             mover = gameObject.AddComponent<ObjectMover>();
-        else
-            capCol = GetComponent<CapsuleCollider2D>();
+
 
         capCol.isTrigger = true;
     }
@@ -239,6 +235,90 @@ public class CharacterController2D : MonoBehaviour
 
         return moveDatas;
 
+    }
+
+    public ContactData[] UpdateState(out int contactCount, Vector2 simMoveDir)
+    {
+        ContactData[] contactDatas = mover.UpdateState(out contactCount, simMoveDir);
+
+        if (!isGrounded)
+        {
+            isTouchingCeiling = false;
+            isTouchingLeftWall = false;
+            isTouchingRightWall = false;
+            
+            if (contactCount > 0)
+            {
+                Vector2 slopeNormal = Vector2.zero;
+                for (int i = 0; i < contactCount; i++)
+                {
+
+                    if (Vector2.Angle(contactDatas[i].normal, Vector2.up) < slopeMax)
+                        slopeNormal += contactDatas[i].normal;
+                    else
+                    {
+
+                        if (Vector2.Dot(contactDatas[i].normal, Vector2.down) > 0.000001f)
+                            isTouchingCeiling = true;
+
+                        float dotLeft = Vector2.Dot(contactDatas[i].normal, Vector2.left);
+                        if (dotLeft > Mathf.Epsilon)
+                            isTouchingRightWall = true;
+                        else if (dotLeft < -Mathf.Epsilon)
+                            isTouchingLeftWall = true;
+                    }
+                }
+                if (slopeNormal != Vector2.zero)
+                {
+                    slopeNormal = slopeFromNormal(slopeNormal.normalized);
+
+                    Ground(slopeNormal);
+                }
+            }
+        }
+        else
+        {
+            Vector2 slopeNormal = Vector2.zero;
+            bool stepHit = false;
+            for (int i = 0; i < contactCount; i++)
+            {
+
+                if (Vector2.Angle(contactDatas[i].normal, Vector2.up) < slopeMax && !stepHit)
+                    slopeNormal += contactDatas[i].normal;
+                else
+                {
+                    if (contactDatas[i].isCorner && CheckStep(contactDatas[i]))
+                    {
+                        slopeNormal = contactDatas[i].normal;//HandleStep(contact);
+                        stepHit = true;
+                    }
+                    else
+                    {
+                        if (Vector2.Dot(contactDatas[i].normal, Vector2.down) > 0.000001f)
+                            isTouchingCeiling = true;
+
+                        float dotLeft = Vector2.Dot(contactDatas[i].normal, Vector2.left);
+                        if (dotLeft > Mathf.Epsilon)
+                            isTouchingRightWall = true;
+                        else if (dotLeft < -Mathf.Epsilon)
+                            isTouchingLeftWall = true;
+                    }
+                }
+            }
+            if (slopeNormal != Vector2.zero)
+            {
+                SetSlope(slopeFromNormal(slopeNormal.normalized));
+            }
+            else
+            {
+                //if (!AttemptReground())
+                //{
+                    Unground();
+                //}
+            }
+        }
+
+        return contactDatas;
     }
 
     public MoveData[] Move(Vector2 moveBy, out int moveCount, bool forceUnground = false)
