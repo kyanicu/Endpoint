@@ -285,6 +285,12 @@ public abstract class Movement : MonoBehaviour
     /// </summary>
     public void TakeKnockback(Vector2 impulse, float time)
     {
+
+        if (impulse == Vector2.zero || time == 0)
+        {
+            return;
+        }
+
         if (impulse.y > 0.1)
             forceUnground = true;
         else

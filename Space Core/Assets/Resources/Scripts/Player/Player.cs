@@ -121,7 +121,7 @@ public class Player : Character
         if (isImmortal || hasIFrames)
             return;
 
-        if (attackInfo.damageSource != DamageSource.Spread && !hasIFrames)
+        if (attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard && !hasIFrames)
         {
             hasIFrames = true;
             StartCoroutine(RunIFrames());
@@ -130,7 +130,7 @@ public class Player : Character
         base.ReceiveAttack(attackInfo);
     }
 
-    protected override void TakeDamage(int damage)
+    protected override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
 

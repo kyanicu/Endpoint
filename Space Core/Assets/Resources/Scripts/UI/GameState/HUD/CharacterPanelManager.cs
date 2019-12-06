@@ -110,7 +110,7 @@ public class CharacterPanelManager : MonoBehaviour
         HealthBar.DOFillAmount(health / maxHealth, 1);
         // Tween the damage health bar slightly slower, to provide the effect of showing damage taken.
         HealthBarDamage.DOFillAmount(health / maxHealth, 2);
-        HealthAmountText.text = "<style=\"HPNumber\">" + health + "</style><sprite=0>" + maxHealth;
+        HealthAmountText.text = "<style=\"HPNumber\">" + (int) health + "</style><sprite=0>" + (int) maxHealth;
     }
 
     /// <summary>
