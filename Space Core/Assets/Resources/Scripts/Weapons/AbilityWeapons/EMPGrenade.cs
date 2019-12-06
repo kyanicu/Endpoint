@@ -5,8 +5,6 @@ using UnityEngine;
 public class EMPGrenade : MonoBehaviour
 {
     private float Radius;
-    public ParticleSystem psImplosion;
-    public ParticleSystem psExplosion;
 
     // Start is called before the first frame update
     void Start()
@@ -18,9 +16,7 @@ public class EMPGrenade : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Terrain"))
         {
-            psImplosion.transform.parent.gameObject.SetActive(true);
-            psImplosion.Play();
-            psExplosion.Play();
+            ObjectPooler.instance.SpawnFromPool("EMPParticle", transform.position, Quaternion.identity);
             Collider[] Colliders = Physics.OverlapSphere(transform.localPosition, Radius);
             foreach (Collider collider in Colliders)
             {

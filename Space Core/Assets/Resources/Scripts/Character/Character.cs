@@ -78,7 +78,9 @@ public abstract class Character : MonoBehaviour
     public virtual void Jump()
     {
         if (!isStunned)
+        {
             movement.Jump();
+        }
     }
 
     public virtual void JumpCancel()

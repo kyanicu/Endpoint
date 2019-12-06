@@ -257,6 +257,7 @@ public abstract class Movement : MonoBehaviour
         {
             velocity = new Vector2(velocity.x, jumpVelocity);
             forceUnground = true;
+            ObjectPooler.instance.SpawnFromPool("JumpParticle", transform.position, Quaternion.identity);
             isJumping = true;
         }
     }
@@ -266,7 +267,6 @@ public abstract class Movement : MonoBehaviour
     /// </summary>
     public virtual void JumpCancel()
     {
-
         if (isJumping)
         {
             if (velocity.y <= jumpCancelMinVel)

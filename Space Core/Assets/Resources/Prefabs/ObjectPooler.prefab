@@ -46,7 +46,7 @@ MonoBehaviour:
   Pools:
   - Tag: NormalBullet
     Prefab: {fileID: 106361945039211251, guid: db8af64fef3f20143850816c3fa8cece, type: 3}
-    Size: 100
+    Size: 150
   - Tag: HomingBullet
     Prefab: {fileID: 106361945039211251, guid: ac8baefbc9427ff44bbf4a1817496c9c, type: 3}
     Size: 100
@@ -60,8 +60,12 @@ MonoBehaviour:
   - Tag: HackProj
     Prefab: {fileID: 2846610237386438041, guid: 89c9631d3603061458a2ced3a06dcb3f,
       type: 3}
-    Size: 2
+    Size: 5
   - Tag: DroppedAmmo
     Prefab: {fileID: 5262941360287232128, guid: 64f929589c80d8e45b1532b938a5d2bf,
       type: 3}
     Size: 25
+  - Tag: JumpParticle
+    Prefab: {fileID: 8104080395950035555, guid: 40bf062f6cc950a42a8111c5b1c01e86,
+      type: 3}
+    Size: 15
