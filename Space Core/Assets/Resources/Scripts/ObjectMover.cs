@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System;
 using static VectorLibrary;
 
 public struct MoveData
@@ -93,13 +94,36 @@ public struct ContactData
 
 public class ObjectMover : MonoBehaviour
 {
+    public struct PreviousTransformInfo
+    {
+        public Vector2 position;
+        public float rotation;
+
+        ObjectMover objectMover;
+
+        public Vector2 movedBy { get { return (Vector2)objectMover.transform.position - position; } }
+        public float rotatedBy { get { return objectMover.transform.rotation.eulerAngles.z - rotation; } }
+
+        public PreviousTransformInfo(Transform transform, ObjectMover mover)
+        {
+            position = transform.position;
+            rotation = transform.rotation.eulerAngles.z;
+            objectMover = mover;
+        }
+    }
+
+    public PreviousTransformInfo previousTransformInfo;
+
     private LayerMask layerMask { get { return Physics2D.GetLayerCollisionMask(gameObject.layer); } }
+    
+    public bool stopOnHit = true;
 
     Rigidbody2D rb;
     Collider2D col;
 
     private void Reset()
     {
+        
         //Const Values
 
         if (!(rb = GetComponent<Rigidbody2D>()))
@@ -422,8 +446,15 @@ public class ObjectMover : MonoBehaviour
         Physics2D.SyncTransforms();
 
         int contactCount;
-        ContactData[] contacts = HandleDiscreteCollision(moveBy.normalized, out contactCount);
+        ContactData[] contacts;
 
+        if (stopOnHit)
+            contacts = HandleDiscreteCollision(moveBy.normalized, out contactCount);
+        else
+        {
+            contacts = new ContactData[0];
+            contactCount = 0;
+        }
         Vector2 moveMade = Vector3.Project(transform.position - prevPos, moveBy);
         if (moveMade.magnitude > moveBy.magnitude)
             moveMade = moveBy;
@@ -556,6 +587,8 @@ public class ObjectMover : MonoBehaviour
         if (moveBy == Vector2.zero)
             return MoveData.invalid;
 
+        previousTransformInfo = new PreviousTransformInfo(transform, this);
+
         if (rb.collisionDetectionMode == CollisionDetectionMode2D.Continuous)
         {
             //Buggy, use discrete for now)
@@ -619,7 +652,62 @@ public class ObjectMover : MonoBehaviour
 
     }
 
-    public float speed;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!stopOnHit && (previousTransformInfo.position != (Vector2)transform.position || previousTransformInfo.rotatedBy != 0))
+        {
+            if (other.tag == "Player" || other.tag == "Enemy")
+            {
+                //if (Physics2D.Distance(other, col).distance < -Physics2D.defaultContactOffset)
+                //{
+                Movement movement = other.GetComponent<Movement>();
+                int contactCount;
+                ContactData[] contacts = movement.UpdateState(-previousTransformInfo.movedBy.normalized, out contactCount);
+                //}
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (!stopOnHit && (previousTransformInfo.position != (Vector2)transform.position || previousTransformInfo.rotatedBy != 0))
+        {
+            if (other.tag == "Player" || other.tag == "Enemy")
+            {
+                //if (Physics2D.Distance(other, col).distance < -Physics2D.defaultContactOffset)
+                //{
+                Movement movement = other.GetComponent<Movement>();
+                int contactCount;
+                ContactData[] contacts = movement.UpdateState(-previousTransformInfo.movedBy.normalized, out contactCount);
+                //}
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!stopOnHit && (previousTransformInfo.position != (Vector2)transform.position || previousTransformInfo.rotatedBy != 0))
+        {
+            if (other.tag == "Player" || other.tag == "Enemy")
+            {
+                Movement movement = other.GetComponent<Movement>();
+                int contactCount;
+                movement.UpdateState(-previousTransformInfo.movedBy.normalized, out contactCount);
+            }
+        }
+    }
+
+    public ContactData[] UpdateState(out int contactCount, Vector2 simMoveDir)
+    {
+        if (rb.collisionDetectionMode == CollisionDetectionMode2D.Continuous)
+        {
+            //Buggy, use discrete for now)
+            return HandleDiscreteCollision(simMoveDir, out contactCount); // return MoveContinuous(moveBy);
+        }
+        else
+            return HandleDiscreteCollision(simMoveDir, out contactCount);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -627,23 +715,5 @@ public class ObjectMover : MonoBehaviour
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
-        if (Input.GetKey(KeyCode.Return))
-            transform.position = new Vector2(0, 2);
-
-        Vector2 direction = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.D))
-            direction += Vector2.right;
-        if (Input.GetKey(KeyCode.A))
-            direction += Vector2.left;
-        if (Input.GetKey(KeyCode.W))
-            direction += Vector2.up;
-        if (Input.GetKey(KeyCode.S))
-            direction += Vector2.down;
-        direction.Normalize();
-
-        int size;
-        MoveData[] moveData = MoveMax(direction * speed * Time.fixedDeltaTime, out size);
-        
     }
 }
