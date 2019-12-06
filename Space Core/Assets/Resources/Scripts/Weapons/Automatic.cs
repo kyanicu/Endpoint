@@ -6,10 +6,11 @@ using UnityEngine;
 /// </summary>
 public class Automatic : Weapon
 {
+
     // Start is called before the first frame update
     void Start()
     {
-        Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        BulletTag = "NormalBullet";
         RotationPoint = transform.parent.transform.parent;
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
@@ -19,32 +20,39 @@ public class Automatic : Weapon
     /// <summary>
     /// The fire function is used to launch a projectile from the tip of the automatic weapon
     /// </summary>
-    public override void Fire()
+    public override bool Fire()
     {
         //if we have ammo, are not reloading, and the timer will let us fire another shot. Fire a bullet
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
-            IsReloading = false;
-            AmmoInClip -= 1;
-            Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
-            pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
-            GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
-            bullet.transform.Rotate(pelletRotation);
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.Damage = Damage;
-            bulletScript.KnockbackImpulse = KnockbackImpulse;
-            bulletScript.StunTime = StunTime;
-            bulletScript.Source = BulletSource;
-            bulletScript.Range = Range;
-            if (ControlledByPlayer)
+            //Retrieve bullet from pooler
+            GameObject bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.identity);
+
+            //Check that bullet was loaded after pooler has been populated
+            if (bullet != null)
             {
-                bulletScript.Velocity = BulletVeloc * playerBulletVelocMod;
-            }
-            else
-            {
+                IsReloading = false;
+                AmmoInClip -= 1;
+                Vector3 pelletRotation = RotationPoint.rotation.eulerAngles;
+                pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
+                bullet.transform.Rotate(pelletRotation);
+                Bullet bulletScript = bullet.GetComponent<Bullet>();
+                bulletScript.Damage = Damage;
+                bulletScript.KnockbackImpulse = KnockbackImpulse;
+                bulletScript.KnockbackTime = KnockbackTime;
+                bulletScript.StunTime = StunTime;
+                bulletScript.Source = BulletSource;
+                bulletScript.Range = Range;
                 bulletScript.Velocity = BulletVeloc;
+                FireTimer = RateOfFire;
+                bulletScript.Activate();
+                return true;
             }
-            FireTimer = RateOfFire;
+            return false;
+        }
+        else
+        {
+            return false;
         }
     }
 }

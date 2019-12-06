@@ -27,6 +27,16 @@ public class ImmortalReloading : PassiveAbility
         reloadStarted = false;
     }
 
+    // Initialize all of the data needed for the Ability UI.
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Immortal Reloading";
+        AbilityShortName = "IRLD";
+        AbilityDescription = "When reloading, your chassis is shielded for a limited time.";
+        AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-immortal-reload@1x");
+    }
+
     // Update is called once per frame
     new void Update()
     {

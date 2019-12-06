@@ -14,7 +14,7 @@ public class Spread : Weapon
     /// </summary>
     private void Start()
     {
-        Bullet = Resources.Load<GameObject>("Prefabs/Weapons/Bullet");
+        BulletTag = "NormalBullet";
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
         FireTimer = 0;
@@ -25,39 +25,51 @@ public class Spread : Weapon
     /// <summary>
     /// Fire out a bust of pellets in a random spread
     /// </summary>
-    public override void Fire()
+    public override bool Fire()
     {
         // If we have ammo, are not reloading, and fire timer is zero, launch a spread of bullets
         if (AmmoInClip > 0 && !IsReloading && FireTimer < 0)
         {
-            IsReloading = false;
-            AmmoInClip -= 1;
-            //pellet rotation will be used for determining the spread of each bullet
-            Vector3 pelletRotation;
+            //Retrieve bullet from pooler
+            GameObject bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.identity);
 
-            //for the number of pellets we are firing, initalize a new bullet, update rotation and lunch it.
-            for (int i = 0; i < NumPellets; i++)
+            //Check that bullet was loaded after pooler has been populated
+            if (bullet != null)
             {
-                pelletRotation = RotationPoint.rotation.eulerAngles;
-                pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
-                GameObject bullet = Instantiate(Bullet, FireLocation.transform.position, Quaternion.identity);
-                bullet.transform.Rotate(pelletRotation);
-                Bullet bulletScript = bullet.GetComponent<Bullet>();
-                bulletScript.Damage = Damage;
-                bulletScript.KnockbackImpulse = KnockbackImpulse;
-                bulletScript.StunTime = StunTime;
-                bulletScript.Source = BulletSource;
-                bulletScript.Range = Range;
-                if (ControlledByPlayer)
+                //Remove bullet used to test status of pooler
+                bullet.SetActive(false);
+
+                IsReloading = false;
+                AmmoInClip -= 1;
+                //pellet rotation will be used for determining the spread of each bullet
+                Vector3 pelletRotation;
+                int damagePerPellet = Damage / NumPellets;
+
+                //for the number of pellets we are firing, initalize a new bullet, update rotation and lunch it.
+                for (int i = 0; i < NumPellets; i++)
                 {
-                    bulletScript.Velocity = BulletVeloc * playerBulletVelocMod;
-                }
-                else
-                {
+                    pelletRotation = RotationPoint.rotation.eulerAngles;
+                    pelletRotation.z += Random.Range(-SpreadFactor, SpreadFactor);
+                    bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.Euler(pelletRotation));
+                    //bullet.transform.Rotate(pelletRotation);
+                    Bullet bulletScript = bullet.GetComponent<Bullet>();
+                    bulletScript.Damage = damagePerPellet;
+                    bulletScript.KnockbackImpulse = KnockbackImpulse;
+                    bulletScript.KnockbackTime = KnockbackTime;
+                    bulletScript.StunTime = StunTime;
+                    bulletScript.Source = DamageSource.Spread;
+                    bulletScript.Range = Range;
                     bulletScript.Velocity = BulletVeloc;
+                    bulletScript.Activate();
                 }
+                FireTimer = RateOfFire;
+                return true;
             }
-            FireTimer = RateOfFire;
+            return false;
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -15,6 +15,53 @@ public static class WeaponGenerator
     /// </summary>
     /// <param name="parent"></param>
     /// <returns></returns>
+    public static GameObject GenerateWeapon(Transform parent, string weaponName)
+    {
+        //Create empty object to load generated weapon into
+        GameObject weapon = null;
+
+        //Create empty string to load generated prefix into
+        string prefix = "";
+
+        //Generate a weaon specified by its name
+        switch(weaponName)
+        {
+            case "Jakkaru":
+                //Load generated Jakkaru stats onto weapon
+                WeaponGenerationInfo newJakkaru = new Jakkaru();
+                weapon = BuildAutomatic(parent, newJakkaru);
+                prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "Matsya":
+                //Load generated Matsya stats onto weapon
+                WeaponGenerationInfo newMatsya = new Matsya();
+                weapon = BuildSpread(parent, newMatsya);
+                prefix = newMatsya.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "SnipeyBoi":
+                //Load generated SnipeyBoi stats onto weapon
+                WeaponGenerationInfo newSnipeyBoi = new SnipeyBoi();
+                weapon = BuildPrecision(parent, newSnipeyBoi);
+                prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            default:
+                return weapon;
+        }
+
+        //Apply the newly generated prefix to the weapon name
+        Weapon wep = weapon.GetComponent<Weapon>();
+        weapon.name = wep.Name;
+        return weapon;
+    }
+
+    /// <summary>
+    /// Main function to generate a weapon
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static GameObject GenerateWeapon(Transform parent)
     {
         //parse into a weapon type
@@ -24,7 +71,7 @@ public static class WeaponGenerator
         string weaponName = Weapon.WeaponsList[rngVal];
 
         //Create empty object to load generated weapon into
-        GameObject weapon = new GameObject();
+        GameObject weapon = null;
 
        //Create empty string to load generated prefix into
         string prefix = "";
@@ -59,7 +106,9 @@ public static class WeaponGenerator
 
         //Apply the newly generated prefix to the weapon name
         Weapon wep = weapon.GetComponent<Weapon>();
-        wep.Name = prefix + weaponName;
+        wep.FullName = prefix + weaponName;
+        wep.Name = weaponName;
+        weapon.name = wep.Name;
         return weapon;
     }
 
@@ -75,8 +124,9 @@ public static class WeaponGenerator
         Automatic automatic = weaponObject.GetComponent<Automatic>();
         automatic.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
         automatic.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
-        automatic.KnockbackImpulse = UnityEngine.Random.Range(wgi.MinKnockbackImpulse, wgi.MaxKnockbackImpulse);
-        automatic.StunTime = UnityEngine.Random.Range(wgi.MinStunTime, wgi.MaxStunTime);
+        automatic.StunTime = wgi.StunTime;
+        automatic.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        automatic.KnockbackTime = wgi.MaxKnockbackTime; ;
         automatic.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         automatic.AmmoInClip = automatic.ClipSize;
         automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
@@ -85,6 +135,7 @@ public static class WeaponGenerator
         automatic.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         automatic.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         automatic.TotalAmmo = automatic.MaxAmmoCapacity;
+        automatic.Description = wgi.description;
         return weaponObject;
     }
 
@@ -102,6 +153,9 @@ public static class WeaponGenerator
         spread.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         spread.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         spread.AmmoInClip = spread.ClipSize;
+        spread.StunTime = wgi.StunTime;
+        spread.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        spread.KnockbackTime = wgi.MaxKnockbackTime;
         spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
         spread.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
         spread.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
@@ -109,6 +163,7 @@ public static class WeaponGenerator
         spread.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         spread.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         spread.TotalAmmo = spread.MaxAmmoCapacity;
+        spread.Description = wgi.description;
         return weaponObject;
     }
 
@@ -126,12 +181,16 @@ public static class WeaponGenerator
         precision.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         precision.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
         precision.AmmoInClip = precision.ClipSize;
+        precision.StunTime = wgi.StunTime;
+        precision.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        precision.KnockbackTime = wgi.MaxKnockbackTime;
         precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
         precision.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
         precision.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
         precision.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
         precision.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
         precision.TotalAmmo = precision.MaxAmmoCapacity;
+        precision.Description = wgi.description;
         return weaponObject;
     }
 }

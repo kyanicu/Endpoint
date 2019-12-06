@@ -25,6 +25,16 @@ public class Overclock : PassiveAbility
         }
     }
 
+    // Initialize all of the data needed for the Ability UI.
+    private new void Awake()
+    {
+        base.Awake();
+        AbilityName = "Overclock";
+        AbilityShortName = "OCLCK";
+        AbilityDescription = "Your chassis has a passive 10% increase to movement speed.";
+        AbilityImage = Resources.Load<Sprite>("Images/UI/HUD/Character Section/Ability Images/ability-overclock@1x");
+    }
+
     /// <summary>
     /// frame by frame activation is not needed
     /// </summary>

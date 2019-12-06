@@ -7,19 +7,23 @@ using UnityEngine.SceneManagement;
 public class Player : Character
 {
     public Enemy Enemy { get; set; }
-    private bool lookingLeft;
+    public InteractableEnv InteractableObject { private get; set; }
+    public bool lookingLeft;
     private bool canSwap;
     private GameObject hackProj;
 
     const float HACK_AREA_LENGTH = 22.5f;
-    public string Class { get; private set; }
+    public string Class { get; set; }
 
     private const float COOLDOWN_TIME = 2.5f; 
 
     [SerializeField]
-    private float iFrameTime = 2;
-
+    private float iFrameTime = 3f;
     private bool hasIFrames;
+
+
+    private static Player _instance;
+    public static Player instance { get { return _instance; } }
 
     /// <summary>
     /// Update HUD after successfully swapping into a new enemy
@@ -28,8 +32,9 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
-        HUDController.instance.UpdateHUD(this);
         Weapon.ControlledByPlayer = true;
+        HUDController.instance.UpdateHUD(this);
+
     }
 
     protected override void Reset()
@@ -40,19 +45,35 @@ public class Player : Character
     protected override void Awake()
     {
         base.Awake();
-
-        MaxHealth = 100;
-        Health = MaxHealth;
-        canSwap = true;
-        isImmortal = false;
-        if (Class == null)
+        if (_instance == null)
         {
+            _instance = this;
+        }
+
+        //Remove enemy component from new body
+        Enemy e = GetComponent<Enemy>();
+
+        //Update player's stats to enemy's 
+        if (e == null)
+        {
+            MaxHealth = 100;
+            Health = 100;
             Class = "medium";
         }
-        ResetSwap();
+        else
+        {
+            MaxHealth = e.MaxHealth;
+            Health = e.Health;
+            Class = e.Class;
+            movement = e.movement;
+        }
 
-        MinimapIcon = transform.Find("PlayerMinimapIcon").gameObject;
+        Destroy(e);
 
+        canSwap = true;
+        isImmortal = false;
+
+        animator = transform.Find("AnimatedCharacter").gameObject.GetComponent<Animator>();
         RotationPoint = transform.Find("RotationPoint").gameObject;
 
         RotationPoint.transform.localScale = new Vector3(1, 1, 1);
@@ -67,6 +88,7 @@ public class Player : Character
         else
         {
             Weapon = WeaponTransform.GetChild(0).GetComponent<Weapon>();
+            Weapon.owner = this;
         }
 
         ActiveAbility = gameObject.GetComponent<ActiveAbility>();
@@ -78,24 +100,37 @@ public class Player : Character
         }
         else
         {
-            
             ActiveAbility.resetOwner(this);
             PassiveAbility.resetOwner(this);
         }
 
-        Weapon.BulletSource = Bullet.BulletSource.Player;
+        if (MinimapIcon == null)
+        {
+            MinimapIcon = transform.Find("MinimapIcon").gameObject;
+            MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
+        }
+
+        Weapon.BulletSource = DamageSource.Player;
         hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
-        HUDController.instance.UpdateHUD(this);
+        ResetSwap();
     }
+
+    #region Inherited Methods 
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
         if (isImmortal || hasIFrames)
             return;
 
+        if (attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard && !hasIFrames)
+        {
+            hasIFrames = true;
+            StartCoroutine(RunIFrames());
+        }
+
         base.ReceiveAttack(attackInfo);
-        StartCoroutine(RunIFrames());
     }
-    protected override void TakeDamage(int damage)
+
+    protected override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
 
@@ -107,7 +142,6 @@ public class Player : Character
 
     private IEnumerator RunIFrames()
     {
-        hasIFrames = true;
         yield return new WaitForSeconds(iFrameTime);
         hasIFrames = false;
     }
@@ -118,18 +152,18 @@ public class Player : Character
         SceneManager.LoadScene(0);
     }
 
-    public override void Fire()
+    public override bool Fire()
     {
         //reload if out of ammo
         if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
         {
             Reload();
+            return false;
         }
         else
         {
-            Weapon.Fire();
+            return Weapon.Fire();
         }
-        HUDController.instance.UpdateAmmo(this);
     }
 
     public override void Reload()
@@ -143,27 +177,15 @@ public class Player : Character
             HUDController.instance.UpdateAmmo(this);
         }
     }
+    #endregion
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet"))
-        {
-            if (other.gameObject.GetComponent<Bullet>().Source == Bullet.BulletSource.Enemy)
-            {
-                ReceiveAttack(new AttackInfo(other.gameObject.GetComponent<Bullet>().Damage/5, other.gameObject.GetComponent<Bullet>().KnockbackImpulse * other.gameObject.transform.right, other.gameObject.GetComponent<Bullet>().StunTime));
-                Destroy(other.gameObject);
-            }
-        }
-        else if (other.CompareTag("Ammo"))
+        if (other.CompareTag("Ammo"))
         {
             Weapon.AddAmmo(other.gameObject.GetComponent<DroppedAmmo>().Ammo);
             HUDController.instance.UpdateAmmo(this);
-            Destroy(other.gameObject);
-        }
-        else if (other.CompareTag("OB"))
-        {
-            //We'll need to figure out a way to decouple scene loading from player
-            SceneManager.LoadScene(0);
+            other.gameObject.SetActive(false);
         }
     }
 
@@ -196,24 +218,25 @@ public class Player : Character
         RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
+    /// <summary>
+    /// Function responsible for instantiating hack projectile
+    /// </summary>
     public void HackSelector()
     {
-        if (canSwap)
+        if (Enemy == null)
         {
-            Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
-            GameObject hackAttempt = Instantiate(hackProj, Weapon.FireLocation.transform.position, Quaternion.identity);
-            hackAttempt.transform.Rotate(launchRotation);
-            ResetSwap();
+            if (canSwap)
+            {
+                Vector3 launchRotation = RotationPoint.transform.rotation.eulerAngles;
+                GameObject hackAttempt = ObjectPooler.instance.SpawnFromPool("HackProj", Weapon.FireLocation.transform.position, Quaternion.identity);
+                hackAttempt.transform.Rotate(launchRotation);
+                ResetSwap();
+            }
         }
-    }
-
-    private void ResetSwap()
-    {
-        canSwap = false;
-        // Disables Swapping for the duration specified in COOLDOWN_TIME.
-        StartCoroutine(implementSwapCooldown());
-        // Begins HUD animation loop for swapping bar.
-        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
+        else
+        {
+            DeselectHackTarget();
+        }
     }
 
     /// <summary>
@@ -221,44 +244,69 @@ public class Player : Character
     /// </summary>
     public void Switch()
     {
-        //Remove attached game objects and components
-        Destroy(RotationPoint);
-        Destroy(ActiveAbility);
-        Destroy(PassiveAbility);
-        Destroy(Enemy.HackArea.gameObject);
-        Destroy(Enemy.QTEPanel.gameObject);
+        //Check that enemy hasn't already been destroyed before starting switch
+        if(Enemy != null)
+        {
+            //Remove attached game objects and components
+            Destroy(RotationPoint);
+            Destroy(ActiveAbility);
+            Destroy(PassiveAbility);
+            Destroy(Enemy.MinimapIcon.gameObject);
 
-        //Update player's stats to enemy's 
-        MaxHealth = Enemy.MaxHealth;
-        Health = Enemy.Health;
-        Class = Enemy.Class;
-        movement = Enemy.movement;
+            //Change the enemy's minimap icon to a player's and remove the enemy's
+            GameObject mapIcon = MinimapIcon;
+            MinimapIcon.transform.position = Enemy.transform.position;
+            MinimapIcon.transform.SetParent(Enemy.transform);
 
-        //Change the enemy's minimap icon to a player's and remove the enemy's
-        MinimapIcon.transform.position = Enemy.MinimapIcon.transform.position;
-        MinimapIcon.transform.SetParent(Enemy.transform);
-        Destroy(Enemy.MinimapIcon.gameObject);
+            //Update rigidbody
+            Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
+            rigidBody.isKinematic = true;
+            rigidBody.simulated = true;
 
+            //Rename enemy to player
+            Enemy.tag = "Player";
+            Enemy.name = "Player";
+            GameObject enemyObject = Enemy.gameObject;
 
+            //Remove add player component from new body
+            enemyObject.gameObject.AddComponent<Player>();
+            _instance = enemyObject.gameObject.GetComponent<Player>();
+            instance.MinimapIcon = mapIcon;
+            Enemy.HackArea.gameObject.SetActive(false);
+            Enemy.QTEPanel.gameObject.SetActive(false);
+            Destroy(Enemy);
 
-        //Update rigidbody
-        Rigidbody2D rigidBody = Enemy.gameObject.GetComponent<Rigidbody2D>();
-        rigidBody.isKinematic = true;
-        rigidBody.simulated = true;
+            Destroy(gameObject);
+        }
+    }
 
-        //Update HUD with new weapon
-        HUDController.instance.UpdateAmmo(this);
-
-        //Rename enemy to player
-        Enemy.tag = "Player";
-        Enemy.name = "Player";
-        GameObject enemyObject = Enemy.gameObject;
-
-        //Remove enemy component from new body
-        Destroy(Enemy);
+    public override void DeselectHackTarget()
+    {
+        Enemy.DeselectHackTarget();
         Enemy = null;
-        enemyObject.gameObject.AddComponent<Player>();
-        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Active environment obj if player is near one
+    /// </summary>
+    public void ActivateEnvironmentObj()
+    {
+        if (InteractableObject != null)
+        {
+            InteractableObject.ActivateFunctionality();
+        }
+    }
+
+    private void ResetSwap()
+    {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            return;
+        canSwap = false;
+        // Disables Swapping for the duration specified in COOLDOWN_TIME.
+        StartCoroutine(implementSwapCooldown());
+        // Begins HUD animation loop for swapping bar.
+        HUDController.instance.UpdateSwap(COOLDOWN_TIME);
     }
 
     /// <summary>
@@ -287,25 +335,5 @@ public class Player : Character
         }
         yield return new WaitForSeconds(COOLDOWN_TIME);
         canSwap = true;
-    }
-
-    private static Player _instance = null;
-
-    public static Player instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<Player>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(Player).Name).AddComponent<Player>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
     }
 }

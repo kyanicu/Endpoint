@@ -19,6 +19,7 @@ public class MoveCamera : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Player.instance == null) return;
         Transform player = Player.instance.gameObject.transform;
         float interpolation = speed * Time.deltaTime;
 

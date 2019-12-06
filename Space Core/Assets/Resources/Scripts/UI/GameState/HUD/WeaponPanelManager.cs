@@ -4,28 +4,34 @@ using UnityEngine;
 using TMPro; // TextMesh Pro
 using DG.Tweening; // Tweening Library (smooth animations/transitions)
 using UnityEngine.UI;
+using System.Linq;
 
 public class WeaponPanelManager : MonoBehaviour
 {
     #region Ammo
-    public Image AmmoBar, AmmoBarFrame;
+    [Header("Ammo")]
+    public Image AmmoBar;
+    public Image AmmoBarFrame;
     public RawImage AmmoBarTiled;
     public TextMeshProUGUI AmmoAmountText, AmmoBarLabel;
     #endregion
 
     #region Weapon
-    public Image WeaponImage, WeaponClassImage, WeaponClassFrame;
+    [Header("Weapon")]
+    public Image WeaponImage;
+    public Image WeaponClassImage;
+    public Image WeaponClassFrame;
     public TextMeshProUGUI WeaponNameText, WeaponClassText;
-    public Text DiagnosticWeaponName;
-
-    [SerializeField]
-    private Sprite[] WeaponClassImages = { };
 
     private Color ColorWeaponClassAutomatic = new Color32(0xe5, 0x2a, 0xfb, 0xff);
     private Color ColorWeaponClassScatter = new Color32(0x2a, 0xf9, 0xfb, 0xff);
     private Color ColorWeaponClassPrecision = new Color32(0xea, 0xfb, 0x2a, 0xff);
     private Color currentWeaponClassColor;
     private string currentWeaponClassText;
+
+    [SerializeField]
+    private Sprite[] WeaponImages = { };
+    [Space]
     #endregion
 
     #region Custom Colors
@@ -46,14 +52,43 @@ public class WeaponPanelManager : MonoBehaviour
         Damage,
         FireRate,
         ReloadTime,
-        MagazineSize,
-        AmmoTotal
+        Range,
+        BulletSpeed
     }
 
-    public Image[] WeaponDiagnosticBars;
-    public Text[] WeaponDiagnosticValues;
+    #region Weapon Diagnostic
+    // Stores the current weapon highlight color (set by the weapon the player is using)
+    public Color activeWeaponColor;
+
+    [Header("Diagnostic GameObjects")]
+    [SerializeField]
+    private Sprite[] WeaponClassImages = { };
 
     public GameObject WeaponDiagnosticInfoPanel;
+
+    // Generic elements associated with weapon diagnostic.
+    public Image WeaponDiagnosticAnimFrame, WeaponDiagnosticBG, DiagnosticWeaponImage;
+
+    // Main elements at top of weapon diagnostic.
+    public TextMeshProUGUI DiagnosticWeaponName, DiagnosticWeaponDescription;
+
+    // Elements within sections of weapon diagnostic.
+    // Bars
+    public Image[] WeaponDiagnosticBars;
+    // Bar Frames
+    public Image[] WeaponDiagnosticBarFrames;
+    // Value Text
+    public TextMeshProUGUI[] WeaponDiagnosticValues;
+    // Titles
+    public TextMeshProUGUI[] WeaponDiagnosticTitles;
+    // Icons
+    public Image[] WeaponDiagnosticIcons;
+
+    // Stores the values for each section of the weapon diagnostic.
+    private float[] WeaponDiagnosticBarValues = new float[5];
+    // Stores the color for each section of the weapon diagnostic.
+    private Color[] WeaponDiagnosticColors = new Color[5];
+    #endregion
 
     /// <summary>
     /// Updates ammo and weapon aspects in the HUD.
@@ -102,10 +137,27 @@ public class WeaponPanelManager : MonoBehaviour
         // weapon image
         WeaponImage.color = currentWeaponClassColor;
 
+        // Update weapon silhouette in diagnostic and HUD.
+        // Get the key associated with the value in the master weapons list to avoid conflicts.
+        int weaponImageIndex = Weapon.WeaponsList.Values.ToList().IndexOf(weapon.Name);
+        // Set the image sprites based on the image stored at that index on the weapon images array.
+        WeaponImage.sprite = WeaponImages[weaponImageIndex];
+        DiagnosticWeaponImage.sprite = WeaponImages[weaponImageIndex];
+
+        // Update diagnostic image and title with class color.
+        DiagnosticWeaponName.color = currentWeaponClassColor;
+        DiagnosticWeaponImage.color = currentWeaponClassColor;
+
+        // Update active color class.
+        activeWeaponColor = currentWeaponClassColor;
+
         // Update the class name.
         WeaponClassText.text = currentWeaponClassText;
-        // Update Diagnostic weapon name text
-        DiagnosticWeaponName.text = p.Weapon.Name;
+        // Update Diagnostic and HUD weapon name text.
+        DiagnosticWeaponName.text = p.Weapon.FullName;
+        WeaponNameText.text = p.Weapon.Name;
+        // Update Diagnostic weapon description text.
+        DiagnosticWeaponDescription.text = p.Weapon.Description;
 
         // Update current ammo.
         UpdateAmmo(weapon);
@@ -148,45 +200,299 @@ public class WeaponPanelManager : MonoBehaviour
     /// </summary>
     public void UpdateWeaponDiagnostic(Player p)
     {
+        Weapon playerWeapon = p.Weapon;
         float[] weaponDiagnosticValues = {
-            p.Weapon.Damage,
+            playerWeapon.Damage,
             Mathf.Round(p.Weapon.RateOfFire * 100f) / 100f,
             Mathf.Round(p.Weapon.ReloadTime * 100f) / 100f,
-            p.Weapon.ClipSize,
-            p.Weapon.TotalAmmo
+            (int) p.Weapon.Range,
+            (int) p.Weapon.BulletVeloc
             };
 
-        float[] weaponDiagnosticMaxs = {
-            GameManager.MaxValues[(int)Category.Damage],
-            GameManager.MaxValues[(int)Category.FireRate],
-            GameManager.MaxValues[(int)Category.ReloadTime],
-            GameManager.MaxValues[(int)Category.MagazineSize],
-            GameManager.MaxValues[(int)Category.MagazineSize] * 5
-            };
+        float[] weaponDiagnosticMaxs = GameManager.MaxStats[playerWeapon.Name];
 
-        //Loop through each stat and update value and fill amount for bar
+        // Loop through each stat and update value and fill amount for bar
         foreach (Category c in System.Enum.GetValues(typeof(Category)))
         {
+            // Store the value for this bar.
+            WeaponDiagnosticBarValues[(int)c] = weaponDiagnosticValues[(int)c] / weaponDiagnosticMaxs[(int)c];
+
+            // Reflect the values for this bar in the UI.
             WeaponDiagnosticBars[(int)c].fillAmount = weaponDiagnosticValues[(int)c] / weaponDiagnosticMaxs[(int)c];
             WeaponDiagnosticValues[(int)c].text = $"{weaponDiagnosticValues[(int)c]}";
             if (WeaponDiagnosticBars[(int)c].fillAmount > 0.95)
             {
+                WeaponDiagnosticValues[(int)c].color = customBlue;
+                WeaponDiagnosticBarFrames[(int)c].color = customBlue;
                 WeaponDiagnosticBars[(int)c].color = customBlue;
+                // Store the color for this bar.
+                WeaponDiagnosticColors[(int)c] = customBlue;
             }
             else if (WeaponDiagnosticBars[(int)c].fillAmount > 0.66)
             {
+                WeaponDiagnosticValues[(int)c].color = customGreen;
+                WeaponDiagnosticBarFrames[(int)c].color = customGreen;
                 WeaponDiagnosticBars[(int)c].color = customGreen;
+                // Store the color for this bar.
+                WeaponDiagnosticColors[(int)c] = customGreen;
             }
             else if (WeaponDiagnosticBars[(int)c].fillAmount > 0.33)
             {
+                WeaponDiagnosticValues[(int)c].color = customYellow;
+                WeaponDiagnosticBarFrames[(int)c].color = customYellow;
                 WeaponDiagnosticBars[(int)c].color = customYellow;
+                // Store the color for this bar.
+                WeaponDiagnosticColors[(int)c] = customYellow;
             }
             else
             {
+                WeaponDiagnosticValues[(int)c].color = customRed;
+                WeaponDiagnosticBarFrames[(int)c].color = customRed;
                 WeaponDiagnosticBars[(int)c].color = customRed;
+                // Store the color for this bar.
+                WeaponDiagnosticColors[(int)c] = customRed;
             }
         }
 
+    }
+
+    #region DiagnosticPanelTweens
+    // Stores tween for the animated frame.
+    private Tween DPFillAmountFrame;
+    private Tween DPFadeFrame;
+    // Stores tween for dialog bg.
+    private Tween DPFadeBG;
+    // Stores tweens for main weapon elements (first section in diagnostic).
+    private Tween DPFadeWeaponTitle, DPFadeWeaponIcon, DPFadeWeaponText;
+    // Stores tweens for each of the bar sections.
+    private Tween[] DPIconFade = new Tween[5],
+        DPTitleFade = new Tween[5],
+        DPValueFade = new Tween[5],
+        DPBarFade = new Tween[5],
+        DPBarFrameFade = new Tween[5],
+        DPBarFillAmount = new Tween[5];
+    #endregion
+
+    // Animates the Weapon diagnostic panel and its elements into view.
+    public IEnumerator showDiagnosticPanelWeapon()
+    {
+        // Enable the character diagnostic panel.
+        WeaponDiagnosticInfoPanel.SetActive(true);
+
+        // Create a local variable for the fade in color for highlighted elements.
+        Color targetColor = activeWeaponColor;
+        // Define a time scale for this animation, to easily shorten or lengthen it.
+        float animTimeScale = 1f;
+
+        // NOTE: The floats within the following animation and wait functions define a duration for and between various animations.
+
+        // Set fill direction.
+        WeaponDiagnosticAnimFrame.fillOrigin = (int)Image.Origin90.BottomRight;
+        // Start fill amount tween.
+        DPFillAmountFrame = WeaponDiagnosticAnimFrame.DOFillAmount(1, 0.4f * animTimeScale);
+
+        // Start bg fade in tween.
+        DPFadeBG = WeaponDiagnosticBG.DOColor(new Color(1f, 1f, 1f, 1f), 0.4f * animTimeScale);
+
+        // Fade the frame in.
+        DPFadeFrame = WeaponDiagnosticAnimFrame.DOColor(targetColor, 0.1f * animTimeScale);
+
+        yield return new WaitForSeconds(0.2f * animTimeScale);
+
+        // Start class items fade in.
+        DPFadeWeaponTitle = DiagnosticWeaponName.DOColor(targetColor, 0.2f * animTimeScale);
+        DPFadeWeaponIcon = DiagnosticWeaponImage.DOColor(targetColor, 0.2f * animTimeScale);
+        DPFadeWeaponText = DiagnosticWeaponDescription.DOColor(new Color(1f, 1f, 1f, 1f), 0.2f * animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        showWeaponDiagnosticBarSection(0, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        showWeaponDiagnosticBarSection(1, animTimeScale);
+
+        // Reverse fill direction.
+        WeaponDiagnosticAnimFrame.fillOrigin = (int)Image.Origin90.TopLeft;
+        // Start reverse fill amount tween.
+        DPFillAmountFrame = WeaponDiagnosticAnimFrame.DOFillAmount(0, 0.4f * animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        showWeaponDiagnosticBarSection(2, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        showWeaponDiagnosticBarSection(3, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        showWeaponDiagnosticBarSection(4, animTimeScale);
+
+        // Fade the frame out.
+        DPFadeFrame = WeaponDiagnosticAnimFrame.DOColor(new Color(activeWeaponColor[0],
+            activeWeaponColor[1],
+            activeWeaponColor[2],
+            0f), 0.2f * animTimeScale);
+
+        yield return null;
+    }
+
+    // Triggers tweens for showing sections within the weapon diagnostic based on given index.
+    private void showWeaponDiagnosticBarSection(int index, float animTimeScale)
+    {
+        // Fade in various elements that make up the bar.
+        // White elements
+        Color blankColor = new Color(1f, 1f, 1f, 1f);
+        DPIconFade[index] = WeaponDiagnosticIcons[index].DOColor(blankColor, 0.2f * animTimeScale);
+        DPTitleFade[index] = WeaponDiagnosticTitles[index].DOColor(blankColor, 0.2f * animTimeScale);
+        // Hue elements
+        Color targetColor = new Color(WeaponDiagnosticColors[index][0],
+            WeaponDiagnosticColors[index][1],
+            WeaponDiagnosticColors[index][2],
+            1f);
+        DPValueFade[index] = WeaponDiagnosticValues[index].DOColor(targetColor, 0.2f * animTimeScale);
+        DPBarFade[index] = WeaponDiagnosticBars[index].DOColor(targetColor, 0.2f * animTimeScale);
+        DPBarFrameFade[index] = WeaponDiagnosticBarFrames[index].DOColor(targetColor, 0.2f * animTimeScale);
+
+        // Tween the bar's fill amount to current value.
+        DPBarFillAmount[index] = WeaponDiagnosticBars[index].DOFillAmount(WeaponDiagnosticBarValues[index], 0.3f * animTimeScale);
+    }
+
+    // Animates the weapon diagnostic panel and its elements out of view.
+    public IEnumerator hideDiagnosticPanelWeapon()
+    {
+        // Create a local variable for the fade out color for highlighted elements.
+        // (in this case, it is the faded out version of the color).
+        Color targetColor = new Color(activeWeaponColor[0],
+            activeWeaponColor[1],
+            activeWeaponColor[2],
+            0f);
+        // Define a time scale for this animation, to easily shorten or lengthen it.
+        float animTimeScale = 1f;
+
+        // NOTE: The floats within the following animation and wait functions define a duration for and between various animations.
+
+        // Set fill direction.
+        WeaponDiagnosticAnimFrame.fillOrigin = (int)Image.Origin90.TopLeft;
+        // Start fill amount tween.
+        DPFillAmountFrame = WeaponDiagnosticAnimFrame.DOFillAmount(1, 0.4f * animTimeScale);
+
+        // Fade the frame in.
+        DPFadeFrame = WeaponDiagnosticAnimFrame.DOColor(activeWeaponColor, 0.1f * animTimeScale);
+
+        // Start class items fade out.
+        DPFadeWeaponTitle = DiagnosticWeaponName.DOColor(targetColor, 0.2f * animTimeScale);
+        DPFadeWeaponIcon = DiagnosticWeaponImage.DOColor(targetColor, 0.2f * animTimeScale);
+        DPFadeWeaponText = DiagnosticWeaponDescription.DOColor(new Color(1f, 1f, 1f, 0f), 0.2f * animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        hideWeaponDiagnosticBarSection(0, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        hideWeaponDiagnosticBarSection(1, animTimeScale);
+
+        // Start bg fade out tween.
+        DPFadeBG = WeaponDiagnosticBG.DOColor(new Color(1f, 1f, 1f, 0f), 0.4f * animTimeScale);
+
+        // Reverse fill direction.
+        WeaponDiagnosticAnimFrame.fillOrigin = (int)Image.Origin90.BottomRight;
+        // Start reverse fill amount tween.
+        DPFillAmountFrame = WeaponDiagnosticAnimFrame.DOFillAmount(0, 0.4f * animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        hideWeaponDiagnosticBarSection(2, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        hideWeaponDiagnosticBarSection(3, animTimeScale);
+
+        // Fade the frame out.
+        DPFadeFrame = WeaponDiagnosticAnimFrame.DOColor(targetColor, 0.2f * animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        hideWeaponDiagnosticBarSection(4, animTimeScale);
+
+        yield return new WaitForSeconds(0.1f * animTimeScale);
+
+        // Disable the character diagnostic panel.
+        WeaponDiagnosticInfoPanel.SetActive(false);
+
+        yield return null;
+    }
+
+    // Triggers tweens for hiding sections within the weapon diagnostic based on given index.
+    private void hideWeaponDiagnosticBarSection(int index, float animTimeScale)
+    {
+        // Fade out various elements that make up the bar.
+        // White elements
+        Color blankColor = new Color(1f, 1f, 1f, 0f);
+        DPIconFade[index] = WeaponDiagnosticIcons[index].DOColor(blankColor, 0.2f * animTimeScale);
+        DPTitleFade[index] = WeaponDiagnosticTitles[index].DOColor(blankColor, 0.2f * animTimeScale);
+        // Hue elements
+        Color targetColor = new Color(WeaponDiagnosticColors[index][0],
+            WeaponDiagnosticColors[index][1],
+            WeaponDiagnosticColors[index][2],
+            0f);
+        DPValueFade[index] = WeaponDiagnosticValues[index].DOColor(targetColor, 0.2f * animTimeScale);
+        DPBarFade[index] = WeaponDiagnosticBars[index].DOColor(targetColor, 0.2f * animTimeScale);
+        DPBarFrameFade[index] = WeaponDiagnosticBarFrames[index].DOColor(targetColor, 0.2f * animTimeScale);
+
+        // Tween the bar's fill amount to 0.
+        DPBarFillAmount[index] = WeaponDiagnosticBars[index].DOFillAmount(0f, 0.1f * animTimeScale);
+    }
+
+    // Instantly reset the Character diagnostic panel elements to their initial hidden state.
+    public void hideDiagnosticPanelWeaponInitial()
+    {
+        // Create a local variable for the fade out color for highlighted elements.
+        // (in this case, it is the faded out version of the color).
+        Color targetColor = new Color(activeWeaponColor[0],
+            activeWeaponColor[1],
+            activeWeaponColor[2],
+            0f);
+
+        // Hide and reset anim frame.
+        WeaponDiagnosticAnimFrame.fillAmount = 0f;
+        WeaponDiagnosticAnimFrame.color = targetColor;
+
+        // Hide colored elements.
+        DiagnosticWeaponImage.color = targetColor;
+        DiagnosticWeaponName.color = targetColor;
+
+        // Hide non colored elements.
+        WeaponDiagnosticBG.color = new Color(1f, 1f, 1f, 0f);
+        DiagnosticWeaponDescription.color = new Color(1f, 1f, 1f, 0f);
+
+        // Hide all of the elements within the sections of the weapon diagnostic.
+        for (int i = 0; i < 5; i++)
+        {
+            hideWeaponDiagnosticBarSectionInitial(i);
+        }
+    }
+
+    private void hideWeaponDiagnosticBarSectionInitial(int index)
+    {
+        // Hide various elements that make up the bar.
+        // White elements
+        Color blankColor = new Color(1f, 1f, 1f, 0f);
+        WeaponDiagnosticIcons[index].color = blankColor;
+        WeaponDiagnosticTitles[index].color = blankColor;
+        // Hue elements
+        Color targetColor = new Color(WeaponDiagnosticColors[index][0],
+            WeaponDiagnosticColors[index][1],
+            WeaponDiagnosticColors[index][2],
+            0f);
+        WeaponDiagnosticValues[index].color = targetColor;
+        WeaponDiagnosticBars[index].color = targetColor;
+        WeaponDiagnosticBarFrames[index].color = targetColor;
+
+        // Set the bar's fill amount to 0.
+        WeaponDiagnosticBars[index].fillAmount = 0f;
     }
 
 }

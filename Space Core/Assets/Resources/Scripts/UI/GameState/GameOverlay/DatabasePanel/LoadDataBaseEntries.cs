@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.IO;
 
+[System.Serializable]
 public static class LoadDataBaseEntries
 {
     public static Dictionary<string, DataEntry> Logs = new Dictionary<string, DataEntry>();
-    public static bool AllLogsLoaded = false;
 
     /// <summary>
     /// DataEntry holds all database panel info and must be unlocked to be displayed in the panel
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public struct DataEntry
     {
         [Tooltip("The name of the data entry log")]
@@ -22,13 +21,13 @@ public static class LoadDataBaseEntries
         public string LogCategory;
 
         [Tooltip("The image associated with the data entry log")]
-        public Sprite LogImage;
+        public string LogImagePath;
         
         [Tooltip("Returns whether or not the log has been unlocked")]
         public bool Visible;
 
         [Tooltip("All entries associated with this log")]
-        public Dictionary<string, Tuple<string, bool>> LogEntries;        
+        public Dictionary<string, Tuple<string, bool>> LogEntries;
 
         /// <summary>
         /// Data entry constructor. All entries start as locked
@@ -37,10 +36,10 @@ public static class LoadDataBaseEntries
         /// <param name="info"></param>
         /// <param name="img"></param>
         /// <param name="cat"></param>
-        public DataEntry(string name, Dictionary<string, Tuple<string, bool>> info, Sprite img, string cat)
+        public DataEntry(string name, Dictionary<string, Tuple<string, bool>> info, string img, string cat)
         {
             LogName = name;
-            LogImage = img;
+            LogImagePath = img;
             LogEntries = info;
             LogCategory = cat;
             Visible = false;
@@ -52,9 +51,6 @@ public static class LoadDataBaseEntries
     /// </summary>
     public static void LoadAllDataEntries()
     {
-        //If logs have already been loaded, don't load them again
-        if (AllLogsLoaded) return;
-
         //Get the directionary holding the category folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
         string[] categoryFolders = Directory.GetDirectories(dir.FullName);
@@ -71,7 +67,7 @@ public static class LoadDataBaseEntries
                 DirectoryInfo logDir = new DirectoryInfo(logPath);
                 FileInfo[] Files = logDir.GetFiles("*.txt");
 
-                string logName = pullDirectoryEndPoint(logPath);
+                string logName = GameManager.instance.PullDirectoryEndPoint(logPath);
 
                 //Load all text assets from resources
                 TextAsset[] dataFolders = Resources.LoadAll<TextAsset>("Text/Lore/" + catDir.Name + "/" + logName);
@@ -81,7 +77,7 @@ public static class LoadDataBaseEntries
                 for (int ii = 0; ii < dataFolders.Length; ii++)
                 {
                     //Format filename appropriately 
-                    string logFileType = pullDirectoryEndPoint(Files[ii].Name);
+                    string logFileType = GameManager.instance.PullDirectoryEndPoint(Files[ii].Name);
                     logFileType = logFileType.Substring(0, logFileType.Length - 4);
 
                     //Compile the data entry
@@ -96,10 +92,6 @@ public static class LoadDataBaseEntries
                 }
             }
         }
-
-        //Unlock stuff for testing purposes
-        UnlockDataEntry("GREENHOUSE 10-1", "NEWS ARTICLE");
-        UnlockDataEntry("GREENHOUSE 10-1", "OBSERVATION");
     }
 
     /// <summary>
@@ -126,14 +118,13 @@ public static class LoadDataBaseEntries
             entry.Visible = false;
 
             //Load the respective image from resources/images using the pulled name
-            Sprite img = Resources.Load<Sprite>("Images/DataEntryImages/" + logName);
-            if (img == null)
+            string img = "Images/DataEntryImages/" + logName;
+            if (logName == null)
             {
-                Debug.LogWarning("No image with name " + logName + " found");
-                img = Resources.Load<Sprite>("Images/DataEntryImages/GREENHOUSE 10-2");
-                entry.LogImage = img;
+                img ="Images/DataEntryImages/GREENHOUSE 10-2";
+                entry.LogImagePath = img;
             }
-            entry.LogImage = img;
+            entry.LogImagePath = img;
             entry.LogCategory = category;
             entry.LogName = logName;
             entry.LogEntries = new Dictionary<string, Tuple<string, bool>>();
@@ -147,17 +138,6 @@ public static class LoadDataBaseEntries
 
         //Return loaded entry
         return entry;
-    }
-
-    /// <summary>
-    /// Pulls the end most item from a directory path
-    /// </summary>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    private static string pullDirectoryEndPoint(string path)
-    {
-        int pos = path.LastIndexOf("\\") + 1;
-        return path.Substring(pos, path.Length - pos);
     }
 
     /// <summary>
@@ -182,5 +162,8 @@ public static class LoadDataBaseEntries
         }
 
         Logs[entryName] = d;
+
+        //Initiate popp for new entry
+        HUDController.instance.InitiateDatabasePopup(entryName, entryArticle);
     }
 }

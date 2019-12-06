@@ -4,8 +4,10 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    public int Health { get; set; }
-    public int MaxHealth { get; set; }
+    public enum AnimationState { idle, running }
+
+    public float Health { get; set; }
+    public float MaxHealth { get; set; }
     public Weapon Weapon { get; set; }
     public bool isImmortal { get; set; }
     public GameObject RotationPoint { get; set; }
@@ -14,7 +16,11 @@ public abstract class Character : MonoBehaviour
     public Movement movement { get; protected set; }
     public GameObject MinimapIcon;
 
-    public bool isStunned { get; private set; }
+    public bool isStunned { get; set; }
+    public int facingDirection { get { return (int)Mathf.Sign(transform.localScale.x); } }
+
+    public AnimationState animationState { get; set; }
+    public Animator animator;
 
     protected virtual void Start()
     {
@@ -51,14 +57,30 @@ public abstract class Character : MonoBehaviour
     public virtual void Move(float axis)
     {
         if (isStunned)
+        {
             axis = 0;
+        }
+
+        if (axis != 0 && animationState != AnimationState.running)
+        {
+            animationState = AnimationState.running;
+            animator.SetInteger("AnimationState", (int) animationState);
+        }
+        else if (axis == 0 && animationState == AnimationState.running)
+        {
+            animationState = AnimationState.idle;
+            animator.SetInteger("AnimationState", (int)animationState);
+        }
+
         movement.Run(axis);
     }
 
     public virtual void Jump()
     {
         if (!isStunned)
+        {
             movement.Jump();
+        }
     }
 
     public virtual void JumpCancel()
@@ -75,7 +97,7 @@ public abstract class Character : MonoBehaviour
 
         TakeDamage(attackInfo.damage);
         StartCoroutine(Stun(attackInfo.stunTime));
-        movement.TakeKnockback(attackInfo.knockbackImpulse);
+        movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
     }
 
     public IEnumerator Stun(float time)
@@ -85,23 +107,21 @@ public abstract class Character : MonoBehaviour
         isStunned = false;
     }
 
-    protected virtual void TakeDamage(int damage)
+    protected virtual void TakeDamage(float damage)
     {
-        
-        if (Health - damage <= 0)
+        Health -= damage;
+        if (Health <= 0)
         {
             Die();
-        }
-        else
-        {
-            Health -= damage;
         }
     }
 
     protected abstract void Die();
 
-    public abstract void Fire();
+    public abstract bool Fire();
     public abstract void Reload();
     public abstract void AimWeapon(float angle);
+
+    public abstract void DeselectHackTarget();
 
 }

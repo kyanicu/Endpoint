@@ -15,7 +15,7 @@ public abstract class Movement : MonoBehaviour
     public CharacterController2D charCont;
 
     private Vector2 _velocity;
-    public Vector2 velocity { get { return _velocity; } protected set { _velocity = value; } }
+    public Vector2 velocity { get { return _velocity; } set { _velocity = value; } }
 
     /// <summary>
     /// Are we forcing the character controller off the ground this frame?
@@ -24,10 +24,21 @@ public abstract class Movement : MonoBehaviour
     public bool forceUnground { protected get { return _forceUnground; } set { _forceUnground = value; } }
 
     /// <summary>
+    /// Are we preventing Run() from being called?
+    /// </summary>
+    public bool freezeRun;
+
+    /// <summary>
+    /// Does the character collide with other characters (not pass through)?
+    /// </summary>
+    public bool collideWithCharacters = true;
+
+
+    /// <summary>
     /// Character movement values
     /// </summary>
     [SerializeField]
-    private float _runMax, _runAccel, _runDecel,
+    private float _runMax, _runAccel, _runDecel, _runBreak,
         _jumpVelocity, _gravityScale, _jumpCancelMinVel, _jumpCancelVel,
         _airAccel, _airDecel, _airMax,
         _pushForce,
@@ -46,6 +57,7 @@ public abstract class Movement : MonoBehaviour
     protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
     protected float runAccel { get { return _runAccel * mod; } set { _runAccel = value; } }
     protected float runDecel { get { return _runDecel * mod; } set { _runDecel = value; } }
+    protected float runBreak { get { return _runBreak * mod; } set { _runBreak = value; } }
     protected float jumpVelocity { get { return _jumpVelocity * mod; } set { _jumpVelocity = value; } }
     protected float gravityScale { get { return _gravityScale * mod; } set { _gravityScale = value; } }
     protected float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } set { _jumpCancelMinVel = value; } }
@@ -101,6 +113,57 @@ public abstract class Movement : MonoBehaviour
             charCont = GetComponent<CharacterController2D>();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
+        {
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = -collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = -(transform.position - collision.transform.position).normalized;
+
+            CancelDirectionalVelocity(dist.normalized);
+
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
+        {
+            float maxPushbackVel = 5;
+            float accel = (tag == "Player") ? 50 : 0;
+
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = (transform.position - collision.transform.position).normalized;
+
+            if (Vector3.Project(velocity, dist).magnitude < maxPushbackVel)
+                velocity += (Vector2)Vector3.Project(dist, Vector2.right).normalized * accel * Time.deltaTime;
+
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
+        {
+            Vector2 dist;
+            if (collision.tag == "Weapon")
+                dist = collision.GetComponent<Weapon>().aimingDirection;
+            else
+                dist = (transform.position - collision.transform.position).normalized;
+
+            CancelDirectionalVelocity(dist.normalized);
+
+        }
+    }
+
     /// <summary>
     /// Default run method
     /// </summary>
@@ -110,6 +173,8 @@ public abstract class Movement : MonoBehaviour
     /// +1 == right</param>
     public virtual void Run(float direction)
     {
+        if (freezeRun)
+            return;
 
         if (charCont.isTouchingRightWall && direction == +1)
         {
@@ -153,6 +218,7 @@ public abstract class Movement : MonoBehaviour
 
             float velSign = Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
 
+            // Deceleration
             if (direction == 0 || velocity.magnitude > runMax)
             {
                 if (velocity.magnitude - runDecel * Time.fixedDeltaTime <= 0)
@@ -160,6 +226,15 @@ public abstract class Movement : MonoBehaviour
                 else
                     velocity += charCont.currentSlope * runDecel * -velSign * Time.fixedDeltaTime;
             }
+            // Breaking
+            else if (velSign != direction && velocity.magnitude != 0)
+            {
+                if (velocity.magnitude - runDecel * Time.fixedDeltaTime <= 0)
+                    velocity = Vector2.zero;
+                else
+                    velocity += charCont.currentSlope * runBreak * direction * Time.fixedDeltaTime;
+            }
+            // Acceleration
             else
             {
                 if (Mathf.Abs((velocity.magnitude * velSign) + (runAccel * direction * Time.fixedDeltaTime)) >= runMax)
@@ -182,6 +257,7 @@ public abstract class Movement : MonoBehaviour
         {
             velocity = new Vector2(velocity.x, jumpVelocity);
             forceUnground = true;
+            ObjectPooler.instance.SpawnFromPool("JumpParticle", transform.position, Quaternion.identity);
             isJumping = true;
         }
     }
@@ -191,7 +267,6 @@ public abstract class Movement : MonoBehaviour
     /// </summary>
     public virtual void JumpCancel()
     {
-
         if (isJumping)
         {
             if (velocity.y <= jumpCancelMinVel)
@@ -208,9 +283,36 @@ public abstract class Movement : MonoBehaviour
     /// <summary>
     /// Applies knockback velocity to the player
     /// </summary>
-    public void TakeKnockback(Vector2 impulse)
+    public void TakeKnockback(Vector2 impulse, float time)
     {
-        velocity += impulse / mass;
+
+        if (impulse == Vector2.zero || time == 0)
+        {
+            return;
+        }
+
+        if (impulse.y > 0.1)
+            forceUnground = true;
+        else
+            impulse = Vector3.Project(impulse, charCont.currentSlope);
+
+        StartCoroutine(FreezeRunFor(time));
+        StartCoroutine(PassThroughCharactersFor(time));
+        velocity = impulse / mass;
+    }
+
+    public IEnumerator FreezeRunFor(float time)
+    {
+        freezeRun = true;
+        yield return new WaitForSeconds(time);
+        freezeRun = false;
+    }
+
+    public IEnumerator PassThroughCharactersFor(float time)
+    {
+        collideWithCharacters = false;
+        yield return new WaitForSeconds(time);
+        collideWithCharacters = true;
     }
 
     /// <summary>
@@ -220,11 +322,12 @@ public abstract class Movement : MonoBehaviour
     /// <param name="contactCount">size of contact data</param>
     protected virtual void HandleContacts(ContactData[] contacts, int contactCount)
     {
+
         if (!charCont.isGrounded)
         {
 
-            if (charCont.isTouchingCeiling)
-                CancelDirectionalVelocity(Vector2.up);
+            //if (charCont.isTouchingCeiling)
+                //CancelDirectionalVelocity(Vector2.up);
 
             if (charCont.isTouchingRightWall)
                 CancelDirectionalVelocity(Vector2.right);
@@ -232,15 +335,33 @@ public abstract class Movement : MonoBehaviour
                 CancelDirectionalVelocity(Vector2.left);
 
             // Need to figure out why this acts weird, for now use the less accurate code up top
-            /* 
+            
             for (int i = 0; i < contactCount; i++)
             {
-                if (contacts[i].wasHit)
-                { 
+                if (contacts[i].isCorner)
+                {
+                    float x;
+                    float y;
+
+                    if (Mathf.Sign(contacts[i].normal.x) != Mathf.Sign(velocity.x))
+                        x = 0;
+                    else
+                        x = velocity.x;
+
+                    if (Mathf.Sign(contacts[i].normal.y) != Mathf.Sign(velocity.y) && velocity.y > 0)
+                        y = 0;
+                    else
+                        y = velocity.y;
+
+                    velocity = new Vector2(x, y);
+                    
+                }
+                else if (contacts[i].wasHit)
+                {
                     CancelDirectionalVelocity(-contacts[i].normal);
                 }
             }
-            */
+            
         }
         else
         {
@@ -289,17 +410,34 @@ public abstract class Movement : MonoBehaviour
 
         Vector2 proj = Vector3.Project(velocity, direction);
 
-        velocity -= proj;
-
-
         if (direction.normalized != proj.normalized)
             return;
 
-        //velocity -= proj;
-
+        velocity -= proj;
+        
     }
 
-    
+    public ContactData[] UpdateState(Vector2 simMoveDir, out int contactCount)
+    {
+        bool prevGroundedState = charCont.isGrounded;
+       
+        ContactData[] contactDatas = charCont.UpdateState(out contactCount, simMoveDir);
+
+        HandleContacts(contactDatas, contactCount);
+
+        if (charCont.isGrounded)
+        {
+            if (prevGroundedState != charCont.isGrounded)
+                velocity = Vector3.Project(velocity, charCont.currentSlope);
+            else
+                velocity = charCont.currentSlope * velocity.magnitude * Mathf.Sign(Vector2.Dot(charCont.currentSlope, velocity));
+        }
+
+        forceUnground = false;
+        pushingDirection = 0;
+
+        return contactDatas;
+    }
 
     /// <summary>
     /// Main function where velocity is handled appropriately
@@ -339,6 +477,7 @@ public abstract class Movement : MonoBehaviour
 
             for (int i = 0; i < moveCount; i++)
                 HandleContacts(moveDatas[i].contacts, moveDatas[i].contactCount);
+
             if (charCont.isGrounded)
             {
                 if (prevGroundedState != charCont.isGrounded)

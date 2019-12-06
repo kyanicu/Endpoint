@@ -12,6 +12,7 @@ public class BasicMovement : Movement
         runMax = 7;
         runAccel = 40;
         runDecel = 40;
+        runBreak = 100;
         jumpVelocity = 18;
         gravityScale = 1;
         jumpCancelMinVel = 12;

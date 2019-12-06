@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class ShockFloor : MonoBehaviour
 {
-    private bool shock = false;
+    [SerializeField] 
+    private int damage;
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && !(shock))
+        if(collision.CompareTag("Player"))
         {
-            shock = true;
-            Player.instance.ReceiveAttack(new AttackInfo(15, Vector2.zero, 0));
-            shock = false;
+            Player.instance.ReceiveAttack(new AttackInfo(damage*Time.fixedDeltaTime, Vector2.zero, 0, 0, DamageSource.Hazard));
         }
     }
 }

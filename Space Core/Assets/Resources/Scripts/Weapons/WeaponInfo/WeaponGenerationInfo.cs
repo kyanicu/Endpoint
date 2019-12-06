@@ -15,21 +15,25 @@ public abstract class WeaponGenerationInfo
     protected const float MIN_RANGE_CHECK = .15f;
     #endregion
 
-    #region Weapon Stat Ranges
     public string name;
+    public string baseName;
+    public string description;
 
+    #region Weapon Stat Ranges
     public float MinSpread;
     public float MaxSpread;
 
     public int MinDamage;
     public int MaxDamage;
-
-    public float MinStunTime;
-    public float MaxStunTime;
+  
+    public float StunTime;
 
     public float MinKnockbackImpulse;
     public float MaxKnockbackImpulse;
-    
+
+    public float MinKnockbackTime;
+    public float MaxKnockbackTime;
+
     public int MinClipSize;
     public int MaxClipSize;
 
@@ -55,7 +59,7 @@ public abstract class WeaponGenerationInfo
     /// <returns></returns>
     public float[] PassMaxValues()
     {
-        float[] maxValues = { MaxDamage, MaxRateOfFire, MaxReloadTime, MaxClipSize, MaxRange, MaxBulletVeloc };
+        float[] maxValues = { MaxDamage, MaxRateOfFire, MaxReloadTime, MaxRange, MaxBulletVeloc };
         return maxValues;
     }
 
@@ -68,11 +72,10 @@ public abstract class WeaponGenerationInfo
     {
         //Check if all stats are in really good range
         if ((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) > MAX_AVG_RANGE_CHECK &&
-                 (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) > MAX_AVG_RANGE_CHECK &&
-                 (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) > MAX_AVG_RANGE_CHECK &&
-                 (wep.Range - MinRange) / (MaxRange - MinRange) > MAX_AVG_RANGE_CHECK &&
-                 (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) > MAX_AVG_RANGE_CHECK &&
-                 (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) > MAX_AVG_RANGE_CHECK)
+            (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) > MAX_AVG_RANGE_CHECK &&
+            (wep.Range - MinRange) / (MaxRange - MinRange) > MAX_AVG_RANGE_CHECK &&
+            (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) > MAX_AVG_RANGE_CHECK &&
+            (wep.ReloadTime - MinReloadTime) / (MaxReloadTime - MinReloadTime) > MAX_AVG_RANGE_CHECK)
         {
             string[] BestNames = { "Legendary ", "Godly ", "Unique ", "Optimal ", "Ideal" };
             int rngVal = Random.Range(0, BestNames.Length);
@@ -80,7 +83,6 @@ public abstract class WeaponGenerationInfo
         }
         //Check if all stats are in really terrible range
         else if ((wep.Damage - (float)MinDamage) / (MaxDamage - MinDamage) < MIN_AVG_RANGE_CHECK &&
-                 (wep.ClipSize - (float)MinClipSize) / (MaxClipSize - MinClipSize) < MIN_AVG_RANGE_CHECK &&
                  (wep.RateOfFire - MinRateOfFire) / (MaxRateOfFire - MinRateOfFire) < MIN_AVG_RANGE_CHECK &&
                  (wep.Range - MinRange) / (MaxRange - MinRange) < MIN_AVG_RANGE_CHECK &&
                  (wep.BulletVeloc - MinBulletVeloc) / (MaxBulletVeloc - MinBulletVeloc) < MIN_AVG_RANGE_CHECK &&

@@ -38,27 +38,16 @@ public class PauseMenuManager : MonoBehaviour {
     public bool PauseMenuPanelIsActive { get; set; }
 
     private static PauseMenuManager _instance = null;
-    public static PauseMenuManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PauseMenuManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(PauseMenuManager).Name).AddComponent<PauseMenuManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
-    }
+    public static PauseMenuManager instance;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (_instance == null || _instance != this)
+        {
+            _instance = this;
+        }
+
         // Set selected button ID to the resume button.
         selectedID = MenuItemID.ResumeButton;
 

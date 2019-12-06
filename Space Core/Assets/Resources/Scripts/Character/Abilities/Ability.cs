@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// The abstract class of a character ability
@@ -12,12 +13,17 @@ public abstract class Ability : MonoBehaviour
     /// </summary>
     protected abstract bool activationCondition { get;  }
 
+    public string AbilityName;
+    public string AbilityShortName;
+    public Sprite AbilityImage;
+    public string AbilityDescription;
+
     /// <summary>
     /// Reference to the owning character
     /// </summary>
     protected Character owner;
 
-    private void Awake()
+    protected void Awake()
     {
         owner = transform.GetComponent<Character>();
     }

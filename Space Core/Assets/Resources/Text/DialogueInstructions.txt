@@ -1,0 +1,12 @@
+Dialogue Files:
+	Dialogue instructions are line specific so fill out the template below and paste everything below the dashes into a new file.
+	Give each Dialogue file a unique name so that it is easily to pick which file was meant for where when we start implementing
+	story and dialogue into the game. Make sure to separate out your dialogue into lines like how you want it to be read on screen.
+
+
+----------------------------------------------------------DIALOGUE FILE TEMPLATE-----------------------------------------------------------
+Speaker: ADAM
+Icon type: null
+This is just a simple dialogue test.
+Hopefully this gets read on a separate line.
+Did it work??

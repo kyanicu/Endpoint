@@ -1,0 +1,6 @@
+Description: ACCESS THE TRAMLINER'S SIMULATION CLUSTER
+Number of Objectives: 1
+Icon Type: diamondIcon
+After confirming a plan of action with the Codex, you've set out to the Veneran Wastes to transmit yourself to the Enigma.
+
+Since the Enigma has safeguardsin place, you will have to acquire a network key from an Enigma drone to pass through its electronic barriers

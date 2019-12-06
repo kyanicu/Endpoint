@@ -111,9 +111,9 @@ public class SwapPanelManager : MonoBehaviour
             // Play the animation of the Swapping Bars hiding again.
             if (timer >= rechargeTime - animationTime - 0.2f && isAnimationHideRunning == false)
             {
-                SwappingText.color = barHighlight;
+                SwappingText.color = HUDController.instance.activeClassColor;
 
-                SwappingText.text = "Swap Ready";
+                SwappingText.text = "Hack Ready";
                 SwappingBarReset.enabled = true;
                 DOTween.To(() => frameHeight, x => frameHeight = x, 0, animationTime);
                 DOTween.To(() => barHeight, x => barHeight = x, 0, animationTime);
@@ -128,5 +128,15 @@ public class SwapPanelManager : MonoBehaviour
             yield return new WaitForSeconds(.05f);
             }
         }
+    }
+
+    // Recolors all elements within the Swap Panel to match the current character's class.
+    public void RecolorSwapHUD()
+    {
+        SwappingBarLeft.color = HUDController.instance.activeClassColor;
+        SwappingBarRight.color = HUDController.instance.activeClassColor;
+        SwappingBarFrame.color = HUDController.instance.activeClassColor;
+        SwappingBarReset.color = HUDController.instance.activeClassColor;
+        SwappingText.color = barBlank;
     }
 }

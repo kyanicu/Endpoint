@@ -8,10 +8,10 @@ TagManager:
   - Bullet
   - HackProjectile
   - PushableObject
-  - OB
   - Ammo
   - Terrain
   - PiercingBullet
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -26,9 +26,9 @@ TagManager:
   - Minimap
   - MapScreen
   - Minimap/Mapscreen
-  - 
-  - 
-  - 
+  - Weapon
+  - Player
+  - Enemy
   - 
   - 
   - 

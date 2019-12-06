@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+
+/// <summary>
 /// Script that controls the bullet object for the piercingShotAbility
 /// </summary>
 public class PiercingBullet : Bullet
@@ -11,9 +13,9 @@ public class PiercingBullet : Bullet
     /// <summary>
     /// Setting NumPassed and MaxPassed to arbitrary values for now
     /// </summary>
-    private new void Start()
+    private new void Activate()
     {
-        base.Start();
+        base.Activate();
         NumPassed = 0;
         MaxPassed = 1;
     }
@@ -25,9 +27,25 @@ public class PiercingBullet : Bullet
     {
         if (NumPassed > MaxPassed)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         base.Update();
+    }
+
+    private new void OnTriggerEnter2D(UnityEngine.Collider2D collision)
+    {
+        if (collision.tag.Contains("Terrain"))
+        {
+            gameObject.SetActive(false);
+        }
+        else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
+        {
+            if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
+            {
+                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                NumPassed++;
+            }
+        }
     }
 }

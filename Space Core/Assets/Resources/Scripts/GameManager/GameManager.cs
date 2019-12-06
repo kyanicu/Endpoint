@@ -1,26 +1,77 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static float[] MaxValues = { 0, 0, 0, 0, 0 };
+    public static Dictionary<string, float[]> MaxStats;
     public static List<GameObject> Enemies;
+    public static string Sector;
+    public static int SaveFileID = 0;
+    public static string FILE_PATH;
+    public static bool Initialized;
+
+    private static GameManager _instance;
+    public static GameManager instance { get { return _instance; } }
+
+    public static Scenes currentScene;
+
+    public enum Scenes
+    {
+        MainMenu,
+        CentralProcessing,
+        ShipmentFacility,
+        scene3,
+        scene4,
+        scene5,
+        scene6,
+        scene7,
+        scene8,
+        scene9,
+    }
+
+    private void Awake()
+    {
+        if (_instance == null || _instance != this)
+        {
+            _instance = this;
+        }
+        FILE_PATH = $"{Application.dataPath}/Save Files/Endpoint";
+        Application.targetFrameRate = 60; 
+        LoadMaxStats();
+
+        //If DB hasn't been initialized yet, do that
+        if (!Initialized)
+        {
+            Initialized = true;
+            currentScene = (Scenes)SceneManager.GetActiveScene().buildIndex;
+            Sector = "CENTRAL PROCESSING";
+            LoadDataBaseEntries.LoadAllDataEntries();
+            LoadObjectives.LoadAllObjectives();
+            LoadDialogue.LoadDialogueItems();
+        }
+        //Create a directory for save files if one doesn't exist
+        if (!Directory.Exists(Application.dataPath + "/Save Files"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Save Files");
+        }
+
+        //Retrieve updated new SaveFileID
+        string path = $"{FILE_PATH}{SaveFileID}.sav";
+        while (File.Exists(path))
+        {
+            SaveFileID++;
+            path = $"{FILE_PATH}{SaveFileID}.sav";
+        }
+        LoadMaxStats();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        Application.targetFrameRate = 60;
-        LoadMaxStats();
-
-        //If DB hasn't been initialized yet, do that
-        if (!LoadDataBaseEntries.AllLogsLoaded)
-        {
-            LoadDataBaseEntries.LoadAllDataEntries();
-            LoadDataBaseEntries.AllLogsLoaded = true;
-        }
-
         Enemies = null;
     }
 
@@ -43,7 +94,6 @@ public class GameManager : MonoBehaviour
         Damage,
         FireRate,
         ReloadTime,
-        MagazineSize,
         Range,
         BulletVeloc
     };
@@ -53,6 +103,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static void LoadMaxStats()
     {
+        MaxStats = new Dictionary<string, float[]>();
         List<WeaponGenerationInfo> allWeaponsList = new List<WeaponGenerationInfo>();
         allWeaponsList.Add(new Jakkaru());
         allWeaponsList.Add(new Matsya());
@@ -62,37 +113,22 @@ public class GameManager : MonoBehaviour
         {
             //Load current weapon stats at list index i
             float[] loadedStats = allWeaponsList[i].PassMaxValues();
+            string weaponName = allWeaponsList[i].name;
 
-            //Loop through each weapon in the list to get the highest possible stats
-            for (int x = 0; x < (int)MaxStat.ReloadTime; x++)
-            {
-                //Compare the curent to the max
-                if (MaxValues[x] < loadedStats[x])
-                {
-                    //Overwrite list with new max
-                    MaxValues[x] = loadedStats[x];
-                }
-            }
+            //Add them to the dictionary keeping track of each weapon's max stats
+            MaxStats.Add(weaponName, loadedStats);
         }
     }
     #endregion
 
-    private static GameManager _instance = null;
-    public static GameManager instance
+    /// <summary>
+    /// Pulls the end most item from a directory path
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public string PullDirectoryEndPoint(string path)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<GameManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(GameManager).Name).AddComponent<GameManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
+        int pos = path.LastIndexOf("\\") + 1;
+        return path.Substring(pos, path.Length - pos);
     }
 }

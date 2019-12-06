@@ -16,6 +16,7 @@ public class EMPGrenade : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Terrain"))
         {
+            ObjectPooler.instance.SpawnFromPool("EMPParticle", transform.position, Quaternion.identity);
             Collider[] Colliders = Physics.OverlapSphere(transform.localPosition, Radius);
             foreach (Collider collider in Colliders)
             {
@@ -24,7 +25,7 @@ public class EMPGrenade : MonoBehaviour
                     collider.gameObject.GetComponent<Enemy>().Freeze();
                 }
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }        
     }
 
@@ -40,7 +41,7 @@ public class EMPGrenade : MonoBehaviour
                     collider.gameObject.GetComponent<Enemy>().Freeze();
                 }
             }
-            Destroy(gameObject);
+            gameObject.gameObject.SetActive(false);
         }
     }
 }

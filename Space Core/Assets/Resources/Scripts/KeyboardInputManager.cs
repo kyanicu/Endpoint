@@ -66,10 +66,15 @@ public class KeyboardInputManager : InputManager
         if (Input.GetMouseButton(0))
         {
             Player.instance.Fire();
+            HUDController.instance.UpdateAmmo(Player.instance);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
             Player.instance.Reload();
+        }
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            Player.instance.ActivateEnvironmentObj();
         }
 
         if (Input.GetKey(KeyCode.F))
@@ -83,7 +88,7 @@ public class KeyboardInputManager : InputManager
             HUDController.instance.toggleDiagnosticPanels();
         }
 
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             // use player ability
             Player.instance.ActivateActiveAbility();
@@ -100,7 +105,11 @@ public class KeyboardInputManager : InputManager
             } 
         }
 
-        Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
+        Vector2 positionOnScreen = Vector2.zero;
+        if (Player.instance.RotationPoint != null)
+        {
+            positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
+        }
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
         float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
 
@@ -128,6 +137,10 @@ public class KeyboardInputManager : InputManager
         else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             MainMenuManager.instance.SelectButton();
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            MainMenuManager.instance.ReturnToMainMenu();
         }
     }
 

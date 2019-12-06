@@ -22,8 +22,10 @@ public abstract class Weapon : MonoBehaviour
     };
 
     public string Name { get; set; }
+    public string FullName { get; set; }
+    public string Description { get; set; }
     public bool IsReloading { get; set; }
-    public Bullet.BulletSource BulletSource { get; set; }
+    public DamageSource BulletSource { get; set; }
     public int AmmoInClip { get; set; }
     public float SpreadFactor { get; set; }
     public int TotalAmmo { get; set; }
@@ -32,22 +34,39 @@ public abstract class Weapon : MonoBehaviour
     public int Damage { get; set; }
     public float StunTime { get; set; }
     public float KnockbackImpulse { get; set; }
+    public float KnockbackTime { get; set; }
     public float RateOfFire { get; set; }
     public float FireTimer { get; set; }
     public float Range { get; set; }
-    public float BulletVeloc { get; set; }
     public float ReloadTime { get; set; }
     public bool ControlledByPlayer { get; set; }
-    public GameObject Bullet { get; set; }
+    public string BulletTag { protected get; set; }
     public GameObject FireLocation { get; set; }
-    protected object ReloadLock = new object();
+    public Character owner { get; set; }
+
+    public float BulletVeloc
+    {
+        get { return (ControlledByPlayer) ? _bulletVelocity * playerBulletVelocMod : _bulletVelocity * enemyBulletVelocMod; }
+        set { _bulletVelocity = value; }
+    }
+
     protected Transform RotationPoint;
-    protected float playerBulletVelocMod = 1.5f;
+    private float playerBulletVelocMod = 1.5f;
+    private float enemyBulletVelocMod = .75f;
+    private float _bulletVelocity;
+
+
+    public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
+
+    private void Awake()
+    {
+        owner = transform.root.GetComponent<Character>();
+    }
 
     /// <summary>
     /// Function that must be implemented to control firing behavior
     /// </summary>
-    public abstract void Fire();
+    public abstract bool Fire();
 
     public void Reload(Character c)
     {
@@ -89,34 +108,40 @@ public abstract class Weapon : MonoBehaviour
             yield return new WaitForSeconds(.5f);
         }
 
-        //Retrieve what inherited memeber of character is doing the reloading
-        bool isPlayer = c.gameObject.GetComponent<Player>();
-        Player p = null;
-
-        if (isPlayer)
+        //Check that passed character still exists
+        if(c != null)
         {
-            p = c.gameObject.GetComponent<Player>();
-        }
+            //Retrieve what inherited memeber of character is doing the reloading
+            bool isPlayer = c.gameObject.GetComponent<Player>();
+            Player p = null;
 
-        //Begin reloading loop
-        while (TotalAmmo > 0 && AmmoInClip < ClipSize)
-        {
-            //Wait until reload timer is up.
-            yield return new WaitForSeconds(ReloadTime / ClipSize);
-
-            //Fill mag with remaining ammo
-            TotalAmmo--;
-            AmmoInClip++;
-
-            //Check if player is reloading to update HUD
             if (isPlayer)
             {
-                HUDController.instance.UpdateAmmo(p);
+                p = c.gameObject.GetComponent<Player>();
             }
+
+            //Begin reloading loop
+            while (TotalAmmo > 0 && AmmoInClip < ClipSize)
+            {
+                if (c == null) break;
+
+                //Wait until reload timer is up.
+                yield return new WaitForSeconds(ReloadTime / ClipSize);
+
+                //Fill mag with remaining ammo
+                TotalAmmo--;
+                AmmoInClip++;
+
+                //Check if player is reloading to update HUD
+                if (isPlayer)
+                {
+                    HUDController.instance.UpdateAmmo(p);
+                }
+            }
+
+            IsReloading = false;
+            yield return null;
         }
-           
-        IsReloading = false;
-        yield return null;
     }
 
     /// <summary>

@@ -1,0 +1,3 @@
+Description: The exodus Project might hold some clues about the future of mankind.
+Number of Objectives: 4
+Icon Type: shootingStarIcon

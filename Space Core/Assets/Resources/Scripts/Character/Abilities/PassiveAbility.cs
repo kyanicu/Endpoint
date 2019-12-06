@@ -11,8 +11,8 @@ public abstract class PassiveAbility : Ability
     public static List<string> PassiveAbilityList = new List<string>()
     {
         "Overclock",
-        "ImmortalReloading",
-        "PiercingShotAbility"
+        "Immortal Reloading",
+        "Piercing Shot"
     };
 
     //if the owner is an enemy, we do not want passive ability to activate

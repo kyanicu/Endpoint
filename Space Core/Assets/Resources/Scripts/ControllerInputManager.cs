@@ -73,6 +73,7 @@ public class ControllerInputManager : InputManager
         if (state.Value.Triggers.Right > 0.3f)
         {
             Player.instance.Fire();
+            HUDController.instance.UpdateAmmo(Player.instance);
         }
 
         if (state.Value.Triggers.Left > 0.3f)
@@ -88,14 +89,14 @@ public class ControllerInputManager : InputManager
 
         #region ABXY Buttons
 
-        if (state.Value.Buttons.A == ButtonState.Pressed && state.Value.Buttons.A == ButtonState.Pressed)
+        if (prevState.Value.Buttons.A == ButtonState.Released && state.Value.Buttons.A == ButtonState.Pressed)
         {
-            //Inspect environmental element
+            Player.instance.ActivateEnvironmentObj();
         }
 
-        if (state.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
+        if (prevState.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
         {
-            //TBD
+            HUDController.instance.UpdateHUD(Player.instance);
         }
 
         if (prevState.Value.Buttons.X == ButtonState.Released && state.Value.Buttons.X == ButtonState.Pressed)
@@ -126,7 +127,7 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.LeftStick == ButtonState.Released && state.Value.Buttons.LeftStick == ButtonState.Pressed)
         {
-            //Deselect Hack Target
+            //TBD
         }
 
         #endregion
@@ -145,8 +146,12 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
-            OverlayManager.instance.ToggleOverlayVisibility();
-            currentState = InputState.OVERLAY;
+            //Make sure overlay can only be opened if not loading 
+            if (HUDController.instance.LoadingScreen == null)
+            {
+                currentState = InputState.OVERLAY;
+                OverlayManager.instance.ToggleOverlayVisibility();
+            }
         }
 
         #endregion
@@ -211,6 +216,10 @@ public class ControllerInputManager : InputManager
         if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
         {
             MainMenuManager.instance.SelectButton();
+        }
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Pressed)
+        {
+            MainMenuManager.instance.ReturnToMainMenu();
         }
     }
 

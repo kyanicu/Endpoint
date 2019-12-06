@@ -7,18 +7,21 @@ public class SnipeyBoi : WeaponGenerationInfo
     public SnipeyBoi()
     {
         name = "SnipeyBoi";
+        description = "Typical ranged weapon with no special features.";
 
         MinSpread = 0.0f;
         MaxSpread = 0.0f;
 
-        MinDamage = 10;
-        MaxDamage = 50;
+        MinDamage = 30;
+        MaxDamage = 40;
 
-        MinKnockbackImpulse = 5;
-        MaxKnockbackImpulse = 20;
+        StunTime = 0.1f;
 
-        MinStunTime = 0;
-        MinStunTime = 0.3f;
+        MinKnockbackImpulse = 10;
+        MaxKnockbackImpulse = 10;
+
+        MinKnockbackTime = 0.1f;
+        MaxKnockbackTime = 0.1f;
 
         MinClipSize = 1;
         MaxClipSize = 10;

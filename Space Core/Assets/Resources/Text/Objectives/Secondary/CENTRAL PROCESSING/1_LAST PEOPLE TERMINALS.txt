@@ -1,0 +1,3 @@
+Description: Understanding the reason for the Enigma's existence might prove useful.
+Number of Objectives: 2
+Icon Type: terminalIcon
