@@ -1492,9 +1492,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charCont: {fileID: 0}
+  freezeRun: 0
+  collideWithCharacters: 1
   _runMax: 7
   _runAccel: 40
   _runDecel: 40
+  _runBreak: 0
   _jumpVelocity: 15
   _gravityScale: 1
   _jumpCancelMinVel: 12
@@ -1552,7 +1555,7 @@ Rigidbody2D:
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!70 &7666198017165101002

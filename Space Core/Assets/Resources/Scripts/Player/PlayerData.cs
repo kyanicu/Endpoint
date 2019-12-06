@@ -14,8 +14,8 @@ public class PlayerData
     #endregion
 
     #region Player Info
-    public int Health;
-    public int MaxHealth;
+    public float Health;
+    public float MaxHealth;
     public string Class;
     public float[] Position;
     public string ActiveAbilityName;

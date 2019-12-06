@@ -6,8 +6,8 @@ public abstract class Character : MonoBehaviour
 {
     public enum AnimationState { idle, running }
 
-    public int Health { get; set; }
-    public int MaxHealth { get; set; }
+    public float Health { get; set; }
+    public float MaxHealth { get; set; }
     public Weapon Weapon { get; set; }
     public bool isImmortal { get; set; }
     public GameObject RotationPoint { get; set; }
@@ -105,7 +105,7 @@ public abstract class Character : MonoBehaviour
         isStunned = false;
     }
 
-    protected virtual void TakeDamage(int damage)
+    protected virtual void TakeDamage(float damage)
     {
         Health -= damage;
         if (Health <= 0)
