@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +9,12 @@ using UnityEngine;
 public class HomingBullet : Bullet
 {
     //Enemy that the bullet will lock onto
-    private Transform LockedEnemy;
+    public Transform LockedEnemy;
+    //radar for homing into an enemy. Need to update its position as well.
+    public GameObject HomingRadar;
 
     // Start is called before the first frame update
-    new void Activate()
+    public new void Activate()
     {
         base.Activate();
         LockedEnemy = null;
@@ -26,30 +29,32 @@ public class HomingBullet : Bullet
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
-        if (LockedEnemy == null)
-        {
-            //calculate vector 2 positon because OverlapCircleAll uses WorldSpace, not local
-            Vector2 point = transform.right * (Range / 2);
-            point = new Vector2(transform.position.x + point.x, transform.position.y + point.y);
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(point, (Range / 2));
-            foreach (Collider2D hit in colliders)
-            {
-                if (hit.CompareTag("Enemy"))
-                {
-                    LockedEnemy = hit.transform;
-                    break;
-                }
-            }
-        }
-
         if (LockedEnemy != null)
         {
             Vector3 targetDirection = LockedEnemy.transform.position - transform.position;
             transform.position += (targetDirection.normalized * Velocity * Time.deltaTime);
+            HomingRadar.transform.position += (targetDirection.normalized * Velocity * Time.deltaTime);
         }
         else
         {
+            HomingRadar.transform.position += (transform.right * Velocity * Time.deltaTime);
             base.Update();
+        }
+    }
+
+    protected new void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Terrain"))
+        {
+            transform.parent.gameObject.SetActive(false);
+        }
+        else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
+        {
+            if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
+            {
+                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                transform.parent.gameObject.SetActive(false);
+            }
         }
     }
 }

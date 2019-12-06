@@ -26,7 +26,6 @@ public class HomingBulletAbility : ActiveAbility
     // Set all resources
     void Start()
     {
-        owner.Weapon.BulletTag = "HomingBullet";
         activeTime = 5f;
         activationTimer = 0f;
         Cooldown = 15f;

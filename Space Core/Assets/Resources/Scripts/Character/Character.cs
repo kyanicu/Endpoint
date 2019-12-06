@@ -15,7 +15,8 @@ public abstract class Character : MonoBehaviour
     public PassiveAbility PassiveAbility { get; set; }
     public Movement movement { get; protected set; }
     public GameObject MinimapIcon;
-
+    protected bool isBlinking;
+    protected SkinnedMeshRenderer[] childComponents;
     public bool isStunned { get; set; }
     public int facingDirection { get { return (int)Mathf.Sign(transform.localScale.x); } }
 
@@ -25,6 +26,7 @@ public abstract class Character : MonoBehaviour
     protected virtual void Start()
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
+        childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
 
     protected virtual void Reset()
@@ -98,6 +100,35 @@ public abstract class Character : MonoBehaviour
         TakeDamage(attackInfo.damage);
         StartCoroutine(Stun(attackInfo.stunTime));
         movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
+        if (!isBlinking)
+        {
+            isBlinking = true;
+            StartCoroutine(beginFlashing());
+        }
+    }
+
+    /// <summary>
+    /// Coroutine to make characters temporarily blink when hit 
+    /// </summary>
+    private IEnumerator beginFlashing()
+    {
+        //Loop through the skinned mesh renderer of each body part
+        foreach (SkinnedMeshRenderer smr in childComponents)
+        {
+            //Only continue operation if character is blinking
+            if (isBlinking)
+            {
+                Material m = smr.material;
+                Color32 c = smr.material.color;
+                smr.material = null;
+                smr.material.color = Color.red;
+                yield return new WaitForSeconds(0.1f);
+                smr.material = m;
+                smr.material.color = c;
+            }
+        }
+        //reset blinking flag
+        isBlinking = false;
     }
 
     public IEnumerator Stun(float time)

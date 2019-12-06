@@ -123,14 +123,18 @@ public class Enemy : Character
     {
         if (other.CompareTag("HackProjectile"))
         {
-            //Extra check to avoid accidentally attempting double hack
-            if (Player.instance.Enemy == this)
+            if (Player.instance.Enemy == null)
             {
+                Player.instance.Enemy = this;
                 IsSelected = true;
                 QTEPanel.SetActive(IsSelected);
                 HackArea.SetActive(IsSelected);
                 other.gameObject.SetActive(false);
             }
+        }
+        else if (other.CompareTag("EMP"))
+        {
+            Freeze();
         }
     }
 

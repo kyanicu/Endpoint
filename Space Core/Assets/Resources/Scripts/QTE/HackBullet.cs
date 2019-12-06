@@ -5,12 +5,9 @@ using UnityEngine;
 public class HackBullet : MonoBehaviour
 {
     private float Speed = 45f;
+
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Enemy"))
-        {
-            Player.instance.Enemy = col.gameObject.GetComponent<Enemy>();
-        }
         if (col.CompareTag("Terrain"))
         {
             gameObject.SetActive(false);

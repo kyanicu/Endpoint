@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag.Contains("Terrain"))
+        if (collision.CompareTag("Terrain"))
         {
             gameObject.SetActive(false);
         }

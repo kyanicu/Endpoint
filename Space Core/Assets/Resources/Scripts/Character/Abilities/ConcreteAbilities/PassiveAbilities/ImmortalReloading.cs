@@ -41,7 +41,7 @@ public class ImmortalReloading : PassiveAbility
     new void Update()
     {
         base.Update();
-        if (owner.Weapon.IsReloading && !reloadStarted)
+        if (owner.Weapon.IsReloading && !reloadStarted && !isEnemy)
         {
             StartCoroutine(ReloadBuffer());
             reloadStarted = true;
