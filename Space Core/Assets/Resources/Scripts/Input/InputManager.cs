@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class InputManager : MonoBehaviour
 {
     /// <summary> enum type used to keep track of how the input from user should be handled </summary>
-    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE }
+    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING }
     /// <summary> The current state of how input should be handled </summary>
     public InputState currentState { get; set; }
 

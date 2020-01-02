@@ -32,8 +32,8 @@ public class Jakkaru : WeaponGenerationInfo
         MinReloadTime = 0.5f;
         MaxReloadTime = 3.0f;
 
-        MinRange = 15f;
-        MaxRange = 23f;
+        MinRange = 10f;
+        MaxRange = 18f;
 
         MaxBulletVeloc = 8f;
         MinBulletVeloc = 14f;

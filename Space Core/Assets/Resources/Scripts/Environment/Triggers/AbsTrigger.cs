@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Why the fuck did I think "Abs" would be a good substitute for "Abstract"??
 public abstract class AbsTrigger : MonoBehaviour
 {
     public enum ResultID

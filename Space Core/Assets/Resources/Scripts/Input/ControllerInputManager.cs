@@ -18,9 +18,6 @@ public class ControllerInputManager : InputManager
     {
         state = null;
         prevState = null;
-        // Initialize state
-        currentState = InputState.GAMEPLAY;
-
     }
 
     new void Update()
@@ -147,7 +144,7 @@ public class ControllerInputManager : InputManager
         if (prevState.Value.Buttons.Back == ButtonState.Released && state.Value.Buttons.Back == ButtonState.Pressed)
         {
             //Make sure overlay can only be opened if not loading 
-            if (HUDController.instance.LoadingScreen == null)
+            if (HUDController.instance.visible)
             {
                 currentState = InputState.OVERLAY;
                 OverlayManager.instance.ToggleOverlayVisibility();
@@ -213,11 +210,11 @@ public class ControllerInputManager : InputManager
         }
 
         //If player selects the currently highlighted button, invoke it
-        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Released)
         {
             MainMenuManager.instance.SelectButton();
         }
-        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Pressed)
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
         {
             MainMenuManager.instance.ReturnToMainMenu();
         }

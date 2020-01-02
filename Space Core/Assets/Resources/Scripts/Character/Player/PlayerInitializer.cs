@@ -1,8 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using LDB = LoadDataBaseEntries;
-using LO = LoadObjectives;
-using LD = LoadDialogue;
 
 public class PlayerInitializer : MonoBehaviour
 {
@@ -116,16 +113,6 @@ public class PlayerInitializer : MonoBehaviour
                 #endregion 
 
                 #endregion
-
-                //Load player's Objectives progress
-                LO.PrimaryObjectives = SaveSystem.loadedData.PrimaryObjectives;
-                LO.SecondaryObjectives = SaveSystem.loadedData.SecondaryObjectives;
-                LO.currentPrimaryObjective = SaveSystem.loadedData.currentPrimaryObjective;
-
-                //Load player's unlocked database entries
-                LDB.Logs = SaveSystem.loadedData.DatabaseEntries;
-
-                LD.DialogueItems = SaveSystem.loadedData.DialogueItems;
             }
         }
     }

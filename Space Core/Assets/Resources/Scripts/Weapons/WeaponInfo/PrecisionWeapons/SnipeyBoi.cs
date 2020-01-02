@@ -32,8 +32,8 @@ public class SnipeyBoi : WeaponGenerationInfo
         MinReloadTime = 0.5f;
         MaxReloadTime = 3.0f;
 
-        MinRange = 45f;
-        MaxRange = 100f;
+        MinRange = 25f;
+        MaxRange = 60f;
 
         MaxBulletVeloc = 20f;
         MinBulletVeloc = 30f;

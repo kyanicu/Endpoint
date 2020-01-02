@@ -6,7 +6,7 @@ using System.IO;
 [System.Serializable]
 public static class LoadDataBaseEntries
 {
-    public static Dictionary<string, DataEntry> Logs = new Dictionary<string, DataEntry>();
+    public static Dictionary<string, DataEntry> Logs;
 
     /// <summary>
     /// DataEntry holds all database panel info and must be unlocked to be displayed in the panel
@@ -51,6 +51,9 @@ public static class LoadDataBaseEntries
     /// </summary>
     public static void LoadAllDataEntries()
     {
+        //Reset log list
+        Logs = new Dictionary<string, DataEntry>();
+
         //Get the directionary holding the category folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
         string[] categoryFolders = Directory.GetDirectories(dir.FullName);

@@ -10,7 +10,6 @@ public class Player : Character
     public InteractableEnv InteractableObject { private get; set; }
     public bool lookingLeft;
     private bool canSwap;
-    private GameObject hackProj;
 
     const float HACK_AREA_LENGTH = 22.5f;
     public string Class { get; set; }
@@ -111,7 +110,6 @@ public class Player : Character
         }
 
         Weapon.BulletSource = DamageSource.Player;
-        hackProj = Resources.Load<GameObject>("Prefabs/Hacking/HackProjectile");
         ResetSwap();
     }
 

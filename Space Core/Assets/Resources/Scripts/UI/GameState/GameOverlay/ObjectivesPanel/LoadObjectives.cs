@@ -7,10 +7,10 @@ using System;
 public static class LoadObjectives
 {
     //List<Tuple<hasBeenCompleted, Objective>>
-    public static List<Tuple<bool, Objective>> PrimaryObjectives = new List<Tuple<bool, Objective>>();
+    public static List<Tuple<bool, Objective>> PrimaryObjectives;
 
     //Dictionary<Location Name, List<Objectives>>
-    public static Dictionary<string, List<Objective>> SecondaryObjectives = new Dictionary<string, List<Objective>>();
+    public static Dictionary<string, List<Objective>> SecondaryObjectives;
     
     public static int currentPrimaryObjective;
 
@@ -103,6 +103,8 @@ public static class LoadObjectives
     /// </summary>
     public static void LoadPrimaryObjectives()
     {
+         PrimaryObjectives = new List<Tuple<bool, Objective>>();
+
         //Get each text file in the primary objectives folder
         TextAsset[] pObjectivesList = Resources.LoadAll<TextAsset>("Text/Objectives/Primary");
 
@@ -120,6 +122,8 @@ public static class LoadObjectives
     /// </summary>
     public static void LoadSecondaryObjectives()
     {
+        SecondaryObjectives = new Dictionary<string, List<Objective>>();
+
         //Get the directionary holding the location folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Objectives/Secondary");
         string[] locationFolders = Directory.GetDirectories(dir.FullName);

@@ -16,5 +16,8 @@ public class SaveObject : InteractableEnv
     {
         SaveSystem.SavePlayer(Player.instance);
         Debug.Log($"Game saved with file id #{GameManager.SaveFileID}");
+
+        //Open save popup on HUD
+        HUDController.instance.InitiateSavePopup();
     }
 }

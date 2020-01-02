@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using oteTag = GameManager.OneTimeEventTags;
 
 public class HazardSwitch : InteractableEnv
 {
     //list of shock floors from the scene. Added manually.
     public ShockFloor[] shockFloors;
+    public bool AlreadyPressed { private get; set; }
 
     private void Awake()
     {
@@ -14,11 +13,15 @@ public class HazardSwitch : InteractableEnv
 
     public override void ActivateFunctionality()
     {
-        foreach (ShockFloor shockFloor in shockFloors)
+        if (!AlreadyPressed)
         {
-            shockFloor.GetComponent<ShockFloor>().enabled = false;
+            foreach (ShockFloor shockFloor in shockFloors)
+            {
+                shockFloor.GetComponent<ShockFloor>().enabled = false;
+            }
+            AlreadyPressed = false;
+            //Add this object to one time events that get used on scene load
+            GameManager.OneTimeEvents.Add(name, oteTag.HazardSwitch);
         }
-        //Disables self so that it can't be activated again.
-        this.enabled = false;
     }
 }

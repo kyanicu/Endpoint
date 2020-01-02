@@ -26,7 +26,6 @@ public class Matsya : WeaponGenerationInfo
         MinKnockbackTime = 0.1f;
         MaxKnockbackTime = 0.1f;
 
-
         MinClipSize = 6;
         MaxClipSize = 14;
 
@@ -36,11 +35,11 @@ public class Matsya : WeaponGenerationInfo
         MinReloadTime = 1.0f;
         MaxReloadTime = 4.0f;
 
-        MinNumPellets = 4;
-        MaxNumPellets = 8;
+        MinNumPellets = 2;
+        MaxNumPellets = 4;
 
-        MinRange = 17f;
-        MaxRange = 22f;
+        MinRange = 7f;
+        MaxRange = 13f;
 
         MaxBulletVeloc = 6f;
         MinBulletVeloc = 12f;

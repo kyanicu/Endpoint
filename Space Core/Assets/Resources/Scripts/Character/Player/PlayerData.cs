@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LDB = LoadDataBaseEntries;
 using LO = LoadObjectives;
 using LD = LoadDialogue;
+using oteTag = GameManager.OneTimeEventTags;
 
 [System.Serializable]
 public class PlayerData
@@ -11,6 +12,9 @@ public class PlayerData
     public string Sector;
     public int Scene;
     public int SaveFileID;
+    public float PlayerTimer;
+    public int PlayerLevel;
+    public Dictionary<string, oteTag> OneTimeEventsList;
     #endregion
 
     #region Player Info
@@ -61,6 +65,9 @@ public class PlayerData
         Sector = GameManager.Sector;
         Scene = (int)GameManager.currentScene;
         SaveFileID = GameManager.SaveFileID;
+        OneTimeEventsList = GameManager.OneTimeEvents;
+        PlayerTimer = GameManager.Timer;
+        PlayerLevel = GameManager.PlayerLevel;
 
         //Retrieve Objects/Data Entry info
         PrimaryObjectives = LO.PrimaryObjectives;

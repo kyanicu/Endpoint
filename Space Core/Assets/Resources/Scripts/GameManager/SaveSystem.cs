@@ -67,7 +67,7 @@ public static class SaveSystem
         //If file at specified path doesn't exist, log an error
         else
         {
-            Debug.LogError("Save file not found in " + path);
+            Debug.LogWarning("Save file not found in " + path);
             return null;
         }
     }

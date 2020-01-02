@@ -24,14 +24,10 @@ public class HUDController : MonoBehaviour
     public CharacterPanelManager CharacterPM;
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
-    public MinimapController Minimap;
+    public MinimapController MinimapManager;
     public DialogueManager DialogueManager;
     public PopupManager PopupManager;
-    
-    [Header("Loading Screen")]
-    public Image LoadingScreen;
-    public MainMenuAnimations MainMenuAnims;
-    public TextMeshProUGUI LoadingText;
+    public LoadingScreenManager LoadingManager;
 
     // Stores the current HUD highlight color (set by the class the player is occupying)
     public Color activeClassColor;
@@ -40,7 +36,7 @@ public class HUDController : MonoBehaviour
 
     private bool diagnosticPanelsVisible = true;
     private bool firstRun = true;
-    private bool visible;
+    public bool visible { get; set; }
     private static HUDController _instance;
     public static HUDController instance { get { return _instance; } }
 
@@ -60,13 +56,10 @@ public class HUDController : MonoBehaviour
 
         //Empty saved data cache as confirmation that data was successfully loaded
         SaveSystem.loadedData = null;
-        visible = false;
     }
     private void Start()
     {
-        LoadingText.text = "LOADING";
-        StartCoroutine(FadeOutLoadingScreen());
-        ToggleHUDVisibility();
+        visible = false;
     }
     
     /// <summary>
@@ -76,7 +69,7 @@ public class HUDController : MonoBehaviour
     public void UpdateHUD(Player p)
     {
         //Can only update HUD if not currently reloading a save file
-        if (SaveSystem.loadedData == null && LoadingScreen == null)
+        if (SaveSystem.loadedData == null && visible)
         {
             UpdateAmmo(p);
             UpdateWeapon(p);
@@ -228,7 +221,7 @@ public class HUDController : MonoBehaviour
         {
             GameManager.Sector = sector;
         }
-        Minimap.UpdateLocation(sector, room);
+        MinimapManager.UpdateLocation(sector, room);
     }
 
     /// <summary>
@@ -285,52 +278,25 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
+    /// Activates Save popup on screen
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="content"></param>
+    public void InitiateSavePopup()
+    {
+        PopupManager.InitiateSavePopup();
+    }
+
+    /// <summary>
     /// Toggles the visibility of HUD upon closing/opening overlay
     /// </summary>
     public void ToggleHUDVisibility()
     {
-        visible = !visible;
         CharacterPM.gameObject.SetActive(visible);
         WeaponPM.gameObject.SetActive(visible);
         SwapPM.gameObject.SetActive(visible);
-        Minimap.gameObject.SetActive(visible);
+        MinimapManager.gameObject.SetActive(visible);
         PopupManager.gameObject.SetActive(visible);
         UpdateHUD(Player.instance);
     }
-
-    /// <summary>
-    /// Coroutine for fading out loading screen on scene start
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator FadeOutLoadingScreen()
-    {
-        // Run the main menu logo's glitching image animation.
-        StartCoroutine(MainMenuAnims.AnimationMenuLogoGlitchImage());
-
-        // Run the helper function for animating the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitHelper();
-
-        // Run the helper function for animating the text of the tinybits around the logo.
-        MainMenuAnims.AnimationTinybitTextHelper();
-        for (int x = 0; x < 3; x++)
-        {
-            yield return new WaitForSeconds(.5f);
-            LoadingText.text += ".";
-        }
-        Destroy(LoadingText, .25f);
-        float timer = 1f;
-        float counter = 0;
-        while (counter < timer)
-        {
-            counter += .025f;
-            Color updatedAlpa = LoadingScreen.color;
-            updatedAlpa.a = timer - counter;
-            LoadingScreen.color = updatedAlpa;
-            yield return null;
-        }
-        DestroyImmediate(LoadingScreen.gameObject);
-        yield return new WaitForSeconds(.1f);
-        ToggleHUDVisibility();
-    }
-
 }
