@@ -28,11 +28,7 @@ public abstract class ActiveAbility : Ability
     {
         if (activationCondition)
         {
-            //if (GetComponent<Player>())
-            //{
-                HUDController.instance.StartAbilityCooldown(Cooldown);
-            //}
-
+            HUDController.instance.StartAbilityCooldown(Cooldown);
             Activate();
             return true;
         }
