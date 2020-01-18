@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmallEnemy : Enemy
+public class LightEnemy : Enemy
 {
     new void Awake()
     {

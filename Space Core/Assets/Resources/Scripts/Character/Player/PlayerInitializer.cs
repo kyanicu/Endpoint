@@ -9,7 +9,7 @@ public class PlayerInitializer : MonoBehaviour
     [Tooltip("Drag in from resources")]
     public GameObject[] Enemies;
 
-    private string[] classes = { "small", "medium", "large" };
+    private string[] classes = { "light", "medium", "heavy" };
 
     private void Awake()
     {
