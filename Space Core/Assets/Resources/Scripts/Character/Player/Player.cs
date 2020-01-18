@@ -18,8 +18,6 @@ public class Player : Character
 
     [SerializeField]
     private float IFRAME_TIME = 3f;
-    private bool hasIFrames;
-
 
     private static Player _instance;
     public static Player instance { get { return _instance; } }
@@ -116,17 +114,16 @@ public class Player : Character
     #region Inherited Methods 
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
-        if (Invincible == 0)
+        if (Invincible > 0)
             return;
 
-        if (!hasIFrames && attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard)
+        base.ReceiveAttack(attackInfo);
+
+        if (attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard)
         {
             Invincible++;
-            hasIFrames = true;
             StartCoroutine(RunIFrames());
         }
-
-        base.ReceiveAttack(attackInfo);
     }
 
     protected override void TakeDamage(float damage)
@@ -142,7 +139,6 @@ public class Player : Character
     private IEnumerator RunIFrames()
     {
         yield return new WaitForSeconds(IFRAME_TIME);
-        hasIFrames = false;
         Invincible--;
     }
 
