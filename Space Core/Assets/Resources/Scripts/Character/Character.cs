@@ -9,7 +9,7 @@ public abstract class Character : MonoBehaviour
     public float Health { get; set; }
     public float MaxHealth { get; set; }
     public Weapon Weapon { get; set; }
-    public bool isImmortal { get; set; }
+    public int Invincible { get; set; }
     public GameObject RotationPoint { get; set; }
     public ActiveAbility ActiveAbility { get; set; }
     public PassiveAbility PassiveAbility { get; set; }
@@ -19,7 +19,6 @@ public abstract class Character : MonoBehaviour
     protected SkinnedMeshRenderer[] childComponents;
     public bool isStunned { get; set; }
     public int facingDirection { get { return (int)Mathf.Sign(transform.localScale.x); } }
-
     public AnimationState animationState { get; set; }
     public Animator animator;
 
@@ -94,7 +93,7 @@ public abstract class Character : MonoBehaviour
 
     public virtual void ReceiveAttack(AttackInfo attackInfo)
     {
-        if (isImmortal)
+        if (Invincible != 0)
             return;
 
         TakeDamage(attackInfo.damage);

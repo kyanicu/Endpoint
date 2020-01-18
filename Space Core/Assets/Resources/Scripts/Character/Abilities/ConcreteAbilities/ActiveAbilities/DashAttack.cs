@@ -46,7 +46,7 @@ public class DashAttack : ActiveAbility
         owner.movement.collideWithCharacters = false;
         owner.isStunned = true;
         owner.movement.freezeRun = true;
-        owner.isImmortal = true;
+        owner.Invincible++;
         owner.movement.velocity = owner.movement.charCont.currentSlope * facingDirection * dashSpeed;
         
         // Check conditional during dash
@@ -67,7 +67,7 @@ public class DashAttack : ActiveAbility
         owner.movement.collideWithCharacters = true;
         owner.isStunned = false;
         owner.movement.freezeRun = false;
-        owner.isImmortal = false;
+        owner.Invincible--;
         activationTimer = Cooldown;
     }
 

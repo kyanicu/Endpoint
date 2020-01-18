@@ -17,7 +17,7 @@ public class Player : Character
     private const float COOLDOWN_TIME = 2.5f; 
 
     [SerializeField]
-    private float iFrameTime = 3f;
+    private float IFRAME_TIME = 3f;
     private bool hasIFrames;
 
 
@@ -70,7 +70,7 @@ public class Player : Character
         Destroy(e);
 
         canSwap = true;
-        isImmortal = false;
+        Invincible = 0;
 
         animator = transform.Find("AnimatedCharacter").gameObject.GetComponent<Animator>();
         RotationPoint = transform.Find("RotationPoint").gameObject;
@@ -116,11 +116,12 @@ public class Player : Character
     #region Inherited Methods 
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
-        if (isImmortal || hasIFrames)
+        if (Invincible == 0)
             return;
 
-        if (attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard && !hasIFrames)
+        if (!hasIFrames && attackInfo.damageSource != DamageSource.Spread  && attackInfo.damageSource != DamageSource.Hazard)
         {
+            Invincible++;
             hasIFrames = true;
             StartCoroutine(RunIFrames());
         }
@@ -132,7 +133,7 @@ public class Player : Character
     {
         base.TakeDamage(damage);
 
-        if (!isImmortal && Health - damage > 0)
+        if (Invincible == 0 && Health - damage > 0)
         {
             HUDController.instance.UpdatePlayer(this);
         }
@@ -140,8 +141,9 @@ public class Player : Character
 
     private IEnumerator RunIFrames()
     {
-        yield return new WaitForSeconds(iFrameTime);
+        yield return new WaitForSeconds(IFRAME_TIME);
         hasIFrames = false;
+        Invincible--;
     }
 
     protected override void Die()
