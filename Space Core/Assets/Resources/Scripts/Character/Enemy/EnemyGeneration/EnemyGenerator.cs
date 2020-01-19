@@ -16,19 +16,23 @@ public class EnemyGenerator : MonoBehaviour
     /// </summary>
     private void GenerateEnemy()
     {
-        int enemyTypeIndex = Random.Range(0, EnemyInfo.EnemyTypes.Length);
-        string enemyType = EnemyInfo.EnemyTypes[enemyTypeIndex];
+        int enemyTypeIndex = Random.Range(0, Enemy.EnemyTypes.Length);
+        string enemyType = Enemy.EnemyTypes[enemyTypeIndex];
+        EnemyGenerationInfo info = null;
 
         switch (enemyType)
         {
-            case "small":
-                GenerateSmallEnemy();
+            case "light":
+                info = new LightEnemyInfo();
+                GenerateEnemy(info);
                 break;
             case "medium":
-                GenerateMediumEnemy();
+                info = new MediumEnemyInfo();
+                GenerateEnemy(info);
                 break;
-            case "large":
-                GenerateLargeEnemy();
+            case "heavy":
+                info = new HeavyEnemyInfo();
+                GenerateEnemy(info);
                 break;
         }
         Destroy(gameObject);
@@ -37,42 +41,14 @@ public class EnemyGenerator : MonoBehaviour
     /// <summary>
     /// Generates a random large enemy based on stats stored in EnemyInfo
     /// </summary>
-    private void GenerateLargeEnemy()
+    private void GenerateEnemy(EnemyGenerationInfo info)
     {
-        GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/LargeEnemy");
+        GameObject enemy = Resources.Load<GameObject>(info.PrefabPath);
         GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
-        LargeEnemy largeEnemy = instantiatedEnemy.GetComponent<LargeEnemy>();
-        largeEnemy.MaxHealth = Random.Range(EnemyInfo.LargeEnemyHealthLo, EnemyInfo.LargeEnemyHealthHi);
-        largeEnemy.Speed = Random.Range(EnemyInfo.LargeEnemySpeedLo, EnemyInfo.LargeEnemySpeedHi);
-        largeEnemy.Health = largeEnemy.MaxHealth;
-        largeEnemy.Class = "large";
-    }
-
-    /// <summary>
-    /// Generates a random medium enemy based on stats stored in EnemyInfo
-    /// </summary>
-    private void GenerateMediumEnemy()
-    {
-        GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/MediumEnemy");
-        GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
-        MediumEnemy mediumEnemy = instantiatedEnemy.GetComponent<MediumEnemy>();
-        mediumEnemy.MaxHealth = Random.Range(EnemyInfo.MediumEnemyHealthLo, EnemyInfo.MediumEnemyHealthHi);
-        mediumEnemy.Speed = Random.Range(EnemyInfo.MediumEnemySpeedLo, EnemyInfo.MediumEnemySpeedHi);
-        mediumEnemy.Health = mediumEnemy.MaxHealth;
-        mediumEnemy.Class = "medium";
-    }
-
-    /// <summary>
-    /// Generates a random medium enemy based on stats stored in EnemyInfo
-    /// </summary>
-    private void GenerateSmallEnemy()
-    {
-        GameObject enemy = Resources.Load<GameObject>("Prefabs/Enemy/SmallEnemy");
-        GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
-        SmallEnemy smallEnemy = instantiatedEnemy.GetComponent<SmallEnemy>();
-        smallEnemy.MaxHealth = Random.Range(EnemyInfo.SmallEnemyHealthLo, EnemyInfo.SmallEnemyHealthHi);
-        smallEnemy.Speed = Random.Range(EnemyInfo.SmallEnemySpeedLo, EnemyInfo.SmallEnemySpeedHi);
-        smallEnemy.Health = smallEnemy.MaxHealth;
-        smallEnemy.Class = "small";
+        Enemy enemyComponent = instantiatedEnemy.GetComponent<Enemy>();
+        enemyComponent.MaxHealth = Random.Range(info.HealthLow, info.HealthHi);
+        enemyComponent.Speed = Random.Range(info.SpeedLow, info.SpeedHi);
+        enemyComponent.Health = enemyComponent.MaxHealth;
+        enemyComponent.Class = info.Class;
     }
 }

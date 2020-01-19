@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class DashAttack : ActiveAbility
 {
-    protected override bool activationCondition { get { return owner.movement.charCont.isGrounded && !owner.isStunned && activationTimer <= 0f; } }
+    protected override bool activationCondition
+        { get { return owner.movement.charCont.isGrounded && !owner.isStunned && activationTimer <= 0f; } }
 
     private bool isDashing;
 
@@ -46,14 +47,16 @@ public class DashAttack : ActiveAbility
         owner.movement.collideWithCharacters = false;
         owner.isStunned = true;
         owner.movement.freezeRun = true;
-        owner.isImmortal = true;
+        owner.Invincible++;
         owner.movement.velocity = owner.movement.charCont.currentSlope * facingDirection * dashSpeed;
         
         // Check conditional during dash
         for (float i = 0; i < dashTime; i += Time.fixedDeltaTime)
         {
             // Is dash condition no longer valid?
-            if (!owner.movement.charCont.isGrounded || owner.movement.charCont.isTouchingRightWall || owner.movement.charCont.isTouchingLeftWall)
+            if (!owner.movement.charCont.isGrounded 
+                || owner.movement.charCont.isTouchingRightWall 
+                || owner.movement.charCont.isTouchingLeftWall)
             {
                 //owner.movement.TakeKnockback(new Vector2(knockBackX * -facingDirection, knockBackY));
                 break;
@@ -67,7 +70,7 @@ public class DashAttack : ActiveAbility
         owner.movement.collideWithCharacters = true;
         owner.isStunned = false;
         owner.movement.freezeRun = false;
-        owner.isImmortal = false;
+        owner.Invincible--;
         activationTimer = Cooldown;
     }
 
@@ -75,7 +78,13 @@ public class DashAttack : ActiveAbility
     {
         // While dashing, check collision with character
         if (isDashing && (other.tag == "Player" || other.tag == "Enemy"))
-            other.GetComponent<Character>().ReceiveAttack(new AttackInfo(damage, new Vector2(knockBackX * owner.facingDirection, knockBackY), knockbackTime, stunTime, DamageSource.Enemy));
+            other.GetComponent<Character>().ReceiveAttack(
+                new AttackInfo(
+                    damage,
+                    new Vector2(knockBackX * owner.facingDirection, knockBackY),
+                    knockbackTime,
+                    stunTime,
+                    DamageSource.Enemy));
     }
 
 }

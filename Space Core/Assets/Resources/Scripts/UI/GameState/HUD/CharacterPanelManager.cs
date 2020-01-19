@@ -123,13 +123,13 @@ public class CharacterPanelManager : MonoBehaviour
 
         switch (playerClass)
         {
-            case "small":
+            case "light":
                 playerClassID = 0;
                 break;
             case "medium":
                 playerClassID = 1;
                 break;
-            case "large":
+            case "heavy":
                 playerClassID = 2;
                 break;
             default:

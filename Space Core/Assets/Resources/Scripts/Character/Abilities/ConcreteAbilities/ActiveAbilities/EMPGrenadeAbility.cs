@@ -9,7 +9,7 @@ public class EMPGrenadeAbility : ActiveAbility
 
     void Start()
     {
-        force = 17500f;
+        force = 325f;
         Cooldown = 15f;
     }
 
@@ -27,7 +27,7 @@ public class EMPGrenadeAbility : ActiveAbility
         GameObject empGrenadeObject = ObjectPooler.instance.SpawnFromPool("EMP", 
                                                                           owner.Weapon.FireLocation.transform.position, 
                                                                           Quaternion.Euler(owner.Weapon.FireLocation.transform.right));
-        empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(owner.Weapon.FireLocation.transform.right * force);
+        empGrenadeObject.GetComponent<Rigidbody2D>().AddForce(owner.Weapon.FireLocation.transform.right * force, ForceMode2D.Impulse);
         activationTimer = Cooldown;
     }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    public static string[] EnemyTypes = 
+        { "light", "medium", "heavy" }; 
+
     public bool IsSelected { get; set; }
     private bool disabled { get; set; }
     public float PatrolRange { get; set; }
