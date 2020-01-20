@@ -94,7 +94,7 @@ public class WeaponPanelManager : MonoBehaviour
     /// Updates ammo and weapon aspects in the HUD.
     /// </summary>
     /// <param name="weapon"></param>
-    public void UpdateWeapon(Player p)
+    public void UpdateWeapon(Character p)
     {
         Weapon weapon = p.Weapon;
         // Update weapon HUD elements to reflect current weapon...
@@ -198,7 +198,7 @@ public class WeaponPanelManager : MonoBehaviour
     /// <summary>
     /// Update the weapon diagnostic info whenever a new weapon is equipped
     /// </summary>
-    public void UpdateWeaponDiagnostic(Player p)
+    public void UpdateWeaponDiagnostic(Character p)
     {
         Weapon playerWeapon = p.Weapon;
         float[] weaponDiagnosticValues = {

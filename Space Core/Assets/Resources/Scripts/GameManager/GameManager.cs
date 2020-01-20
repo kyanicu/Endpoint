@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static Dictionary<string, float[]> MaxStats;
-    public static List<GameObject> Enemies;
+    public static List<GameObject> EnemyControllers;
     public static string Sector;
     public static int SaveFileID = 0;
     public static string FILE_PATH;
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Enemies = null;
+        EnemyControllers = null;
 
         if (OneTimeEvents.Count > 0)
         {
@@ -124,11 +124,11 @@ public class GameManager : MonoBehaviour
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
-        if (Enemies == null)
+        if (EnemyControllers == null)
         {
-            Enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            EnemyControllers = GameObject.FindGameObjectsWithTag("EnemyController").ToList();
         }
-        Enemies.RemoveAll(enemy => enemy == null || enemy.CompareTag("Player"));
+        EnemyControllers.RemoveAll(enemy => enemy == null || enemy.CompareTag("Player"));
     }
 
     #region Total Range Stats

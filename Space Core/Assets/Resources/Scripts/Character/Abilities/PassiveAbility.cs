@@ -23,7 +23,7 @@ public abstract class PassiveAbility : Ability
     /// </summary>
     protected void Start()
     {
-        isEnemy = owner.GetComponent<Enemy>() != null;
+        isEnemy = owner.GetComponent<Character>().IsPlayer;
     }
 
     public new void resetOwner(Character character)

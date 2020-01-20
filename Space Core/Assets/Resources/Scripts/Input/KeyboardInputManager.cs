@@ -56,30 +56,30 @@ public class KeyboardInputManager : InputManager
     {
         if (Input.GetButtonDown("Jump"))
         {
-            Player.instance.Jump();
+            PlayerController.instance.Jump();
         }
         if (Input.GetButtonUp("Jump"))
         {
-            Player.instance.JumpCancel();
+            PlayerController.instance.JumpCancel();
         }
 
         if (Input.GetMouseButton(0))
         {
-            Player.instance.Fire();
-            HUDController.instance.UpdateAmmo(Player.instance);
+            PlayerController.instance.Fire();
+            HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Player.instance.Reload();
+            PlayerController.instance.Reload();
         }
         if(Input.GetKeyDown(KeyCode.P))
         {
-            Player.instance.ActivateEnvironmentObj();
+            PlayerController.instance.ActivateEnvironmentObj();
         }
 
         if (Input.GetKey(KeyCode.F))
         {
-            Player.instance.HackSelector();
+            PlayerController.instance.HackSelector();
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -91,7 +91,7 @@ public class KeyboardInputManager : InputManager
         if (Input.GetKeyDown(KeyCode.Z))
         {
             // use player ability
-            Player.instance.ActivateActiveAbility();
+            PlayerController.instance.ActivateActiveAbility();
         }
 
         // Toggles/deals with Pause Menu.
@@ -106,17 +106,17 @@ public class KeyboardInputManager : InputManager
         }
 
         Vector2 positionOnScreen = Vector2.zero;
-        if (Player.instance.RotationPoint != null)
+        if (PlayerController.instance.Character.RotationPoint != null)
         {
-            positionOnScreen = Camera.main.WorldToViewportPoint(Player.instance.RotationPoint.transform.position);
+            positionOnScreen = Camera.main.WorldToViewportPoint(PlayerController.instance.Character.RotationPoint.transform.position);
         }
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
         float angle = Mathf.Atan2(mouseOnScreen.y - positionOnScreen.y, mouseOnScreen.x - positionOnScreen.x) * Mathf.Rad2Deg;
 
-        Player.instance.AimWeapon(angle);
+        PlayerController.instance.AimWeapon(angle);
 
         if (Input.GetKeyDown(KeyCode.Return))
-            Player.instance.transform.position = new Vector2(0, 0);
+            PlayerController.instance.Character.transform.position = new Vector2(0, 0);
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public class KeyboardInputManager : InputManager
     {
         float horiz = Input.GetAxisRaw("Horizontal");
 
-        Player.instance.Move(horiz);
+        PlayerController.instance.Move(horiz);
     }
 
     /// <summary>

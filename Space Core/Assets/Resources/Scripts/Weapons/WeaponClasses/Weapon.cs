@@ -111,15 +111,6 @@ public abstract class Weapon : MonoBehaviour
         //Check that passed character still exists
         if(c != null)
         {
-            //Retrieve what inherited memeber of character is doing the reloading
-            bool isPlayer = c.gameObject.GetComponent<Player>();
-            Player p = null;
-
-            if (isPlayer)
-            {
-                p = c.gameObject.GetComponent<Player>();
-            }
-
             //Begin reloading loop
             while (TotalAmmo > 0 && AmmoInClip < ClipSize)
             {
@@ -133,9 +124,9 @@ public abstract class Weapon : MonoBehaviour
                 AmmoInClip++;
 
                 //Check if player is reloading to update HUD
-                if (isPlayer)
+                if (ControlledByPlayer)
                 {
-                    HUDController.instance.UpdateAmmo(p);
+                    HUDController.instance.UpdateAmmo(c);
                 }
             }
 

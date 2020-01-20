@@ -41,13 +41,13 @@ public static class AbilityGenerator
         }
 
         character.GetComponent<Character>().ActiveAbility = character.GetComponent<ActiveAbility>();
-        character.GetComponent<Character>().PassiveAbility = character.GetComponent<PassiveAbility>();
+        //character.GetComponent<Character>().PassiveAbility = character.GetComponent<PassiveAbility>();
     }
     /// <summary>
     /// Method to add abilities to a character game object
     /// </summary>
     /// <param name="character">The character getting the abilities</param>
-    public static void AddAbilitiesToCharacter(Player player, string activeAbility, string passiveAbility)
+    public static void AddAbilitiesToCharacter(Character player, string activeAbility, string passiveAbility)
     {
         switch (passiveAbility)
         {
@@ -73,8 +73,8 @@ public static class AbilityGenerator
         }
 
         player.ActiveAbility = player.GetComponent<ActiveAbility>();
-        player.PassiveAbility = player.GetComponent<PassiveAbility>();
+        //player.PassiveAbility = player.GetComponent<PassiveAbility>();
         player.ActiveAbility.resetOwner(player);
-        player.PassiveAbility.resetOwner(player);
+        //player.PassiveAbility.resetOwner(player);
     }
 }

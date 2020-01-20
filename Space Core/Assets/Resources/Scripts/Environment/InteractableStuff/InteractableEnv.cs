@@ -29,7 +29,7 @@ public abstract class InteractableEnv : MonoBehaviour
             //If button is hidden and currently not being animated, animate it
             if (hidden && !isAnimatingButton)
             {
-                col.gameObject.GetComponent<Player>().InteractableObject = this;
+                PlayerController.instance.InteractableObject = this;
                 hidden = false;
                 StartCoroutine(animateButton(true));
             }
@@ -43,7 +43,7 @@ public abstract class InteractableEnv : MonoBehaviour
             //If button is hidden and currently not being animated, animate it
             if (hidden && !isAnimatingButton)
             {
-                col.gameObject.GetComponent<Player>().InteractableObject = this;
+                PlayerController.instance.InteractableObject = this;
                 hidden = false;
                 StartCoroutine(animateButton(true));
             }
@@ -54,7 +54,7 @@ public abstract class InteractableEnv : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            col.gameObject.GetComponent<Player>().InteractableObject = null;
+            PlayerController.instance.InteractableObject = null;
             //If button is visible and currently not being animated, animate it
             if (!hidden && !isAnimatingButton)
             {

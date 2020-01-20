@@ -59,10 +59,10 @@ public class DynamicMusic : MonoBehaviour
         //potential null reference exception thrown here if an enemy gets killed mid for-loop.
         try
         {
-            for (int i = 0; i < GameManager.Enemies.Count; i++)
+            for (int i = 0; i < GameManager.EnemyControllers.Count; i++)
             {
-                GameObject enemy = GameManager.Enemies[i];
-                if (enemy != null && enemy.GetComponent<Enemy>() && enemy.GetComponent<Enemy>().PlayerInRange)
+                GameObject enemy = GameManager.EnemyControllers[i];
+                if (enemy != null && enemy.GetComponent<EnemyController>() && enemy.GetComponent<EnemyController>().PlayerInRange)
                 {
                     return true;
                 }

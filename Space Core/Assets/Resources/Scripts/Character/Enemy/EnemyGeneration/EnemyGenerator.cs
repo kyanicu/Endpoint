@@ -16,8 +16,8 @@ public class EnemyGenerator : MonoBehaviour
     /// </summary>
     private void GenerateEnemy()
     {
-        int enemyTypeIndex = Random.Range(0, Enemy.EnemyTypes.Length);
-        string enemyType = Enemy.EnemyTypes[enemyTypeIndex];
+        int enemyTypeIndex = Random.Range(0, EnemyController.EnemyTypes.Length);
+        string enemyType = EnemyController.EnemyTypes[enemyTypeIndex];
         EnemyGenerationInfo info = null;
 
         switch (enemyType)
@@ -44,11 +44,15 @@ public class EnemyGenerator : MonoBehaviour
     private void GenerateEnemy(EnemyGenerationInfo info)
     {
         GameObject enemy = Resources.Load<GameObject>(info.PrefabPath);
+        GameObject loadedEnemyController = Resources.Load<GameObject>("Prefabs/Enemy/EnemyController");
         GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
-        Enemy enemyComponent = instantiatedEnemy.GetComponent<Enemy>();
-        enemyComponent.MaxHealth = Random.Range(info.HealthLow, info.HealthHi);
-        enemyComponent.Speed = Random.Range(info.SpeedLow, info.SpeedHi);
-        enemyComponent.Health = enemyComponent.MaxHealth;
-        enemyComponent.Class = info.Class;
+        GameObject instantiatedEnemyController = Instantiate(loadedEnemyController);
+        EnemyController enemyController = instantiatedEnemyController.GetComponent<EnemyController>();
+        enemyController.Character = instantiatedEnemy.GetComponent<Character>();
+        enemyController.Character.MaxHealth = Random.Range(info.HealthLow, info.HealthHi);
+        enemyController.Speed = Random.Range(info.SpeedLow, info.SpeedHi);
+        enemyController.PatrolRange = info.PatrolRange;
+        enemyController.Character.Health = enemyController.Character.MaxHealth;
+        enemyController.Character.Class = info.Class;
     }
 }

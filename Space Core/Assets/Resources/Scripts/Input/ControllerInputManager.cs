@@ -69,17 +69,17 @@ public class ControllerInputManager : InputManager
 
         if (state.Value.Triggers.Right > 0.3f)
         {
-            Player.instance.Fire();
-            HUDController.instance.UpdateAmmo(Player.instance);
+            PlayerController.instance.Fire();
+            HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
         }
 
         if (state.Value.Triggers.Left > 0.3f)
         {
-            Player.instance.Jump();
+            PlayerController.instance.Jump();
         }
         else if (state.Value.Triggers.Left == 0)
         {
-            Player.instance.JumpCancel();
+            PlayerController.instance.JumpCancel();
         }
 
         #endregion
@@ -88,17 +88,17 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.A == ButtonState.Released && state.Value.Buttons.A == ButtonState.Pressed)
         {
-            Player.instance.ActivateEnvironmentObj();
+            PlayerController.instance.ActivateEnvironmentObj();
         }
 
         if (prevState.Value.Buttons.B == ButtonState.Released && state.Value.Buttons.B == ButtonState.Pressed)
         {
-            HUDController.instance.UpdateHUD(Player.instance);
+            HUDController.instance.UpdateHUD(PlayerController.instance.Character);
         }
 
         if (prevState.Value.Buttons.X == ButtonState.Released && state.Value.Buttons.X == ButtonState.Pressed)
         {
-            Player.instance.Reload();
+            PlayerController.instance.Reload();
         }
 
         if (prevState.Value.Buttons.Y == ButtonState.Released && state.Value.Buttons.Y == ButtonState.Pressed)
@@ -113,7 +113,7 @@ public class ControllerInputManager : InputManager
         if (state.Value.ThumbSticks.Right.X != 0 || state.Value.ThumbSticks.Right.Y != 0)
         {
             float angle = Mathf.Atan2(state.Value.ThumbSticks.Right.Y, state.Value.ThumbSticks.Right.X) * Mathf.Rad2Deg;
-            Player.instance.AimWeapon(angle);
+            PlayerController.instance.AimWeapon(angle);
         }
 
         if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
@@ -157,12 +157,12 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.RightShoulder == ButtonState.Released && state.Value.Buttons.RightShoulder == ButtonState.Pressed)
         {
-            Player.instance.ActivateActiveAbility();
+            PlayerController.instance.ActivateActiveAbility();
         }
 
         if (prevState.Value.Buttons.LeftShoulder == ButtonState.Released && state.Value.Buttons.LeftShoulder == ButtonState.Pressed)
         {
-            Player.instance.HackSelector();
+            PlayerController.instance.HackSelector();
         }
 
         #endregion
@@ -172,12 +172,12 @@ public class ControllerInputManager : InputManager
         if (state.Value.DPad.Right == ButtonState.Pressed)
         {
             float horiz = 1f;
-            Player.instance.Move(horiz);
+            PlayerController.instance.Move(horiz);
         }
         else if (state.Value.DPad.Left == ButtonState.Pressed)
         {
             float horiz = -1f;
-            Player.instance.Move(horiz);
+            PlayerController.instance.Move(horiz);
         }
         #endregion
     }
@@ -376,7 +376,7 @@ public class ControllerInputManager : InputManager
 
         float horiz = state.Value.ThumbSticks.Left.X;
 
-        Player.instance.Move(horiz);
+        PlayerController.instance.Move(horiz);
     }
 
     /// <summary>

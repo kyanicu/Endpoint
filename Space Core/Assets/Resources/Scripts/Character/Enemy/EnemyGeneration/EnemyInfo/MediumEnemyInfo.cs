@@ -12,5 +12,6 @@ public class MediumEnemyInfo : EnemyGenerationInfo
         HealthLow = 85;
         SpeedHi = 4f;
         SpeedLow = 2f;
+        PatrolRange = 4.0f;
     }
 }

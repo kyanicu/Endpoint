@@ -139,7 +139,6 @@ public class QTEManager : MonoBehaviour
                     {
                         listening = false;
                         successfulHack();
-                        Destroy(gameObject);
                         break;
                     }
                     //If player has no more QTE buttons but listIndex isn't at last button
@@ -189,8 +188,7 @@ public class QTEManager : MonoBehaviour
         {
             StopCoroutine(Listener());
             listening = false;
-            Player player = Player.instance.gameObject.GetComponent<Player>();
-            player.Switch();
+            PlayerController.instance.Switch();
         }
     }
 }

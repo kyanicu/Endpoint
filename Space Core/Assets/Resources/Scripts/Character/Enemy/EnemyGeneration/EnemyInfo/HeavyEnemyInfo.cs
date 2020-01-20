@@ -12,5 +12,6 @@ public class HeavyEnemyInfo : EnemyGenerationInfo
         HealthLow = 105;
         SpeedHi = 3f;
         SpeedLow = 1.5f;
+        PatrolRange = 3.0f;
     }
 }

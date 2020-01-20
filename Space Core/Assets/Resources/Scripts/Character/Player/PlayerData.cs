@@ -59,7 +59,7 @@ public class PlayerData
     /// <summary>
     /// Constructs datamass to be serialized in save/load system
     /// </summary>
-    public PlayerData(Player p)
+    public PlayerData(Character p)
     {
         //Retrieve GameManager info
         Sector = GameManager.Sector;
@@ -87,7 +87,7 @@ public class PlayerData
         MaxHealth = p.MaxHealth;
         Class = p.Class;
         ActiveAbilityName = p.ActiveAbility.AbilityName;
-        PassiveAbilityName = p.PassiveAbility.AbilityName;
+        //PassiveAbilityName = p.PassiveAbility.AbilityName;
 
         //Retrieve Weapon info
         Weapon w = p.Weapon;

@@ -10,7 +10,7 @@ public static class SaveSystem
     /// Retrieves saveable data and serializes it to a binary file
     /// </summary>
     /// <param name="p"></param>
-    public static void SavePlayer (Player p)
+    public static void SavePlayer (Character p)
     {
         //Retrieve most up to date FileID
         int saveFileID = GameManager.SaveFileID;

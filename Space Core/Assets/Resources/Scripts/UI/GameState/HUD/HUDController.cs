@@ -66,7 +66,7 @@ public class HUDController : MonoBehaviour
     /// Updates every Section of the HUD
     /// </summary>
     /// <param name="p"></param>
-    public void UpdateHUD(Player p)
+    public void UpdateHUD(Character p)
     {
         //Can only update HUD if not currently reloading a save file
         if (SaveSystem.loadedData == null && visible)
@@ -78,7 +78,18 @@ public class HUDController : MonoBehaviour
             CharacterPM.UpdateCharacterClass(p);
             CharacterPM.UpdateCharacterAbilities(p);
             RecolorHUD();
+        }
+    }
 
+    /// <summary>
+    /// Updates every Section of the HUD
+    /// </summary>
+    /// <param name="p"></param>
+    public void InitalHUDStart()
+    {
+        //Can only update HUD if not currently reloading a save file
+        if (SaveSystem.loadedData == null && visible)
+        {
             if (firstRun)
             {
                 // This needs to be run at the start only once, but after the player's class has been extracted.
@@ -93,27 +104,27 @@ public class HUDController : MonoBehaviour
     /// Updates the ammo Section of the HUD
     /// </summary>
     /// <param name="p"></param>
-    public void UpdateAmmo(Player p)
+    public void UpdateAmmo(Character c)
     {
-        WeaponPM.UpdateAmmo(p.Weapon);
+        WeaponPM.UpdateAmmo(c.Weapon);
     }
 
     /// <summary>
     /// Updates the weapon Section of the HUD
     /// </summary>
     /// <param name="p"></param>
-    public void UpdateWeapon(Player p)
+    public void UpdateWeapon(Character c)
     {
-        WeaponPM.UpdateWeapon(p);
+        WeaponPM.UpdateWeapon(c);
     }
 
     /// <summary>
     /// Updates the character Section of the HUD
     /// </summary>
-    /// <param name="p"></param>
-    public void UpdatePlayer(Player p)
+    /// <param name="c"></param>
+    public void UpdatePlayer(Character c)
     {
-        CharacterPM.UpdateHealth(p.MaxHealth, p.Health);
+        CharacterPM.UpdateHealth(c.MaxHealth, c.Health);
     }
 
     /// <summary>
@@ -297,6 +308,6 @@ public class HUDController : MonoBehaviour
         SwapPM.gameObject.SetActive(visible);
         MinimapManager.gameObject.SetActive(visible);
         PopupManager.gameObject.SetActive(visible);
-        UpdateHUD(Player.instance);
+        InitalHUDStart();
     }
 }

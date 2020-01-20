@@ -12,5 +12,6 @@ public class LightEnemyInfo : EnemyGenerationInfo
         HealthLow = 75;
         SpeedHi = 6f;
         SpeedLow = 3f;
+        PatrolRange = 8.0f;
     }
 }

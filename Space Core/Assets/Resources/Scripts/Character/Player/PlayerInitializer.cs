@@ -7,6 +7,9 @@ public class PlayerInitializer : MonoBehaviour
     public GameObject PlayerObj;
 
     [Tooltip("Drag in from resources")]
+    public GameObject PlayerControllerObj;
+
+    [Tooltip("Drag in from resources")]
     public GameObject[] Enemies;
 
     private string[] classes = { "light", "medium", "heavy" };
@@ -14,10 +17,11 @@ public class PlayerInitializer : MonoBehaviour
     private void Awake()
     {
         //Check that there's not already a player in scene [DontDestroyOnLoad]
-        if (Player.instance != null)
+        if (PlayerController.instance != null)
         {
             Destroy(gameObject);
         }
+        GameObject playerController = Instantiate(PlayerControllerObj);
         //If scene is not being loaded from a save file
         if (SaveSystem.loadedData == null)
         {
@@ -26,6 +30,7 @@ public class PlayerInitializer : MonoBehaviour
             player.transform.position = transform.position;
             player.name = "Player";
             player.tag = "Player";
+            PlayerController.instance.Character = player.GetComponent<Character>();
         }
         //Begin operation for loading a player from a save file
         else
@@ -46,33 +51,31 @@ public class PlayerInitializer : MonoBehaviour
                 player.transform.position = transform.position;
 
                 //Remove enemy component and add a player component
-                Destroy(player.GetComponent<Enemy>());
-                player.AddComponent<Player>();
-                Player playerComponent = player.GetComponent<Player>();
+                PlayerController.instance.Character = player.GetComponent<Character>();
 
                 #region Load Player Stats
-                playerComponent.Class = classes[classToInstantiate];
-                playerComponent.Health = SaveSystem.loadedData.Health;
-                playerComponent.MaxHealth = SaveSystem.loadedData.MaxHealth;
-                playerComponent.MinimapIcon = player.transform.Find("MinimapIcon").gameObject;
-                playerComponent.MinimapIcon.GetComponent<SpriteRenderer>().color = Color.cyan;
+                PlayerController.instance.Character.Class = classes[classToInstantiate];
+                PlayerController.instance.Character.Health = SaveSystem.loadedData.Health;
+                PlayerController.instance.Character.MaxHealth = SaveSystem.loadedData.MaxHealth;
+                PlayerController.instance.Character.MinimapIcon = player.transform.Find("MinimapIcon").gameObject;
+                PlayerController.instance.Character.MinimapIcon.GetComponent<SpriteRenderer>().color = Color.cyan;
                 player.name = "Player";
                 player.tag = "Player";
                 #endregion
 
-                Transform weaponParent = playerComponent.RotationPoint.transform.GetChild(0);
-                Vector2 weaponPos = playerComponent.Weapon.gameObject.transform.position;
-                Destroy(playerComponent.Weapon.gameObject);
-                playerComponent.Weapon = null;
+                Transform weaponParent = PlayerController.instance.Character.RotationPoint.transform.GetChild(0);
+                Vector2 weaponPos = PlayerController.instance.Character.Weapon.gameObject.transform.position;
+                Destroy(PlayerController.instance.Character.Weapon.gameObject);
+                PlayerController.instance.Character.Weapon = null;
 
                 //Remove player's current ability components
-                Destroy(playerComponent.ActiveAbility);
-                Destroy(playerComponent.PassiveAbility);
+                Destroy(PlayerController.instance.Character.ActiveAbility);
+                //Destroy(PlayerController.instance.Character.PassiveAbility);
 
                 //Load the player's saved abilities and attach components to player
                 AbilityGenerator.AddAbilitiesToCharacter
                 (
-                    playerComponent,
+                    PlayerController.instance.Character,
                     SaveSystem.loadedData.ActiveAbilityName,
                     SaveSystem.loadedData.PassiveAbilityName
                 );
@@ -88,7 +91,7 @@ public class PlayerInitializer : MonoBehaviour
 
                 //Set player's weapon to loaded weapon
                 Weapon weaponComponent = tempWeapon.GetComponent<Weapon>();
-                playerComponent.Weapon = weaponComponent;
+                PlayerController.instance.Character.Weapon = weaponComponent;
 
                 #region Load Weapon Stats
                 weaponComponent.Name = SaveSystem.loadedData.WeaponName;
