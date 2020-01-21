@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using oteTag = GameManager.OneTimeEventTags;
 
 public class Console : InteractableEnv
 {
@@ -8,7 +7,7 @@ public class Console : InteractableEnv
     public string EntryName;
     public string EntryArticle;
 
-    private bool alreadyPressed;
+    public bool AlreadyPressed { private get; set; }
 
     private void Awake()
     {
@@ -20,10 +19,12 @@ public class Console : InteractableEnv
     /// </summary>
     public override void ActivateFunctionality()
     {
-        if (!alreadyPressed)
+        if (!AlreadyPressed)
         {
+            //Add this object to one time events that get unlocked on scene load
+            GameManager.OneTimeEvents.Add(name, oteTag.Console);
             LoadDataBaseEntries.UnlockDataEntry(EntryName, EntryArticle);
-            alreadyPressed = true;
+            AlreadyPressed = true;
         }
     }
 }

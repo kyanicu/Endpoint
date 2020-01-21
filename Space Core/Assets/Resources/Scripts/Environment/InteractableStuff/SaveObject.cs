@@ -14,7 +14,10 @@ public class SaveObject : InteractableEnv
     /// </summary>
     public override void ActivateFunctionality()
     {
-        SaveSystem.SavePlayer(Player.instance);
+        SaveSystem.SavePlayer(PlayerController.instance.Character);
         Debug.Log($"Game saved with file id #{GameManager.SaveFileID}");
+
+        //Open save popup on HUD
+        HUDController.instance.InitiateSavePopup();
     }
 }

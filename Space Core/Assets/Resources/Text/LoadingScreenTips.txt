@@ -1,0 +1,5 @@
+You can deselect a hack target by pressing LB
+Defeat enemies and discover terminals to gain XP
+If you gain enough XP, you'll be rewarded an upgrade point which can be used towards progressing a paradigm
+Leveling up immedietely fills your paradigm progress bar
+Hack a bot you don't particularly enjoy? No worries, just try another!

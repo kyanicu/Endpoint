@@ -19,8 +19,8 @@ public class MoveCamera : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Player.instance == null) return;
-        Transform player = Player.instance.gameObject.transform;
+        if (PlayerController.instance == null) return;
+        Transform player = PlayerController.instance.Character.gameObject.transform;
         float interpolation = speed * Time.deltaTime;
 
         Vector3 camPos = transform.position;

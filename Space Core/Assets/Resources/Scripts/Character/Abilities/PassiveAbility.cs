@@ -23,26 +23,12 @@ public abstract class PassiveAbility : Ability
     /// </summary>
     protected void Start()
     {
-        if (owner.GetComponent<Enemy>() != null)
-        {
-            isEnemy = true;
-        }
-        else
-        {
-            isEnemy = false;
-        }
+        isEnemy = owner.GetComponent<Character>().IsPlayer;
     }
 
     public new void resetOwner(Character character)
     {
-        if (!character.gameObject.CompareTag("Player"))
-        {
-            isEnemy = true;
-        }
-        else
-        {
-            isEnemy = false;
-        }
+        isEnemy = !character.gameObject.CompareTag("Player");
         base.resetOwner(character);
     }
 

@@ -12,6 +12,9 @@ TagManager:
   - Terrain
   - PiercingBullet
   - Weapon
+  - EMP
+  - EnemyController
+  - ControllerGroup
   layers:
   - Default
   - TransparentFX

@@ -16,6 +16,10 @@ public class PopupManager : MonoBehaviour
     public GameObject DatabaseGroup;
     private RectTransform DatabaseRectTrans;
 
+    [Header("Save Popup")]
+    public GameObject SaveGroup;
+    private RectTransform SaveRectTrans;
+
     #region Constants
     private const float popupDuration = 10f;
     private const float ObjPopupHiddenX = -414;
@@ -29,7 +33,10 @@ public class PopupManager : MonoBehaviour
     {
         ObjectivesRectTrans = ObjectivesGroup.GetComponent<RectTransform>();
         DatabaseRectTrans = DatabaseGroup.GetComponent<RectTransform>();
+        SaveRectTrans = SaveGroup.GetComponent<RectTransform>();
     }
+
+    #region Objectives Popup
 
     /// <summary>
     /// Opens pop up and populate content with given arguments
@@ -75,9 +82,11 @@ public class PopupManager : MonoBehaviour
         }
         StartCoroutine(closeObjectivesPopup());
     }
+    #endregion
 
+    #region Database Popup
     /// <summary>
-    /// Opens pop up and populate content with given arguments
+    /// Starts coroutine to unhide popup
     /// </summary>
     /// <param name="title"></param>
     /// <param name="content"></param>
@@ -138,4 +147,52 @@ public class PopupManager : MonoBehaviour
             HUDController.instance.RecentDataBaseEntry = null;
         }
     }
+    #endregion
+
+    #region Save Popup
+    /// <summary>
+    /// Starts coroutine to unhide popup
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="content"></param>
+    public void InitiateSavePopup()
+    {
+        StartCoroutine(openSavePopup());
+    }
+
+    /// <summary>
+    /// Coroutine to unhide save popup 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator openSavePopup()
+    {
+        Vector3 pos = SaveRectTrans.position;
+        while (pos.x < DBPopupVisibleX)
+        {
+            pos = DatabaseRectTrans.position;
+            SaveRectTrans.position = new Vector3(pos.x + animationMoveSpeed, pos.y, pos.z);
+            yield return null;
+        }
+
+        //Start coroutine to close it
+        StartCoroutine(closeDatabasePopup());
+    }
+
+    /// <summary>
+    /// Coroutine to wait and then hide save popup
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator closeSavePopup()
+    {
+        yield return new WaitForSeconds(popupDuration);
+        Vector3 pos = SaveRectTrans.position;
+        while (pos.x > DBPopupHiddenX)
+        {
+            //Update popup position
+            pos = SaveRectTrans.position;
+            SaveRectTrans.position = new Vector3(pos.x - animationMoveSpeed, pos.y, pos.z);
+            yield return null;
+        }
+    }
+    #endregion
 }

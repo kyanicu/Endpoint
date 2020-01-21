@@ -10,7 +10,7 @@ public class ShockFloor : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            Player.instance.ReceiveAttack(new AttackInfo(damage*Time.fixedDeltaTime, Vector2.zero, 0, 0, DamageSource.Hazard));
+            PlayerController.instance.Character.ReceiveAttack(new AttackInfo(damage*Time.fixedDeltaTime, Vector2.zero, 0, 0, DamageSource.Hazard));
         }
     }
 }

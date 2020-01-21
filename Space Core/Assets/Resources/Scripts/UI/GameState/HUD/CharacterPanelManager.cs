@@ -116,20 +116,20 @@ public class CharacterPanelManager : MonoBehaviour
     /// <summary>
     /// Update the HUD to reflect the player's current class.
     /// </summary>
-    public void UpdateCharacterClass(Player p)
+    public void UpdateCharacterClass(Character p)
     {
         string playerClass = p.Class;
         int playerClassID;
 
         switch (playerClass)
         {
-            case "small":
+            case "light":
                 playerClassID = 0;
                 break;
             case "medium":
                 playerClassID = 1;
                 break;
-            case "large":
+            case "heavy":
                 playerClassID = 2;
                 break;
             default:
@@ -154,10 +154,9 @@ public class CharacterPanelManager : MonoBehaviour
     /// <summary>
     /// Update the HUD to reflect the player's current abilities.
     /// </summary>
-    public void UpdateCharacterAbilities(Player p)
+    public void UpdateCharacterAbilities(Character p)
     {
         Ability playerActiveAbility = p.ActiveAbility;
-        Ability playerPassiveAbility = p.PassiveAbility;
 
         // Change Ability source images based on the ability.
         CharacterActiveAbilityFill.sprite = playerActiveAbility.AbilityImage;
@@ -169,14 +168,14 @@ public class CharacterPanelManager : MonoBehaviour
         CharDiagnosticActiveAbilityTitle.text = playerActiveAbility.AbilityName;
         CharDiagnosticActiveAbilityText.text = playerActiveAbility.AbilityDescription;
 
-        CharacterPassiveAbilityFill.sprite = playerPassiveAbility.AbilityImage;
-        CharacterPassiveAbilityEmpty.sprite = playerPassiveAbility.AbilityImage;
-        CharacterPassiveAbilityText.text = playerPassiveAbility.AbilityShortName;
+        //CharacterPassiveAbilityFill.sprite = playerPassiveAbility.AbilityImage;
+        //CharacterPassiveAbilityEmpty.sprite = playerPassiveAbility.AbilityImage;
+        //CharacterPassiveAbilityText.text = playerPassiveAbility.AbilityShortName;
 
-        CharDiagnosticPassiveAbilityIcon.sprite = playerPassiveAbility.AbilityImage;
-        CharDiagnosticPassiveAbilityAbbr.text = playerPassiveAbility.AbilityShortName;
-        CharDiagnosticPassiveAbilityTitle.text = playerPassiveAbility.AbilityName;
-        CharDiagnosticPassiveAbilityText.text = playerPassiveAbility.AbilityDescription;
+        //CharDiagnosticPassiveAbilityIcon.sprite = playerPassiveAbility.AbilityImage;
+        //CharDiagnosticPassiveAbilityAbbr.text = playerPassiveAbility.AbilityShortName;
+        //CharDiagnosticPassiveAbilityTitle.text = playerPassiveAbility.AbilityName;
+        //CharDiagnosticPassiveAbilityText.text = playerPassiveAbility.AbilityDescription;
     }
 
     // Recolors all elements within the Character Panel to match the current character's class.

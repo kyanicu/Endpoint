@@ -6,7 +6,7 @@ using System.IO;
 
 public static class LoadDialogue
 {
-    public static Dictionary<string, DialogueItem> DialogueItems = new Dictionary<string, DialogueItem>();
+    public static Dictionary<string, DialogueItem> DialogueItems;
 
     public enum DialogueLineID
     {
@@ -36,6 +36,8 @@ public static class LoadDialogue
     /// </summary>
     public static void LoadDialogueItems()
     {
+        DialogueItems = new Dictionary<string, DialogueItem>();
+
         //Get each text file in the primary objectives folder
         TextAsset[] DialogueList = Resources.LoadAll<TextAsset>("Text/Dialogue");
 

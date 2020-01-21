@@ -18,6 +18,7 @@ public class OverlayManager : MonoBehaviour
     public DataBaseOverlayManager DBManager;
     public MapOverlayManager MapManager;
     public ObjectivesOverlayManager OOManager;
+    public UpgradesOverlayManager UpgradesManager;
     [Space]
     #endregion
 
@@ -68,8 +69,6 @@ public class OverlayManager : MonoBehaviour
         OverlayPanels[(int)ActivePanel].SetActive(false);
         MenuOptionButtons[activeButtonID].SwapSelect();
 
-        HUDController.instance.ToggleHUDVisibility();
-
         //If haven't recently unlocked lore entry
         if (HUDController.instance.RecentDataBaseEntry == null ||
             HUDController.instance.RecentDataBaseEntry.Length == 0)
@@ -83,7 +82,9 @@ public class OverlayManager : MonoBehaviour
 
             //Toggle overlay visibility
             overlayVisible = !overlayVisible;
+            HUDController.instance.visible = !overlayVisible;
             overlay.gameObject.SetActive(overlayVisible);
+            HUDController.instance.ToggleHUDVisibility();
         }
         //Otherwise go straight to database overlay
         else
@@ -157,12 +158,6 @@ public class OverlayManager : MonoBehaviour
             case Panels.Database:
                 DBManager.NavigateLeftPanel(y);
                 break;
-            case Panels.SkillTree:
-                break;
-            case Panels.Map:
-                break;
-            case Panels.Objectives:
-                break;
         }
     }
 
@@ -173,9 +168,14 @@ public class OverlayManager : MonoBehaviour
     /// <param name="y"></param>
     public void ReceiveLeftStickDragInput(float x, float y)
     {
-        if (ActivePanel == Panels.Map)
+        switch(ActivePanel)
         {
-            MapManager.MoveCamera(x, y);
+            case Panels.Map:
+                MapManager.MoveCamera(x, y);
+                break;
+            case Panels.SkillTree:
+                UpgradesManager.MoveReticle(x, y);
+                break;
         }
     }
     #endregion
@@ -228,6 +228,7 @@ public class OverlayManager : MonoBehaviour
         switch (ActivePanel)
         {
             case Panels.SkillTree:
+                UpgradesManager.SwapParadigm(isRightTrigger);
                 break;
             case Panels.Map:
                 MapManager.ZoomCamera(isRightTrigger);

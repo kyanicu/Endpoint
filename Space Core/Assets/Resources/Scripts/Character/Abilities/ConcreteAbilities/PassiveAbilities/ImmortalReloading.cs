@@ -13,6 +13,11 @@ public class ImmortalReloading : PassiveAbility
     /// </summary>
     private bool reloadStarted;
 
+    /// <summary>
+    /// Time that the player stays immortal after reloading
+    /// </summary>
+    private float IMMORTAL_TIME = 5.0f;
+
     protected override void Activate()
     {
         StartCoroutine(Immortality());
@@ -65,8 +70,8 @@ public class ImmortalReloading : PassiveAbility
     /// <returns></returns>
     IEnumerator Immortality()
     {
-        owner.isImmortal = true;
-        yield return new WaitForSeconds(5);
-        owner.isImmortal = false;
+        owner.Invincible++;
+        yield return new WaitForSeconds(IMMORTAL_TIME);
+        owner.Invincible--;
     }
 }

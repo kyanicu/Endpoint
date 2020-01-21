@@ -28,9 +28,9 @@ public class MapOverlayManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Player.instance != null)
+        if (PlayerController.instance != null && PlayerController.instance.Character != null)
         {
-            startPos = Player.instance.transform.position;
+            startPos = PlayerController.instance.Character.transform.position;
             startPos = new Vector3(startPos.x, startPos.y, startingZ);
             ResetCamera();
         }

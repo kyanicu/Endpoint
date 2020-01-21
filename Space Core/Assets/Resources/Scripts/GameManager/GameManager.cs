@@ -8,11 +8,14 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static Dictionary<string, float[]> MaxStats;
-    public static List<GameObject> Enemies;
+    public static List<GameObject> EnemyControllers;
     public static string Sector;
     public static int SaveFileID = 0;
     public static string FILE_PATH;
     public static bool Initialized;
+    public static float Timer;
+    public static int PlayerLevel = 0;
+    public static Dictionary<string, OneTimeEventTags> OneTimeEvents = new Dictionary<string, OneTimeEventTags>();
 
     private static GameManager _instance;
     public static GameManager instance { get { return _instance; } }
@@ -33,6 +36,12 @@ public class GameManager : MonoBehaviour
         scene9,
     }
 
+    public enum OneTimeEventTags
+    {
+        Destroy,
+        Console,
+        HazardSwitch
+    }
     private void Awake()
     {
         if (_instance == null || _instance != this)
@@ -46,9 +55,13 @@ public class GameManager : MonoBehaviour
         //If DB hasn't been initialized yet, do that
         if (!Initialized)
         {
+            InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
             Initialized = true;
             currentScene = (Scenes)SceneManager.GetActiveScene().buildIndex;
             Sector = "CENTRAL PROCESSING";
+            Timer = 0;
+
+            //Refresh progress lists
             LoadDataBaseEntries.LoadAllDataEntries();
             LoadObjectives.LoadAllObjectives();
             LoadDialogue.LoadDialogueItems();
@@ -72,20 +85,50 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Enemies = null;
+        EnemyControllers = null;
+
+        if (OneTimeEvents.Count > 0)
+        {
+            //Iterate through each One Time Event that has already occurred
+            foreach (KeyValuePair<string, OneTimeEventTags> ote in OneTimeEvents)
+            {
+                //Locate the event in the scene given its name
+                GameObject Event = GameObject.Find(ote.Key);
+
+                //Check if the game object exists in the current scene
+                if (Event != null)
+                {
+                    switch (ote.Value)
+                    {
+                        case OneTimeEventTags.Destroy:
+                            Destroy(Event.gameObject);
+                            break;
+                        case OneTimeEventTags.Console:
+                            Console console = Event.GetComponent<Console>();
+                            console.AlreadyPressed = true;
+                            break;
+                        case OneTimeEventTags.HazardSwitch:
+                            HazardSwitch hazardSwitch = Event.GetComponent<HazardSwitch>();
+                            hazardSwitch.AlreadyPressed = true;
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public void Update()
     {
+        Timer += Time.deltaTime;
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
-        if (Enemies == null)
+        if (EnemyControllers == null)
         {
-            Enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            EnemyControllers = GameObject.FindGameObjectsWithTag("EnemyController").ToList();
         }
-        Enemies.RemoveAll(enemy => enemy == null || enemy.CompareTag("Player"));
+        EnemyControllers.RemoveAll(enemy => enemy == null || enemy.CompareTag("Player"));
     }
 
     #region Total Range Stats
@@ -130,5 +173,17 @@ public class GameManager : MonoBehaviour
     {
         int pos = path.LastIndexOf("\\") + 1;
         return path.Substring(pos, path.Length - pos);
+    }
+
+    /// <summary>
+    /// Returns a formatted string representing player's time in game
+    /// </summary>
+    /// <returns></returns>
+    public static string RetrievePlayTime(float playerTime)
+    {
+        int seconds = (int)playerTime % 60;
+        int minutes = (int)playerTime / 60;
+        int hours = (int)playerTime / 3600;
+        return $"{hours}:{minutes}:{seconds}";
     }
 }

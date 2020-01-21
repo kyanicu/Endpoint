@@ -119,24 +119,7 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildAutomatic(Transform parent, WeaponGenerationInfo wgi)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/" + wgi.name);
-        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
-        Automatic automatic = weaponObject.GetComponent<Automatic>();
-        automatic.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
-        automatic.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
-        automatic.StunTime = wgi.StunTime;
-        automatic.KnockbackImpulse = wgi.MaxKnockbackImpulse;
-        automatic.KnockbackTime = wgi.MaxKnockbackTime; ;
-        automatic.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
-        automatic.AmmoInClip = automatic.ClipSize;
-        automatic.MaxAmmoCapacity = UnityEngine.Random.Range(automatic.ClipSize * MIN_RNG, automatic.ClipSize * MAX_RNG);
-        automatic.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
-        automatic.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
-        automatic.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
-        automatic.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
-        automatic.TotalAmmo = automatic.MaxAmmoCapacity;
-        automatic.Description = wgi.description;
-        return weaponObject;
+        return SetCommonAttributes(parent, wgi);
     }
 
     /// <summary>
@@ -146,24 +129,10 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildSpread(Transform parent, WeaponGenerationInfo wgi)
     {
-        GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/" + wgi.name);
-        GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
+
+        GameObject weaponObject = SetCommonAttributes(parent, wgi);
         Spread spread = weaponObject.GetComponent<Spread>();
-        spread.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
-        spread.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
-        spread.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
-        spread.AmmoInClip = spread.ClipSize;
-        spread.StunTime = wgi.StunTime;
-        spread.KnockbackImpulse = wgi.MaxKnockbackImpulse;
-        spread.KnockbackTime = wgi.MaxKnockbackTime;
-        spread.MaxAmmoCapacity = UnityEngine.Random.Range(spread.ClipSize * MIN_RNG, spread.ClipSize * MAX_RNG);
-        spread.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
-        spread.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
         spread.NumPellets = UnityEngine.Random.Range(wgi.MinNumPellets, wgi.MaxNumPellets);
-        spread.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
-        spread.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
-        spread.TotalAmmo = spread.MaxAmmoCapacity;
-        spread.Description = wgi.description;
         return weaponObject;
     }
 
@@ -174,23 +143,34 @@ public static class WeaponGenerator
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildPrecision(Transform parent, WeaponGenerationInfo wgi)
     {
+        return SetCommonAttributes(parent, wgi);
+    }
+
+    /// <summary>
+    /// This function will generate a specific weapon with random stats
+    /// </summary>
+    /// <param name="parent">Transform of the weapons parent object</param>
+    /// <param name="wgi">Weapon generation information</param>
+    /// <returns>new weapon gameobject</returns>
+    private static GameObject SetCommonAttributes(Transform parent, WeaponGenerationInfo wgi)
+    {
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/" + wgi.name);
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
-        Precision precision = weaponObject.GetComponent<Precision>();
-        precision.SpreadFactor = wgi.MinSpread;
-        precision.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
-        precision.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
-        precision.AmmoInClip = precision.ClipSize;
-        precision.StunTime = wgi.StunTime;
-        precision.KnockbackImpulse = wgi.MaxKnockbackImpulse;
-        precision.KnockbackTime = wgi.MaxKnockbackTime;
-        precision.MaxAmmoCapacity = UnityEngine.Random.Range(precision.ClipSize * MIN_RNG, precision.ClipSize * MAX_RNG);
-        precision.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
-        precision.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
-        precision.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
-        precision.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
-        precision.TotalAmmo = precision.MaxAmmoCapacity;
-        precision.Description = wgi.description;
+        Weapon weapon = weaponObject.GetComponent<Weapon>();
+        weapon.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
+        weapon.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
+        weapon.StunTime = wgi.StunTime;
+        weapon.KnockbackImpulse = wgi.MaxKnockbackImpulse;
+        weapon.KnockbackTime = wgi.MaxKnockbackTime; ;
+        weapon.ClipSize = UnityEngine.Random.Range(wgi.MinClipSize, wgi.MaxClipSize);
+        weapon.AmmoInClip = weapon.ClipSize;
+        weapon.MaxAmmoCapacity = UnityEngine.Random.Range(weapon.ClipSize * MIN_RNG, weapon.ClipSize * MAX_RNG);
+        weapon.RateOfFire = UnityEngine.Random.Range(wgi.MinRateOfFire, wgi.MaxRateOfFire);
+        weapon.ReloadTime = UnityEngine.Random.Range(wgi.MinReloadTime, wgi.MaxReloadTime);
+        weapon.Range = UnityEngine.Random.Range(wgi.MinRange, wgi.MaxRange);
+        weapon.BulletVeloc = UnityEngine.Random.Range(wgi.MinBulletVeloc, wgi.MaxBulletVeloc);
+        weapon.TotalAmmo = weapon.MaxAmmoCapacity;
+        weapon.Description = wgi.description;
         return weaponObject;
     }
 }
