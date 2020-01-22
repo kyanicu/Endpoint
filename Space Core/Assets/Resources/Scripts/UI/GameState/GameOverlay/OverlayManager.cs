@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,23 +10,53 @@ public class OverlayManager : MonoBehaviour
     #region Attached UI Objects
     [Header("Attached UI Objects")]
     public ButtonElementSetup[] MenuOptionButtons;
+    public GameObject OverlayPanelsContainer;
     public GameObject[] OverlayPanels;
-    private Canvas overlay;
+    public Canvas overlay;
     private bool overlayVisible = true;
+    [Space]
     #endregion
 
-    #region Overlay Scripts
+    #region Overlay Manager Scripts
     [Header("Overlay Scripts")]
     public DataBaseOverlayManager DBManager;
     public MapOverlayManager MapManager;
     public ObjectivesOverlayManager OOManager;
     public UpgradesOverlayManager UpgradesManager;
+    public TopPanelManager TopPM;
     [Space]
     #endregion
 
-    private int activeButtonID;
+    #region Overlay BG Animation Objects
+    [Header("Overlay BG Animation Objects")]
+    public Canvas OverlayCanvas;
+    public GameObject OverlayBGAnimPanel, DarkBGPanel, FrostedGlassBlurGameplay;
+    public Image[] OverlayBGAnimBlocks;
+    #endregion
 
+    #region Overlay Top Panel Objects
+    [Header("Overlay Top Panel Objects")]
+    public GameObject OverlayTopPanel;
+    public Image TopPanelBGImage, TopPanelSymbiosLogo, TopPanelC1, TopPanelC2, TopPanelC3, TopPanelC4;
+    public TextMeshProUGUI TopPanelClock, TopPanelProcessesText;
+    #endregion
+
+    #region Overlay Bottom Panel Objects
+    [Header("Overlay Bottom Panel Objects")]
+    public GameObject OverlayBottomPanel;
+    public Image BottomPanelBG;
+    #endregion
+
+    #region Overlay Nav Panel Objects
+    [Header("Overlay Nav Panel Objects")]
+    public GameObject NavPanel;
+    public Image NavPanelMapButton, NavPanelObjectivesButton, NavPanelUpgradesButton, NavPanelDatabaseButton;
+    #endregion
+
+    private int activeButtonID;
     public Panels ActivePanel;
+
+    private OverlayAnimations OverlayAnims;
 
     private static OverlayManager _instance;
     public static OverlayManager instance { get { return _instance; } }
@@ -34,9 +66,9 @@ public class OverlayManager : MonoBehaviour
     /// </summary>
     public enum Panels
     {
-        SkillTree,
-        Objectives,
         Map,
+        Objectives,
+        SkillTree,
         Database
     }
 
@@ -48,42 +80,69 @@ public class OverlayManager : MonoBehaviour
             _instance = this;
         }
 
+        OverlayAnims = OverlayAnimations.instance;
+        OverlayAnims.OverlayAnimationsInit();
+
+        // Find the overlay canvas and trigger it.
+        overlay = transform.Find("OverlayCanvas").GetComponent<Canvas>();
+        ToggleOverlayVisibility();
+
         //Set the start button/panel values
         MenuOptionButtons[(int)Panels.Map].SwapSelect();
         ActivePanel = Panels.Map;
 
         //Activate the first button/panel
         activeButtonID = (int)ActivePanel;
-
-        //Find the overlay canvas
-        overlay = transform.Find("Canvas").GetComponent<Canvas>();
-        ToggleOverlayVisibility();
     }
+
+    // Stores coroutine for opening/closing overlay.
+    private Coroutine OverlayOpenClose;
+    // Stores tween for hiding or showing active panels container.
+    private Tween OverlayPanelsContainerOpenClose;
 
     /// <summary>
     /// Toggles the visiblity of the hud, called from Input Manager
     /// </summary>
     public void ToggleOverlayVisibility()
     {
-        //Hide currently active panel
+        // Hide the currently active overlay panel, whether overlay is visible or not.
         OverlayPanels[(int)ActivePanel].SetActive(false);
+        OverlayPanelsContainerOpenClose = OverlayPanelsContainer.GetComponent<CanvasGroup>().DOFade(0f, 0.2f);
+
         MenuOptionButtons[activeButtonID].SwapSelect();
 
-        //If haven't recently unlocked lore entry
+        // If the player hasn't recently unlocked lore entry
         if (HUDController.instance.RecentDataBaseEntry == null ||
             HUDController.instance.RecentDataBaseEntry.Length == 0)
         {
-            //reset active panel
+            // Reset the active panel to the default (map).
             ActivePanel = Panels.Map;
             activeButtonID = (int)ActivePanel;
 
-            //Hide currently active panel
-            OverlayPanels[(int)ActivePanel].SetActive(true);
-
-            //Toggle overlay visibility
+            // Toggle overlay visibility.
             overlayVisible = !overlayVisible;
+
+            // If it is not visible, open everything, including the newly reset active panel.
+            if (overlayVisible)
+            {
+                OverlayOpenClose = StartCoroutine(OverlayAnims.OpenOverlayAnimation());
+
+                // Enable and open the new active panel.
+                OverlayPanels[(int)ActivePanel].SetActive(true);
+                OverlayPanelsContainerOpenClose = OverlayPanelsContainer.GetComponent<CanvasGroup>().DOFade(1f, 0.2f);
+                OverlayAnims.NavigateOpenAnimation((int)ActivePanel);
+                
+            }
+            // If it is visible, close everything.
+            else
+            {
+                OverlayOpenClose = StartCoroutine(OverlayAnims.CloseOverlayAnimation());
+
+                // Close and disable the currently active panel.
+                // Enable and open the new active panel.
+            }
+
             HUDController.instance.visible = !overlayVisible;
-            overlay.gameObject.SetActive(overlayVisible);
             HUDController.instance.ToggleHUDVisibility();
         }
         //Otherwise go straight to database overlay
@@ -115,32 +174,53 @@ public class OverlayManager : MonoBehaviour
     public void NavigateOverlay(float horiz) {
         if (horiz == 0) return;
 
-        //Hide currently active panel
-        OverlayPanels[(int)ActivePanel].SetActive(false);
+        //OverlayPanels[(int)ActivePanel].SetActive(false);
         MenuOptionButtons[activeButtonID].SwapSelect();
 
         //If user scrolls to the left
-        if (horiz > 0) {
+        if (horiz > 0)
+        {
+            // Hide currently active panel, play the "close to right" animation
+            OverlayAnims.NavigatePanelCloseRightAnimation((int)ActivePanel);
+
             activeButtonID--;
             if (activeButtonID < 0)
             {
                 activeButtonID = MenuOptionButtons.Length - 1;
             }
+
+            // Update the new active panel.
+            ActivePanel = (Panels)activeButtonID;
+            MenuOptionButtons[activeButtonID].SwapSelect();
+
+            // Make sure the new panel is set to active.
+            OverlayPanels[(int)ActivePanel].SetActive(true);
+
+            // Play opening animation for next panel.
+            OverlayAnims.NavigatePanelOpenRightAnimation((int)ActivePanel);
         }
         //If user scrolls to the right
         else if (horiz < 0)
         {
+            // Hide currently active panel, play the "close to left" animation
+            OverlayAnims.NavigatePanelCloseLeftAnimation((int)ActivePanel);
+
             activeButtonID++;
             if (activeButtonID == MenuOptionButtons.Length)
             {
                 activeButtonID = 0;
             }
-        }
 
-        //Update and unhide the new active panel
-        ActivePanel = (Panels) activeButtonID;
-        MenuOptionButtons[activeButtonID].SwapSelect();
-        OverlayPanels[(int)ActivePanel].SetActive(true);
+            // Update the new active panel.
+            ActivePanel = (Panels)activeButtonID;
+            MenuOptionButtons[activeButtonID].SwapSelect();
+
+            // Make sure the new panel is set to active.
+            OverlayPanels[(int)ActivePanel].SetActive(true);
+
+            // Play opening animation for next panel.
+            OverlayAnims.NavigatePanelOpenLeftAnimation((int)ActivePanel);
+        }
     }
 
     #region RECEIVE INPUT FROM INPUT MANAGER

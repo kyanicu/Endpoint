@@ -20,6 +20,7 @@ public class Character : MonoBehaviour
     public GameObject QTEPanel { get; protected set; }
     public Transform QTEPointLeft;
     public Transform QTEPointRight;
+    public Canvas WorldspaceCanvas;
     public ActiveAbility ActiveAbility { get; set; }
     public Movement movement { get; protected set; }
     public bool IsBlinking;

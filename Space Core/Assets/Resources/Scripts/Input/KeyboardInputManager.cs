@@ -105,6 +105,16 @@ public class KeyboardInputManager : InputManager
             } 
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            // If the pause menu isn't already open...
+            if (HUDController.instance.visible)
+            {
+                currentState = InputState.OVERLAY;
+                OverlayManager.instance.ToggleOverlayVisibility();
+            }
+        }
+
         Vector2 positionOnScreen = Vector2.zero;
         if (PlayerController.instance.Character.RotationPoint != null)
         {
@@ -151,6 +161,20 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunPlayerOverlayFrameInput()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            currentState = InputState.GAMEPLAY;
+            OverlayManager.instance.ToggleOverlayVisibility();
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OverlayManager.instance.NavigateOverlay(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OverlayManager.instance.NavigateOverlay(1);
+        }
+
 
     }
 

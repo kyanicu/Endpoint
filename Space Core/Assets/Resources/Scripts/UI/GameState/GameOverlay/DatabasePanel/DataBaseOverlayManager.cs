@@ -30,8 +30,8 @@ public class DataBaseOverlayManager : MonoBehaviour
     private float Y_MODIFIER;
     private float X_MODIFIER;
 
-    private Color selectedColor = Color.yellow;
-    private Color deselectedColor = Color.blue;
+    private Color selectedColor = new Color32(0xf4, 0x0a, 0xfd, 0xff);
+    private Color deselectedColor = new Color32(0x53, 0x51, 0x4c, 0xff);
 
     private List<string> loadedArticleInfo;
 

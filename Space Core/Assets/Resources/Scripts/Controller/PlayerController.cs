@@ -43,10 +43,14 @@ public class PlayerController : Controller
         Character.Weapon.BulletSource = DamageSource.Player;
         if (Character.Class == null)
         {
-            Character.MaxHealth = 100;
-            Character.Health = 100;
+            Character.MaxHealth = 200;
+            Character.Health = 200;
             Character.Class = "medium";
             Character.IsPlayer = true;
+
+            // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
+            Character.WorldspaceCanvas.gameObject.SetActive(true);
+            WorldspaceCanvas.instance.UpdateWorldspaceCanvas(Character.WorldspaceCanvas);
         }
         canSwap = true;
         HUDController.instance.UpdateHUD(Character);
@@ -80,6 +84,10 @@ public class PlayerController : Controller
         {
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
+
+            // Disable player canvas on the old character.
+            Character.WorldspaceCanvas.gameObject.SetActive(false);
+
             Character.IsPlayer = false;
             Character.Weapon.BulletSource = DamageSource.Enemy;
             Character.Weapon.ControlledByPlayer = false;
@@ -88,6 +96,11 @@ public class PlayerController : Controller
             Character.IsBlinking = false;
             Character.Invincible = 0;
             SwapCharacter(Enemy.Character, Enemy);
+
+            // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
+            Character.WorldspaceCanvas.gameObject.SetActive(true);
+            WorldspaceCanvas.instance.UpdateWorldspaceCanvas(Character.WorldspaceCanvas);
+
             Character.IsPlayer = true;
             Character.Weapon.BulletSource = DamageSource.Player;
             Character.Weapon.ControlledByPlayer = true;
@@ -138,6 +151,10 @@ public class PlayerController : Controller
         if (collision.CompareTag("Ammo"))
         {
             Character.Weapon.AddAmmo(collision.gameObject.GetComponent<DroppedAmmo>().Ammo);
+
+            // Update the ammo text above player - using ONLY this Enemy's canvas.
+            WorldspaceCanvas.instance.UpdatePlayerAmmo();
+            
             HUDController.instance.UpdateAmmo(Character);
             collision.gameObject.SetActive(false);
         }
@@ -252,5 +269,40 @@ public class PlayerController : Controller
     {
         yield return new WaitForSeconds(IFRAME_TIME);
         Character.Invincible--;
+    }
+
+    void Update()
+    {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            return;
+
+        UpdateWorldspaceCanvasDirection();
+    }
+
+    protected void UpdateWorldspaceCanvasDirection()
+    {
+        // If character is facing to the left, x local scale is negative
+        // So that the character's UI is always facing the right direction.
+        if (isFacingLeft)
+        {
+            Character.WorldspaceCanvas.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        //Else reset scale and positions
+        else
+        {
+            Character.WorldspaceCanvas.transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    //Returns whether or not the character is facing left
+    //Used in UpdatePlayerCanvasDirection()
+    protected bool isFacingLeft
+    {
+        get
+        {
+            Vector2 charScale = Character.transform.localScale;
+            return charScale.x < 0;
+        }
     }
 }

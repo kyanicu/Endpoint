@@ -169,13 +169,13 @@ public class PopupManager : MonoBehaviour
         Vector3 pos = SaveRectTrans.position;
         while (pos.x < DBPopupVisibleX)
         {
-            pos = DatabaseRectTrans.position;
+            pos = SaveRectTrans.position;
             SaveRectTrans.position = new Vector3(pos.x + animationMoveSpeed, pos.y, pos.z);
             yield return null;
         }
 
         //Start coroutine to close it
-        StartCoroutine(closeDatabasePopup());
+        StartCoroutine(closeSavePopup());
     }
 
     /// <summary>

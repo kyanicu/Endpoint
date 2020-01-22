@@ -12,8 +12,6 @@ public class UpgradesOverlayManager : MonoBehaviour
     public Image[] IconBackgrounds;
     public Image[] Icons;
     public List<TextMeshProUGUI> DispositionModValues;
-    public TextMeshProUGUI OverlayHeader;
-    public Image OverlayHeaderIcon;
     #endregion
 
     [Header("Upgrade Details")]
@@ -453,8 +451,8 @@ public class UpgradesOverlayManager : MonoBehaviour
         Equipped.color = dominantCol;
         WheelCenter.color = dominantCol;
         SelectedUpgradeIcon.color = dominantCol;
-        OverlayHeader.color = dominantCol;
-        OverlayHeaderIcon.color = dominantCol;
+        //OverlayHeader.color = dominantCol;
+        //OverlayHeaderIcon.color = dominantCol;
 
         for (int i = 0; i< Paradigm.maxActiveBranches; i++)
         {
