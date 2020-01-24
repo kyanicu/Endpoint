@@ -16,8 +16,7 @@ public class AudioManager : MonoBehaviour
         Deny
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         instance = this;
         audioSource = GetComponent<AudioSource>();

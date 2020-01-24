@@ -34,7 +34,7 @@ public class OverlayAnimations : MonoBehaviour
     private Vector2[] bgBlockOriginalDimensions = new Vector2[5];
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         //Setup singleton
         if (_instance == null || _instance != this)
