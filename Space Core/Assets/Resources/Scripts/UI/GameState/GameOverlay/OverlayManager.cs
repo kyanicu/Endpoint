@@ -136,6 +136,7 @@ public class OverlayManager : MonoBehaviour
             // If it is visible, close everything.
             else
             {
+                OverlayManager.instance.FrostedGlassBlurGameplay.GetComponent<Image>();
                 OverlayOpenClose = StartCoroutine(OverlayAnims.CloseOverlayAnimation());
 
                 // Close and disable the currently active panel.

@@ -300,7 +300,7 @@ public class OverlayAnimations : MonoBehaviour
         {
             StopCoroutine(FrostedGlassFade);
         }
-        FrostedGlassFade = StartCoroutine(CloseFrostedGlass(OverlayManager.FrostedGlassBlurGameplay.GetComponent<Image>(), animTimeScale));
+        FrostedGlassFade = StartCoroutine(CloseFrostedGlass(OverlayManager.instance.FrostedGlassBlurGameplay.GetComponent<Image>(), animTimeScale));
 
         // *** Trigger the BG Blocks animations
         // Check if the coroutine exists. Delete it if it does.

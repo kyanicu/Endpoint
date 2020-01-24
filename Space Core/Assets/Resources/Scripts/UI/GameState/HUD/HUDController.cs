@@ -59,7 +59,7 @@ public class HUDController : MonoBehaviour
     }
     private void Start()
     {
-        visible = false;
+        visible = true;
     }
     
     /// <summary>

@@ -16,7 +16,7 @@ public class LoadingScreenManager : MonoBehaviour
     private Image[] LoadingScreenImages;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         InputManager.instance.currentState = InputManager.InputState.LOADING;
         LoadingText.text = "LOADING";
