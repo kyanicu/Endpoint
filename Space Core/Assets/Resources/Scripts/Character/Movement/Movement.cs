@@ -54,19 +54,19 @@ public abstract class Movement : MonoBehaviour
 
     // The following values return the encapsulated value with the current set modifier  
 
-    protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
-    protected float runAccel { get { return _runAccel * mod; } set { _runAccel = value; } }
-    protected float runDecel { get { return _runDecel * mod; } set { _runDecel = value; } }
-    protected float runBreak { get { return _runBreak * mod; } set { _runBreak = value; } }
-    protected float jumpVelocity { get { return _jumpVelocity * mod; } set { _jumpVelocity = value; } }
-    protected float gravityScale { get { return _gravityScale * mod; } set { _gravityScale = value; } }
-    protected float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } set { _jumpCancelMinVel = value; } }
-    protected float jumpCancelVel { get { return _jumpCancelVel / mod; } set { _jumpCancelVel = value; } }
-    protected float airAccel { get { return _airAccel * mod; } set { _airAccel = value; } }
-    protected float airDecel { get { return _airDecel * mod; } set { _airDecel = value; } }
-    protected float airMax { get { return _airMax * mod; } set { _airMax = value; } }
-    protected float pushForce { get { return _pushForce * mod; } set { _pushForce = value; } }
-    protected float mass { get { return _mass * mod; } set { _mass = value; } }
+    public float runMax { get { return _runMax * mod; } set { _runMax = value; } }
+    public float runAccel { get { return _runAccel * mod; } protected set { _runAccel = value; } }
+    public float runDecel { get { return _runDecel * mod; } protected set { _runDecel = value; } }
+    public float runBreak { get { return _runBreak * mod; } protected set { _runBreak = value; } }
+    public float jumpVelocity { get { return _jumpVelocity * mod; } protected set { _jumpVelocity = value; } }
+    public float gravityScale { get { return _gravityScale * mod; } protected set { _gravityScale = value; } }
+    public float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } protected set { _jumpCancelMinVel = value; } }
+    public float jumpCancelVel { get { return _jumpCancelVel / mod; } protected set { _jumpCancelVel = value; } }
+    public float airAccel { get { return _airAccel * mod; } protected set { _airAccel = value; } }
+    public float airDecel { get { return _airDecel * mod; } protected set { _airDecel = value; } }
+    public float airMax { get { return _airMax * mod; } protected set { _airMax = value; } }
+    public float pushForce { get { return _pushForce * mod; } protected set { _pushForce = value; } }
+    public float mass { get { return _mass * mod; } protected set { _mass = value; } }
     /// <summary>
     /// Current jump values
     /// </summary>

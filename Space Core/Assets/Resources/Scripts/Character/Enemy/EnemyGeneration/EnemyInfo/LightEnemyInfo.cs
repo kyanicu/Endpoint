@@ -10,8 +10,8 @@ public class LightEnemyInfo : EnemyGenerationInfo
         PrefabPath = "Prefabs/Enemy/LightEnemy";
         HealthHi = 105;
         HealthLow = 75;
-        SpeedHi = 6f;
-        SpeedLow = 3f;
+        SpeedHi = 10f;
+        SpeedLow = 7f;
         PatrolRange = 8.0f;
     }
 }

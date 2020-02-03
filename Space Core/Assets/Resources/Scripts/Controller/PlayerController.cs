@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : Controller
 {
     //Base variables for the player controller
-    public EnemyController Enemy { get; set; }
+    public AIController Enemy { get; set; }
     public InteractableEnv InteractableObject { private get; set; }
     const float HACK_AREA_LENGTH = 22.5f;
     private const float COOLDOWN_TIME = 2.5f;

@@ -10,8 +10,8 @@ public class HeavyEnemyInfo : EnemyGenerationInfo
         PrefabPath = "Prefabs/Enemy/HeavyEnemy";
         HealthHi = 150;
         HealthLow = 105;
-        SpeedHi = 3f;
-        SpeedLow = 1.5f;
+        SpeedHi = 5f;
+        SpeedLow = 3f;
         PatrolRange = 3.0f;
     }
 }

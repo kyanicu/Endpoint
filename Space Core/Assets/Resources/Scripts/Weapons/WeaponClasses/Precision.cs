@@ -20,6 +20,7 @@ public class Precision : Weapon
         RotationPoint = transform.parent.transform.parent;
         IsReloading = false;
         FireTimer = 0;
+        Type = WeaponType.Precision;
     }
 
     /// <summary>

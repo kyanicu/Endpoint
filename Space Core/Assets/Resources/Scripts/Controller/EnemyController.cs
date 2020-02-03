@@ -217,7 +217,6 @@ public class EnemyController : Controller
         {
             if (PlayerController.instance.Enemy == null)
             {
-                PlayerController.instance.Enemy = this;
                 Character.IsSelected = true;
                 Character.QTEPanel.SetActive(Character.IsSelected);
                 Character.HackArea.SetActive(Character.IsSelected);

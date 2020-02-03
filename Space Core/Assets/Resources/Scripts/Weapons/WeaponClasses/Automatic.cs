@@ -15,6 +15,7 @@ public class Automatic : Weapon
         FireLocation = transform.Find("FirePoint").gameObject;
         IsReloading = false;
         FireTimer = 0;
+        Type = WeaponType.Automatic;
     }
 
     /// <summary>

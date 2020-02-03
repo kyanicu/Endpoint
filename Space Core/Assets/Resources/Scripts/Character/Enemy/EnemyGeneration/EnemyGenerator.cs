@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Class that when attached to a gameobject will genearate a random enemy based on the GenerateEnemy method on startup
 /// </summary>
 public class EnemyGenerator : MonoBehaviour
 {
+    public List<Node> RoomGraph;
+
     // Start is called before the first frame update
     void Start()
     {

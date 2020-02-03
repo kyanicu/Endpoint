@@ -21,11 +21,14 @@ public abstract class Weapon : MonoBehaviour
         //{ 5, "Thor" },
     };
 
+    public enum WeaponType { Automatic, Scatter, Precision };
+
     public string Name { get; set; }
     public string FullName { get; set; }
     public string Description { get; set; }
     public bool IsReloading { get; set; }
     public DamageSource BulletSource { get; set; }
+    public WeaponType Type { get; set; }
     public int AmmoInClip { get; set; }
     public float SpreadFactor { get; set; }
     public int TotalAmmo { get; set; }
@@ -56,7 +59,18 @@ public abstract class Weapon : MonoBehaviour
     private float _bulletVelocity;
 
 
-    public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
+    public Vector2 aimingDirection
+    {
+        get
+        {
+            if (RotationPoint == null)
+            {
+                return transform.right;
+            }
+
+            return RotationPoint.transform.right;
+        }
+    }
 
     private void Awake()
     {

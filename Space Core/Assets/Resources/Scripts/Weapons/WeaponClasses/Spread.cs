@@ -20,6 +20,7 @@ public class Spread : Weapon
         FireTimer = 0;
         //grab the rotation point for the weapon
         RotationPoint = transform.parent.transform.parent;
+        Type = WeaponType.Scatter;
     }
 
     /// <summary>
