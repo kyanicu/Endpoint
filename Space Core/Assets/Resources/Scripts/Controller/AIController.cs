@@ -32,6 +32,7 @@ public class AIController : Controller
     public int PreviousNode { get; set; }
     public Node.PathType CurrentPathType { get; set; }
     public float SearchTime = 5.0f;
+    public float BaseRunMax;
     private Vector2 playerPos { get { return PlayerController.instance.Character.transform.position; } }
     private Vector2 lastPlayerPosition;
     private int bulletsToFire;
@@ -40,7 +41,6 @@ public class AIController : Controller
     private float fireWaitTime;
     private float searchMoveTimer;
     private float pauseTimer;
-    private float baseRunMax;
     private bool finishedFiring;
     private bool disabled;
     private bool canMakeJump;
@@ -65,7 +65,7 @@ public class AIController : Controller
         disabled = false;
         SetStart();
         base.Start();
-        baseRunMax = Character.movement.runMax;
+        BaseRunMax = Character.movement.runMax;
     }
 
     // Update is called once per frame
@@ -182,15 +182,15 @@ public class AIController : Controller
             
             if (Math.Abs(Vector3.Distance(playerPos, Character.transform.position)) > PLAYER_RANGE * factor)
             {
-                if (baseRunMax - Character.movement.runMax > .5f)
+                if (BaseRunMax - Character.movement.runMax > .5f)
                 {
-                    Character.movement.runMax = baseRunMax;
+                    Character.movement.runMax = BaseRunMax;
                 }
                 Move(directionTowardsObject);
             }
             else if (Math.Abs(Vector3.Distance(playerPos, Character.transform.position)) < PLAYER_RANGE * factor)
             {
-                if (baseRunMax - Character.movement.runMax < .5f)
+                if (BaseRunMax - Character.movement.runMax < .5f)
                 {
                     Character.movement.runMax = Character.movement.runMax / speedMod;
                 }

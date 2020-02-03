@@ -62,7 +62,7 @@ public class DynamicMusic : MonoBehaviour
             for (int i = 0; i < GameManager.EnemyControllers.Count; i++)
             {
                 GameObject enemy = GameManager.EnemyControllers[i];
-                if (enemy != null && enemy.GetComponent<EnemyController>() && enemy.GetComponent<EnemyController>().PlayerInRange)
+                if (enemy != null && enemy.GetComponent<AIController>() && enemy.GetComponent<AIController>().IsPlayerInRange())
                 {
                     return true;
                 }

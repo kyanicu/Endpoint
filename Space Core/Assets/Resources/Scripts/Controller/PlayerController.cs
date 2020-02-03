@@ -84,7 +84,7 @@ public class PlayerController : Controller
         {
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
-
+            Enemy.Character.movement.runMax = Enemy.BaseRunMax;
             // Disable player canvas on the old character.
             Character.WorldspaceCanvas.gameObject.SetActive(false);
 
