@@ -535,16 +535,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1691978603226647245, guid: 36279ffef40cfa148a36f90465f8411e,
-        type: 3}
-      propertyPath: m_Name
-      value: PS_EMP Grenade Explosion
-      objectReference: {fileID: 0}
-    - target: {fileID: 1691978603226647245, guid: 36279ffef40cfa148a36f90465f8411e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1691978603226647242, guid: 36279ffef40cfa148a36f90465f8411e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -600,6 +590,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1691978603226647245, guid: 36279ffef40cfa148a36f90465f8411e,
+        type: 3}
+      propertyPath: m_Name
+      value: PS_EMP Grenade Explosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 1691978603226647245, guid: 36279ffef40cfa148a36f90465f8411e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36279ffef40cfa148a36f90465f8411e, type: 3}
 --- !u!1001 &8104080396674962025
@@ -609,11 +609,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8104080395950035555, guid: 40bf062f6cc950a42a8111c5b1c01e86,
-        type: 3}
-      propertyPath: m_Name
-      value: PS_Jump Dust
-      objectReference: {fileID: 0}
     - target: {fileID: 8104080395950035554, guid: 40bf062f6cc950a42a8111c5b1c01e86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -668,6 +663,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8104080395950035555, guid: 40bf062f6cc950a42a8111c5b1c01e86,
+        type: 3}
+      propertyPath: m_Name
+      value: PS_Jump Dust
       objectReference: {fileID: 0}
     - target: {fileID: 8104080395647691648, guid: 40bf062f6cc950a42a8111c5b1c01e86,
         type: 3}
