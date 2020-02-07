@@ -24,7 +24,9 @@ public class QTEManager : MonoBehaviour
     private List<QTEButton> buttonStack = new List<QTEButton>();
 
     //How many buttons we'll be generating
-    public int listSize { get; private set; }
+    public int ListSize;
+
+    public bool InstantHack;
 
     //Amount of time it takes to start the hack
     public float WaitTime = 1f;
@@ -44,7 +46,7 @@ public class QTEManager : MonoBehaviour
     {
         listening = false;
         listIndex = 0;
-        listSize = 3;
+        ListSize = 3;
         stackCreate();
     }
 
@@ -54,7 +56,7 @@ public class QTEManager : MonoBehaviour
     /// <returns></returns>
     public int getButtonsLeft()
     {
-        return listSize - listIndex;
+        return ListSize - listIndex;
     }
 
     /// <summary>
@@ -74,7 +76,7 @@ public class QTEManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             //No buttons left to generate
-            if (i >= listSize - listIndex)   break;
+            if (i >= ListSize - listIndex)   break;
 
             //Initialize a new random button
             buttons[i].gameObject.SetActive(true);
@@ -111,7 +113,7 @@ public class QTEManager : MonoBehaviour
     // Update is called once per frame
     private IEnumerator Listener()
     {
-        if (buttonStack.Count == 0 || listIndex == listSize) yield return null;
+        if (buttonStack.Count == 0 || listIndex == ListSize) yield return null;
         
         //If first button in stack is active
         while (activeButton.Active && listIndex % 3 < buttonStack.Count)
@@ -135,7 +137,7 @@ public class QTEManager : MonoBehaviour
                     listIndex++;
 
                     //If player has completed all QTE buttons in panel
-                    if (listIndex == listSize)
+                    if (listIndex == ListSize)
                     {
                         listening = false;
                         successfulHack();
@@ -182,9 +184,9 @@ public class QTEManager : MonoBehaviour
     /// Function that gets called after player successfully completes QTE
     /// Upon completion, switches Player and Enemy bodies
     /// </summary>
-    private void successfulHack()
+    public void successfulHack()
     {
-        if (listIndex == buttonStack.Count)
+        if (listIndex == buttonStack.Count || InstantHack)
         {
             StopCoroutine(Listener());
             listening = false;

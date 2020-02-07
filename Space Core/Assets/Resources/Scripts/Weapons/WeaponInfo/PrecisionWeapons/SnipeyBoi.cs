@@ -23,8 +23,8 @@ public class SnipeyBoi : WeaponGenerationInfo
         MinKnockbackTime = 0.1f;
         MaxKnockbackTime = 0.1f;
 
-        MinClipSize = 1;
-        MaxClipSize = 10;
+        MinClipSize = 5;
+        MaxClipSize = 15;
 
         MinRateOfFire = 0.25f;
         MaxRateOfFire = 1.0f;

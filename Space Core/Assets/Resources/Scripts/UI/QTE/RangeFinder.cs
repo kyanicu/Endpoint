@@ -237,7 +237,14 @@ public class RangeFinder : MonoBehaviour
         yield return new WaitForSeconds(uploadTime);
         if(hackStart)
         {
-            startQTE();
+            if (QTEManager.InstantHack)
+            {
+                QTEManager.successfulHack();
+            }
+            else
+            {
+                startQTE();
+            }
         }
         yield return null;
     }

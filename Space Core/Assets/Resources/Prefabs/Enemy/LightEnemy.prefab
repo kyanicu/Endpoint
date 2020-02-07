@@ -5539,6 +5539,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2162099692501074394}
     m_Modifications:
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_Name
+      value: QTE_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5644,15 +5654,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    - target: {fileID: 8871462847359994029, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
-      propertyPath: m_Name
-      value: QTE_Canvas
+      propertyPath: InstantHack
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    - target: {fileID: 8871462847359994029, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: ListSize
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
@@ -5895,6 +5905,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2162099692501074394}
     m_Modifications:
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_Name
+      value: PS_Hack Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5937,14 +5955,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_Name
-      value: PS_Hack Sphere
-      objectReference: {fileID: 0}
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8530807881161471891, guid: adc8b05849acbcb4db958419bfc77438,
