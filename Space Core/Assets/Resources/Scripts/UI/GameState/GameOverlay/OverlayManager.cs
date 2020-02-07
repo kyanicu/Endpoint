@@ -294,6 +294,10 @@ public class OverlayManager : MonoBehaviour
                 }
                 break;
             case Panels.SkillTree:
+                if (buttonName.Equals("a"))
+                {
+                    UpgradesManager.EquipNewParadigm();
+                }
                 break;
             case Panels.Map:
                 break;

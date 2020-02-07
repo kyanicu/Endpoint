@@ -8,6 +8,7 @@ public class Upgrade
     public string FullName { get; private set; }
     public string ShortName { get; private set; }
     public string Description { get; private set; }
+    public WheelUpgrade AssociatedUpgrade { get; set; }
 
     /// <summary>
     /// Basic Upgrade Constructor

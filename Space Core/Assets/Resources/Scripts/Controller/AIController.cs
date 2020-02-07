@@ -590,7 +590,7 @@ public class AIController : Controller
     /// <returns></returns>
     public bool IsPlayerInRange()
     {
-        if (PlayerController.instance.Character != null)
+        if (PlayerController.instance.Character != null && !PlayerController.instance.Undetectable)
         {
             return (Vector3.Distance(playerPos, Character.transform.position) < PLAYER_RANGE);
         }
@@ -651,6 +651,12 @@ public class AIController : Controller
             if (PlayerController.instance.Enemy == null)
             {
                 PlayerController.instance.Enemy = this;
+
+                if (PlayerController.instance.HealOnHack)
+                {
+                    HealCharacter(FortificationChipset.HealValue);
+                }
+
                 Character.IsSelected = true;
                 Character.QTEPanel.SetActive(Character.IsSelected);
                 Character.HackArea.SetActive(Character.IsSelected);

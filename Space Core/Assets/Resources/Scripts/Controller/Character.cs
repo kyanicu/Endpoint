@@ -204,7 +204,7 @@ public class Character : MonoBehaviour
     /// <summary>
     /// function that exposes the weapon's reload function
     /// </summary>
-    public void Reload()
+    public virtual void Reload()
     {
         Weapon.Reload(this);
     }
@@ -239,6 +239,18 @@ public class Character : MonoBehaviour
         }
 
         RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+    }
+
+    public void HealCharacter(int health)
+    {
+        if (health + Health > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+        else
+        {
+            Health += health;
+        }
     }
 
     /// <summary>

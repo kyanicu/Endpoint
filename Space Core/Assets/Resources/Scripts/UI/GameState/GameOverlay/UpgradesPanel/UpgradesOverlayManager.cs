@@ -25,6 +25,7 @@ public class UpgradesOverlayManager : MonoBehaviour
     #region Attached GameObjects [Wheel Panel]
     public List<Image> Nodes;
     public List<Image> Branches;
+    public List<WheelUpgrade> UpgradeGameObjects;
     public TextMeshProUGUI Level;
     public TextMeshProUGUI ParadigmName;
     public TextMeshProUGUI Equipped;
@@ -90,29 +91,29 @@ public class UpgradesOverlayManager : MonoBehaviour
         for (int x = 0; x < 10; x++)
             UnlockedParadigms.Add(new Paradigm());
         Upgrades = new List<Upgrade>();
-        Upgrade u = new Upgrade("UpgradeA", "UPA", "Temporary Upgrade A", new int[] { 2, 0, 0 });
+        Upgrade u = new Upgrade("IFF Spoofer", "IFF_STEALTH.ZIP", "Nearby enemies can’t see you for a few seconds after hack", new int[] { 2, 0, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeB", "UPB", "Temporary Upgrade B", new int[] { 2, 0, 0 });
+        u = new Upgrade("Fortification Chipset", "FTFY.EXE", "Heal enemy bots with your hack bullet", new int[] { 2, 0, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeC", "UPC", "Temporary Upgrade C", new int[] { 1, 1, 0 });
+        u = new Upgrade("Scorched Earth", "SCORCH.ZIP", "Damage enemy you hack out of", new int[] { 1, 1, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeD", "UPD", "Temporary Upgrade D", new int[] { 1, 1, 0 });
+        u = new Upgrade("Tactical Trojan", "IYBKYD.EXE", "Cancelling a hack deals damage to target", new int[] { 1, 1, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeE", "UPE", "Temporary Upgrade E", new int[] { 0, 2, 0 });
+        u = new Upgrade("Force Compensator", "FORC.PI", "More damage from behind less damage from front", new int[] { 0, 2, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeF", "UPF", "Temporary Upgrade F", new int[] { 0, 2, 0 });
+        u = new Upgrade("Defense Module", "DEF.CAT", "Gain invincibility after reloading for a short while", new int[] { 0, 2, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeG", "UPG", "Temporary Upgrade G", new int[] { 0, 1, 1 });
+        u = new Upgrade("Salvage Scanner", "SALVAGE.PI", "Ammo health regen small, pick up less ammo", new int[] { 0, 1, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeH", "UPH", "Temporary Upgrade H", new int[] { 0, 1, 1 });
+        u = new Upgrade("Active Protection Module", "APM.CAT", "Shield that defends from x number of shots", new int[] { 0, 1, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeI", "UPI", "Temporary Upgrade I", new int[] { 0, 0, 2 });
+        u = new Upgrade("Tactical ", "TACTICAL ", "Larger mag but slow reload", new int[] { 0, 0, 2 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeJ", "UPJ", "Temporary Upgrade J", new int[] { 0, 0, 2 });
+        u = new Upgrade("Reverse Engineering Protocol", "REVERSI.DLL", "Getting shot gives you bullets proportional to damage", new int[] { 0, 0, 2 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeK", "UPK", "Temporary Upgrade K", new int[] { 1, 0, 1 });
+        u = new Upgrade("Sapper Subroutine", "SAPPER.MAT", "Dealing damage to enemies heals you slightly", new int[] { 1, 0, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("UpgradeL", "UPL", "Temporary Upgrade L", new int[] { 1, 0, 1 });
+        u = new Upgrade("Rate of Fire Optimizer", "HI_ROF.DLL", "Rate of fire increases the more shot till reload", new int[] { 1, 0, 1 });
         Upgrades.Add(u);
         ///--------------------------------------------------------------------------------------------------------------
         normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
@@ -129,6 +130,7 @@ public class UpgradesOverlayManager : MonoBehaviour
         Reticle.position = reticleStartPos;
         ParadigmTreeGroup.position = paradigmTreeGroupStartPos;
         RefreshUpgradesOverlay(equippedParadigmID);
+        EquipNewParadigm(equippedParadigmID);
     }
 
     /// <summary>
@@ -208,6 +210,43 @@ public class UpgradesOverlayManager : MonoBehaviour
         {
             SelectedDispositionValues[index].text = $"+{u.DispositionValues[index]}{DispositionAbreviation[index]}";
         }
+    }
+
+    public void EquipNewParadigm()
+    {
+        if (selectedParadigmID < 0 || selectedParadigmID > UnlockedParadigms.Count)
+        {
+            return;
+        }
+
+        foreach (int branch in UnlockedParadigms[equippedParadigmID].Branches)
+        {
+            UpgradeGameObjects[branch].DeactivateAbility();
+        }
+
+        foreach (int branch in UnlockedParadigms[selectedParadigmID].Branches)
+        {
+            UpgradeGameObjects[branch].enabled = true;
+            UpgradeGameObjects[branch].EnableAbility();
+        }
+
+        equippedParadigmID = selectedParadigmID;
+    }
+
+    public void EquipNewParadigm(int paradigmID)
+    {
+        if (paradigmID < 0 || paradigmID > UnlockedParadigms.Count)
+        {
+            return;
+        }
+
+        foreach (int branch in UnlockedParadigms[paradigmID].Branches)
+        {
+            UpgradeGameObjects[branch].enabled = true;
+            UpgradeGameObjects[branch].EnableAbility();
+        }
+
+        equippedParadigmID = paradigmID;
     }
 
     /// <summary>

@@ -38,6 +38,12 @@ public abstract class Controller : MonoBehaviour
         controller.Character = temp;
     }
 
+    public void HealCharacter(int health)
+    {
+        Character.HealCharacter(health);
+        HUDController.instance.UpdatePlayer(Character);
+    }
+
     /// <summary>
     /// Move method that exposes the character's move method
     /// </summary>
@@ -82,7 +88,12 @@ public abstract class Controller : MonoBehaviour
     /// <param name="attackInfo">information about the attack that the character will take</param>
     public virtual void ReceiveAttack(AttackInfo attackInfo)
     {
-        if (Character.Invincible != 0)
+        if (Character.Invincible < 0)
+        {
+            Character.Invincible = 0;
+        }
+
+        if (Character.Invincible > 0)
             return;
 
         TakeDamage(attackInfo.damage);
@@ -107,7 +118,7 @@ public abstract class Controller : MonoBehaviour
     /// Method for exposing the character's fire method
     /// </summary>
     /// <returns></returns>
-    public bool Fire()
+    public virtual bool Fire()
     {
         return Character.Fire();
     }
