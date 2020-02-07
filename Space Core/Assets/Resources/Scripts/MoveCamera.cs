@@ -26,7 +26,7 @@ public class MoveCamera : MonoBehaviour
         Vector3 camPos = transform.position;
 
         //If camera not near player pos
-        if (!Mathf.Approximately(player.position.x, camPos.x) &&
+        if (!Mathf.Approximately(player.position.x, camPos.x) ||
             !Mathf.Approximately(player.position.y, camPos.y))
         {
             //Lerp that ish

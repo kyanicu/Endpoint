@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PlayerController : Controller
 {
+
     //Base variables for the player controller
     public AIController Enemy { get; set; }
     public InteractableEnv InteractableObject { private get; set; }

@@ -140,7 +140,6 @@ public class MovingPlatform : MonoBehaviour
             int numHits;
             if ((numHits = col.Cast(-direction, hits, Physics2D.defaultContactOffset + (speed * Time.fixedDeltaTime))) > 0)
             {
-                Debug.Log("hit");
                 if(numHits > maxSize)
                     numHits = maxSize;
 

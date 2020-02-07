@@ -2028,9 +2028,9 @@ GameObject:
   - component: {fileID: 3658287851682297152}
   - component: {fileID: 3498479289215741088}
   - component: {fileID: 5097425916343718072}
-  - component: {fileID: 6829344382291040626}
   - component: {fileID: 7519951028398615165}
   - component: {fileID: 6593826210481940427}
+  - component: {fileID: -4784329037670710578}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2118,35 +2118,6 @@ MonoBehaviour:
   childComponents: []
   animator: {fileID: 772169754159359233}
   lookingLeft: 0
---- !u!114 &6829344382291040626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3658287851682297158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b64473acf8df44045965fac99bea20fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charCont: {fileID: 7519951028398615165}
-  freezeRun: 0
-  collideWithCharacters: 1
-  _runMax: 7
-  _runAccel: 40
-  _runDecel: 40
-  _runBreak: 100
-  _jumpVelocity: 18
-  _gravityScale: 1
-  _jumpCancelMinVel: 12
-  _jumpCancelVel: 2
-  _airAccel: 50
-  _airDecel: 25
-  _airMax: 9
-  _pushForce: 14
-  _mass: 1
-  mod: 1
 --- !u!114 &7519951028398615165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2176,6 +2147,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopOnHit: 1
+--- !u!114 &-4784329037670710578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658287851682297158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1aed990887b2e46bfe7a81c8da806e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charCont: {fileID: 7519951028398615165}
+  freezeRun: 0
+  collideWithCharacters: 1
+  _runMax: 7
+  _runAccel: 40
+  _runDecel: 40
+  _runBreak: 100
+  _jumpVelocity: 18
+  _gravityScale: 1
+  _jumpCancelMinVel: 12
+  _jumpCancelVel: 2
+  _airAccel: 50
+  _airDecel: 25
+  _airMax: 9
+  _pushForce: 14
+  _mass: 1
+  mod: 1
 --- !u!1 &3658287852304863083
 GameObject:
   m_ObjectHideFlags: 0
@@ -5299,14 +5299,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3658287851682297180}
     m_Modifications:
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_Name
-      value: PS_Hack Sphere
-      objectReference: {fileID: 0}
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5349,6 +5341,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_Name
+      value: PS_Hack Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8530807881161471891, guid: adc8b05849acbcb4db958419bfc77438,
@@ -5605,16 +5605,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3658287851682297180}
     m_Modifications:
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_Name
-      value: QTE_Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5719,6 +5709,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_Name
+      value: QTE_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}

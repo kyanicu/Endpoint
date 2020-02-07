@@ -169,11 +169,11 @@ public class AIController : Controller
             directionTowardsObject = GetMovementDirection(hit.collider.gameObject.transform.position.x);
             if (Math.Abs(Vector3.Distance(playerPos, hit.collider.gameObject.transform.position)) > DISTANCE_BETWEEN_ENEMIES * factor)
             {
-                Move(directionTowardsObject * -1);
+                Move(directionTowardsObject * -1 * Vector2.right);
             }
             else
             {
-                Move(directionTowardsObject);
+                Move(directionTowardsObject * Vector2.right);
             }
         }
         else
@@ -186,7 +186,7 @@ public class AIController : Controller
                 {
                     Character.movement.runMax = BaseRunMax;
                 }
-                Move(directionTowardsObject);
+                Move(directionTowardsObject * Vector2.right);
             }
             else if (Math.Abs(Vector3.Distance(playerPos, Character.transform.position)) < PLAYER_RANGE * factor)
             {
@@ -194,7 +194,7 @@ public class AIController : Controller
                 {
                     Character.movement.runMax = Character.movement.runMax / speedMod;
                 }
-                Move(directionTowardsObject * -1);
+                Move(directionTowardsObject * -1 * Vector2.right);
             }
         }
     }
@@ -324,7 +324,7 @@ public class AIController : Controller
         if (Math.Abs(distance) > SEARCH_RADIUS)
         {
             short direction = GetMovementDirection(lastPlayerPosition.x);
-            Move(direction);
+            Move(direction * Vector2.right);
         }
         else
         {
@@ -344,7 +344,7 @@ public class AIController : Controller
             if (searchMoveTimer > 0)
             {
                 searchMoveTimer -= Time.deltaTime;
-                Move(searchDirection);
+                Move(searchDirection * Vector2.right);
             }
             else if (pauseTimer > 0)
             {
@@ -426,7 +426,7 @@ public class AIController : Controller
             if (Mathf.Abs(RoomGraph[CurrentNode].transform.position.x - Character.transform.position.x) > 1.0f && !madeJump)
             {
                 Jump();
-                Move(direction);
+                Move(direction * Vector2.right);
             }
             else if (!Character.movement.charCont.isGrounded)
             {
@@ -436,7 +436,7 @@ public class AIController : Controller
             }
             else if (Character.movement.charCont.isGrounded)
             {
-                Move(direction);
+                Move(direction * Vector2.right);
             }
         }
         else if (PreviousNode != -1)
@@ -450,7 +450,7 @@ public class AIController : Controller
     /// </summary>
     private void PatrolWalkBehavior()
     {
-        Move(GetMovementDirection(RoomGraph[CurrentNode].transform.position.x));
+        Move(GetMovementDirection(RoomGraph[CurrentNode].transform.position.x) * Vector2.right);
     }
     #endregion
 

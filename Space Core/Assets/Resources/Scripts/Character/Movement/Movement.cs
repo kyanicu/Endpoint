@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Movement : MonoBehaviour
 {
 
-    Character owner;
+    protected Character owner;
 
     /// <summary>
     /// Have the default values been set?
@@ -16,6 +16,13 @@ public abstract class Movement : MonoBehaviour
 
     private Vector2 _velocity;
     public Vector2 velocity { get { return _velocity; } set { _velocity = value; } }
+
+    /// <summary>
+    /// Max Velocity
+    /// </summary> 
+    private float terminalVelocity = 50;
+
+    protected Vector2 movingDirection = Vector2.zero;
 
     /// <summary>
     /// Are we forcing the character controller off the ground this frame?
@@ -96,7 +103,7 @@ public abstract class Movement : MonoBehaviour
             charCont = gameObject.AddComponent<CharacterController2D>();
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         owner = GetComponent<Character>();
 
@@ -113,7 +120,7 @@ public abstract class Movement : MonoBehaviour
             charCont = GetComponent<CharacterController2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
 
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
@@ -129,7 +136,7 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
 
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
@@ -149,7 +156,7 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
         {
@@ -165,13 +172,26 @@ public abstract class Movement : MonoBehaviour
     }
 
     /// <summary>
+    /// Handles intended movement on x and y axes
+    /// </summary>
+    /// <param name="direction">direction of intended movement</param>
+    public virtual void Move(Vector2 direction)
+    {
+        movingDirection = direction;
+        if (direction.x == 0)
+            Run(0);
+        else
+            Run(Mathf.Sign(direction.x));
+    }
+
+    /// <summary>
     /// Default run method
     /// </summary>
     /// <param name="direction">direction the character of movement,
     /// 0 == none,
     /// -1 == left,
     /// +1 == right</param>
-    public virtual void Run(float direction)
+    protected virtual void Run(float direction)
     {
         if (freezeRun)
             return;
@@ -278,6 +298,14 @@ public abstract class Movement : MonoBehaviour
                 isJumpCanceling = true;
         }
 
+    }
+
+    /// <summary>
+    /// Birtual blank function for unique movement option for different movement classes
+    /// </summary>
+    public virtual void SpecialAbility() 
+    {
+        
     }
 
     /// <summary>
@@ -448,6 +476,9 @@ public abstract class Movement : MonoBehaviour
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
+
+        if (velocity.magnitude > terminalVelocity)
+            velocity = velocity.normalized * terminalVelocity;
 
         bool prevGroundedState = charCont.isGrounded;
 

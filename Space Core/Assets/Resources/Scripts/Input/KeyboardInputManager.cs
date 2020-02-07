@@ -228,8 +228,10 @@ public class KeyboardInputManager : InputManager
     protected override void RunGameplayFixedInput()
     {
         float horiz = Input.GetAxisRaw("Horizontal");
+        float vert = Input.GetAxisRaw("Vertical");
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
-        PlayerController.instance.Move(horiz);
+        PlayerController.instance.Move(direction);
     }
 
     /// <summary>

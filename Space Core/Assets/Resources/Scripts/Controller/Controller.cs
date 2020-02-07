@@ -21,7 +21,7 @@ public abstract class Controller : MonoBehaviour
         GameObject parent = GameObject.FindWithTag("ControllerGroup");
         gameObject.transform.SetParent(parent.transform);
     }
-
+     
     /// <summary>
     /// Method for swapping the controller's character with another controller.
     /// </summary>
@@ -41,10 +41,10 @@ public abstract class Controller : MonoBehaviour
     /// <summary>
     /// Move method that exposes the character's move method
     /// </summary>
-    /// <param name="axis">Axis the player is moving along</param>
-    public void Move(float axis)
+    /// <param name="direction">direcion the player is moving in</param>
+    public void Move(Vector2 direction)
     {
-        Character.Move(axis);
+        Character.Move(direction.normalized);
     }
 
     /// <summary>

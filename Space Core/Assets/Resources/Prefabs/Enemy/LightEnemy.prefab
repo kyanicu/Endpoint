@@ -1371,9 +1371,9 @@ GameObject:
   - component: {fileID: 2162099692501074398}
   - component: {fileID: 7689985435003298454}
   - component: {fileID: 4601666248765662027}
-  - component: {fileID: 1211248689936347162}
   - component: {fileID: 5073340946118413704}
   - component: {fileID: 2067440773589771522}
+  - component: {fileID: 5280564689273083437}
   m_Layer: 0
   m_Name: LightEnemy
   m_TagString: Enemy
@@ -1506,35 +1506,6 @@ MonoBehaviour:
   childComponents: []
   animator: {fileID: 1922656938457368960}
   lookingLeft: 0
---- !u!114 &1211248689936347162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2162099692501074396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b64473acf8df44045965fac99bea20fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charCont: {fileID: 5073340946118413704}
-  freezeRun: 0
-  collideWithCharacters: 1
-  _runMax: 7
-  _runAccel: 40
-  _runDecel: 40
-  _runBreak: 100
-  _jumpVelocity: 18
-  _gravityScale: 1
-  _jumpCancelMinVel: 12
-  _jumpCancelVel: 2
-  _airAccel: 50
-  _airDecel: 25
-  _airMax: 9
-  _pushForce: 14
-  _mass: 1
-  mod: 1
 --- !u!114 &5073340946118413704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1564,6 +1535,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopOnHit: 1
+--- !u!114 &5280564689273083437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2162099692501074396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9da6948aceff7a4384096e50e8c1536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charCont: {fileID: 5073340946118413704}
+  freezeRun: 0
+  collideWithCharacters: 1
+  _runMax: 10
+  _runAccel: 40
+  _runDecel: 40
+  _runBreak: 100
+  _jumpVelocity: 25
+  _gravityScale: 0.4
+  _jumpCancelMinVel: 20.808653
+  _jumpCancelVel: 2
+  _airAccel: 50
+  _airDecel: 25
+  _airMax: 12
+  _pushForce: 14
+  _mass: 1
+  mod: 1
 --- !u!1 &2162099692534817361
 GameObject:
   m_ObjectHideFlags: 0
@@ -5539,16 +5539,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2162099692501074394}
     m_Modifications:
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_Name
-      value: QTE_Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5653,6 +5643,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_Name
+      value: QTE_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
@@ -5895,14 +5895,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2162099692501074394}
     m_Modifications:
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_Name
-      value: PS_Hack Sphere
-      objectReference: {fileID: 0}
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5945,6 +5937,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_Name
+      value: PS_Hack Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8530807881161471891, guid: adc8b05849acbcb4db958419bfc77438,

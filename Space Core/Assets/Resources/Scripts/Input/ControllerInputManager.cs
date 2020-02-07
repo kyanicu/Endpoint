@@ -12,10 +12,12 @@ public class ControllerInputManager : InputManager
 {
     private GamePadState? state;
     private GamePadState? prevState;
+    private bool jumped;
 
     // Start is called before the first frame update
     void Start()
     {
+        jumped = false;
         state = null;
         prevState = null;
     }
@@ -73,7 +75,7 @@ public class ControllerInputManager : InputManager
             HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
         }
 
-        if (state.Value.Triggers.Left > 0.3f)
+        if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left < 0.3f)
         {
             PlayerController.instance.Jump();
         }
@@ -168,18 +170,31 @@ public class ControllerInputManager : InputManager
         #endregion
 
         #region D-Pad
-
+        /*
+        float horiz = 0;
+        float vert = 0;
         if (state.Value.DPad.Right == ButtonState.Pressed)
         {
-            float horiz = 1f;
-            PlayerController.instance.Move(horiz);
+            horiz = +1f;
         }
         else if (state.Value.DPad.Left == ButtonState.Pressed)
         {
-            float horiz = -1f;
-            PlayerController.instance.Move(horiz);
+            horiz = -1f;
         }
+        if (state.Value.DPad.Up == ButtonState.Pressed)
+        {
+            vert = +1f;
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed)
+        {
+            vert = -1f;
+        }
+
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
+        PlayerController.instance.Move(direction);
+        */    
         #endregion
+        
     }
 
     /// <summary>
@@ -375,8 +390,10 @@ public class ControllerInputManager : InputManager
         }
 
         float horiz = state.Value.ThumbSticks.Left.X;
+        float vert = state.Value.ThumbSticks.Left.Y;
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
-        PlayerController.instance.Move(horiz);
+        PlayerController.instance.Move(direction);
     }
 
     /// <summary>

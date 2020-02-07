@@ -9,7 +9,6 @@ public class EnemyController : Controller
     public static string[] EnemyTypes =
         { "light", "medium", "heavy" };
 
-
     protected int moveDirection = +1;
     public float PatrolRange { get; set; }
     public bool PlayerInRange { get; set; }
@@ -87,7 +86,7 @@ public class EnemyController : Controller
                     finishedFiring = true;
                 }
 
-                Move(0);
+                Move(Vector2.zero);
             }
             else
             {
@@ -100,7 +99,7 @@ public class EnemyController : Controller
                 else if (Dist0 < .5 || Character.movement.charCont.isTouchingRightWall)
                     moveDirection = -1;
 
-                Move(moveDirection);
+                Move(moveDirection * Vector2.right );
             }
         }
     }

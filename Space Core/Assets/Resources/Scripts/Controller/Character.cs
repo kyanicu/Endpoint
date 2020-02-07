@@ -25,7 +25,7 @@ public class Character : MonoBehaviour
     public Movement movement { get; protected set; }
     public bool IsBlinking;
     public bool IsPlayer;
-    public bool isStunned { get; set; }
+    public int isStunned { get; set; }
     public bool IsSelected { get; set; }
 
     public SkinnedMeshRenderer[] childComponents;
@@ -51,6 +51,7 @@ public class Character : MonoBehaviour
     {
         RotationPoint = transform.Find("RotationPoint").gameObject;
         childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
+        
     }
 
     /// <summary>
@@ -92,28 +93,28 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// Function that moves the character along an axis based on its character controller values
+    /// Function that moves the character along an direction based on its character controller values
     /// </summary>
-    /// <param name="axis"></param>
-    public virtual void Move(float axis)
+    /// <param name="direction">Direction to move the character</param>
+    public virtual void Move(Vector2 direction)
     {
-        if (isStunned)
+        if (isStunned > 0)
         {
-            axis = 0;
+            direction.x = 0;
         }
 
-        if (axis != 0 && animationState != AnimationState.running)
+        if (direction.x != 0 && animationState != AnimationState.running)
         {
             animationState = AnimationState.running;
             animator.SetInteger("AnimationState", (int)animationState);
         }
-        else if (axis == 0 && animationState == AnimationState.running)
+        else if (direction.x == 0 && animationState == AnimationState.running)
         {
             animationState = AnimationState.idle;
             animator.SetInteger("AnimationState", (int)animationState);
         }
 
-        movement.Run(axis);
+        movement.Move(direction);
     }
 
     /// <summary>
@@ -121,7 +122,7 @@ public class Character : MonoBehaviour
     /// </summary>
     public virtual void Jump()
     {
-        if (!isStunned)
+        if (isStunned <= 0)
         {
             movement.Jump();
         }
@@ -132,7 +133,7 @@ public class Character : MonoBehaviour
     /// </summary>
     public virtual void JumpCancel()
     {
-        if (!isStunned)
+        if (isStunned <= 0)
             movement.JumpCancel();
     }
 
@@ -177,9 +178,9 @@ public class Character : MonoBehaviour
     /// <returns></returns>
     public IEnumerator Stun(float time)
     {
-        isStunned = true;
+        isStunned++;
         yield return new WaitForSeconds(time);
-        isStunned = false;
+        isStunned--;
     }
 
     /// <summary>
