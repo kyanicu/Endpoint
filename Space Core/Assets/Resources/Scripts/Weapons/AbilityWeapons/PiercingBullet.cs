@@ -42,7 +42,38 @@ public class PiercingBullet : Bullet
         {
             if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
             {
-                collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                if (VampireBullet && Source == DamageSource.Player)
+                {
+                    float healthToHeal = Damage * 0.25f;
+                    if (healthToHeal < 0)
+                    {
+                        PlayerController.instance.HealCharacter(1);
+                    }
+                    else
+                    {
+                        PlayerController.instance.HealCharacter((int)healthToHeal);
+                    }
+                }
+
+                if (PlayerController.instance.ForceCompensatorActive && Source == DamageSource.Enemy)
+                {
+                    if (gameObject.transform.position.x < PlayerController.instance.Character.transform.position.x && PlayerController.instance.isFacingLeft)
+                    {
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                    }
+                    else if (gameObject.transform.position.x > PlayerController.instance.Character.transform.position.x && !PlayerController.instance.isFacingLeft)
+                    {
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                    }
+                    else
+                    {
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage * 1.25f, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                    }
+                }
+                else
+                {
+                    collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                }
                 NumPassed++;
             }
         }

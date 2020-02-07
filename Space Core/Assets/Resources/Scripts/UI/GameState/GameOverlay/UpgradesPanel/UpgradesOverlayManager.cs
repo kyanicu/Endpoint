@@ -130,6 +130,10 @@ public class UpgradesOverlayManager : MonoBehaviour
         Reticle.position = reticleStartPos;
         ParadigmTreeGroup.position = paradigmTreeGroupStartPos;
         RefreshUpgradesOverlay(equippedParadigmID);
+    }
+
+    private void Start()
+    {
         EquipNewParadigm(equippedParadigmID);
     }
 
