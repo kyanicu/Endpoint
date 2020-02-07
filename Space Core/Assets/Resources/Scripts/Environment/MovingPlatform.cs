@@ -41,8 +41,9 @@ public class MovingPlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        defaultSpeed = speed;    
     }
+
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == "Player" || other.tag == "Enemy")
@@ -115,8 +116,10 @@ public class MovingPlatform : MonoBehaviour
 */
     public float speed = 5f;
     public float change = 1f;
+    public float stallTime = 2f;
     public Vector2 direction = Vector2.right;
 
+    public float defaultSpeed;
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -124,8 +127,17 @@ public class MovingPlatform : MonoBehaviour
         timer += Time.fixedDeltaTime;
         if (timer >= change)
         {
-            direction = -direction;
-            timer = 0f;
+            if (speed == 0)
+            {
+                if (timer >= change + stallTime)
+                {
+                    direction = -direction;
+                    speed = defaultSpeed;
+                    timer = 0f;
+                }
+            }
+            else
+                speed = 0;
         }
         mover.Move(speed * direction * Time.fixedDeltaTime);
         
