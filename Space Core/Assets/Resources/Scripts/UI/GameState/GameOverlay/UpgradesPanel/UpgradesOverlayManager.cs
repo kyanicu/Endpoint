@@ -115,8 +115,8 @@ public class UpgradesOverlayManager : MonoBehaviour
         u = new Upgrade("UpgradeL", "UPL", "Temporary Upgrade L", new int[] { 1, 0, 1 });
         Upgrades.Add(u);
         ///--------------------------------------------------------------------------------------------------------------
-        normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/NormalBranches");
-        dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/DottedBranches");
+        normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
+        dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
         upgradeIcons = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/UpgradeIcons");
         reticleStartPos = Reticle.position;
         paradigmTreeGroupStartPos = ParadigmTreeGroup.position;
@@ -289,7 +289,7 @@ public class UpgradesOverlayManager : MonoBehaviour
                     //Remove when icons are in <--------------------------------------
                     if (normalBranchSprites.Length > 0)
                     {
-                        Branches[branchID].sprite = normalBranchSprites[x];
+                        Branches[branchID].sprite = normalBranchSprites[branchID];
                     }
                     //Iterate through each disposition and calculate new dis values
                     for (int i = 0; i <= (int)Disposition.VirtualRanger; i++)
@@ -309,7 +309,7 @@ public class UpgradesOverlayManager : MonoBehaviour
                         //Remove when icons are in <--------------------------------------
                         if (dottedBranchSprites.Length > 0)
                         {
-                            Branches[branchID].sprite = dottedBranchSprites[x];
+                            Branches[branchID].sprite = dottedBranchSprites[branchID];
                         }
                     }
                     //Check if branch should be a faded solid line
@@ -318,7 +318,7 @@ public class UpgradesOverlayManager : MonoBehaviour
                         //Remove when icons are in <--------------------------------------
                         if (normalBranchSprites.Length > 0)
                         {
-                            Branches[branchID].sprite = normalBranchSprites[x];
+                            Branches[branchID].sprite = normalBranchSprites[branchID];
                         }
                         Branches[branchID].color = ColorWithVariedTransparency(Branches[branchID].color, .5f);
                     }

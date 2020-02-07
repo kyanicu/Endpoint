@@ -454,6 +454,12 @@ public class OverlayAnimations : MonoBehaviour
     {
         OverlayManager.instance.TopPanelSymbiosLogo.color = OverlayHighlightColor;
         OverlayManager.instance.TopPanelC3.color = OverlayHighlightColor;
+
+        // Change colors of bg squares
+        for (int i = 0; i < 5; i++)
+        {
+            OverlayManager.instance.OverlayBGAnimBlocks[i].color = OverlayHighlightColor;
+        }
     }
 
 }
