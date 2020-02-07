@@ -182,8 +182,11 @@ public class GameManager : MonoBehaviour
     public static string RetrievePlayTime(float playerTime)
     {
         int seconds = (int)playerTime % 60;
+        string sec = seconds > 9 ? seconds + "" : "0" + seconds;
         int minutes = (int)playerTime / 60;
+        string min = minutes > 9 ? minutes + "" : "0" + minutes;
         int hours = (int)playerTime / 3600;
-        return $"{hours}:{minutes}:{seconds}";
+        string hr = hours > 9 ? hours + "" : "0" + hours;
+        return $"{hr}:{min}:{sec}";
     }
 }

@@ -1,15 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
-using TMPro; // TextMesh Pro
-using System.IO;
-using LDB = LoadDataBaseEntries;
-using LO = LoadObjectives;
-using LD = LoadDialogue;
-
 public class MainMenuManager : MonoBehaviour
 {
     private enum activeScreenName
@@ -31,6 +21,7 @@ public class MainMenuManager : MonoBehaviour
 
     public LoadingFileManager FileManager;
     public MainButtonsManager MainButtonsManager;
+    public SettingsMenuManger SettingsManager;
 
     private static MainMenuManager _instance;
     public static MainMenuManager instance { get { return _instance; } }
@@ -78,10 +69,20 @@ public class MainMenuManager : MonoBehaviour
         {
             FileManager.TraverseMenu(vert);
         }
+        //There are different buttons to navigate if player is on settings menu group
         else if (activeScreen == activeScreenName.Settings)
         {
-            //TO DO - Settings screen item traversal
+            SettingsManager.TraverseMenu(vert);
         }
+    }
+
+    /// <summary>
+    /// Uses horizontal stick movement to update settings values
+    /// </summary>
+    /// <param name="horiz"></param>
+    public void TraverseSettings(float horiz)
+    {
+        SettingsManager.EditSetting(horiz);
     }
 
     /// <summary>
@@ -98,10 +99,6 @@ public class MainMenuManager : MonoBehaviour
         {
             FileManager.SelectButton();
         }
-        else if(activeScreen == activeScreenName.Settings)
-        {
-            //TO DO - Implements settings functionality
-        }
     }
 
     /// <summary>
@@ -113,7 +110,7 @@ public class MainMenuManager : MonoBehaviour
             activeScreen == activeScreenName.Settings)
         {
             AudioManager.instance.PlaySound(AudioManager.Clips.Back);
-            ToggleLoadingFileMenu((int)activeScreenName.MainMenu);
+            ToggleMenuScreens((int)activeScreenName.MainMenu);
         }
     }
 
@@ -143,7 +140,11 @@ public class MainMenuManager : MonoBehaviour
 
     }
 
-    public void ToggleLoadingFileMenu(int screenID)
+    /// <summary>
+    /// Toggles usability of the all screens based on activated screen
+    /// </summary>
+    /// <param name="screenID"></param>
+    public void ToggleMenuScreens(int screenID)
     {
         //Update active screen to id passed as argument
         activeScreen = (activeScreenName)screenID;
@@ -151,7 +152,7 @@ public class MainMenuManager : MonoBehaviour
         //Toggle each button groups' visiblity depending on active screen
         MainButtonsManager.MainButtonsMenuReset(activeScreen == activeScreenName.MainMenu);
         FileManager.FileMenuReset(activeScreen == activeScreenName.LoadingFiles);
-        //SettingsManager.SettingsMenuReset(activeScreen == activeScreenName.Settings); <-- uncomment when settings done
+        SettingsManager.SettingsMenuReset(activeScreen == activeScreenName.Settings);
     }
 
     /// <summary>
@@ -161,15 +162,6 @@ public class MainMenuManager : MonoBehaviour
     public void LoadGame(int saveID)
     {
         FileManager.LoadGame(saveID);
-    }
-
-    /// <summary>
-    /// Open the settings panel to adjust the game's settings
-    /// </summary>
-    public void OpenSettings()
-    {
-        AudioManager.instance.PlaySound(AudioManager.Clips.Deny);
-        //ToggleLoadingFileMenu((int)activeScreenName.Settings); <-- uncomment when settings done
     }
 
     /// <summary>

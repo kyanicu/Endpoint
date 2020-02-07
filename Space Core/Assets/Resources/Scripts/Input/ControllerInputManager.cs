@@ -223,6 +223,11 @@ public class ControllerInputManager : InputManager
         {
             MainMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
         }
+        //Check horizontal movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.X != 0 && prevState.Value.ThumbSticks.Left.X == 0)
+        {
+            MainMenuManager.instance.TraverseSettings(state.Value.ThumbSticks.Left.X * -1);
+        }
 
         //If player selects the currently highlighted button, invoke it
         if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Released)

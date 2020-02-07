@@ -34,7 +34,8 @@ public class MainButtonsManager : MonoBehaviour
     /// </summary>
     /// <param name="vert"></param>
     public void TraverseMenu(float vert)
-    {// Find out the previously selected button.
+    {
+        // Find out the previously selected button.
         int selected = (int)selectedID;
 
         // Change style of previously selected button to regular.
