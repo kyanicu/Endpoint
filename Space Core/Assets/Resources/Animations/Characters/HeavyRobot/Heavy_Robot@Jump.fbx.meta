@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a8ac9f18f4e259d41b6e969f6bf26ae9
+guid: 1002e4710240bb649908cafde257cbe4
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Running
+      name: Jump
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
-      lastFrame: 37
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
