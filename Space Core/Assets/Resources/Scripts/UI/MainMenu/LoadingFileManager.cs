@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using LDB = LoadDataBaseEntries;
@@ -21,7 +19,7 @@ public class LoadingFileManager : MonoBehaviour
     public TextMeshProUGUI FileSector;
     public TextMeshProUGUI FileTimer;
 
-    private PlayerData loadedData;
+    public PlayerData loadedData;
 
     // Start is called before the first frame update
     void Start()

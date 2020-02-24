@@ -53,9 +53,6 @@ public class HUDController : MonoBehaviour
         {
             instance.UpdateMinimap(GameManager.Sector, "Save Room");
         }
-
-        //Empty saved data cache as confirmation that data was successfully loaded
-        SaveSystem.loadedData = null;
     }
     private void Start()
     {

@@ -48,10 +48,13 @@ public class PlayerInitializer : MonoBehaviour
             {
                 #region Load Player
                 GameObject player = Instantiate(Enemies[classToInstantiate]);
-                player.transform.position = transform.position;
+                player.transform.position = transform.position; 
 
                 //Remove enemy component and add a player component
                 PlayerController.instance.Character = player.GetComponent<Character>();
+                PlayerController.instance.Character.WorldspaceCanvas.gameObject.SetActive(true);
+                WorldspaceCanvas.instance.UpdateWorldspaceCanvas(PlayerController.instance.Character.WorldspaceCanvas);
+                WorldspaceCanvas.instance.UpdatePlayerAmmo();
 
                 #region Load Player Stats
                 PlayerController.instance.Character.Class = classes[classToInstantiate];
@@ -117,6 +120,11 @@ public class PlayerInitializer : MonoBehaviour
 
                 #endregion
             }
+
+            //Empty saved data cache as confirmation that data was successfully loaded
+            SaveSystem.loadedData = null;
+
+            HUDController.instance.UpdateHUD(PlayerController.instance.Character);
         }
     }
 }
