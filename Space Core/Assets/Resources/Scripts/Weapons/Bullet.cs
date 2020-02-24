@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
 {
     //enum source to let objects know who fired the bullet
     public static bool VampireBullet { get; set; }
-    public int Damage { get; set; }
+    public float Damage { get; set; }
     public float StunTime { get; set; }
     public float KnockbackImpulse { get; set; }
     public float KnockbackTime { get; set; }
@@ -19,6 +19,8 @@ public class Bullet : MonoBehaviour
     protected float startX;
     protected float lowRange;
     protected float highRange;
+    protected float spreadFallOfSpeed;
+    protected float baseDamage;
 
     /// <summary>
     /// Initialize start x to the base x position of the bullet
@@ -28,6 +30,8 @@ public class Bullet : MonoBehaviour
         startX = transform.position.x;
         highRange = startX + Range;
         lowRange = startX - Range;
+        spreadFallOfSpeed = (Damage / Range) * 0.5f;
+        baseDamage = Damage;
     }
 
     /// <summary>
@@ -43,6 +47,11 @@ public class Bullet : MonoBehaviour
         if (transform.position.x > highRange || transform.position.x < lowRange)
         {
             gameObject.SetActive(false);
+        }
+
+        if (Source == DamageSource.Spread && Damage > baseDamage / 2.0f)
+        {
+            Damage -= spreadFallOfSpeed * Time.deltaTime;
         }
 
         transform.position += (transform.right * Velocity * Time.deltaTime);
@@ -75,20 +84,20 @@ public class Bullet : MonoBehaviour
                 {
                     if (gameObject.transform.position.x < PlayerController.instance.Character.transform.position.x && PlayerController.instance.isFacingLeft)
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage/2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage/2, Vector2.zero, 0, StunTime, Source));
                     }
                     else if (gameObject.transform.position.x > PlayerController.instance.Character.transform.position.x && !PlayerController.instance.isFacingLeft)
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, Vector2.zero, 0, StunTime, Source));
                     }
                     else
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage * 1.25f, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage * 1.25f, Vector2.zero, 0, StunTime, Source));
                     }
                 }
                 else
                 {
-                    collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                    collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, Vector2.zero, 0, StunTime, Source));
                 }
                 gameObject.SetActive(false);
             }

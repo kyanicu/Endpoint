@@ -69,20 +69,20 @@ public class HomingBullet : Bullet
                 {
                     if (gameObject.transform.position.x < PlayerController.instance.Character.transform.position.x && PlayerController.instance.isFacingLeft)
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, Vector2.zero, 0, StunTime, Source));
                     }
                     else if (gameObject.transform.position.x > PlayerController.instance.Character.transform.position.x && !PlayerController.instance.isFacingLeft)
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage / 2, Vector2.zero, 0, StunTime, Source));
                     }
                     else
                     {
-                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage * 1.25f, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                        collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage * 1.25f, Vector2.zero, 0, StunTime, Source));
                     }
                 }
                 else
                 {
-                    collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, KnockbackImpulse * transform.right, KnockbackTime, StunTime, Source));
+                    collision.gameObject.GetComponent<Character>().ReceiveAttack(new AttackInfo(Damage, Vector2.zero, 0, StunTime, Source));
                 }
                 transform.parent.gameObject.SetActive(false);
             }

@@ -18,7 +18,7 @@ public class Matsya : WeaponGenerationInfo
         MinDamage = 20;
         MaxDamage = 30;
 
-        StunTime = 0.1f;
+        StunTime = 0.35f;
 
         MinKnockbackImpulse = 10;
         MaxKnockbackImpulse = 10;
@@ -41,8 +41,8 @@ public class Matsya : WeaponGenerationInfo
         MinRange = 7f;
         MaxRange = 13f;
 
-        MaxBulletVeloc = 6f;
-        MinBulletVeloc = 12f;
+        MaxBulletVeloc = 9f;
+        MinBulletVeloc = 18f;
 
     }
 }

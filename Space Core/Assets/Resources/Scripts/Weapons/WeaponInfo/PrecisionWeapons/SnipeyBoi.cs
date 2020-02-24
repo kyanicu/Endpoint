@@ -15,7 +15,7 @@ public class SnipeyBoi : WeaponGenerationInfo
         MinDamage = 30;
         MaxDamage = 40;
 
-        StunTime = 0.1f;
+        StunTime = 0.35f;
 
         MinKnockbackImpulse = 10;
         MaxKnockbackImpulse = 10;

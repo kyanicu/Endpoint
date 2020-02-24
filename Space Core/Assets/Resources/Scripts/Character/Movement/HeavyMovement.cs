@@ -20,7 +20,7 @@ public class HeavyMovement : Movement
     private float jumpHeight = 8;
     private float jumpAcceleration = 8;
     private float hoverTime = 2;
-    private bool isHovering;
+    public bool isHovering { get; private set; }
 
 
     /// <summary>

@@ -117,6 +117,19 @@ public class ControllerInputManager : InputManager
             float angle = Mathf.Atan2(state.Value.ThumbSticks.Right.Y, state.Value.ThumbSticks.Right.X) * Mathf.Rad2Deg;
             PlayerController.instance.AimWeapon(angle);
         }
+        else
+        {
+            switch (PlayerController.instance.Character.MoveDirection)
+            {
+                case 0:
+                case 1:
+                    PlayerController.instance.AimWeapon(0, false);
+                    break;
+                case -1:
+                    PlayerController.instance.AimWeapon(180, false);
+                    break;
+            }
+        }
 
         if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
         {

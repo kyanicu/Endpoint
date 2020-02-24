@@ -11,7 +11,7 @@ public class PlayerController : Controller
 {
 
     //Base variables for the player controller
-    public AIController Enemy { get; set; }
+    public AIController Enemy;
     public InteractableEnv InteractableObject { private get; set; }
     
     //Variables for wheel upgrades
@@ -33,6 +33,7 @@ public class PlayerController : Controller
     private const float HACK_AREA_LENGTH = 22.5f;
     private const float COOLDOWN_TIME = 2.5f;
     private const float SHIELD_RECHARGE_TIME = 2.5f;
+    private const int SNAP_RANGE = 10;
     private float IFRAME_TIME = 3f;
     private bool canSwap;
     private bool routineRunning;
@@ -124,7 +125,7 @@ public class PlayerController : Controller
             Character.name = "Enemy";
             Character.IsBlinking = false;
             Character.Invincible = 0;
-            SwapCharacter(Enemy.Character, Enemy);
+            SwapCharacter(Enemy.Character, ref Enemy);
 
             if(ScorchedEarthActive)
             {
@@ -208,7 +209,7 @@ public class PlayerController : Controller
 
         base.ReceiveAttack(attackInfo);
 
-        if (attackInfo.damageSource != DamageSource.Spread && attackInfo.damageSource != DamageSource.Hazard)
+        if (attackInfo.damageSource != DamageSource.Hazard)
         {
             Character.Invincible++;
             StartCoroutine(RunIFrames());
@@ -299,12 +300,53 @@ public class PlayerController : Controller
         }
     }
 
+    public void AimWeapon(float angle, bool track)
+    {
+        if (!track)
+        {
+            Character.AimWeapon(angle, Camera.main);
+        }
+        else
+        {
+            AimWeapon(angle);
+        }
+    }
+
     /// <summary>
     /// Method for passing the main camera to the character when the player aim's the weapon
     /// </summary>
     /// <param name="angle">New angle the player will be aiming at</param>
     public override void AimWeapon(float angle)
     {
+        Vector2 direction = (Vector2)(Quaternion.Euler(0, 0, angle) * Vector2.right);
+        bool previous = Physics2D.queriesHitTriggers;
+        Physics2D.queriesHitTriggers = true;
+        RaycastHit2D hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+        //check if we hit an enemy
+        if (hit.collider == null || hit.collider.tag != "Enemy")
+        {
+            //check if we hit an enemy above the range
+            for (int i = 0; i < SNAP_RANGE && (hit.collider == null || hit.collider.tag != "Enemy"); i++)
+            {
+                direction = (Vector2)(Quaternion.Euler(0, 0, angle + i) * Vector2.right);
+                hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+            }
+            //if there is still no enemy hit, check below the current angle
+            if (hit.collider == null || hit.collider.tag != "Enemy")
+            {
+                for (int i = 0; i < SNAP_RANGE && (hit.collider == null || hit.collider.tag != "Enemy"); i++)
+                {
+                    direction = (Vector2)(Quaternion.Euler(0, 0, angle - i) * Vector2.right);
+                    hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+                }
+            }
+        }
+        Physics2D.queriesHitTriggers = previous;
+        if (hit && hit.collider && hit.collider.tag == "Enemy")
+        {
+            Vector3 diff = hit.collider.gameObject.transform.position - Character.transform.position;
+            angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        }
         Character.AimWeapon(angle, Camera.main);
     }
 
@@ -331,6 +373,11 @@ public class PlayerController : Controller
 
     public override bool Fire()
     {
+        if (Character.isStunned > 0)
+        {
+            return false;
+        }
+
         bool fired = base.Fire();
         if (fired && RateOfFireOptimizerActive)
         {

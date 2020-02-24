@@ -6,8 +6,6 @@ using UnityEngine;
 /// </summary>
 public class EnemyGenerator : MonoBehaviour
 {
-    public List<Node> RoomGraph;
-
     // Start is called before the first frame update
     void Start()
     {

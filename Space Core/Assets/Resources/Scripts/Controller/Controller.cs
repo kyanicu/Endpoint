@@ -27,15 +27,56 @@ public abstract class Controller : MonoBehaviour
     /// </summary>
     /// <param name="newCharacter">New Character this controller will gain control of</param>
     /// <param name="controller">The controller that is getting this controller's old character</param>
-    public void SwapCharacter(Character newCharacter, Controller controller)
+    public void SwapCharacter(Character newCharacter, ref AIController controller)
     {
+        GameObject controllerGameObject = controller.gameObject;
+        string oldClass = controller.Character.Class;
         Character temp = Character;
+        //disable the other controller
+        switch (oldClass)
+        {
+            case "heavy":
+                controllerGameObject.GetComponent<HeavyEnemyAIController>().enabled = false;
+                break;
+            case "medium":
+                controllerGameObject.GetComponent<MediumEnemyAIController>().enabled = false;
+                break;
+            case "light":
+                controllerGameObject.GetComponent<LightEnemyAIController>().enabled = false;
+                break;
+        }
+        //enable controller of the new character
+        switch (temp.Class)
+        {
+            case "heavy":
+                controller = controllerGameObject.GetComponent<HeavyEnemyAIController>();
+                break;
+            case "medium":
+                controller = controllerGameObject.GetComponent<MediumEnemyAIController>();
+                break;
+            case "light":
+                controller = controllerGameObject.GetComponent<LightEnemyAIController>();
+                break;
+        }
         temp.AttackRecievedDeleage = controller.ReceiveAttack;
         temp.TriggerEntered2DDelegate = controller.TriggerEnter2D;
         Character = newCharacter;
         Character.AttackRecievedDeleage = ReceiveAttack;
         Character.TriggerEntered2DDelegate = TriggerEnter2D;
         controller.Character = temp;
+        //enable the controller object
+        switch (temp.Class)
+        {
+            case "heavy":
+                controllerGameObject.GetComponent<HeavyEnemyAIController>().enabled = true;
+                break;
+            case "medium":
+                controllerGameObject.GetComponent<MediumEnemyAIController>().enabled = true;
+                break;
+            case "light":
+                controllerGameObject.GetComponent<LightEnemyAIController>().enabled = true;
+                break;
+        }
     }
 
     public void HealCharacter(int health)
@@ -98,7 +139,7 @@ public abstract class Controller : MonoBehaviour
 
         TakeDamage(attackInfo.damage);
         StartCoroutine(Character.Stun(attackInfo.stunTime));
-        Character.movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
+        //Character.movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
         if (!Character.IsBlinking)
         {
             Character.IsBlinking = true;

@@ -6,10 +6,8 @@ using UnityEngine;
 /// </summary>
 public class AIGenerator : MonoBehaviour
 {
-    public List<Node> RoomGraph;
-
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         GenerateEnemy();
     }
@@ -47,15 +45,30 @@ public class AIGenerator : MonoBehaviour
     private void GenerateEnemy(EnemyGenerationInfo info)
     {
         GameObject enemy = Resources.Load<GameObject>(info.PrefabPath);
-        GameObject loadedEnemyController = Resources.Load<GameObject>("Prefabs/Enemy/AIController");
+        GameObject loadedEnemyController = null;
+        loadedEnemyController = Resources.Load<GameObject>("Prefabs/Enemy/AIControllers/AIController");
         GameObject instantiatedEnemy = Instantiate(enemy, transform.position, Quaternion.identity);
         GameObject instantiatedAIController = Instantiate(loadedEnemyController);
-        AIController aiController = instantiatedAIController.GetComponent<AIController>();
+        AIController aiController = null;
+        switch (info.Class)
+        {
+            case "heavy":
+                instantiatedAIController.GetComponent<HeavyEnemyAIController>().enabled = true;
+                aiController = instantiatedAIController.GetComponent<HeavyEnemyAIController>();
+                break;
+            case "medium":
+                instantiatedAIController.GetComponent<MediumEnemyAIController>().enabled = true;
+                aiController = instantiatedAIController.GetComponent<MediumEnemyAIController>();
+                break;
+            case "light":
+                instantiatedAIController.GetComponent<LightEnemyAIController>().enabled = true;
+                aiController = instantiatedAIController.GetComponent<LightEnemyAIController>();
+                break;
+        }
         aiController.Character = instantiatedEnemy.GetComponent<Character>();
         aiController.Character.MaxHealth = Random.Range(info.HealthLow, info.HealthHi);
         aiController.Character.Health = aiController.Character.MaxHealth;
         aiController.Character.Class = info.Class;
-        aiController.RoomGraph = RoomGraph;
         aiController.Character.movement.runMax = Random.Range(info.SpeedLow, info.SpeedHi);
     }
 }

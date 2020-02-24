@@ -7,13 +7,14 @@ using UnityEngine;
 /// </summary>
 public class Character : MonoBehaviour
 {
-    public enum AnimationState { idle, running }
+    public enum AnimationState { idle, running, hit }
 
     public float Health { get; set; }
     public float MaxHealth { get; set; }
     public string Class { get; set; }
     public Weapon Weapon { get; set; }
     public int Invincible { get; set; }
+    public short MoveDirection { get; set; }
     public GameObject HackArea { get; protected set; }
     public GameObject RotationPoint { get; set; }
     public GameObject MinimapIcon;
@@ -49,6 +50,7 @@ public class Character : MonoBehaviour
     /// </summary>
     void Start()
     {
+        MoveDirection = 0;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
         
@@ -101,6 +103,12 @@ public class Character : MonoBehaviour
         if (isStunned > 0)
         {
             direction.x = 0;
+            return;
+        }
+
+        if (direction != Vector2.zero && direction.x != 0)
+        {
+            MoveDirection = (short)Mathf.Sign(direction.x);
         }
 
         if (direction.x != 0 && animationState != AnimationState.running)
@@ -179,7 +187,11 @@ public class Character : MonoBehaviour
     public IEnumerator Stun(float time)
     {
         isStunned++;
+        animationState = AnimationState.hit;
+        animator.SetInteger("AnimationState", (int)animationState);
         yield return new WaitForSeconds(time);
+        animationState = AnimationState.idle;
+        animator.SetInteger("AnimationState", (int)animationState);
         isStunned--;
     }
 
@@ -235,6 +247,7 @@ public class Character : MonoBehaviour
         }
         if (lookingLeft)
         {
+            MoveDirection = -1;
             angle *= -1;
         }
 
@@ -251,6 +264,16 @@ public class Character : MonoBehaviour
         {
             Health += health;
         }
+    }
+
+    /// <summary>
+    /// Method used to update the character's animation state
+    /// </summary>
+    /// <param name="animationState">The new animation state</param>
+    public void SetAnimationState(AnimationState animationState)
+    {
+        this.animationState = animationState;
+        animator.SetInteger("AnimationState", (int)animationState);
     }
 
     /// <summary>
