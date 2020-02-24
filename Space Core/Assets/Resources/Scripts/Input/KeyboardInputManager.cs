@@ -220,6 +220,25 @@ public class KeyboardInputManager : InputManager
     }
 
     /// <summary>
+    /// Runs the frame input intended while in the game over InputState
+    /// </summary>
+    protected override void RunGameOverFrameInput()
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameOverManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameOverManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            GameOverManager.instance.SelectButton();
+        }
+    }
+
+    /// <summary>
     /// Runs the fixed input intended while in the gameplay InputState
     /// Called only on an physics tick through FixedUpdate() function
     /// Should only handle things physics related

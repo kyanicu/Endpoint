@@ -101,8 +101,8 @@ public class PlayerController : Controller
     /// </summary>
     public override void Die()
     {
-        InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
-        SceneManager.LoadScene(0);
+        InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
+        SceneManager.LoadScene(2);
     }
 
     /// <summary>
