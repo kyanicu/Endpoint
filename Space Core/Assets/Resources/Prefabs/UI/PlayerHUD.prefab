@@ -11770,6 +11770,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7121d8adf6b4e47408bab237d962b5b2, type: 3}
   - {fileID: 21300000, guid: 1c2027938438cc749be1054c7cd75b95, type: 3}
   - {fileID: 21300000, guid: 5ff3ecec82090184d9c84b8d9a230961, type: 3}
+  - {fileID: 21300000, guid: 1c2027938438cc749be1054c7cd75b95, type: 3}
   activeWeaponColor: {r: 0, g: 0, b: 0, a: 0}
   WeaponClassImages:
   - {fileID: 21300000, guid: dbf7647e51525154cb0dc79c3bcfc094, type: 3}

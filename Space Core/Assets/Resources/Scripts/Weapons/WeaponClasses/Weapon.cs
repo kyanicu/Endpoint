@@ -16,9 +16,10 @@ public abstract class Weapon : MonoBehaviour
         { 0, "Matsya" },
         { 1, "Jakkaru" },
         { 2, "SnipeyBoi" },
-        //{ 3, "Tributar" },
-        //{ 4, "Bestafera" },
-        //{ 5, "Thor" },
+        { 3, "Jakkaru Burst"},
+        //{ 4, "Tributar" },
+        //{ 5, "Bestafera" },
+        //{ 6, "Thor" },
     };
 
     public enum WeaponType { Automatic, Scatter, Precision };

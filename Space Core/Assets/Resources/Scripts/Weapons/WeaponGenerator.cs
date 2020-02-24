@@ -33,6 +33,13 @@ public static class WeaponGenerator
                 prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
+            case "Jakkaru Burst":
+                //Load generated Jakkaru Burst stats onto weapon
+                WeaponGenerationInfo newJakkaruBurst = new JakkaruBurst();
+                weapon = BuildBurstFire(parent, newJakkaruBurst);
+                prefix = newJakkaruBurst.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
             case "Matsya":
                 //Load generated Matsya stats onto weapon
                 WeaponGenerationInfo newMatsya = new Matsya();
@@ -86,6 +93,13 @@ public static class WeaponGenerator
                 prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
+            case "Jakkaru Burst":
+                //Load generated Jakkaru Burst stats onto weapon
+                WeaponGenerationInfo newJakkaruBurst = new JakkaruBurst();
+                weapon = BuildBurstFire(parent, newJakkaruBurst);
+                prefix = newJakkaruBurst.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
             case "Matsya":
                 //Load generated Matsya stats onto weapon
                 WeaponGenerationInfo newMatsya = new Matsya();
@@ -118,6 +132,17 @@ public static class WeaponGenerator
     /// <param name="parent">Transform of the weapons parent object</param>
     /// <returns>new weapon gameobject</returns>
     private static GameObject BuildAutomatic(Transform parent, WeaponGenerationInfo wgi)
+    {
+        return SetCommonAttributes(parent, wgi);
+    }
+
+    /// <summary>
+    /// This function will generate a specified Burst Fire Weapon with random stats
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="wgi"></param>
+    /// <returns></returns>
+    private static GameObject BuildBurstFire(Transform parent, WeaponGenerationInfo wgi)
     {
         return SetCommonAttributes(parent, wgi);
     }

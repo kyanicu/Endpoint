@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
         allWeaponsList.Add(new Jakkaru());
         allWeaponsList.Add(new Matsya());
         allWeaponsList.Add(new SnipeyBoi());
+        allWeaponsList.Add(new JakkaruBurst());
 
         for (int i = 0; i < allWeaponsList.Count; i++)
         {
