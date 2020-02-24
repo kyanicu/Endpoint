@@ -57,7 +57,13 @@ public class BurstFire : Automatic
                 bulletScript.Velocity = BulletVeloc;
                 FireTimer = RateOfFire * nBullets;
                 bulletScript.Activate();
-                HUDController.instance.UpdateAmmo(owner); // Update Weapon Ammo in HUD
+                
+                //TODO: Remove HUD update from Weapon class
+                if (ControlledByPlayer)
+                {
+                    HUDController.instance.UpdateAmmo(owner); // Update Weapon Ammo in HUD
+                }
+
                 yield return new WaitForSeconds(RateOfFire);
             }
         }
