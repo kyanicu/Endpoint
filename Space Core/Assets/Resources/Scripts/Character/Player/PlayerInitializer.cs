@@ -31,6 +31,7 @@ public class PlayerInitializer : MonoBehaviour
             player.name = "Player";
             player.tag = "Player";
             PlayerController.instance.Character = player.GetComponent<Character>();
+            ExperienceSystem.instance.StartExperienceSystem();
         }
         //Begin operation for loading a player from a save file
         else
@@ -64,6 +65,12 @@ public class PlayerInitializer : MonoBehaviour
                 PlayerController.instance.Character.MinimapIcon.GetComponent<SpriteRenderer>().color = Color.cyan;
                 player.name = "Player";
                 player.tag = "Player";
+
+                ExperienceSystem.instance.level = SaveSystem.loadedData.level;
+                ExperienceSystem.instance.experience = SaveSystem.loadedData.experience;
+                ExperienceSystem.instance.totalExperience = SaveSystem.loadedData.totalExperience;
+                ExperienceSystem.instance.nextLevelExperience = SaveSystem.loadedData.nextLevelExperience;
+                ExperienceSystem.instance.totalNextLevelExperience = SaveSystem.loadedData.totalNextLevelExperience;
                 #endregion
 
                 Transform weaponParent = PlayerController.instance.Character.RotationPoint.transform.GetChild(0);

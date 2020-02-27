@@ -71,7 +71,7 @@ public class UpgradesOverlayManager : MonoBehaviour
         ""
     };
     #endregion
-    public static int PlayerLevel = 5;
+    public int PlayerLevel = 0;
     public Transform Reticle;
     private const int maxLevel = 15;
     public static List<Paradigm> UnlockedParadigms { get; private set; }
@@ -118,8 +118,8 @@ public class UpgradesOverlayManager : MonoBehaviour
         Upgrades.Add(u);
         ///--------------------------------------------------------------------------------------------------------------
         normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
-        dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
-        upgradeIcons = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/UpgradeIcons");
+        dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/dashed");
+        upgradeIcons = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
         reticleStartPos = Reticle.position;
         paradigmTreeGroupStartPos = ParadigmTreeGroup.position;
     }
@@ -240,7 +240,8 @@ public class UpgradesOverlayManager : MonoBehaviour
 
     public void EquipNewParadigm(int paradigmID)
     {
-        if (paradigmID < 0 || paradigmID > UnlockedParadigms.Count)
+        //Don't run functionality if we don't have any paradigms
+        if (UnlockedParadigms.Count == 0) 
         {
             return;
         }
@@ -252,6 +253,11 @@ public class UpgradesOverlayManager : MonoBehaviour
         }
 
         equippedParadigmID = paradigmID;
+    }
+
+    public void SetLevel(int level)
+    {
+        PlayerLevel = level;
     }
 
     /// <summary>
@@ -344,8 +350,8 @@ public class UpgradesOverlayManager : MonoBehaviour
                 else
                 {
                     //Make upgrade list element transparent
-                    ParadigmUpgradeIcons[x].color = ColorWithVariedTransparency(ParadigmUpgradeIcons[x].color, .5f);
-                    ParadigmUpgradeNames[x].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .5f);
+                    ParadigmUpgradeIcons[x].color = ColorWithVariedTransparency(ParadigmUpgradeIcons[x].color, .2f);
+                    ParadigmUpgradeNames[x].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .2f);
 
                     //Check if branch should be a dotted line
                     if (x - 1 == playerLevel)
@@ -364,7 +370,7 @@ public class UpgradesOverlayManager : MonoBehaviour
                         {
                             Branches[branchID].sprite = normalBranchSprites[branchID];
                         }
-                        Branches[branchID].color = ColorWithVariedTransparency(Branches[branchID].color, .5f);
+                        Branches[branchID].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .2f);
                     }
                 }
             }
@@ -463,7 +469,8 @@ public class UpgradesOverlayManager : MonoBehaviour
         for (int i = 0; i < Branches.Count; i++)
         {
             Nodes[i].color = dominantCol;
-            Branches[i].color = dominantCol;
+            //Branches[i].color = dominantCol;
+            Branches[i].color = ColorWithVariedTransparency(dominantCol, Branches[i].color.a);
         }
 
         //If color is white, everything in the Dispositions Section should already be active

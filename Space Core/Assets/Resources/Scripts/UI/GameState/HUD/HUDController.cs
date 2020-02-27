@@ -24,6 +24,7 @@ public class HUDController : MonoBehaviour
     public CharacterPanelManager CharacterPM;
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
+    public ExperiencePanelManager ExperiencePM;
     public MinimapController MinimapManager;
     public DialogueManager DialogueManager;
     public PopupManager PopupManager;
@@ -75,6 +76,8 @@ public class HUDController : MonoBehaviour
             CharacterPM.UpdateCharacterClass(p);
             CharacterPM.UpdateCharacterAbilities(p);
             RecolorHUD();
+
+            ExperiencePM.UpdateExperienceFromSystem();
         }
     }
 
@@ -212,6 +215,14 @@ public class HUDController : MonoBehaviour
             weaponDiagnosticPanel = WeaponPM.hideDiagnosticPanelWeapon();
             StartCoroutine(weaponDiagnosticPanel);
         }
+    }
+
+    /// <summary>
+    /// Updates the Experience Section of the HUD
+    /// </summary>
+    public void UpdateExperiencePanel(int level, int experience, int nextLevelExperience)
+    {
+        ExperiencePM.UpdateExperience(level, experience, nextLevelExperience);
     }
 
     /// <summary>

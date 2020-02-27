@@ -13,7 +13,7 @@ public class PlayerController : Controller
     //Base variables for the player controller
     public AIController Enemy;
     public InteractableEnv InteractableObject { private get; set; }
-    
+
     //Variables for wheel upgrades
     public bool ForceCompensatorActive { get; set; }
     public bool HasSwitched { get; set; }
@@ -52,6 +52,7 @@ public class PlayerController : Controller
         HasSwitched = false;
         Shield = 0;
         ShieldMax = 0;
+
         if (_instance == null)
         {
             _instance = this;

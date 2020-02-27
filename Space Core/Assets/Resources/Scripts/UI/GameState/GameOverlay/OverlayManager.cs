@@ -93,6 +93,9 @@ public class OverlayManager : MonoBehaviour
 
         //Activate the first button/panel
         activeButtonID = (int)ActivePanel;
+
+        // Update experience system
+        UpdatePlayerLevelUpgrades(ExperienceSystem.instance.level);
     }
 
     // Stores coroutine for opening/closing overlay.
@@ -222,6 +225,11 @@ public class OverlayManager : MonoBehaviour
             // Play opening animation for next panel.
             OverlayAnims.NavigatePanelOpenLeftAnimation((int)ActivePanel);
         }
+    }
+
+    public void UpdatePlayerLevelUpgrades(int level)
+    {
+        UpgradesManager.SetLevel(level);
     }
 
     #region RECEIVE INPUT FROM INPUT MANAGER

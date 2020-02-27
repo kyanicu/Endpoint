@@ -24,6 +24,12 @@ public class PlayerData
     public float[] Position;
     public string ActiveAbilityName;
     public string PassiveAbilityName;
+
+    public int level;
+    public int experience;
+    public int totalExperience;
+    public int nextLevelExperience;
+    public int totalNextLevelExperience;
     #endregion
 
     #region Weapon Info
@@ -88,6 +94,12 @@ public class PlayerData
         Class = p.Class;
         ActiveAbilityName = p.ActiveAbility.AbilityName;
         //PassiveAbilityName = p.PassiveAbility.AbilityName;
+
+        level = ExperienceSystem.instance.level;
+        experience = ExperienceSystem.instance.experience;
+        totalExperience = ExperienceSystem.instance.totalExperience;
+        nextLevelExperience = ExperienceSystem.instance.nextLevelExperience;
+        totalNextLevelExperience = ExperienceSystem.instance.totalNextLevelExperience;
 
         //Retrieve Weapon info
         Weapon w = p.Weapon;

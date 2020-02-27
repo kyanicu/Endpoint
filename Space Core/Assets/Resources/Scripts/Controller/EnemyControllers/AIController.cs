@@ -326,6 +326,7 @@ public abstract class AIController : Controller
                 droppedAmmo.Ammo = (Character.Weapon.TotalAmmo < 25) ? 25 : Character.Weapon.TotalAmmo;
             }
         }
+        ExperienceSystem.instance.AddPlayerExperience(12);
         Destroy(Character.gameObject);
         Destroy(this);
     }
