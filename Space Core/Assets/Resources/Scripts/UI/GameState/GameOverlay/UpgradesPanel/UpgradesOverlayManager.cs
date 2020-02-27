@@ -88,8 +88,9 @@ public class UpgradesOverlayManager : MonoBehaviour
     {
         ///PROTOTYPING - GENERATE PARADIGM TESTS AND TEMPLATE UPGRADES-----------------------------------------------
         UnlockedParadigms = new List<Paradigm>();
-        for (int x = 0; x < 10; x++)
-            UnlockedParadigms.Add(new Paradigm());
+        //Commenting out as functionality will now be done with terminals
+        //for (int x = 0; x < 10; x++)
+            //UnlockedParadigms.Add(new Paradigm());
         Upgrades = new List<Upgrade>();
         Upgrade u = new Upgrade("IFF Spoofer", "IFF_STEALTH.ZIP", "Nearby enemies can’t see you for a few seconds after hack", new int[] { 2, 0, 0 });
         Upgrades.Add(u);
@@ -534,5 +535,14 @@ public class UpgradesOverlayManager : MonoBehaviour
         float timer = .18f;
         yield return new WaitForSeconds(timer);
         lockParadigmSwap = false;
+    }
+
+    /// <summary>
+    /// Add Paradigm to the UnlockedParadigm list
+    /// </summary>
+    /// <returns></returns>
+    public static void AddParadigm(Paradigm paradigm)
+    {
+        UnlockedParadigms.Add(paradigm);
     }
 }
