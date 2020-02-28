@@ -17,12 +17,14 @@ public abstract class Weapon : MonoBehaviour
         { 1, "Jakkaru" },
         { 2, "SnipeyBoi" },
         { 3, "Jakkaru Burst"},
-        //{ 4, "Tributar" },
-        //{ 5, "Bestafera" },
-        //{ 6, "Thor" },
+        { 4, "RawketLawnchair" },
+        { 5, "Vohnemet" }
+        //{ 6, "Tributar" },
+        //{ 7, "Bestafera" },
+        //{ 8, "Thor" },
     };
 
-    public enum WeaponType { Automatic, Scatter, Precision };
+    public enum WeaponType { Automatic, Scatter, Precision, Heavy, Energy };
 
     public string Name { get; set; }
     public string FullName { get; set; }
@@ -173,7 +175,7 @@ public abstract class Weapon : MonoBehaviour
     /// <summary>
     /// Main update function decrementing fire timer
     /// </summary>
-    protected void Update()
+    protected virtual void Update()
     {
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 

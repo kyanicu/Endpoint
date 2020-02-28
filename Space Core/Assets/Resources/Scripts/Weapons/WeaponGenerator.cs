@@ -54,6 +54,20 @@ public static class WeaponGenerator
                 prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
+            case "RawketLawnchair":
+                //Load generated RawketLawnchair stats onto weapon
+                WeaponGenerationInfo newRawketLawnchair = new RawketLawnchair();
+                weapon = BuildPrecision(parent, newRawketLawnchair);
+                prefix = newRawketLawnchair.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "Vohnemet":
+                //Load generated Vohnemet stats onto weapon
+                WeaponGenerationInfo newVohnemet = new Vohnemet();
+                weapon = BuildPrecision(parent, newVohnemet);
+                prefix = newVohnemet.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
             default:
                 return weapon;
         }
@@ -114,6 +128,20 @@ public static class WeaponGenerator
                 prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
+            case "RawketLawnchair":
+                //Load generated RawketLawnchair stats onto weapon
+                WeaponGenerationInfo newRawketLawnchair = new RawketLawnchair();
+                weapon = BuildPrecision(parent, newRawketLawnchair);
+                prefix = newRawketLawnchair.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
+            case "Vohnemet":
+                //Load generated Vohnemet stats onto weapon
+                WeaponGenerationInfo newVohnemet = new Vohnemet();
+                weapon = BuildPrecision(parent, newVohnemet);
+                prefix = newVohnemet.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                break;
+
             default:
                 return weapon;
         }
@@ -159,6 +187,16 @@ public static class WeaponGenerator
         Spread spread = weaponObject.GetComponent<Spread>();
         spread.NumPellets = UnityEngine.Random.Range(wgi.MinNumPellets, wgi.MaxNumPellets);
         return weaponObject;
+    }
+
+    private static GameObject BuildHeavy(Transform parent, WeaponGenerationInfo wgi)
+    {
+        return SetCommonAttributes(parent, wgi);
+    }
+
+    private static GameObject BuildEnergy(Transform parent, WeaponGenerationInfo wgi)
+    {
+        return SetCommonAttributes(parent, wgi);
     }
 
     /// <summary>

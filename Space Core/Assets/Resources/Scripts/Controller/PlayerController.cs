@@ -264,6 +264,14 @@ public class PlayerController : Controller
             HUDController.instance.UpdateAmmo(Character);
             collision.gameObject.SetActive(false);
         }
+        else if (collision.CompareTag("Rocket"))
+        {
+            //Damage applied from Rockets. Can damage self.
+
+            //collision.gameObject.GetComponent<Rocket>().attInfo.knockbackImpulse 
+                //= collision.gameObject.GetComponent<Rocket>().KnockbackImpulse * (transform.position - collision.transform.position).normalized;
+            ReceiveAttack(collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info);
+        }
     }
 
     /// <summary>

@@ -359,6 +359,14 @@ public abstract class AIController : Controller
         {
             Freeze();
         }
+        else if (collision.CompareTag("Rocket"))
+        {
+            //Take damage from Rocket explosions. Can damage self.
+
+            //collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info.knockbackImpulse 
+              //  = collision.gameObject.GetComponent<Rocket>().KnockbackImpulse * (transform.position - collision.transform.position).normalized;
+            ReceiveAttack(collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info);
+        }
     }
 
     /// <summary>

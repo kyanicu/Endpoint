@@ -41,8 +41,8 @@ public class Matsya : WeaponGenerationInfo
         MinRange = 7f;
         MaxRange = 13f;
 
-        MaxBulletVeloc = 9f;
-        MinBulletVeloc = 18f;
+        MaxBulletVeloc = 18f;
+        MinBulletVeloc = 9f;
 
     }
 }

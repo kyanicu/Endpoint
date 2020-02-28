@@ -35,7 +35,7 @@ public class JakkaruBurst : WeaponGenerationInfo
         MinRange = 10f;
         MaxRange = 18f;
 
-        MaxBulletVeloc = 8f;
-        MinBulletVeloc = 14f;
+        MaxBulletVeloc = 14f;
+        MinBulletVeloc = 8f;
     }
 }

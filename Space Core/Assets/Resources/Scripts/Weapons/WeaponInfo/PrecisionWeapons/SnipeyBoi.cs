@@ -35,7 +35,7 @@ public class SnipeyBoi : WeaponGenerationInfo
         MinRange = 25f;
         MaxRange = 60f;
 
-        MaxBulletVeloc = 20f;
-        MinBulletVeloc = 30f;
+        MaxBulletVeloc = 30f;
+        MinBulletVeloc = 20f;
     }
 }

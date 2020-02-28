@@ -152,6 +152,8 @@ public class GameManager : MonoBehaviour
         allWeaponsList.Add(new Matsya());
         allWeaponsList.Add(new SnipeyBoi());
         allWeaponsList.Add(new JakkaruBurst());
+        allWeaponsList.Add(new RawketLawnchair());
+        allWeaponsList.Add(new Vohnemet());
 
         for (int i = 0; i < allWeaponsList.Count; i++)
         {
