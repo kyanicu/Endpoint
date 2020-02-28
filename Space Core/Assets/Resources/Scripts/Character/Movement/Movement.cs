@@ -301,7 +301,7 @@ public abstract class Movement : MonoBehaviour
     }
 
     /// <summary>
-    /// Birtual blank function for unique movement option for different movement classes
+    /// Virtual blank function for unique movement option for different movement classes
     /// </summary>
     public virtual void SpecialAbility() 
     {

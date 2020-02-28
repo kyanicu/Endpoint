@@ -91,7 +91,7 @@ public class CharacterController2D : MonoBehaviour
     private bool _isTouchingRightWall;
     public bool isTouchingRightWall { get { return _isTouchingRightWall; } private set { _isTouchingRightWall = value; } }
 
-    [SerializeField] private float slopeMax = 45;
+    [SerializeField] private float slopeMax = 50;
     [SerializeField] private float stepMax = 0.5f;
 
     public Vector2 bottomPoint { get { return (Vector2)(capCol.bounds.center + (-transform.up * capCol.size.y / 2)); } }

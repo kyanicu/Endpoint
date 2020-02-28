@@ -7,37 +7,51 @@ public class LightMovement : Movement
     // Blink Dash attributes
     private bool isBlinkDashing = false;
     private bool landingWait = false;
-    private float dashTime = 0.1f;
-    private float dashTimer = 0f;
-    private float dashDistance = 5;
+	[SerializeField]
+    private float dashTime;
+	private float dashTimer = 0f;
+    [SerializeField]
+	private float dashDistance;
 
     // Unique Jump values;
-    float jumpHeight = 8;
-    bool jumpStunned = false;
+	[SerializeField]
+    float jumpHeight;
+    float jumpApexVel;
+    [SerializeField]
+    float jumpMaxXSpeed;
+    //bool jumpStunned = false;
 
     // Unique gravity attributes
     float defaultGravityScale;
-    float fastFallGravity = 5f;
-    float fastFallCap = 20f;
+	[SerializeField]
+    float fastFallGravity;
+    [SerializeField]
+	float fastFallCap;
 
     /// <summary>
     /// Sets the basic default values
     /// </summary>
     protected override void SetDefaultValues()
     {
-        runMax = 11;
+        runMax = 12;
         runAccel = 40;
         runDecel = 20;
         runBreak = 40;
-        jumpVelocity = 30;
+        jumpVelocity = 25;
         gravityScale = 0.5f;
         jumpCancelVel = 3;
-        jumpCancelMinVel = Mathf.Sqrt((jumpVelocity*jumpVelocity) + 2*Physics2D.gravity.y*gravityScale*jumpHeight);
+        jumpCancelMinVel = 24.99f;
         airAccel = 80;
         airDecel = 20;
-        airMax = 11;
+        airMax = 12;
         pushForce = 14;
         mass = 1;
+        dashTime = 0.1f;
+        dashDistance = 5;
+        jumpHeight = 8;
+        jumpMaxXSpeed = 5;
+        fastFallGravity = 5f;
+        fastFallCap = 20f;
     }
 
     /// <summary>
@@ -46,6 +60,7 @@ public class LightMovement : Movement
     protected virtual void Start()
     {
         defaultGravityScale = gravityScale;
+        jumpApexVel = Mathf.Sqrt((jumpVelocity * jumpVelocity) + 2 * Physics2D.gravity.y * gravityScale * jumpHeight); ;
     }
 
     /// <summary>
@@ -54,9 +69,11 @@ public class LightMovement : Movement
     public override void Jump()
     {
         if(charCont.isGrounded){
+            if (Mathf.Abs(velocity.x) > jumpMaxXSpeed)
+                velocity = new Vector2(Mathf.Sign(velocity.x) * jumpMaxXSpeed, 0);
             base.Jump();
-            owner.isStunned++;
-            jumpStunned = true;
+            //owner.isStunned++;
+            //jumpStunned = true;
         }
         else
         {
@@ -76,10 +93,17 @@ public class LightMovement : Movement
          if (isBlinkDashing)
             return;
 
-        if (gravityScale != fastFallGravity && !isJumping && velocity.y > -fastFallCap && direction != Vector2.zero && Vector2.Angle(direction, Vector2.down) <= 46)
+        if (gravityScale != fastFallGravity && !charCont.isGrounded && !isJumping && velocity.y > -fastFallCap && direction != Vector2.zero && Vector2.Angle(direction, Vector2.down) <= 46)
             gravityScale = fastFallGravity;
         else if (gravityScale != defaultGravityScale)
             gravityScale = defaultGravityScale;
+    }
+
+    protected override void Run(float direction)
+    {
+        if (isJumping)
+            return;
+        base.Run(direction);
     }
 
     /// <summary>
@@ -87,7 +111,7 @@ public class LightMovement : Movement
     /// </summary>
     public override void SpecialAbility()
     {
-        if (!charCont.isGrounded && !landingWait && !isBlinkDashing)
+        if (!charCont.isGrounded && !isJumping && !landingWait && !isBlinkDashing)
             StartCoroutine(BlinkDash((movingDirection != Vector2.zero) ? movingDirection : Vector2.right * owner.facingDirection));
     }
 
@@ -159,15 +183,14 @@ public class LightMovement : Movement
         
         if (isJumping)
         {   
-            if (velocity.y <= jumpCancelMinVel)
+            if (velocity.y <= jumpApexVel)
                 JumpCancel();
-
         }
-        if(jumpStunned && !isJumping)
-        {
-            owner.isStunned--;
-            jumpStunned = false;
-        }
+        //if(jumpStunned && !isJumping)
+        //{
+            //owner.isStunned--;
+            //jumpStunned = false;
+        //}
 
         if (landingWait && charCont.isGrounded)
             landingWait = false;

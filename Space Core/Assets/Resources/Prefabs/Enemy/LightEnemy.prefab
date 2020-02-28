@@ -1553,20 +1553,26 @@ MonoBehaviour:
   charCont: {fileID: 5073340946118413704}
   freezeRun: 0
   collideWithCharacters: 1
-  _runMax: 10
+  _runMax: 12
   _runAccel: 40
-  _runDecel: 40
-  _runBreak: 100
+  _runDecel: 20
+  _runBreak: 40
   _jumpVelocity: 25
-  _gravityScale: 0.4
-  _jumpCancelMinVel: 20.808653
-  _jumpCancelVel: 2
-  _airAccel: 50
-  _airDecel: 25
+  _gravityScale: 0.5
+  _jumpCancelMinVel: 24.99
+  _jumpCancelVel: 3
+  _airAccel: 80
+  _airDecel: 20
   _airMax: 12
   _pushForce: 14
   _mass: 1
   mod: 1
+  dashTime: 0.1
+  dashDistance: 5
+  jumpHeight: 8
+  jumpMaxXSpeed: 5
+  fastFallGravity: 5
+  fastFallCap: 20
 --- !u!82 &380889532204705949
 AudioSource:
   m_ObjectHideFlags: 0

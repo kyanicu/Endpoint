@@ -7,10 +7,13 @@ public class MediumMovement : Movement
     // Combat Roll Values
 
     public bool isCombatRolling { get; private set; }
-    private float coolDown = 0.5f;
+    [SerializeField]
+    private float coolDown;
     private float coolDownTimer = 0f;
-    private float rollTime = 0.3f;
-    private float rollVelocityIncrease = 15;
+	[SerializeField]
+    private float rollTime;
+	[SerializeField]
+    private float rollVelocityIncrease;
 
     // Double Tap Detection system values
 
@@ -26,19 +29,22 @@ public class MediumMovement : Movement
     /// </summary>
     protected override void SetDefaultValues()
     {
-        runMax = 7;
-        runAccel = 40;
-        runDecel = 40;
-        runBreak = 100;
-        jumpVelocity = 18;
-        gravityScale = 1;
-        jumpCancelMinVel = 12;
-        jumpCancelVel = 2;
-        airAccel = 50;
-        airDecel = 25;
-        airMax = 9;
+        runMax = 10;
+        runAccel = 30;
+        runDecel = 30;
+        runBreak = 150;
+        jumpVelocity = 22;
+        gravityScale = 1.2f;
+        jumpCancelMinVel = 20;
+        jumpCancelVel = -1;
+        airAccel = 75;
+        airDecel = 50;
+        airMax = 11;
         pushForce = 14;
         mass = 1;
+        coolDown = 0.5f;
+        rollTime = 0.3f;
+        rollVelocityIncrease = 15;
     }
 
     /// <summary>

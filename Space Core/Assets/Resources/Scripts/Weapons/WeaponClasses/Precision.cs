@@ -28,8 +28,11 @@ public class Precision : Weapon
     /// </summary>
     new void Update()
     {
-        lineRenderer.SetPosition(0, new Vector3(transform.position.x, transform.position.y, transform.position.z));
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, transform.right);
+        lineRenderer.SetPosition(0, new Vector3(FireLocation.transform.position.x, FireLocation.transform.position.y, FireLocation.transform.position.z));
+        bool previous = Physics2D.queriesHitTriggers;
+        Physics2D.queriesHitTriggers = true;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(FireLocation.transform.position, FireLocation.transform.right, Range);
+        Physics2D.queriesHitTriggers = previous;
 
         //If we hit another object that does not share the same tag as this object's bullet source then set line position
         //to that object's x and y position
