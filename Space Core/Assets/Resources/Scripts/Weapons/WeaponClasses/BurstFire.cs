@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BurstFire : Automatic
@@ -64,6 +63,8 @@ public class BurstFire : Automatic
                     HUDController.instance.UpdateAmmo(owner); // Update Weapon Ammo in HUD
                 }
 
+                audioSource.clip = FireSfx;
+                audioSource.Play();
                 yield return new WaitForSeconds(RateOfFire);
             }
         }

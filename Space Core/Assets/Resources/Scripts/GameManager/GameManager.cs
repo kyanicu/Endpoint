@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
-        if (EnemyControllers == null)
+        if (EnemyControllers == null || EnemyControllers.Count == 0)
         {
             EnemyControllers = GameObject.FindGameObjectsWithTag("EnemyController").ToList();
         }

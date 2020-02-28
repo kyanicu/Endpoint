@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class Character : MonoBehaviour
 {
-    public enum AnimationState { idle, running, hit }
+    public enum AnimationState { idle, running, hit, jump, special, runextended, falling }
 
     public float Health { get; set; }
     public float MaxHealth { get; set; }
@@ -26,6 +26,9 @@ public class Character : MonoBehaviour
     public Movement movement { get; protected set; }
     public bool IsBlinking;
     public bool IsPlayer;
+    public AudioClip WalkClip;
+    public AudioClip HitClip;
+    public AudioSource AudioSource { get; private set; }
     public int isStunned { get; set; }
     public bool IsSelected { get; set; }
 
@@ -53,7 +56,7 @@ public class Character : MonoBehaviour
         MoveDirection = 0;
         RotationPoint = transform.Find("RotationPoint").gameObject;
         childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
-        
+        AudioSource = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -111,15 +114,35 @@ public class Character : MonoBehaviour
             MoveDirection = (short)Mathf.Sign(direction.x);
         }
 
-        if (direction.x != 0 && animationState != AnimationState.running)
+        if (direction.x != 0 
+            && (animationState != AnimationState.running || animationState == AnimationState.falling)
+            && movement.charCont.isGrounded)
         {
             animationState = AnimationState.running;
             animator.SetInteger("AnimationState", (int)animationState);
         }
-        else if (direction.x == 0 && animationState == AnimationState.running)
+        else if (direction.x == 0 
+            && (animationState == AnimationState.running || animationState == AnimationState.jump || animationState == AnimationState.falling)
+            && movement.charCont.isGrounded)
         {
             animationState = AnimationState.idle;
             animator.SetInteger("AnimationState", (int)animationState);
+        }
+        else if (
+            (animationState == AnimationState.running || animationState == AnimationState.idle)
+            && !movement.charCont.isGrounded)
+        {
+            animationState = AnimationState.jump;
+            animator.SetInteger("AnimationState", (int)animationState);
+        }
+
+        if (direction.x != 0 && movement.charCont.isGrounded)
+        {
+            if (!AudioSource.isPlaying)
+            {
+                AudioSource.clip = WalkClip;
+                AudioSource.Play();
+            }
         }
 
         movement.Move(direction);
@@ -132,6 +155,11 @@ public class Character : MonoBehaviour
     {
         if (isStunned <= 0)
         {
+            if(animationState != AnimationState.jump)
+            {
+                animationState = AnimationState.jump;
+                animator.SetInteger("AnimationState", (int)animationState);
+            }
             movement.Jump();
         }
     }

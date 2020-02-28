@@ -65,7 +65,7 @@ public abstract class AIController : Controller
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
@@ -102,6 +102,7 @@ public abstract class AIController : Controller
                     break;
                 
             }
+            base.Update();
         }
     }
     #endregion

@@ -47,6 +47,10 @@ public abstract class Weapon : MonoBehaviour
     public string BulletTag { protected get; set; }
     public GameObject FireLocation { get; set; }
     public Character owner { get; set; }
+    public AudioClip ReloadStart;
+    public AudioClip ReloadEnd;
+    public AudioClip FireSfx;
+    protected AudioSource audioSource { get; set; }
 
     public float BulletVeloc
     {
@@ -75,6 +79,7 @@ public abstract class Weapon : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         owner = transform.root.GetComponent<Character>();
     }
 
@@ -126,9 +131,19 @@ public abstract class Weapon : MonoBehaviour
         //Check that passed character still exists
         if(c != null)
         {
+            if(ReloadStart != null && ReloadEnd != null)
+            {
+                audioSource.clip = ReloadStart;
+                audioSource.Play();
+            }
             //Begin reloading loop
             while (TotalAmmo > 0 && AmmoInClip < ClipSize)
             {
+                if (ReloadStart != null && ReloadEnd == null)
+                {
+                    audioSource.clip = ReloadStart;
+                    audioSource.Play();
+                }
                 if (c == null) break;
 
                 //Wait until reload timer is up.
@@ -143,6 +158,11 @@ public abstract class Weapon : MonoBehaviour
                 {
                     HUDController.instance.UpdateAmmo(c);
                 }
+            }
+            if (ReloadStart != null && ReloadEnd != null)
+            {
+                audioSource.clip = ReloadEnd;
+                audioSource.Play();
             }
 
             IsReloading = false;

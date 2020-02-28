@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// A controller is responsible for guiding the behavior of a character in the scene
@@ -22,6 +23,11 @@ public abstract class Controller : MonoBehaviour
         gameObject.transform.SetParent(parent.transform);
     }
      
+    protected virtual void Update()
+    {
+        CheckFalling();
+    }
+
     /// <summary>
     /// Method for swapping the controller's character with another controller.
     /// </summary>
@@ -117,6 +123,8 @@ public abstract class Controller : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         Character.Health -= damage;
+        Character.AudioSource.clip = Character.HitClip;
+        Character.AudioSource.Play();
         if (Character.Health <= 0)
         {
             Die();
@@ -179,5 +187,53 @@ public abstract class Controller : MonoBehaviour
     public void ActivateActiveAbility()
     {
         Character.ActivateActiveAbility();
+    }
+
+    /// <summary>
+    /// Checks if the character is falling
+    /// </summary>
+    private void CheckFalling()
+    {
+        if (Character.movement.velocity.y < -0.1)
+        {
+            Character.animationState = Character.AnimationState.falling;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
+    }
+
+    /// <summary>
+    /// Sets animation state to rolling
+    /// </summary>
+    protected void CheckRolling()
+    {
+        MediumMovement mediumMovement = (Character.movement as MediumMovement);
+        if (mediumMovement != null && mediumMovement.isCombatRolling)
+        {
+            Character.animationState = Character.AnimationState.special;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
+        else if (mediumMovement != null && !mediumMovement.isCombatRolling 
+            && Character.animationState == Character.AnimationState.special)
+        {
+            Character.animationState = Character.AnimationState.running;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the heavy is at max speed
+    /// </summary>
+    protected void CheckMaxSpeed()
+    {
+        if (Character.movement.charCont.isGrounded && Character.movement.velocity.x >= Character.movement.runMax)
+        {
+            Character.animationState = Character.AnimationState.runextended;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
+        else if (Character.movement.charCont.isGrounded && Character.animationState == Character.AnimationState.runextended)
+        {
+            Character.animationState = Character.AnimationState.running;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Medium Enemy controller implementation.
@@ -8,6 +9,12 @@ public class MediumEnemyAIController : AIController
     //counter that keeps track of the amount of damage the Medium Enemy has taken
     private float damageTaken = 0;
     private float attackMoveRange = 0.5f;
+
+    protected override void Update()
+    {
+        CheckRolling();
+        base.Update();
+    }
 
     /// <summary>
     /// Method that controls the Medium Enemy's attack behavior

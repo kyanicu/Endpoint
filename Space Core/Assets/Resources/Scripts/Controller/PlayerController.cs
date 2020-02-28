@@ -444,12 +444,24 @@ public class PlayerController : Controller
         Character.Invincible--;
     }
 
-    void Update()
+    protected override void Update()
     {
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
             return;
 
+        base.Update();
+
+        switch (Character.Class)
+        {
+            case "heavy":
+                CheckMaxSpeed();
+                break;
+            case "medium":
+                CheckRolling();
+                break;
+        }
+        
         UpdateWorldspaceCanvasDirection();
     }
 

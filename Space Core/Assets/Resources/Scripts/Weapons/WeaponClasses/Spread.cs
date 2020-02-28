@@ -9,6 +9,10 @@ public class Spread : Weapon
     //number of pellets being launched in each shot.
     public int NumPellets { get; set; }
 
+    //extra spread specific audio clips
+    public AudioClip PumpStart;
+    public AudioClip PumpEnd;
+
     /// <summary>
     /// Initalize all components of the Spread weapon
     /// </summary>
@@ -70,6 +74,8 @@ public class Spread : Weapon
                     bulletScript.Activate();
                 }
                 FireTimer = RateOfFire;
+                audioSource.clip = FireSfx;
+                audioSource.Play();
                 return true;
             }
             return false;
@@ -78,5 +84,18 @@ public class Spread : Weapon
         {
             return false;
         }
+    }
+
+    private IEnumerator PumpEffect()
+    {
+        yield return new WaitForSeconds(RateOfFire / 2.0f);
+        audioSource.clip = PumpStart;
+        audioSource.Play();
+        yield return new WaitForSeconds(audioSource.clip.length);
+        if (audioSource.clip != FireSfx)
+        {
+            audioSource.clip = PumpEnd;
+            audioSource.Play();
+        }   
     }
 }

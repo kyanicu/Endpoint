@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Heavy Enemy controller implementation.
@@ -10,6 +11,12 @@ public class HeavyEnemyAIController : AIController
     private float hoverTimer = MAX_HOVER_TIME;
     private float damageTaken = 0;
     private float attackMoveRange = 0.4f;
+
+    protected override void Update()
+    {
+        CheckMaxSpeed();
+        base.Update();
+    }
 
     /// <summary>
     /// Method for controling the heavy's 
@@ -60,6 +67,23 @@ public class HeavyEnemyAIController : AIController
         if (!hovering)
         {
             damageTaken += attackInfo.damage;
+        }
+    }
+
+    /// <summary>
+    /// Checks if the heavy is at max speed
+    /// </summary>
+    private void CheckMaxSpeed()
+    {
+        if(Character.movement.charCont.isGrounded && Character.movement.velocity.x >= Character.movement.runMax)
+        {
+            Character.animationState = Character.AnimationState.runextended;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
+        }
+        else if (Character.movement.charCont.isGrounded && Character.animationState == Character.AnimationState.runextended)
+        {
+            Character.animationState = Character.AnimationState.running;
+            Character.animator.SetInteger("AnimationState", (int)Character.animationState);
         }
     }
 }

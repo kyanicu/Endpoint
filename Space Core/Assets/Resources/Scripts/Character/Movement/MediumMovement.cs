@@ -6,7 +6,7 @@ public class MediumMovement : Movement
 
     // Combat Roll Values
 
-    private bool isCombatRolling = false;
+    public bool isCombatRolling { get; private set; }
     private float coolDown = 0.5f;
     private float coolDownTimer = 0f;
     private float rollTime = 0.3f;

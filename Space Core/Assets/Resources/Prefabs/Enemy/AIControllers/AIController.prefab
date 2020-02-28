@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 6306821476996990447}
   - component: {fileID: 5413380532146096158}
   m_Layer: 0
-  m_Name: MediumAIController
-  m_TagString: Untagged
+  m_Name: AIController
+  m_TagString: EnemyController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4c51500ba32ad4dbcf32e3f479d48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseRunMax: 0
 --- !u!114 &6306821476996990447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +57,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc1b17d0d9bc47a4e8b4c4a108a1c6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseRunMax: 0
 --- !u!114 &5413380532146096158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,4 +69,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c78e18d047204b4abb263dcde6f63d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseRunMax: 0

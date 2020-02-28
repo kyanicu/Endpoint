@@ -108,6 +108,8 @@ public class Precision : Weapon
                 bulletScript.Velocity = BulletVeloc;
                 FireTimer = RateOfFire;
                 bulletScript.Activate();
+                audioSource.clip = FireSfx;
+                audioSource.Play();
                 return true;
             }
             return false;
