@@ -8,9 +8,9 @@ using UnityEngine.Audio;
 
 public class SettingsMenuManger : MonoBehaviour
 {
-    public enum SettingsOption { MaVS, MuVS, SVS, RV, FSAV }
+    public enum SettingsOption { MaVS, MuVS, SVS, RV, FSAV, DB }
     private SettingsOption selectedID;
-    const int TOTAL_SETTINGS_OPTIONS = 5;
+    const int TOTAL_SETTINGS_OPTIONS = 6;
     const float SLIDER_INC_VAL = 5f;
     const int SLIDER_MIN_VAL = -80;
 
@@ -30,8 +30,11 @@ public class SettingsMenuManger : MonoBehaviour
     public TextMeshProUGUI FullScreenActiveValue;
     List<Tuple<int, int>> resolutions = new List<Tuple<int, int>>();
     int selectedRes = 2;
-    private bool fullscreenActive;
+    private bool fullscreenActive = true;
     #endregion
+
+    public Button DefaultButton;
+    public TextMeshProUGUI DefaultText;
 
     // Start is called before the first frame update
     void Awake()
@@ -41,12 +44,28 @@ public class SettingsMenuManger : MonoBehaviour
         resolutions.Add(new Tuple<int, int>(1600, 900));
         resolutions.Add(new Tuple<int, int>(1920, 1280));
 
-        //Set starting resolution
-        Screen.SetResolution(1920, 1280, true);
+        //Load previously saved settings
+        SettingsSerlializer loadedSettings = SaveSystem.LoadSettings();
+        if (loadedSettings != null)
+        {
+            selectedRes = loadedSettings.ResolutionID;
+            Tuple<int, int> newRes = resolutions[selectedRes];
+
+            //Set starting resolution
+            Screen.SetResolution(newRes.Item1, newRes.Item2, true);
+
+            //Get window status
+            fullscreenActive = loadedSettings.FullScreenActive;
+            Screen.fullScreen = fullscreenActive;
+
+            //Load volume slider settings
+            MasterVolSlider.value = loadedSettings.MasterVolSliderValue;
+            MusicVolSlider.value = loadedSettings.MusicVolSliderValue;
+            SoundVolSlider.value = loadedSettings.SoundVolSliderValue;
+        }
+
         ResolutionValue.text = $"{Screen.currentResolution.width} X {Screen.currentResolution.height}";
 
-        //Get window status
-        fullscreenActive = Screen.fullScreen;
         FullScreenActiveValue.text = fullscreenActive ? "On" : "Off";
 
         //Hide this screen
@@ -144,6 +163,7 @@ public class SettingsMenuManger : MonoBehaviour
                 FullScreenActiveValue.text = fullscreenActive ? "On" : "Off";
                 break;
         }
+        saveSettings();
     }
 
     /// <summary>
@@ -187,6 +207,29 @@ public class SettingsMenuManger : MonoBehaviour
     }
 
     /// <summary>
+    /// Restores all settings to their default values
+    /// </summary>
+    public void RestoreDefaultSettings()
+    {
+        if (selectedID == SettingsOption.DB)
+        {
+            MasterVolSlider.value = 0;
+            MusicVolSlider.value = 0;
+            SoundVolSlider.value = 0;
+            fullscreenActive = true;
+            selectedRes = 2;
+
+            Tuple<int, int> newRes = resolutions[selectedRes];
+            Screen.SetResolution(newRes.Item1, newRes.Item2, true);
+            ResolutionValue.text = $"{Screen.currentResolution.width} X {Screen.currentResolution.height}";
+
+            Screen.fullScreen = fullscreenActive;
+            FullScreenActiveValue.text = fullscreenActive ? "On" : "Off";
+            SaveSystem.DeleteSavedSettings();
+        }
+    }
+
+    /// <summary>
     /// Changes a ui element appearance when a cursor moves off of it
     /// </summary>
     /// <param name="option"></param>
@@ -217,6 +260,12 @@ public class SettingsMenuManger : MonoBehaviour
             //Fullscreen Active Value
             case 4:
                 FullScreenActiveValue.color = Color.white;
+                break;
+
+            //Restore to Default 
+            case 5:
+                DefaultButton.image.color = Color.white;
+                DefaultText.color = Color.white;
                 break;
         }
     }
@@ -253,6 +302,25 @@ public class SettingsMenuManger : MonoBehaviour
             case 4:
                 FullScreenActiveValue.color = Color.yellow;
                 break;
+
+            //Restore to Default 
+            case 5:
+                DefaultButton.image.color = Color.yellow;
+                DefaultText.color = Color.yellow;
+                break;
         }
+    }
+
+    /// <summary>
+    /// Makes the current settings values the default whenever anything gets changed 
+    /// </summary>
+    private void saveSettings()
+    {
+        SettingsSerlializer savedSettings = new SettingsSerlializer( MasterVolSlider.value,
+                                                                     MusicVolSlider.value,
+                                                                     SoundVolSlider.value,
+                                                                     selectedRes,
+                                                                     fullscreenActive);
+        SaveSystem.SaveSettings(savedSettings);
     }
 }

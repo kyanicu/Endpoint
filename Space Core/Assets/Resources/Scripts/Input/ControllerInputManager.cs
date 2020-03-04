@@ -231,6 +231,14 @@ public class ControllerInputManager : InputManager
         {
             MainMenuManager.instance.TraverseMenu(1);
         }
+        if (state.Value.DPad.Left == ButtonState.Pressed && prevState.Value.DPad.Left == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseSettings(1);
+        }
+        else if (state.Value.DPad.Right == ButtonState.Pressed && prevState.Value.DPad.Right == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseSettings(-1);
+        }
         //Check vertical movement through menu with Left Stick
         else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
         {

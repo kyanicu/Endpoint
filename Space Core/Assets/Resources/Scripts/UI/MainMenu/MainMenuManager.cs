@@ -99,6 +99,10 @@ public class MainMenuManager : MonoBehaviour
         {
             FileManager.SelectButton();
         }
+        else if (activeScreen == activeScreenName.Settings)
+        {
+            SettingsManager.RestoreDefaultSettings();
+        }
     }
 
     /// <summary>
@@ -111,6 +115,7 @@ public class MainMenuManager : MonoBehaviour
         {
             AudioManager.instance.PlaySound(AudioManager.Clips.Back);
             ToggleMenuScreens((int)activeScreenName.MainMenu);
+            MainButtonsManager.TagText.gameObject.SetActive(true);
         }
     }
 

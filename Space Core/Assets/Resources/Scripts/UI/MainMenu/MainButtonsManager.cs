@@ -72,6 +72,8 @@ public class MainButtonsManager : MonoBehaviour
     /// </summary>
     public void SelectButton()
     {
+        if (selectedID == MenuItemID.SettingsButton)
+            TagText.gameObject.SetActive(false);
         MenuButtons[(int)selectedID].onClick.Invoke();
     }
 
