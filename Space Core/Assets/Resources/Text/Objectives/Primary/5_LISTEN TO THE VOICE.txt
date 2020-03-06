@@ -1,0 +1,6 @@
+Description: LISTEN TO THE VOICE
+Number of Objectives: 1
+Icon Type: diamondIcon
+The voice beckons you. It calls itself the Codex.
+
+You can feel its presence close by. It's time to introduce yourself.

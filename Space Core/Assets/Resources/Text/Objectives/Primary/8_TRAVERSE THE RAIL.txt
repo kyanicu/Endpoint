@@ -1,0 +1,6 @@
+Description: TRAVERSE THE RAIL
+Number of Objectives: 1
+Icon Type: diamondIcon
+The transport rail hums with life. The sound is both beautiful and precise. 
+
+Mount the rail, and obtain the Aurora Sphere. 

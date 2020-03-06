@@ -1,0 +1,6 @@
+Description: ACTIVATE TRANSPORT RAIL
+Number of Objectives: 1
+Icon Type: diamondIcon
+The Aurora Sphere is transported along the power rail above the dock.
+
+Initiate rail transport sequence, and proceed.  

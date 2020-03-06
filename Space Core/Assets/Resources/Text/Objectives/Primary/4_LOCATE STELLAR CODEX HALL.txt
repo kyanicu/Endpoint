@@ -1,0 +1,6 @@
+Description: LOCATE STELLAR CODEX HALL
+Number of Objectives: 1
+Icon Type: diamondIcon
+The voice seems to be guiding you. Does it know your true directive?
+
+Traverse the confines and continue your search.  

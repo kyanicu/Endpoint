@@ -1,0 +1,6 @@
+Description: LOCATE DOCK COMMAND
+Number of Objectives: 1
+Icon Type: diamondIcon
+Your conversation with the Codex leaves you with new insight. 
+
+For now, allying with this being seems to be only beneficial, even if you must play fetch for them. 

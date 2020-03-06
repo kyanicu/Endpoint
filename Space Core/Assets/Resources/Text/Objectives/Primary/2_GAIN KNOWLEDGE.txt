@@ -1,0 +1,6 @@
+Description: GAIN KNOWLEDGE
+Number of Objectives: 1
+Icon Type: diamondIcon
+This place is an enigma, you must learn more.
+
+Scour for a source of knowledge.
