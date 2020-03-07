@@ -31,7 +31,6 @@ public class Character : MonoBehaviour
     public AudioSource AudioSource { get; private set; }
     public int isStunned { get; set; }
     public bool IsSelected { get; set; }
-
     public SkinnedMeshRenderer[] childComponents;
     public AnimationState animationState { get; set; }
     public Animator animator;
@@ -114,6 +113,7 @@ public class Character : MonoBehaviour
             MoveDirection = (short)Mathf.Sign(direction.x);
         }
 
+        //If we are moving, and are not in a running or falling state and the player is grounded, move to the running state
         if (direction.x != 0 
             && (animationState != AnimationState.running || animationState == AnimationState.falling)
             && movement.charCont.isGrounded)
@@ -121,6 +121,7 @@ public class Character : MonoBehaviour
             animationState = AnimationState.running;
             animator.SetInteger("AnimationState", (int)animationState);
         }
+        //If we are running, jumping or falling, the character is grounded and not moving, move to the idle state
         else if (direction.x == 0 
             && (animationState == AnimationState.running || animationState == AnimationState.jump || animationState == AnimationState.falling)
             && movement.charCont.isGrounded)
@@ -128,6 +129,7 @@ public class Character : MonoBehaviour
             animationState = AnimationState.idle;
             animator.SetInteger("AnimationState", (int)animationState);
         }
+        //If the player is running or is idle, but we are not grounded. Move to the jump state
         else if (
             (animationState == AnimationState.running || animationState == AnimationState.idle)
             && !movement.charCont.isGrounded)
@@ -136,6 +138,7 @@ public class Character : MonoBehaviour
             animator.SetInteger("AnimationState", (int)animationState);
         }
 
+        //if we are grounded and moving forward, play the walking audi clip
         if (direction.x != 0 && movement.charCont.isGrounded)
         {
             if (!AudioSource.isPlaying)

@@ -8,11 +8,6 @@ using UnityEngine;
 /// </summary>
 public class HomingBullet : Bullet
 {
-    //Enemy that the bullet will lock onto
-    public Transform LockedEnemy;
-    //radar for homing into an enemy. Need to update its position as well.
-    public GameObject HomingRadar;
-
     // Start is called before the first frame update
     public new void Activate()
     {

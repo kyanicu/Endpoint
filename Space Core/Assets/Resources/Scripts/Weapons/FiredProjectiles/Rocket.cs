@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rocket : Bullet
@@ -9,14 +8,25 @@ public class Rocket : Bullet
     public GameObject DamageRadius;
     private MeshRenderer meshRenderer;
     private float explosionTime = .5f;
+    private float baseVelocity;
+    private float startVelocityFactor = .2f;
+    private float startUpTime = .2f;
 
-    private void Awake()
+    /// <summary>
+    /// Acitvate override for getting the mesh renderer
+    /// </summary>
+    public override void Activate()
     {
+        base.Activate();
         meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.enabled = true;
+        baseVelocity = Velocity;
+        Velocity = Velocity * startVelocityFactor;
+        StartCoroutine(WaitToSpeedUp());
     }
 
     //Explodes on collision with anything
-    protected new void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if ((collision.CompareTag("Enemy") || collision.CompareTag("Terrain") || collision.CompareTag("Player")))
         {
@@ -25,8 +35,15 @@ public class Rocket : Bullet
             DamageRadius.SetActive(true);
             meshRenderer.enabled = false;
             StartCoroutine(Explosion());
+            Velocity = baseVelocity;
             //ObjectPooler.instance.SpawnFromPool("RocketExplosion", transform.position, Quaternion.identity);
         }
+    }
+
+    private IEnumerator WaitToSpeedUp()
+    {
+        yield return new WaitForSeconds(startUpTime);
+        Velocity = baseVelocity;
     }
 
     private IEnumerator Explosion()
@@ -34,7 +51,7 @@ public class Rocket : Bullet
         yield return new WaitForSeconds(explosionTime);
         DamageRadius.SetActive(false);
         meshRenderer.enabled = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.2f);
         gameObject.SetActive(false);
     }
 }

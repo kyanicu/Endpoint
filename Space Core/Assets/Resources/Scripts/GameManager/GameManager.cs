@@ -148,12 +148,12 @@ public class GameManager : MonoBehaviour
     {
         MaxStats = new Dictionary<string, float[]>();
         List<WeaponGenerationInfo> allWeaponsList = new List<WeaponGenerationInfo>();
-        allWeaponsList.Add(new Jakkaru());
-        allWeaponsList.Add(new Matsya());
-        allWeaponsList.Add(new SnipeyBoi());
-        allWeaponsList.Add(new JakkaruBurst());
-        allWeaponsList.Add(new RawketLawnchair());
-        allWeaponsList.Add(new Vohnemet());
+        allWeaponsList.Add(new RotaryRepeaterInfo());
+        allWeaponsList.Add(new PulseProjectorInfo());
+        allWeaponsList.Add(new GaussCannonInfo());
+        allWeaponsList.Add(new VortexLauncherInfo());
+        allWeaponsList.Add(new BreachMissileInfo());
+        allWeaponsList.Add(new ShockLanceInfo());
 
         for (int i = 0; i < allWeaponsList.Count; i++)
         {

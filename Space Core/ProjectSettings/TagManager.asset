@@ -17,6 +17,7 @@ TagManager:
   - ControllerGroup
   - Rocket
   - EnergyBurst
+  - HomingRadar
   layers:
   - Default
   - TransparentFX
@@ -34,7 +35,7 @@ TagManager:
   - Weapon
   - Player
   - Enemy
-  - 
+  - HackRadar
   - 
   - 
   - 

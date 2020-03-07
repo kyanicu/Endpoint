@@ -361,11 +361,21 @@ public abstract class AIController : Controller
         }
         else if (collision.CompareTag("Rocket"))
         {
-            //Take damage from Rocket explosions. Can damage self.
-
-            //collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info.knockbackImpulse 
-              //  = collision.gameObject.GetComponent<Rocket>().KnockbackImpulse * (transform.position - collision.transform.position).normalized;
-            ReceiveAttack(collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info);
+            //need to heal player if vampire bullets are active
+            AttackInfo info = collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info;
+            if (Bullet.VampireBullet && info.damageSource == DamageSource.Player)
+            {
+                float healthToHeal = info.damage * 0.25f;
+                if (healthToHeal < 0)
+                {
+                    PlayerController.instance.HealCharacter(1);
+                }
+                else
+                {
+                    PlayerController.instance.HealCharacter((int)healthToHeal);
+                }
+            }
+            ReceiveAttack(info);
         }
     }
 

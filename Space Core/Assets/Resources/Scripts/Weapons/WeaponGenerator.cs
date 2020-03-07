@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// This class will generate a random weapon
@@ -26,46 +25,46 @@ public static class WeaponGenerator
         //Generate a weaon specified by its name
         switch(weaponName)
         {
-            case "Jakkaru":
-                //Load generated Jakkaru stats onto weapon
-                WeaponGenerationInfo newJakkaru = new Jakkaru();
-                weapon = BuildAutomatic(parent, newJakkaru);
-                prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Rotary Repeater":
+                //Load generated RotaryRepeater stats onto weapon
+                WeaponGenerationInfo newRotaryRepeater = new RotaryRepeaterInfo();
+                weapon = BuildAutomatic(parent, newRotaryRepeater);
+                prefix = newRotaryRepeater.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Jakkaru Burst":
-                //Load generated Jakkaru Burst stats onto weapon
-                WeaponGenerationInfo newJakkaruBurst = new JakkaruBurst();
-                weapon = BuildBurstFire(parent, newJakkaruBurst);
-                prefix = newJakkaruBurst.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Vortex Launcher":
+                //Load generated Vortex Launcher stats onto weapon
+                WeaponGenerationInfo newVortexLauncher = new VortexLauncherInfo();
+                weapon = BuildAutomatic(parent, newVortexLauncher);
+                prefix = newVortexLauncher.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Matsya":
-                //Load generated Matsya stats onto weapon
-                WeaponGenerationInfo newMatsya = new Matsya();
-                weapon = BuildSpread(parent, newMatsya);
-                prefix = newMatsya.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Pulse Projector":
+                //Load generated Pulse Projector stats onto weapon
+                WeaponGenerationInfo newPulseProjector = new PulseProjectorInfo();
+                weapon = BuildSpread(parent, newPulseProjector);
+                prefix = newPulseProjector.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "SnipeyBoi":
+            case "Gauss Cannon":
                 //Load generated SnipeyBoi stats onto weapon
-                WeaponGenerationInfo newSnipeyBoi = new SnipeyBoi();
-                weapon = BuildPrecision(parent, newSnipeyBoi);
-                prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newGaussCannon = new GaussCannonInfo();
+                weapon = BuildPrecision(parent, newGaussCannon);
+                prefix = newGaussCannon.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "RawketLawnchair":
+            case "Breach Missile":
                 //Load generated RawketLawnchair stats onto weapon
-                WeaponGenerationInfo newRawketLawnchair = new RawketLawnchair();
-                weapon = BuildPrecision(parent, newRawketLawnchair);
-                prefix = newRawketLawnchair.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newBreachMissile = new BreachMissileInfo();
+                weapon = BuildPrecision(parent, newBreachMissile);
+                prefix = newBreachMissile.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Vohnemet":
+            case "Shock Lance":
                 //Load generated Vohnemet stats onto weapon
-                WeaponGenerationInfo newVohnemet = new Vohnemet();
-                weapon = BuildPrecision(parent, newVohnemet);
-                prefix = newVohnemet.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newShockLance = new ShockLanceInfo();
+                weapon = BuildPrecision(parent, newShockLance);
+                prefix = newShockLance.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
             default:
@@ -100,46 +99,46 @@ public static class WeaponGenerator
         //Generate a weaon specified by its name
         switch(weaponName)
         {
-            case "Jakkaru":
-                //Load generated Jakkaru stats onto weapon
-                WeaponGenerationInfo newJakkaru = new Jakkaru();
-                weapon = BuildAutomatic(parent, newJakkaru);
-                prefix = newJakkaru.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Rotary Repeater":
+                //Load generated RotaryRepeater stats onto weapon
+                WeaponGenerationInfo newRotaryRepeater = new RotaryRepeaterInfo();
+                weapon = BuildAutomatic(parent, newRotaryRepeater);
+                prefix = newRotaryRepeater.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Jakkaru Burst":
-                //Load generated Jakkaru Burst stats onto weapon
-                WeaponGenerationInfo newJakkaruBurst = new JakkaruBurst();
-                weapon = BuildBurstFire(parent, newJakkaruBurst);
-                prefix = newJakkaruBurst.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Vortex Launcher":
+                //Load generated Vortex Launcher stats onto weapon
+                WeaponGenerationInfo newVortexLauncher = new VortexLauncherInfo();
+                weapon = BuildBurstFire(parent, newVortexLauncher);
+                prefix = newVortexLauncher.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Matsya":
-                //Load generated Matsya stats onto weapon
-                WeaponGenerationInfo newMatsya = new Matsya();
-                weapon = BuildSpread(parent, newMatsya);
-                prefix = newMatsya.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+            case "Pulse Projector":
+                //Load generated Pulse Projector stats onto weapon
+                WeaponGenerationInfo newPulseProjector = new PulseProjectorInfo();
+                weapon = BuildSpread(parent, newPulseProjector);
+                prefix = newPulseProjector.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "SnipeyBoi":
+            case "Gauss Cannon":
                 //Load generated SnipeyBoi stats onto weapon
-                WeaponGenerationInfo newSnipeyBoi = new SnipeyBoi();
-                weapon = BuildPrecision(parent, newSnipeyBoi);
-                prefix = newSnipeyBoi.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newGaussCannon = new GaussCannonInfo();
+                weapon = BuildPrecision(parent, newGaussCannon);
+                prefix = newGaussCannon.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "RawketLawnchair":
+            case "Breach Missile":
                 //Load generated RawketLawnchair stats onto weapon
-                WeaponGenerationInfo newRawketLawnchair = new RawketLawnchair();
-                weapon = BuildPrecision(parent, newRawketLawnchair);
-                prefix = newRawketLawnchair.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newBreachMissile = new BreachMissileInfo();
+                weapon = BuildPrecision(parent, newBreachMissile);
+                prefix = newBreachMissile.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
-            case "Vohnemet":
+            case "Shock Lance":
                 //Load generated Vohnemet stats onto weapon
-                WeaponGenerationInfo newVohnemet = new Vohnemet();
-                weapon = BuildPrecision(parent, newVohnemet);
-                prefix = newVohnemet.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
+                WeaponGenerationInfo newShockLance = new ShockLanceInfo();
+                weapon = BuildPrecision(parent, newShockLance);
+                prefix = newShockLance.GenerateNewWeaponName(weapon.GetComponent<Weapon>());
                 break;
 
             default:
@@ -183,10 +182,7 @@ public static class WeaponGenerator
     private static GameObject BuildSpread(Transform parent, WeaponGenerationInfo wgi)
     {
 
-        GameObject weaponObject = SetCommonAttributes(parent, wgi);
-        Spread spread = weaponObject.GetComponent<Spread>();
-        spread.NumPellets = UnityEngine.Random.Range(wgi.MinNumPellets, wgi.MaxNumPellets);
-        return weaponObject;
+        return SetCommonAttributes(parent, wgi);
     }
 
     private static GameObject BuildHeavy(Transform parent, WeaponGenerationInfo wgi)
@@ -220,6 +216,7 @@ public static class WeaponGenerator
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/" + wgi.name);
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Weapon weapon = weaponObject.GetComponent<Weapon>();
+        weapon.BulletTag = wgi.BulletTag;
         weapon.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
         weapon.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         weapon.StunTime = wgi.StunTime;

@@ -99,19 +99,19 @@ public class WeaponPanelManager : MonoBehaviour
         Weapon weapon = p.Weapon;
         // Update weapon HUD elements to reflect current weapon...
         // Update current weapon class color and set various elements to that color.
-        if (weapon is Automatic)
+        if (weapon is RotaryRepeater)
         {
             currentWeaponClassColor = ColorWeaponClassAutomatic;
             currentWeaponClassText = "auto";
             WeaponClassImage.sprite = WeaponClassImages[0];
         }
-        else if (weapon is Precision)
+        else if (weapon is GaussCannon)
         {
             currentWeaponClassColor = ColorWeaponClassPrecision;
             currentWeaponClassText = "precise";
             WeaponClassImage.sprite = WeaponClassImages[1];
         }
-        else if (weapon is Spread)
+        else if (weapon is PulseProjector)
         {
             currentWeaponClassColor = ColorWeaponClassScatter;
             currentWeaponClassText = "scatter";

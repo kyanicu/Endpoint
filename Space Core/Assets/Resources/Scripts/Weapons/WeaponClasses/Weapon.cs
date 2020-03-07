@@ -13,12 +13,12 @@ public abstract class Weapon : MonoBehaviour
     /// </summary>
     public static Dictionary<int, string> WeaponsList = new Dictionary<int, string>()
     {
-        { 0, "Matsya" },
-        { 1, "Jakkaru" },
-        { 2, "SnipeyBoi" },
-        { 3, "Jakkaru Burst"},
-        { 4, "RawketLawnchair" },
-        { 5, "Vohnemet" }
+        { 0, "Pulse Projector" },
+        { 1, "Rotary Repeater" },
+        { 2, "Gauss Cannon" },
+        { 3, "Vortex Launcher"},
+        { 4, "Breach Missile" },
+        { 5, "Shock Lance" }
         //{ 6, "Tributar" },
         //{ 7, "Bestafera" },
         //{ 8, "Thor" },
@@ -52,6 +52,7 @@ public abstract class Weapon : MonoBehaviour
     public AudioClip ReloadStart;
     public AudioClip ReloadEnd;
     public AudioClip FireSfx;
+    public bool BulletHoming { get; set; }
     protected AudioSource audioSource { get; set; }
 
     public float BulletVeloc
