@@ -65,7 +65,7 @@ public abstract class Weapon : MonoBehaviour
     private float playerBulletVelocMod = 1.5f;
     private float enemyBulletVelocMod = .75f;
     private float _bulletVelocity;
-
+    internal int ammoInClip;
 
     public Vector2 aimingDirection
     {

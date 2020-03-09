@@ -77,7 +77,7 @@ public class PlayerController : Controller
 
             // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
             Character.WorldspaceCanvas.gameObject.SetActive(true);
-            WorldspaceCanvas.instance.UpdateWorldspaceCanvas(Character.WorldspaceCanvas);
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
         }
         canSwap = true;
         HUDController.instance.UpdateHUD(Character);
@@ -145,7 +145,7 @@ public class PlayerController : Controller
 
             // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
             Character.WorldspaceCanvas.gameObject.SetActive(true);
-            WorldspaceCanvas.instance.UpdateWorldspaceCanvas(Character.WorldspaceCanvas);
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
 
             Character.IsPlayer = true;
             Character.Weapon.BulletSource = DamageSource.Player;
@@ -259,7 +259,7 @@ public class PlayerController : Controller
             }
 
             // Update the ammo text above player - using ONLY this Enemy's canvas.
-            WorldspaceCanvas.instance.UpdatePlayerAmmo();
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdatePlayerAmmo();
             
             HUDController.instance.UpdateAmmo(Character);
             collision.gameObject.SetActive(false);

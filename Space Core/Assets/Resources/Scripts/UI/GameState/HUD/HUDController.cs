@@ -34,6 +34,7 @@ public class HUDController : MonoBehaviour
     public Color activeClassColor;
     public bool ObjectivesPopupIsActive;
     public string[] RecentDataBaseEntry;
+    public Color activeWeaponColor;
 
     private bool diagnosticPanelsVisible = true;
     private bool firstRun = true;
@@ -78,6 +79,9 @@ public class HUDController : MonoBehaviour
             RecolorHUD();
 
             ExperiencePM.UpdateExperienceFromSystem();
+
+            // After updating the HUD, also make sure to update the player's worldspace canvas.
+            p.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsPlayerCanvas(p);
         }
     }
 
@@ -107,6 +111,9 @@ public class HUDController : MonoBehaviour
     public void UpdateAmmo(Character c)
     {
         WeaponPM.UpdateAmmo(c.Weapon);
+
+        // After updating the HUD, also make sure to update the player's worldspace canvas.
+        c.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsPlayerCanvas(c);
     }
 
     /// <summary>

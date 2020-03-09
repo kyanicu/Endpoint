@@ -62,6 +62,10 @@ public abstract class AIController : Controller
         disabled = false;
         base.Start();
         BaseRunMax = Character.movement.runMax;
+
+        // Initialize this enemy's player canvas appropriately.
+        Character.WorldspaceCanvas.gameObject.SetActive(true);
+        Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsEnemyCanvas(Character);
     }
 
     // Update is called once per frame

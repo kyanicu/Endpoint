@@ -54,8 +54,8 @@ public class PlayerInitializer : MonoBehaviour
                 //Remove enemy component and add a player component
                 PlayerController.instance.Character = player.GetComponent<Character>();
                 PlayerController.instance.Character.WorldspaceCanvas.gameObject.SetActive(true);
-                WorldspaceCanvas.instance.UpdateWorldspaceCanvas(PlayerController.instance.Character.WorldspaceCanvas);
-                WorldspaceCanvas.instance.UpdatePlayerAmmo();
+                PlayerController.instance.Character.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(PlayerController.instance.Character);
+                PlayerController.instance.Character.GetComponent<WorldspaceCanvasManager>().UpdatePlayerAmmo();
 
                 #region Load Player Stats
                 PlayerController.instance.Character.Class = classes[classToInstantiate];

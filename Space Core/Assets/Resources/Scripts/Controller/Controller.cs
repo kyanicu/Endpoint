@@ -22,7 +22,7 @@ public abstract class Controller : MonoBehaviour
         GameObject parent = GameObject.FindWithTag("ControllerGroup");
         gameObject.transform.SetParent(parent.transform);
     }
-     
+
     protected virtual void Update()
     {
         CheckFalling();
@@ -125,6 +125,13 @@ public abstract class Controller : MonoBehaviour
         Character.Health -= damage;
         Character.AudioSource.clip = Character.HitClip;
         Character.AudioSource.Play();
+
+        // Update worldspace UI for enemies if this is an enemy type controller.
+        if (this is HeavyEnemyAIController || this is LightEnemyAIController || this is MediumEnemyAIController)
+        {
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsEnemyCanvas(Character);
+        }
+
         if (Character.Health <= 0)
         {
             Die();

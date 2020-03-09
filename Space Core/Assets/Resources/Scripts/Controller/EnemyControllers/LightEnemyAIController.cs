@@ -25,7 +25,7 @@ public class LightEnemyAIController : AIController
         {
             jumpActive = true;
             StartCoroutine(JumpBehindPlayer());
-        }        
+        }
     }
 
     /// <summary>

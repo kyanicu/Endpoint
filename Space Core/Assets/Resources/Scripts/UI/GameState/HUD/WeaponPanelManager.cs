@@ -18,14 +18,17 @@ public class WeaponPanelManager : MonoBehaviour
 
     #region Weapon
     [Header("Weapon")]
-    public Image WeaponImage;
-    public Image WeaponClassImage;
-    public Image WeaponClassFrame;
+    public Image WeaponImage, WeaponFrame;
     public TextMeshProUGUI WeaponNameText, WeaponClassText;
 
-    private Color ColorWeaponClassAutomatic = new Color32(0xe5, 0x2a, 0xfb, 0xff);
-    private Color ColorWeaponClassScatter = new Color32(0x2a, 0xf9, 0xfb, 0xff);
-    private Color ColorWeaponClassPrecision = new Color32(0xea, 0xfb, 0x2a, 0xff);
+    // Colors for various weapons
+    private Color ColorWeaponShockLance = new Color32(0x00, 0xa8, 0xff, 0xff);
+    private Color ColorWeaponGaussCannon = new Color32(0xe5, 0x00, 0xff, 0xff);
+    private Color ColorWeaponBreachMissile = new Color32(0xff, 0xc9, 0x00, 0xff);
+    private Color ColorWeaponVortexLauncher = new Color32(0xff, 0x00, 0x21, 0xff);
+    private Color ColorWeaponRotaryRepeater = new Color32(0xff, 0x98, 0x00, 0xff);
+    private Color ColorWeaponPulseProjector = new Color32(0x00, 0xff, 0xab, 0xff);
+
     private Color currentWeaponClassColor;
     private string currentWeaponClassText;
 
@@ -90,6 +93,138 @@ public class WeaponPanelManager : MonoBehaviour
     private Color[] WeaponDiagnosticColors = new Color[5];
     #endregion
 
+    // Returns a color corresponding to the given weapon.
+    public Color RetrieveCorrespondingWeaponColor(Weapon w)
+    {
+        if (w is GaussCannon)
+        {
+            return ColorWeaponGaussCannon;
+        }
+        else if (w is PulseProjector)
+        {
+            return ColorWeaponPulseProjector;
+        }
+        else if (w is VortexLauncher)
+        {
+            return ColorWeaponVortexLauncher;
+        }
+        else if (w is RotaryRepeater)
+        {
+            return ColorWeaponRotaryRepeater;
+        }
+        else if (w is ShockLance)
+        {
+            return ColorWeaponShockLance;
+        }
+        else if (w is BreachMissile)
+        {
+            return ColorWeaponBreachMissile;
+        } 
+        else
+        {
+            return Color.white;
+        }
+    }
+
+    // Returns a name string corresponding to the given weapon.
+    public string RetrieveCorrespondingWeaponName(Weapon w)
+    {
+        if (w is GaussCannon)
+        {
+            return "Gauss Cannon";
+        }
+        else if (w is PulseProjector)
+        {
+            return "Pulse Projector";
+        }
+        else if (w is VortexLauncher)
+        {
+            return "Vortex Launcher";
+        }
+        else if (w is RotaryRepeater)
+        {
+            return "Rotary Repeater";
+        }
+        else if (w is ShockLance)
+        {
+            return "Shock Lance";
+        }
+        else if (w is BreachMissile)
+        {
+            return "Breach Missile";
+        }
+        else
+        {
+            return "Undefined Weapon";
+        }
+    }
+
+    // Returns a formal name string corresponding to the given weapon.
+    public string RetrieveCorrespondingWeaponFormalName(Weapon w)
+    {
+        if (w is GaussCannon)
+        {
+            return "Mokumokuren Type R9";
+        }
+        else if (w is PulseProjector)
+        {
+            return "GW Sonic Projector";
+        }
+        else if (w is VortexLauncher)
+        {
+            return "SHIVA Type 88";
+        }
+        else if (w is RotaryRepeater)
+        {
+            return "M-88 Liberty";
+        }
+        else if (w is ShockLance)
+        {
+            return "NANCOM K-1 Multitool";
+        }
+        else if (w is BreachMissile)
+        {
+            return "Tsarevich TK-2";
+        }
+        else
+        {
+            return "???";
+        }
+    }
+
+    // Returns a sprite index corresponding to the given weapon.
+    public int RetrieveCorrespondingWeaponSprite(Weapon w)
+    {
+        if (w is GaussCannon)
+        {
+            return 1;
+        }
+        else if (w is PulseProjector)
+        {
+            return 2;
+        }
+        else if (w is VortexLauncher)
+        {
+            return 3;
+        }
+        else if (w is RotaryRepeater)
+        {
+            return 0;
+        }
+        else if (w is ShockLance)
+        {
+            return 4;
+        }
+        else if (w is BreachMissile)
+        {
+            return 5;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     /// <summary>
     /// Updates ammo and weapon aspects in the HUD.
     /// </summary>
@@ -97,33 +232,13 @@ public class WeaponPanelManager : MonoBehaviour
     public void UpdateWeapon(Character p)
     {
         Weapon weapon = p.Weapon;
+
         // Update weapon HUD elements to reflect current weapon...
         // Update current weapon class color and set various elements to that color.
-        if (weapon is RotaryRepeater)
-        {
-            currentWeaponClassColor = ColorWeaponClassAutomatic;
-            currentWeaponClassText = "auto";
-            WeaponClassImage.sprite = WeaponClassImages[0];
-        }
-        else if (weapon is GaussCannon)
-        {
-            currentWeaponClassColor = ColorWeaponClassPrecision;
-            currentWeaponClassText = "precise";
-            WeaponClassImage.sprite = WeaponClassImages[1];
-        }
-        else if (weapon is PulseProjector)
-        {
-            currentWeaponClassColor = ColorWeaponClassScatter;
-            currentWeaponClassText = "scatter";
-            WeaponClassImage.sprite = WeaponClassImages[2];
-        }
+        currentWeaponClassColor = RetrieveCorrespondingWeaponColor(weapon);
 
-        // class frame
-        WeaponClassFrame.color = currentWeaponClassColor;
         // class text
-        WeaponClassText.color = currentWeaponClassColor;
-        // class image
-        WeaponClassImage.color = currentWeaponClassColor;
+        //WeaponClassText.color = currentWeaponClassColor;
         // ammo bar frame
         AmmoBarFrame.color = currentWeaponClassColor;
         // ammo bar image
@@ -136,13 +251,16 @@ public class WeaponPanelManager : MonoBehaviour
         WeaponNameText.color = currentWeaponClassColor;
         // weapon image
         WeaponImage.color = currentWeaponClassColor;
+        // weapon frame
+        //WeaponFrame.color = currentWeaponClassColor;
 
         // Update weapon silhouette in diagnostic and HUD.
-        // Get the key associated with the value in the master weapons list to avoid conflicts.
-        int weaponImageIndex = Weapon.WeaponsList.Values.ToList().IndexOf(weapon.Name);
+        int weaponImageIndex = RetrieveCorrespondingWeaponSprite(weapon);
         // Set the image sprites based on the image stored at that index on the weapon images array.
         WeaponImage.sprite = WeaponImages[weaponImageIndex];
         DiagnosticWeaponImage.sprite = WeaponImages[weaponImageIndex];
+
+        currentWeaponClassText = RetrieveCorrespondingWeaponName(weapon);
 
         // Update diagnostic image and title with class color.
         DiagnosticWeaponName.color = currentWeaponClassColor;
@@ -150,12 +268,13 @@ public class WeaponPanelManager : MonoBehaviour
 
         // Update active color class.
         activeWeaponColor = currentWeaponClassColor;
+        HUDController.instance.activeWeaponColor = currentWeaponClassColor;
 
         // Update the class name.
-        WeaponClassText.text = currentWeaponClassText;
+        WeaponClassText.text = RetrieveCorrespondingWeaponFormalName(weapon);
         // Update Diagnostic and HUD weapon name text.
         DiagnosticWeaponName.text = p.Weapon.FullName;
-        WeaponNameText.text = p.Weapon.Name;
+        WeaponNameText.text = RetrieveCorrespondingWeaponName(weapon);
         // Update Diagnostic weapon description text.
         DiagnosticWeaponDescription.text = p.Weapon.Description;
 
