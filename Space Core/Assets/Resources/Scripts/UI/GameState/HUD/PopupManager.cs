@@ -65,6 +65,8 @@ public class PopupManager : MonoBehaviour
             ObjectivesRectTrans.position = new Vector3(pos.x - animationMoveSpeed, pos.y, pos.z);
             yield return null;
         }
+
+        HUDController.instance.ObjectivesPopupIsActive = false;
     }
 
     /// <summary>
