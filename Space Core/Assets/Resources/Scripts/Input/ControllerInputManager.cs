@@ -217,7 +217,8 @@ public class ControllerInputManager : InputManager
     /// </summary>
     protected override void RunMainMenuFrameInput()
     {
-        if (!CheckControllerConnected() || state == null || prevState == null)
+        if (!CheckControllerConnected() || state == null || 
+            prevState == null || MainMenuManager.instance == null)
         {
             return;
         }

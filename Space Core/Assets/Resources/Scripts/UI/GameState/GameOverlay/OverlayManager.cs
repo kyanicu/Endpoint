@@ -161,7 +161,18 @@ public class OverlayManager : MonoBehaviour
 
             //Toggle overlay visibility
             overlayVisible = !overlayVisible;
-            overlay.gameObject.SetActive(overlayVisible);
+
+            // If it is not visible, open everything, including the newly reset active panel.
+            if (overlayVisible)
+            {
+                OverlayOpenClose = StartCoroutine(OverlayAnims.OpenOverlayAnimation());
+
+                // Enable and open the new active panel.
+                OverlayPanels[(int)ActivePanel].SetActive(true);
+                OverlayPanelsContainerOpenClose = OverlayPanelsContainer.GetComponent<CanvasGroup>().DOFade(1f, 0.2f);
+                OverlayAnims.NavigateOpenAnimation((int)ActivePanel);
+
+            }
 
             string entryName = HUDController.instance.RecentDataBaseEntry[0];
             DBManager.OpenSpecificEntry(entryName);
