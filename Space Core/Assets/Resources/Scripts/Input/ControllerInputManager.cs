@@ -152,7 +152,14 @@ public class ControllerInputManager : InputManager
             if (!PauseMenuManager.instance.PauseMenuPanelIsActive)
             {
                 // Open the pause menu.
+                currentState = InputState.PAUSE;
                 PauseMenuManager.instance.OpenPauseMenu();
+            }
+            else
+            {
+                // Open the pause menu.
+                currentState = InputState.GAMEPLAY;
+                PauseMenuManager.instance.ClosePauseMenu();
             }
         }
 

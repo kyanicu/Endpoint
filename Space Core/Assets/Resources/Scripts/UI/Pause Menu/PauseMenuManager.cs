@@ -65,9 +65,6 @@ public class PauseMenuManager : MonoBehaviour {
     // This function is called when the pause menu is opened in the game.
     public void OpenPauseMenu()
     {
-        // Set current state to Pause Menu.
-        InputManager.instance.currentState = InputManager.InputState.PAUSE;
-
         // Show this panel.
         PauseMenuPanel.gameObject.SetActive(true);
         this.PauseMenuPanelIsActive = true;

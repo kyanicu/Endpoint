@@ -55,8 +55,7 @@ public class GameManager : MonoBehaviour
         //If DB hasn't been initialized yet, do that
         if (!Initialized)
         {
-            if (SceneManager.GetActiveScene().name == "MainMenu")
-                InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+            InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
             Initialized = true;
             currentScene = (Scenes)SceneManager.GetActiveScene().buildIndex;
             Sector = "CENTRAL PROCESSING";
