@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class InputManager : MonoBehaviour
 {
@@ -8,6 +9,22 @@ public abstract class InputManager : MonoBehaviour
     public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING, GAME_OVER }
     /// <summary> The current state of how input should be handled </summary>
     public InputState currentState { get; set; }
+
+    private static InputManager _instance;
+    public static InputManager instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+
+        if (SceneManager.GetActiveScene().name == "LevelOneProper")
+        {
+            currentState = InputState.GAMEPLAY;
+        }
+    }
 
     protected abstract void RunGameplayFrameInput();
     protected abstract void RunMainMenuFrameInput();
@@ -79,25 +96,5 @@ public abstract class InputManager : MonoBehaviour
     void LateUpdate()
     {
 
-    }
-
-    private static InputManager _instance = null;
-
-    public static InputManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<InputManager>();
-                // fallback, might not be necessary.
-                if (_instance == null)
-                    _instance = new GameObject(typeof(InputManager).Name).AddComponent<InputManager>();
-
-                // This breaks scene reloading
-                // DontDestroyOnLoad(m_Instance.gameObject);
-            }
-            return _instance;
-        }
     }
 }
