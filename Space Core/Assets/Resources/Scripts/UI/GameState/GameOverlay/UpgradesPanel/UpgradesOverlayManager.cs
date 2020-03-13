@@ -35,7 +35,8 @@ public class UpgradesOverlayManager : MonoBehaviour
     public Transform ParadigmTreeGroup;
     private Sprite[] normalBranchSprites;
     private Sprite[] dottedBranchSprites;
-    private Sprite[] upgradeIcons;
+    private Sprite[] upgradeIconsSelected;
+    private Sprite[] upgradeIconsUnselected;
     private string dominantDispositionTxt = "white";
     #endregion
 
@@ -92,34 +93,39 @@ public class UpgradesOverlayManager : MonoBehaviour
         //for (int x = 0; x < 10; x++)
             //UnlockedParadigms.Add(new Paradigm());
         Upgrades = new List<Upgrade>();
-        Upgrade u = new Upgrade("IFF Spoofer", "IFF_STEALTH.ZIP", "Nearby enemies can’t see you for a few seconds after hack", new int[] { 2, 0, 0 });
+        Upgrade u = new Upgrade("Stealth Identity", "STEALTH.ID", "After using the hack target ability, enemies can not detect you for a few seconds.", new int[] { 2, 0, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Fortification Chipset", "FTFY.EXE", "Heal enemy bots with your hack bullet", new int[] { 2, 0, 0 });
+        u = new Upgrade("Fortification Chipset", "FTFY.CHIP", "Using the hack target ability on enemies heals them.", new int[] { 2, 0, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Scorched Earth", "SCORCH.ZIP", "Damage enemy you hack out of", new int[] { 1, 1, 0 });
+        u = new Upgrade("Scorched Earth", "SCORCH.ZIP", "Completing a hack into a new chassis causes the old chassis to receive damage.", new int[] { 1, 1, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Tactical Trojan", "IYBKYD.EXE", "Cancelling a hack deals damage to target", new int[] { 1, 1, 0 });
+        u = new Upgrade("Tactical Trojan", "TROJ.TAC", "Cancelling the hack target ability causes the enemy to receive damage.", new int[] { 1, 1, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Force Compensator", "FORC.PI", "More damage from behind less damage from front", new int[] { 0, 2, 0 });
+        u = new Upgrade("Force Compensator", "FORCE.COMP", "You gain a passive shield which reduces damage from the front, but you take more damage from the back.", new int[] { 0, 2, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Defense Module", "DEF.CAT", "Gain invincibility after reloading for a short while", new int[] { 0, 2, 0 });
+        u = new Upgrade("Defense Module", "DEF.MOD", "While reloading, you are rendered invulnerable.", new int[] { 0, 2, 0 });
         Upgrades.Add(u);
-        u = new Upgrade("Salvage Scanner", "SALVAGE.PI", "Ammo health regen small, pick up less ammo", new int[] { 0, 1, 1 });
+        u = new Upgrade("Salvage Scanner", "SALV~GE.SCAN", "When picking up ammo, you gain a small amount of HP, but you gain less ammo than usual.", new int[] { 0, 1, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("Active Protection Module", "APM.CAT", "Shield that defends from x number of shots", new int[] { 0, 1, 1 });
+        u = new Upgrade("Active Protection Module", "PROTECT.MOD", "You gain a passive shield which completely absorbs a single shot from any source before having to recharge.", new int[] { 0, 1, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("Tactical ", "TACTICAL ", "Larger mag but slow reload", new int[] { 0, 0, 2 });
+        u = new Upgrade("Tactical Protocol", "TAC_MAG.PRO", "You get larger magazines, but your reloads are slower.", new int[] { 0, 0, 2 });
         Upgrades.Add(u);
-        u = new Upgrade("Reverse Engineering Protocol", "REVERSI.DLL", "Getting shot gives you bullets proportional to damage", new int[] { 0, 0, 2 });
+        u = new Upgrade("Reverse Engineering", "REVERSI.ENG", "When you get shot and damaged by an enemy, you receive ammo proportional to the damage sustained.", new int[] { 0, 0, 2 });
         Upgrades.Add(u);
-        u = new Upgrade("Sapper Subroutine", "SAPPER.MAT", "Dealing damage to enemies heals you slightly", new int[] { 1, 0, 1 });
+        u = new Upgrade("Vampire Subroutine", "VAMPIRE.SUB", "When you deal damage to an enemy, you regain HP proportional to the damage sustained.", new int[] { 1, 0, 1 });
         Upgrades.Add(u);
-        u = new Upgrade("Rate of Fire Optimizer", "HI_ROF.DLL", "Rate of fire increases the more shot till reload", new int[] { 1, 0, 1 });
+        u = new Upgrade("Reload Optimizer", "RLD.OPTIMIZE", "Reloading on an empty magazine is much faster than normal, while reloading on a partial magazine is slower.", new int[] { 1, 0, 1 });
         Upgrades.Add(u);
         ///--------------------------------------------------------------------------------------------------------------
         normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
         dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/dashed");
-        upgradeIcons = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
+
+        // Unselected sprites for upgrades
+        upgradeIconsUnselected = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/icons-unselected");
+        // Selected sprites for upgrades
+        upgradeIconsSelected = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/icons-selected");
+
         reticleStartPos = Reticle.position;
         paradigmTreeGroupStartPos = ParadigmTreeGroup.position;
     }
@@ -211,6 +217,9 @@ public class UpgradesOverlayManager : MonoBehaviour
         SelectedIconFullName.text = u.FullName;
         SelectedIconDescription.text = u.Description;
 
+        // Set icon to use currently selected icon sprite
+        SelectedUpgradeIcon.sprite = upgradeIconsUnselected[nodeID];
+
         for (int index = 0; index < u.DispositionValues.Length; index++)
         {
             SelectedDispositionValues[index].text = $"+{u.DispositionValues[index]}{DispositionAbreviation[index]}";
@@ -296,6 +305,14 @@ public class UpgradesOverlayManager : MonoBehaviour
             branch.sprite = null;
             branch.color = ColorWithVariedTransparency(branch.color, 1);
             branch.gameObject.SetActive(false);
+
+            
+        }
+
+        for (int i = 0; i < 12; i++)
+        {
+            // Set corresponding icon sprites to unselected.
+            Nodes[i].sprite = upgradeIconsUnselected[i];
         }
 
         //Hide Paradigm upgrade list 
@@ -326,21 +343,23 @@ public class UpgradesOverlayManager : MonoBehaviour
                 //Update list of paradigm's upgrades
                 Upgrade u = Upgrades[branchID];
 
-                //Remove when icons are in <--------------------------------------
-                if (upgradeIcons.Length > 0)
+                if (upgradeIconsUnselected.Length > 0)
                 {
-                    ParadigmUpgradeIcons[x].sprite = upgradeIcons[x];
+                    ParadigmUpgradeIcons[x].sprite = upgradeIconsUnselected[x];
                 }
                 ParadigmUpgradeNames[x].text = u.ShortName;
 
                 //Check if branch should be a solid line
                 if (playerLevel >= x)
                 {
-                    //Remove when icons are in <--------------------------------------
                     if (normalBranchSprites.Length > 0)
                     {
                         Branches[branchID].sprite = normalBranchSprites[branchID];
+
+                        // Set corresponding icon sprites to selected.
+                        Nodes[branchID].sprite = upgradeIconsSelected[branchID];
                     }
+
                     //Iterate through each disposition and calculate new dis values
                     for (int i = 0; i <= (int)Disposition.VirtualRanger; i++)
                     {

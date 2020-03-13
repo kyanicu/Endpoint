@@ -152,9 +152,14 @@ public class OverlayManager : MonoBehaviour
         //Otherwise go straight to database overlay
         else
         {
-            //update active panel to database overlay
+            MenuOptionButtons[activeButtonID].SwapSelect();
+
+            // Update active panel to database overlay
             ActivePanel = Panels.Database;
             activeButtonID = (int)ActivePanel;
+
+            // Set the right
+            MenuOptionButtons[activeButtonID].SwapSelect();
 
             //Hide currently active panel
             OverlayPanels[(int)ActivePanel].SetActive(true);

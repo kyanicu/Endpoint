@@ -132,6 +132,9 @@ public class HUDController : MonoBehaviour
     public void UpdatePlayer(Character c)
     {
         CharacterPM.UpdateHealth(c.MaxHealth, c.Health);
+
+        // After updating the HUD, also make sure to update the player's worldspace canvas.
+        c.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsPlayerCanvas(c);
     }
 
     /// <summary>

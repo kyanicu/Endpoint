@@ -47,14 +47,6 @@ public class DataBaseOverlayManager : MonoBehaviour
 
         Y_MODIFIER = BlankTextInsert.GetComponent<TextMeshProUGUI>().rectTransform.rect.height + 5;
         X_MODIFIER = 40f;
-
-        //Populate headers list with all category types
-        foreach (TextMeshProUGUI header in CategoryHeaders)
-        {
-            ActiveLeftSideElements.Add(header);
-            headersList.Add(header.text.Substring(2), new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-            headerPos.Add(header.rectTransform.position);
-        }
     }
 
     /// <summary>
@@ -62,6 +54,16 @@ public class DataBaseOverlayManager : MonoBehaviour
     /// </summary>
     public void OnEnable()
     {
+        headersList.Clear();
+        ActiveLeftSideElements.Clear();
+
+        //Populate headers list with all category types
+        foreach (TextMeshProUGUI header in CategoryHeaders)
+        {
+            ActiveLeftSideElements.Add(header);
+            headersList.Add(header.text.Substring(2), new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
+        }
+
         selectedTextID = 0;
         selectedArticleID = 0;
         ActiveLeftSideElements[selectedTextID].color = selectedColor;
@@ -448,6 +450,7 @@ public class DataBaseOverlayManager : MonoBehaviour
                     //Check that element hasn't already been destroyed
                     if (ActiveLeftSideElements[i] != null)
                     {
+                        moveContent(i + 1, 1, true);
                         Destroy(ActiveLeftSideElements[i].gameObject);
                     }
                 }
@@ -455,7 +458,7 @@ public class DataBaseOverlayManager : MonoBehaviour
                 {
                     Tuple<bool, List<TextMeshProUGUI>> content = headersList[ActiveLeftSideElements[i].text.Substring(2)];
 
-                    //Otherwise collapse the header if it's expanded
+                    // Otherwise, collapse the header if it's expanded
                     if (content.Item1)
                     {
                         content = new Tuple<bool, List<TextMeshProUGUI>>(false, content.Item2);
@@ -463,12 +466,6 @@ public class DataBaseOverlayManager : MonoBehaviour
                         ActiveLeftSideElements[i].text = "+ " + ActiveLeftSideElements[i].text.Substring(2);
                     }
                 }
-            }
-
-            //Reposition all the header elements
-            for (int i = 0; i < CategoryHeaders.Length; i++)
-            {
-                CategoryHeaders[i].rectTransform.position = headerPos[i];
             }
 
             //Reset the element list

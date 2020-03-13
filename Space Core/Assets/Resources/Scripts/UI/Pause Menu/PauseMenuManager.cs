@@ -77,9 +77,6 @@ public class PauseMenuManager : MonoBehaviour {
 
         // Trigger selection of first menu item.
         TraverseMenu(0);
-
-        // Set gameplay timescale to 0 to pause the gameplay.
-        Time.timeScale = 0;
     }
 
     // This function is called when the pause menu is closed.
@@ -91,9 +88,6 @@ public class PauseMenuManager : MonoBehaviour {
 
         // Set current state to Gameplay.
         InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
-
-        // Set gameplay timescale to 1 to resume the gameplay.
-        Time.timeScale = 1;
     }
 
     /// <summary>
@@ -228,7 +222,9 @@ public class PauseMenuManager : MonoBehaviour {
     }
     public void QuitGameToMenu()
     {
-        Debug.Log("clicked quit 1");
+        // Load main menu scene
+        InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+        SceneManager.LoadScene(0);
     }
     public void QuitGameToDesktop()
     {

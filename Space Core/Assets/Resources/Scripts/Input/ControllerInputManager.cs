@@ -105,7 +105,7 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.Y == ButtonState.Released && state.Value.Buttons.Y == ButtonState.Pressed)
         {
-            //TBD
+            // None
         }
 
         #endregion
