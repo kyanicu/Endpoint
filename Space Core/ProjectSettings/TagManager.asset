@@ -18,6 +18,7 @@ TagManager:
   - Rocket
   - EnergyBurst
   - HomingRadar
+  - Boss
   layers:
   - Default
   - TransparentFX

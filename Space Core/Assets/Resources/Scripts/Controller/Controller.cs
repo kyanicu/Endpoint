@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     //Character this controller is in control of
-    public Character Character { get; set; }
+    public Character Character;
 
     //Abstract methods all sub-controllers need to implement
     public abstract void DeselectHackTarget();

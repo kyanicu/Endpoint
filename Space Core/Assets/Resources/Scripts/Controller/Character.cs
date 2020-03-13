@@ -53,7 +53,6 @@ public class Character : MonoBehaviour
     void Start()
     {
         MoveDirection = 0;
-        RotationPoint = transform.Find("RotationPoint").gameObject;
         childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
         AudioSource = GetComponent<AudioSource>();
     }
@@ -63,7 +62,6 @@ public class Character : MonoBehaviour
     /// </summary>
     void Awake()
     {
-
         if (!(movement = GetComponent<Movement>()))
             movement = gameObject.AddComponent<BasicMovement>();
         else
