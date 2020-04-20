@@ -121,7 +121,6 @@ public class ControllerInputManager : InputManager
         {
             switch (PlayerController.instance.Character.MoveDirection)
             {
-                case 0:
                 case 1:
                     PlayerController.instance.AimWeapon(0, false);
                     break;

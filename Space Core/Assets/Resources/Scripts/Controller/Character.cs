@@ -279,6 +279,10 @@ public class Character : MonoBehaviour
             MoveDirection = -1;
             angle *= -1;
         }
+        else
+        {
+            MoveDirection = 1;
+        }
 
         RotationPoint.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
