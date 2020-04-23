@@ -70,8 +70,8 @@ public class PlayerController : Controller
         Character.Weapon.BulletSource = DamageSource.Player;
         if (Character.Class == null)
         {
-            Character.MaxHealth = 200;
-            Character.Health = 200;
+            Character.MaxHealth = 150;
+            Character.Health = 150;
             Character.Class = "medium";
             Character.IsPlayer = true;
 

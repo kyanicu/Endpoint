@@ -449,6 +449,20 @@ public class ControllerInputManager : InputManager
 
     }
 
+    protected override void RunTerminalWindowFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            TerminalWindow.instance.ButtonClick();
+        }
+    }
+
     /// <summary>
     /// Runs the fixed input intended while in the gameplay InputState
     /// Called only on an physics tick through FixedUpdate() function

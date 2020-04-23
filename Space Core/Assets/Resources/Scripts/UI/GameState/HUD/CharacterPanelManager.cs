@@ -46,11 +46,8 @@ public class CharacterPanelManager : MonoBehaviour
     [Header("Character Ability")]
     public Image CharacterActiveAbilityFill;
     public Image CharacterActiveAbilityEmpty;
-    public Image CharacterPassiveAbilityFill;
-    public Image CharacterPassiveAbilityEmpty;
 
     public TextMeshProUGUI CharacterActiveAbilityText;
-    public TextMeshProUGUI CharacterPassiveAbilityText;
     #endregion
 
     #region CharacterDiagnostic
@@ -59,7 +56,6 @@ public class CharacterPanelManager : MonoBehaviour
 
     public Image CharDiagnosticClassIcon;
     public Image CharDiagnosticActiveAbilityIcon;
-    public Image CharDiagnosticPassiveAbilityIcon;
     public Image CharDiagnosticAnimFrame;
     public Image CharDiagnosticBG;
 
@@ -69,9 +65,6 @@ public class CharacterPanelManager : MonoBehaviour
     public TextMeshProUGUI CharDiagnosticActiveAbilityAbbr;
     public TextMeshProUGUI CharDiagnosticActiveAbilityTitle;
     public TextMeshProUGUI CharDiagnosticActiveAbilityText;
-    public TextMeshProUGUI CharDiagnosticPassiveAbilityAbbr;
-    public TextMeshProUGUI CharDiagnosticPassiveAbilityTitle;
-    public TextMeshProUGUI CharDiagnosticPassiveAbilityText;
     #endregion
 
     #region CharacterUIDetails
@@ -96,7 +89,6 @@ public class CharacterPanelManager : MonoBehaviour
     public void Start()
     {
         CharacterActiveAbilityFill.fillAmount = 1f;
-        CharacterPassiveAbilityFill.fillAmount = 1f;
     }
 
     /// <summary>
@@ -167,15 +159,6 @@ public class CharacterPanelManager : MonoBehaviour
         CharDiagnosticActiveAbilityAbbr.text = playerActiveAbility.AbilityShortName;
         CharDiagnosticActiveAbilityTitle.text = playerActiveAbility.AbilityName;
         CharDiagnosticActiveAbilityText.text = playerActiveAbility.AbilityDescription;
-
-        //CharacterPassiveAbilityFill.sprite = playerPassiveAbility.AbilityImage;
-        //CharacterPassiveAbilityEmpty.sprite = playerPassiveAbility.AbilityImage;
-        //CharacterPassiveAbilityText.text = playerPassiveAbility.AbilityShortName;
-
-        //CharDiagnosticPassiveAbilityIcon.sprite = playerPassiveAbility.AbilityImage;
-        //CharDiagnosticPassiveAbilityAbbr.text = playerPassiveAbility.AbilityShortName;
-        //CharDiagnosticPassiveAbilityTitle.text = playerPassiveAbility.AbilityName;
-        //CharDiagnosticPassiveAbilityText.text = playerPassiveAbility.AbilityDescription;
     }
 
     // Recolors all elements within the Character Panel to match the current character's class.
@@ -184,23 +167,17 @@ public class CharacterPanelManager : MonoBehaviour
         // Recolor abilities.
         CharacterActiveAbilityFill.color = HUDController.instance.activeClassColor;
         CharacterActiveAbilityText.color = HUDController.instance.activeClassColor;
-        CharacterPassiveAbilityFill.color = HUDController.instance.activeClassColor;
-        CharacterPassiveAbilityText.color = HUDController.instance.activeClassColor;
 
         Color activeClassColor = HUDController.instance.activeClassColor;
         CharacterActiveAbilityEmpty.color = new Vector4(activeClassColor[0], activeClassColor[1], activeClassColor[2], 0.2f);
-        CharacterPassiveAbilityEmpty.color = new Vector4(activeClassColor[0], activeClassColor[1], activeClassColor[2], 0.2f);
 
         // Recolor character diagnostic.
         CharDiagnosticAnimFrame.color = HUDController.instance.activeClassColor;
         CharDiagnosticClassIcon.color = HUDController.instance.activeClassColor;
         CharDiagnosticActiveAbilityIcon.color = HUDController.instance.activeClassColor;
-        CharDiagnosticPassiveAbilityIcon.color = HUDController.instance.activeClassColor;
         CharDiagnosticClassTitle.color = HUDController.instance.activeClassColor;
         CharDiagnosticActiveAbilityAbbr.color = HUDController.instance.activeClassColor;
-        CharDiagnosticPassiveAbilityAbbr.color = HUDController.instance.activeClassColor;
         CharDiagnosticActiveAbilityTitle.color = HUDController.instance.activeClassColor;
-        CharDiagnosticPassiveAbilityTitle.color = HUDController.instance.activeClassColor;
     }
 
     /// <summary>
@@ -274,8 +251,6 @@ public class CharacterPanelManager : MonoBehaviour
     private Tween DPFadeClassIcon, DPFadeClassTitle, DPFadeClassText;
     // Stores tweens for active ability elements.
     private Tween DPFadeAAIcon, DPFadeAAAbbr, DPFadeAATitle, DPFadeAAText;
-    // Stores tweens for passive ability elements.
-    private Tween DPFadePAIcon, DPFadePAAbbr, DPFadePATitle, DPFadePAText;
     #endregion
 
     // Animates the character diagnostic panel and its elements into view.
@@ -321,14 +296,6 @@ public class CharacterPanelManager : MonoBehaviour
         DPFadeAAAbbr = CharDiagnosticActiveAbilityAbbr.DOColor(targetColor, 0.2f * animTimeScale);
         DPFadeAATitle = CharDiagnosticActiveAbilityTitle.DOColor(targetColor, 0.2f * animTimeScale);
         DPFadeAAText = CharDiagnosticActiveAbilityText.DOColor(new Color(1f, 1f, 1f, 1f), 0.2f * animTimeScale);
-
-        yield return new WaitForSeconds(0.2f * animTimeScale);
-
-        // Start passive ability fade in.
-        DPFadePAIcon = CharDiagnosticPassiveAbilityIcon.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePAAbbr = CharDiagnosticPassiveAbilityAbbr.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePATitle = CharDiagnosticPassiveAbilityTitle.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePAText = CharDiagnosticPassiveAbilityText.DOColor(new Color(1f, 1f, 1f, 1f), 0.2f * animTimeScale);
 
         yield return new WaitForSeconds(0.1f * animTimeScale);
 
@@ -386,12 +353,6 @@ public class CharacterPanelManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.2f * animTimeScale);
 
-        // Start passive ability fade out.
-        DPFadePAIcon = CharDiagnosticPassiveAbilityIcon.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePAAbbr = CharDiagnosticPassiveAbilityAbbr.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePATitle = CharDiagnosticPassiveAbilityTitle.DOColor(targetColor, 0.2f * animTimeScale);
-        DPFadePAText = CharDiagnosticPassiveAbilityText.DOColor(new Color(1f, 1f, 1f, 0f), 0.2f * animTimeScale);
-
         // Fade the frame out.
         DPFadeFrame = CharDiagnosticAnimFrame.DOColor(targetColor, 0.2f * animTimeScale);
 
@@ -426,10 +387,5 @@ public class CharacterPanelManager : MonoBehaviour
         CharDiagnosticActiveAbilityAbbr.color = targetColor;
         CharDiagnosticActiveAbilityTitle.color = targetColor;
         CharDiagnosticActiveAbilityText.color = new Color(1f, 1f, 1f, 0f);
-
-        CharDiagnosticPassiveAbilityIcon.color = targetColor;
-        CharDiagnosticPassiveAbilityAbbr.color = targetColor;
-        CharDiagnosticPassiveAbilityTitle.color = targetColor;
-        CharDiagnosticPassiveAbilityText.color = new Color(1f, 1f, 1f, 0f);
     }
 }

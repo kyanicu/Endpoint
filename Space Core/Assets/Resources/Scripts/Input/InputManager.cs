@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public abstract class InputManager : MonoBehaviour
 {
     /// <summary> enum type used to keep track of how the input from user should be handled </summary>
-    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING, GAME_OVER }
+    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING, GAME_OVER, TERMINAL_WINDOW }
     /// <summary> The current state of how input should be handled </summary>
     public InputState currentState { get; set; }
 
@@ -27,6 +27,7 @@ public abstract class InputManager : MonoBehaviour
     protected abstract void RunPlayerMenuFrameInput();
     protected abstract void RunPauseFrameInput();
     protected abstract void RunGameOverFrameInput();
+    protected abstract void RunTerminalWindowFrameInput();
     protected abstract void RunMainMenuFixedInput();
     protected abstract void RunPlayerOverlayFixedInput();
     protected abstract void RunPlayerMenuFixedInput();
@@ -81,6 +82,9 @@ public abstract class InputManager : MonoBehaviour
                 break;
             case (InputState.GAME_OVER):
                 RunGameOverFrameInput();
+                break;
+            case (InputState.TERMINAL_WINDOW):
+                RunTerminalWindowFrameInput();
                 break;
             default:
                 break;

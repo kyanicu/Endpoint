@@ -238,6 +238,14 @@ public class KeyboardInputManager : InputManager
         }
     }
 
+    protected override void RunTerminalWindowFrameInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+        {
+            TerminalWindow.instance.ButtonClick();
+        }
+    }
+
     /// <summary>
     /// Runs the fixed input intended while in the gameplay InputState
     /// Called only on an physics tick through FixedUpdate() function
