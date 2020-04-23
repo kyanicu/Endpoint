@@ -309,22 +309,17 @@ public class OverlayManager : MonoBehaviour
     /// <param name="buttonName"></param>
     public void ReceiveFaceButtonInput(string buttonName)
     {
-        switch (ActivePanel)
+        if (buttonName.Equals("a"))
         {
-            case Panels.Database:
-                if (buttonName.Equals("a"))
-                {
+            switch (ActivePanel)
+            {
+                case Panels.Database:
                     DBManager.SelectLeftPanelItem();
-                }
-                break;
-            case Panels.SkillTree:
-                if (buttonName.Equals("a"))
-                {
+                    break;
+                case Panels.SkillTree:
                     UpgradesManager.EquipNewParadigm();
-                }
-                break;
-            case Panels.Map:
-                break;
+                    break;
+            }
         }
     }
 

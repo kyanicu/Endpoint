@@ -330,7 +330,8 @@ public class ControllerInputManager : InputManager
         //Check for B button press
         if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
         {
-            OverlayManager.instance.ReceiveFaceButtonInput("b");
+            OverlayManager.instance.ToggleOverlayVisibility();
+            currentState = InputState.GAMEPLAY;
         }
         //Check for X button press
         if (state.Value.Buttons.X == ButtonState.Pressed && prevState.Value.Buttons.X == ButtonState.Released)
@@ -402,6 +403,11 @@ public class ControllerInputManager : InputManager
         if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
         {
             PauseMenuManager.instance.SelectButton();
+        }
+        //If player selects the currently highlighted button, invoke it
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Pressed)
+        {
+            PauseMenuManager.instance.ClosePauseMenu();
         }
         else if (prevState.Value.Buttons.Start == ButtonState.Released && state.Value.Buttons.Start == ButtonState.Pressed)
         {

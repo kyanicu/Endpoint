@@ -113,6 +113,7 @@ public class PlayerController : Controller
     {
         if(Enemy != null)
         {
+            InputManager.instance.currentState = InputManager.InputState.LOADING;
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
             Enemy.Character.movement.runMax = Enemy.BaseRunMax;
