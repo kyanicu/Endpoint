@@ -21,7 +21,10 @@ public class HeavyMovement : Movement
     [SerializeField] private float jumpAcceleration;
     [SerializeField] private float hoverTime;
     [SerializeField] private float descendMaxSpeed;
+    public bool isAscending { get; private set; }
     public bool isHovering { get; private set; }
+    public bool isDescending { get; private set; }
+    
 
     private bool waitingToHover;
     private bool waitingToLand;
@@ -92,6 +95,9 @@ public class HeavyMovement : Movement
     /// </summary>
     private IEnumerator Ascend()
     {
+
+        isAscending = true;
+
         //gravityScale = 0;
 
         // Used to track height
@@ -127,6 +133,9 @@ public class HeavyMovement : Movement
         //gravityScale = defaultGravityScale;
         if (!isJumpCanceling)
             StartCoroutine(Hover());
+
+        isAscending = false;
+
     }
 
 
@@ -163,6 +172,8 @@ public class HeavyMovement : Movement
     /// </summary>
     private IEnumerator Descend()
     {
+        isDescending = true;
+
         gravityScale = 0;
         // After hover, decend slowly
         while (!charCont.isGrounded && !isJumpCanceling)
@@ -183,6 +194,9 @@ public class HeavyMovement : Movement
             yield return new WaitForFixedUpdate();
         }
         gravityScale = defaultGravityScale;
+
+        isDescending = false;
+
     }
 
     /// <summary>
@@ -240,12 +254,12 @@ public class HeavyMovement : Movement
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        /*
-        if (waitingToHover || waitingToDescend)
+
+        if (isHovering || isAscending || isDescending)
         {
             isJumping = true;
         }
-        */
+
         if (waitingToHover)
         {
             if (charCont.isGrounded)
