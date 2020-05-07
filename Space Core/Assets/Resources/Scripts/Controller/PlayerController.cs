@@ -82,6 +82,7 @@ public class PlayerController : Controller
         canSwap = true;
         HUDController.instance.UpdateHUD(Character);
         base.Start();
+        Character.SetMeshEmissionColor(Color.red);
     }
 
     /// <summary>
@@ -119,6 +120,8 @@ public class PlayerController : Controller
             Enemy.Character.movement.runMax = Enemy.BaseRunMax;
             // Disable player canvas on the old character.
             Character.WorldspaceCanvas.gameObject.SetActive(false);
+
+            Character.SetMeshEmissionColor(Color.blue);
 
             Character.IsPlayer = false;
             Character.Weapon.BulletSource = DamageSource.Enemy;

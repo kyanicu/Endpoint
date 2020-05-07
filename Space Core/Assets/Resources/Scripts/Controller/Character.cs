@@ -53,7 +53,6 @@ public class Character : MonoBehaviour
     void Start()
     {
         MoveDirection = 0;
-        childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
         AudioSource = GetComponent<AudioSource>();
     }
 
@@ -83,6 +82,8 @@ public class Character : MonoBehaviour
             MinimapIcon = transform.Find("MinimapIcon").gameObject;
             MinimapIcon.layer = LayerMask.NameToLayer("Minimap/Mapscreen");
         }
+        childComponents = GetComponentsInChildren<SkinnedMeshRenderer>();
+        SetMeshEmissionColor(Color.blue);
     }
 
     /// <summary>
@@ -206,6 +207,21 @@ public class Character : MonoBehaviour
         }
         //reset blinking flag
         IsBlinking = false;
+    }
+
+    /// <summary>
+    /// Sets red for player mesh emission and blue for enemies
+    /// </summary>
+    /// <param name="newColor"></param>
+    public void SetMeshEmissionColor(Color newColor)
+    {
+        //Loop through the skinned mesh renderer of each body part
+        foreach (SkinnedMeshRenderer smr in childComponents)
+        {
+            Material m = smr.material;
+            m.SetColor("_EmissionColor", newColor);
+            smr.material = m;
+        }
     }
 
     /// <summary>

@@ -58,6 +58,7 @@ public class MoveCamera : MonoBehaviour
                 {
                     ps.Stop();
                 }
+                PlayerController.instance.Character.SetMeshEmissionColor(Color.red);
             }
         }
         //Otherwise, do normal camera movement
@@ -72,6 +73,26 @@ public class MoveCamera : MonoBehaviour
                 camPos.z = zMod;
 
                 transform.position = camPos;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Prevent hack particles from being visible when not swapping 
+    /// </summary>
+    private void LateUpdate()
+    {
+        //Verify that the player is in the game play state
+        if (InputManager.instance.currentState == InputManager.InputState.GAMEPLAY)
+        { 
+            //Loop through each particle system in "hack spirit"
+            foreach (ParticleSystem ps in hackSpirit)
+            {
+                //If the particle system is playing, stop it
+                if (ps.isPlaying)
+                {
+                    ps.Stop();
+                }
             }
         }
     }
