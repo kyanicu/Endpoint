@@ -1,0 +1,46 @@
+{
+    "ENTITIES": {
+        "Daitengu Class": [
+            "Examination"
+        ],
+        "HEPHAESTUS": [
+            "Examination",
+            "Work Order Recording"
+        ]
+    },
+    "LOCATIONS": {
+        "Cargo Railgun": [
+            "Examination",
+            "Shipment Manifest"
+        ],
+        "GREENHOUSE 10-1": [
+            "NEWS ARTICLE",
+            "OBSERVATION"
+        ],
+        "KOB Terraformers": [
+            "Examination",
+            "Scientific Abstract"
+        ],
+        "SUPIDORESA": [
+            "TRANSCRIPT 51A"
+        ],
+        "Veneran Wastes": [
+            "Examination",
+            "News Article"
+        ]
+    },
+    "UPGRADES": {
+        "NJMP Network Jump": [
+            "Package Details"
+        ]
+    },
+    "WEAPONS": {
+        "Plymouth Security Carbine": [
+            "Advertisement",
+            "Examination"
+        ],
+        "PULSE PROJECTOR": [
+            "EXAMINATION"
+        ]
+    }
+}
