@@ -4,6 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
+using LDB = LoadDataBaseEntries;
+using LO = LoadObjectives;
+using LD = LoadDialogue;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -31,6 +35,9 @@ public class GameOverManager : MonoBehaviour
 
     private static GameOverManager _instance = null;
     public static GameOverManager instance { get { return _instance; } }
+
+    public LoadingFileManager FileManager;
+
 
     private void Awake()
     {
@@ -144,11 +151,52 @@ public class GameOverManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        Debug.Log("TODO: Attach Resume Game to loading last save.");
+        //Load the most previously saved file
+        LoadGame(GameManager.SaveFileID - 1);
     }
+
     public void ExitGameToMenu()
     {
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
         SceneManager.LoadScene(0);
+    }
+
+    /// <summary>
+    /// Loads a savefile given its file ID
+    /// </summary>
+    /// <param name="saveID"></param>
+    private void LoadGame(int saveID)
+    {
+        if (saveID < 0)
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        //Get file path with specified file ID
+        string path = $"{GameManager.FILE_PATH}{saveID}.sav";
+
+        //Only load the file if the file at specified path exists
+        if (File.Exists(path))
+        {
+            SaveSystem.loadedData = SaveSystem.LoadPlayer(saveID);
+            GameManager.SaveFileID = saveID;
+            GameManager.Sector = SaveSystem.loadedData.Sector;
+            GameManager.currentScene = (GameManager.Scenes)SaveSystem.loadedData.Scene;
+            GameManager.OneTimeEvents = SaveSystem.loadedData.OneTimeEventsList;
+            GameManager.Timer = SaveSystem.loadedData.PlayerTimer;
+            GameManager.PlayerLevel = SaveSystem.loadedData.PlayerLevel;
+
+            //Load player's Objectives progress
+            LO.PrimaryObjectives = SaveSystem.loadedData.PrimaryObjectives;
+            LO.SecondaryObjectives = SaveSystem.loadedData.SecondaryObjectives;
+            LO.currentPrimaryObjective = SaveSystem.loadedData.currentPrimaryObjective;
+
+            //Load player's unlocked database entries
+            LDB.Logs = SaveSystem.loadedData.DatabaseEntries;
+
+            //Load
+            LD.DialogueItems = SaveSystem.loadedData.DialogueItems;
+            SceneManager.LoadScene((int)GameManager.currentScene);
+        }
     }
 }

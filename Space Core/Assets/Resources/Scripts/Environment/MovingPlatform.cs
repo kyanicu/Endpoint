@@ -5,12 +5,15 @@ using UnityEngine;
 public class MovingPlatform : MonoBehaviour
 {
 
-    float timer;
-
     public ObjectMover mover;
     public Collider2D col;
 
+    private Vector3 playerPos { get { return PlayerController.instance.Character.transform.position; } }
+    private Vector3 transformOrigin { get { return transform.position + Vector3.down * 2; } }
+
     List<Character> groundedCharacters = new List<Character>();
+
+    Vector3 center;
 
     private void Reset()
     {
@@ -35,6 +38,9 @@ public class MovingPlatform : MonoBehaviour
 
         col.isTrigger = false;
         mover.stopOnHit = false;
+
+        center = transform.position + (Vector3)(direction * speed * change) / 2;
+
     }
 
 
@@ -116,28 +122,59 @@ public class MovingPlatform : MonoBehaviour
 */
     public float speed = 5f;
     public float change = 1f;
-    public float stallTime = 2f;
+    private float timer;
     public Vector2 direction = Vector2.right;
 
     public float defaultSpeed;
+
+    public bool entered; 
     // Update is called once per frame
     void FixedUpdate()
     {
 
-        timer += Time.fixedDeltaTime;
+        if (Vector2.Distance(transform.position, playerPos) <= 3) 
+        {
+            if (!entered)
+            {
+                if (speed == 0 && Vector3.Dot(Vector2.up, playerPos - transformOrigin) >= .8f)
+                {
+                    speed = defaultSpeed;
+                }
+                else if (speed != 0 && Vector3.Dot(Vector2.down, playerPos - transformOrigin) >= .6f) 
+                {
+                    direction *= -1;
+                    timer = change - timer;
+                }
+                entered = true;
+            }
+        }
+        else
+        {
+
+            if (speed == 0 && Vector3.Dot(direction, playerPos - center) >= 0.5f)
+            {
+                speed = defaultSpeed;
+            }
+            else if (speed != 0 && Vector3.Dot(-direction, playerPos - center) >= 0.5f)
+            {
+                direction *= -1;
+                timer = change - timer;
+            }
+
+            entered = false;
+        }
+
+
+
+        if (speed != 0) 
+        {
+            timer += Time.fixedDeltaTime;
+        }
         if (timer >= change)
         {
-            if (speed == 0)
-            {
-                if (timer >= change + stallTime)
-                {
-                    direction = -direction;
-                    speed = defaultSpeed;
-                    timer = 0f;
-                }
-            }
-            else
-                speed = 0;
+            timer = 0;
+            speed = 0;
+            direction *= -1f;
         }
         mover.Move(speed * direction * Time.fixedDeltaTime);
         

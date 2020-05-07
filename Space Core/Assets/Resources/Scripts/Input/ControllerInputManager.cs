@@ -75,11 +75,11 @@ public class ControllerInputManager : InputManager
             HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
         }
 
-        if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left < 0.3f)
+        if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left <= 0.3f)
         {
             PlayerController.instance.Jump();
         }
-        else if (state.Value.Triggers.Left == 0)
+        else if (state.Value.Triggers.Left <= 0.3f && prevState.Value.Triggers.Left > 0.3f)
         {
             PlayerController.instance.JumpCancel();
         }
