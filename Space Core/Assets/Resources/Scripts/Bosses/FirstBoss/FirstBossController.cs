@@ -9,6 +9,9 @@ public class FirstBossController : Controller
     public enum BossStage { Stage1, State2, Stage3 }
 
     #region PublicVariables
+    public float AltLaserTime;
+    public float RightRocketArmTime;
+    public float LeftRocketArmTime;
     public BossStage Stage { get; set; }
     public CentralLaserCannon CentralLaserCannon;
     public LaserCannons LaserCannonRight;
@@ -26,11 +29,15 @@ public class FirstBossController : Controller
     private float fireWaitTime;
     private float moveWaitTime;
     private float moveTimer;
+    private float laserCannonTimer;
+    private float rightRocketArmTimer;
+    private float leftRocketArmTimer;
     private int bulletsToFire;
     private int maxBulletsToFire;
     private short moveDirection;
     private bool finishedFiring;
     private bool finishedMoving;
+    private bool firingMissiles;
     private Vector2 playerPos { get { return PlayerController.instance.Character.transform.position; } }
     #endregion
 
@@ -38,6 +45,9 @@ public class FirstBossController : Controller
     protected const float MAX_PAUSE_TIME = 1.5f;
     protected const float MAX_MOVE_TIME = 1.0f;
     private const float PLAYER_RANGE = 25.0f;
+    private const float PLAYER_STOMP_RANGE = 5.0f;
+    private const float STOMP_TIME = 1.0f;
+    private const float MISSILE_COOLDOWN = 10.0f;
     #endregion
 
     public override void Start()
@@ -50,6 +60,9 @@ public class FirstBossController : Controller
         fireWaitTime = 1.5f;
         moveWaitTime = .75f;
         moveTimer = moveWaitTime;
+        laserCannonTimer = AltLaserTime;
+        leftRocketArmTimer = LeftRocketArmTime;
+        rightRocketArmTimer = RightRocketArmTime;
         base.Start();
     }
 
@@ -79,16 +92,18 @@ public class FirstBossController : Controller
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
             return;
 
-        if (IsPlayerInRange())
+        if (IsPlayerInRange() && Character.animationState != Character.AnimationState.special)
         {
             FireLaserCannons();
             MoveAroundPlayer();
-        }        
+            FireMissiles();
+            //FireRocketArms();
+        }
     }
 
     private void MoveAroundPlayer()
     {
-        if(moveTimer > 0 && !finishedMoving)
+        if (moveTimer > 0 && !finishedMoving)
         {
             moveTimer -= Time.deltaTime;
             Move(moveDirection * Vector2.right);
@@ -100,47 +115,85 @@ public class FirstBossController : Controller
         }
     }
 
-    private void FireLaserCannons()
+    private void FireRocketArms()
     {
-        Vector2 myPosition = Character.transform.position;
-        Vector2 diff = playerPos - myPosition;
-        float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-
-        bool pointLeft = Mathf.Abs(angle) > 90;
-        if (pointLeft ^ Character.lookingLeft)
+        if (RocketArmRight.GetComponent<RocketArms>().state == LaserCannons.State.ConnectedToBoss)
         {
-            Vector3 newScale = Character.gameObject.transform.localScale;
-            newScale.x *= -1;
-            Character.gameObject.transform.localScale = newScale;
-            Character.lookingLeft = !Character.lookingLeft;
-        }
-        else
-        {
-            LaserCannonRight.AimWeapon(angle);
-        }
-
-        if (bulletsToFire > 0 && IsPlayerInRange())
-        {
-            if (LaserCannonRight.Activate(0))
+            if (rightRocketArmTimer > 0)
             {
-                bulletsToFire--;
+                rightRocketArmTimer -= Time.deltaTime;
+            }
+            else
+            {
+                RocketArmRight.Activate(1);
+                rightRocketArmTimer = RightRocketArmTime;
             }
         }
-        else if (bulletsToFire <= 0 && !finishedFiring)
+
+        if (RocketArmLeft.GetComponent<RocketArms>().state == LaserCannons.State.ConnectedToBoss)
         {
-            StartCoroutine(WaitToFireTimer());
-            finishedFiring = true;
+            if (leftRocketArmTimer > 0)
+            {
+                leftRocketArmTimer -= Time.deltaTime;
+            }
+            else
+            {
+                RocketArmLeft.Activate(1);
+                leftRocketArmTimer = LeftRocketArmTime;
+            }
+        }
+    }
+
+    private void FireLaserCannons()
+    {
+        if (LaserCannonRight.GetComponent<LaserCannons>().state == LaserCannons.State.ConnectedToBoss)
+        {
+            laserCannonTimer -= Time.deltaTime;
+            Vector2 myPosition = Character.transform.position;
+            Vector2 diff = playerPos - myPosition;
+            float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+
+            bool pointLeft = Mathf.Abs(angle) > 90;
+            if (pointLeft ^ Character.lookingLeft)
+            {
+                Vector3 newScale = Character.gameObject.transform.localScale;
+                newScale.x *= -1;
+                Character.gameObject.transform.localScale = newScale;
+                Character.lookingLeft = !Character.lookingLeft;
+            }
+            else
+            {
+                LaserCannonRight.AimWeapon(angle);
+            }
+
+            if (bulletsToFire > 0 && IsPlayerInRange())
+            {
+                if (LaserCannonRight.Activate(0))
+                {
+                    bulletsToFire--;
+                }
+            }
+            else if (bulletsToFire <= 0 && !finishedFiring)
+            {
+                StartCoroutine(WaitToFireTimer());
+                finishedFiring = true;
+            }
+
+            if (laserCannonTimer <= 0)
+            {
+                LaserCannonRight.Activate(1);
+                laserCannonTimer = AltLaserTime;
+            }
         }
     }
 
     private void FireMissiles()
     {
-
-    }
-
-    private void FireRocketArms()
-    {
-
+        if (!firingMissiles)
+        {
+            firingMissiles = true;
+            StartCoroutine(LaunchTheMissiles());
+        }
     }
 
     private void FireCentralCannon()
@@ -153,6 +206,12 @@ public class FirstBossController : Controller
 
     }
 
+    public void Stomp()
+    {
+        Character.SetAnimationState(Character.AnimationState.special);
+        StartCoroutine(WaitForStomp());
+    }
+
     public override void Die()
     {
         InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
@@ -161,7 +220,8 @@ public class FirstBossController : Controller
 
     public override void TriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Rocket"))
+
+        if (collision.CompareTag("Rocket"))
         {
             //need to heal player if vampire bullets are active
             AttackInfo info = collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info;
@@ -202,5 +262,32 @@ public class FirstBossController : Controller
         moveDirection *= -1;
         moveTimer = moveWaitTime;
         finishedMoving = false;
+    }
+
+    /// <summary>
+    /// Coroutine that will wait to reset the boss's ability to stomp
+    /// </summary>
+    private IEnumerator WaitForStomp()
+    {
+        if (Character.animationState == Character.AnimationState.special)
+        {
+            yield return null;
+        }
+        else
+        {
+            yield return new WaitForSeconds(STOMP_TIME);
+            Character.SetAnimationState(Character.AnimationState.idle);
+        }
+    }
+
+    private IEnumerator LaunchTheMissiles()
+    {
+        foreach (MissileLauncher launcher in MissileLaunchers)
+        {
+            launcher.Activate(0);
+            yield return new WaitForSeconds(0.2f);
+        }
+        yield return new WaitForSeconds(MISSILE_COOLDOWN);
+        firingMissiles = false;
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class BossWeapon : MonoBehaviour
 {
+    public enum State { ConnectedToBoss, Independent }
+
     public BossCharacter Owner;
     public int Damage;
     public float StunTime;

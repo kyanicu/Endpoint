@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class LaserCannons : BossWeapon
 {
-    public enum LaserState { ConnectedToBoss, Independent }
-
-    public LaserState state;
+    public State state;
     public Transform StartPoint;
     public Transform EndPointLeft;
     public Transform EndPointRight;
+    public GameObject LaserBeam;
     public float LaserActiveTime;
     public float ActiveLaserStunTime;
+    public float MoveSpeed;
     public short Direction;
+    private bool MoveRight;
     private float laserActiveTimer;
     private string baseProjectileName;
     private string fullLazerProjectileName;
+    private bool initialMove;
+    private const float INITIALMOVEFACTOR = 2.0f;
 
     public override bool Activate(int behavior)
     {
@@ -24,7 +27,12 @@ public class LaserCannons : BossWeapon
             case 0:
                 return FireBaseProjectile();
             case 1:
-                state = LaserState.Independent;
+                transform.parent = null;
+                transform.localRotation = Quaternion.Euler(90, -90, 0);
+                state = State.Independent;
+                initialMove = true;
+                MoveRight = true;
+                laserActiveTimer = LaserActiveTime;
                 return true;
         }
 
@@ -35,13 +43,13 @@ public class LaserCannons : BossWeapon
     {
         base.Update();
 
-        if (state == LaserState.Independent && !Stunned)
+        if (state == State.Independent && !Stunned)
         {
             MoveAlongCeiling();
         }
-        else if (state == LaserState.ConnectedToBoss && !Stunned)
+        else if (state == State.ConnectedToBoss && !Stunned)
         {
-            //AimWeapon(0);
+            AimWeapon(0);
         }
     }
 
@@ -79,6 +87,60 @@ public class LaserCannons : BossWeapon
 
     private void MoveAlongCeiling()
     {
+        float step = Time.deltaTime * MoveSpeed;
+        if (initialMove)
+        {
+            step *= INITIALMOVEFACTOR;
+            transform.position = Vector2.MoveTowards(
+                                    transform.position,
+                                    EndPointLeft.position,
+                                    step);
+            if (transform.position.x == EndPointLeft.position.x && transform.position.y == EndPointLeft.position.y)
+            {
+                initialMove = false;
+                LaserBeam.SetActive(true);
+            }
+        }
+        if (!initialMove && laserActiveTimer > 0)
+        {
+            laserActiveTimer -= Time.deltaTime;
+            if (MoveRight)
+            {
+                transform.position = Vector2.MoveTowards(
+                                        transform.position,
+                                        EndPointRight.position,
+                                        step);
+                if ((Vector2) transform.position == (Vector2) EndPointRight.position)
+                {
+                    MoveRight = false;
+                }
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(
+                                        transform.position,
+                                        EndPointLeft.position,
+                                        step);
 
+                if ((Vector2) transform.position == (Vector2) EndPointLeft.position)
+                {
+                    MoveRight = true;
+                }
+            }
+        }
+        else if (!initialMove && laserActiveTimer < 0)
+        {
+            LaserBeam.SetActive(false);
+            transform.position = Vector2.MoveTowards(
+                                        transform.position,
+                                        AttachedBossLocation.position,
+                                        step * INITIALMOVEFACTOR);
+            if (transform.position.x - AttachedBossLocation.position.x < 1.0f && transform.position.y - AttachedBossLocation.position.y < 1.0f)
+            {
+                transform.parent = AttachedBossLocation;
+                transform.position = AttachedBossLocation.position;
+                state = State.ConnectedToBoss;
+            }
+        }
     }
 }

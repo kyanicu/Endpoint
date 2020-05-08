@@ -19,6 +19,7 @@ TagManager:
   - EnergyBurst
   - HomingRadar
   - Boss
+  - Missile
   layers:
   - Default
   - TransparentFX

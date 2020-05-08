@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissileLauncher : MonoBehaviour
+public class MissileLauncher : BossWeapon
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private const string projectileName = "Missile";
 
-    // Update is called once per frame
-    void Update()
+    public override bool Activate(int behavior)
     {
-        
+        GameObject missile = ObjectPooler.instance.SpawnFromPool(projectileName, transform.position, Quaternion.identity);
+        return true;
     }
 }

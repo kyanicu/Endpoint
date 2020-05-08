@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossCharacter : Character
 {
+    public Image UIBar;
     /// <summary>
     /// Set base objects of Boss
     /// </summary>
@@ -23,5 +25,11 @@ public class BossCharacter : Character
 
         Health = 500;
         MaxHealth = 500;
+    }
+
+    public override void ReceiveAttack(AttackInfo attackInfo)
+    {
+        base.ReceiveAttack(attackInfo);
+        UIBar.fillAmount = Health / MaxHealth;
     }
 }

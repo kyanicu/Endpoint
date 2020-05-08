@@ -28,7 +28,7 @@ public class Rocket : Bullet
     //Explodes on collision with anything
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Enemy") || collision.CompareTag("Terrain") || collision.CompareTag("Player")))
+        if ((collision.CompareTag("Enemy") || collision.CompareTag("Terrain") || collision.CompareTag("Player") || collision.CompareTag("Boss")))
         {
             //Pass the attack info on to the explosion radius
             DamageRadius.GetComponent<ExplosionInformation>().Info = attInfo;
