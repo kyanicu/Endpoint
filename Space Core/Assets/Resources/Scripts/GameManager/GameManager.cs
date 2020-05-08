@@ -105,7 +105,10 @@ public class GameManager : MonoBehaviour
                             break;
                         case OneTimeEventTags.Console:
                             Console console = Event.GetComponent<Console>();
-                            console.AlreadyPressed = true;
+                            if (console != null)
+                            {
+                                console.AlreadyPressed = true;
+                            }
                             break;
                         case OneTimeEventTags.HazardSwitch:
                             HazardSwitch hazardSwitch = Event.GetComponent<HazardSwitch>();

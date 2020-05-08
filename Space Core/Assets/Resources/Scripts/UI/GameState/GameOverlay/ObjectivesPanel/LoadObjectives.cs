@@ -95,7 +95,7 @@ public static class LoadObjectives
     {
         currentPrimaryObjective = 0;
         LoadPrimaryObjectives();
-        LoadSecondaryObjectives();
+        //LoadSecondaryObjectives();
     }
 
     /// <summary>
