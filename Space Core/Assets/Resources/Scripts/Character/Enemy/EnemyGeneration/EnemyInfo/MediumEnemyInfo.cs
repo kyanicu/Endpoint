@@ -10,8 +10,8 @@ public class MediumEnemyInfo : EnemyGenerationInfo
         PrefabPath = "Prefabs/Enemy/MediumEnemy";
         HealthHi = 115;
         HealthLow = 85;
-        SpeedHi = 8f;
-        SpeedLow = 5f;
+        SpeedHi = 9f;
+        SpeedLow = 7f;
         PatrolRange = 4.0f;
     }
 }
