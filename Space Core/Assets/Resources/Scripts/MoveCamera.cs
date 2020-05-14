@@ -4,20 +4,26 @@ using System.Collections;
 public class MoveCamera : MonoBehaviour
 {
     private const float CAM_SPEED = 5;
+    private const float CAM_ZOOM_OUT = 78.45135f;
+    private const float CAM_ZOOM_IN = 35;
+    private const int SPIRIT_ZOOM_COUNTER = 35;
 
     //Distance camera rests above player
     private const float yMod = .15f;
 
     //Camera's nonchanging z positioning
     private float zMod;
+    private bool adjustingZoom;
 
     private Transform player;
     private ParticleSystem[] hackSpirit;
+    private Camera camera;
 
     private void Start()
     {
         zMod = transform.position.z;
         hackSpirit = GetComponentsInChildren<ParticleSystem>();
+        camera = GetComponent<Camera>();
     }
 
     void FixedUpdate()
@@ -36,6 +42,12 @@ public class MoveCamera : MonoBehaviour
         //Perform different type of camera movement dependent on if we're swapping or not
         if (InputManager.instance.currentState == InputManager.InputState.LOADING)
         {
+            //Zoom in on first frame of hack swap
+            if(!adjustingZoom && camera.fieldOfView == CAM_ZOOM_OUT)
+            {
+                adjustingZoom = false;
+                StartCoroutine(adjustCameraZoom(true));
+            }
             foreach(ParticleSystem ps in hackSpirit)
             {
                 if (!ps.isPlaying)
@@ -59,6 +71,9 @@ public class MoveCamera : MonoBehaviour
                     ps.Stop();
                 }
                 PlayerController.instance.Character.SetMeshEmissionColor(Color.red);
+
+                StartCoroutine(adjustCameraZoom(false));
+                adjustingZoom = true;
             }
         }
         //Otherwise, do normal camera movement
@@ -73,6 +88,7 @@ public class MoveCamera : MonoBehaviour
                 camPos.z = zMod;
 
                 transform.position = camPos;
+
             }
         }
     }
@@ -94,6 +110,22 @@ public class MoveCamera : MonoBehaviour
                     ps.Stop();
                 }
             }
+        }
+    }
+
+    private IEnumerator adjustCameraZoom(bool zoomingIn)
+    {
+        float zoomAdjustAmt = (CAM_ZOOM_OUT - CAM_ZOOM_IN) / SPIRIT_ZOOM_COUNTER;
+        int counter = 0;
+
+        //If zoomingIn, multiply zoomAdjustAmt by -1 so FoV decreases
+        int zoomMod = zoomingIn ? -1 : 1;
+
+        while(counter < SPIRIT_ZOOM_COUNTER)
+        {
+            camera.fieldOfView += zoomAdjustAmt * zoomMod;
+            counter++;
+            yield return null;
         }
     }
 }
