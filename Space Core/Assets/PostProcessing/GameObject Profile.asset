@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
   m_Name: Grain
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enabled:
     overrideState: 1
     value: 1
@@ -64,7 +64,7 @@ MonoBehaviour:
     value: 0
   color:
     overrideState: 1
-    value: {r: 0.7812834, g: 0.8887154, b: 0.9150943, a: 1}
+    value: {r: 0.2581829, g: 1, b: 1, a: 1}
   fastMode:
     overrideState: 1
     value: 0
