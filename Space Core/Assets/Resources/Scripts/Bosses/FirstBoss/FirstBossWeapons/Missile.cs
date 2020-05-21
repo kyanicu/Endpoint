@@ -33,16 +33,7 @@ public class Missile : MonoBehaviour
                                     PlayerController.instance.Character.transform.position,
                                     step);
             Vector3 lookPos = PlayerController.instance.Character.transform.position - transform.position;
-            float angle = Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg;
-
-            if (angle < 0)
-            {
-                angle = angle - 90;
-            }
-            else
-            {
-                angle = angle + 90;
-            }
+            float angle = Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg + 90;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
