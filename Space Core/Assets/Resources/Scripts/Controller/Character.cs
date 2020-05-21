@@ -249,12 +249,30 @@ public class Character : MonoBehaviour
         //reload if out of ammo
         if (Weapon.AmmoInClip <= 0 && !Weapon.IsReloading)
         {
+            Weapon.EndFire();
             Reload();
             return false;
         }
         else
         {
             return Weapon.Fire();
+        }
+    }
+
+    /// <summary>
+    /// function that will call the FireEnd function of the weapon class
+    /// </summary>
+    /// <returns>true if successful, flase otherwise</returns>
+    public bool EndFire()
+    {
+        //reload if out of ammo
+        if (Weapon.AmmoInClip <= 0 || Weapon.IsReloading)
+        {
+            return false;
+        }
+        else
+        {
+            return Weapon.EndFire();
         }
     }
 

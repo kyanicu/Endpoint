@@ -13,6 +13,7 @@ public class DynamicMusic : MonoBehaviour
     public AudioClip[] AudioClips;
     public int BattleClipIdx;
     public int BackgroundMusicClipIdx;
+    public int BossMusicClipIdx;
 
     //sets audio source
     private void Start()
@@ -29,6 +30,19 @@ public class DynamicMusic : MonoBehaviour
 
         //check if any enemies are in range
         bool InRangeOfEnemy = CheckInRange();
+
+        if(FirstBossController.Engaged)
+        {
+            if (audioSource.clip != AudioClips[BossMusicClipIdx])
+            {
+                audioSource.clip = AudioClips[BossMusicClipIdx];
+            }
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+            return;
+        }
 
         //set to battle music or background depending on range
         if (InRangeOfEnemy)

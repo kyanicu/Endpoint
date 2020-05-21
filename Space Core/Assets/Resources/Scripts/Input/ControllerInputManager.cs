@@ -74,6 +74,10 @@ public class ControllerInputManager : InputManager
             PlayerController.instance.Fire();
             HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
         }
+        else if (state.Value.Triggers.Right <= 0.3f && prevState.Value.Triggers.Right > 0.3f)
+        {
+            PlayerController.instance.EndFire();
+        }
 
         if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left <= 0.3f)
         {

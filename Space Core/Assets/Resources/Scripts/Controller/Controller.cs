@@ -179,6 +179,11 @@ public abstract class Controller : MonoBehaviour
         return Character.Fire();
     }
 
+    public virtual bool EndFire()
+    {
+        return Character.EndFire();
+    }
+
     /// <summary>
     /// Method for exposing the character's Aim Weapon method
     /// </summary>

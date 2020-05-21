@@ -8,6 +8,8 @@ public class FirstBossController : Controller
 {
     public enum BossStage { Stage1, State2, Stage3 }
 
+    public static bool Engaged;
+
     #region PublicVariables
     public float AltLaserTime;
     public float RightRocketArmTime;
@@ -63,6 +65,7 @@ public class FirstBossController : Controller
         laserCannonTimer = AltLaserTime;
         leftRocketArmTimer = LeftRocketArmTime;
         rightRocketArmTimer = RightRocketArmTime;
+        Engaged = false;
         base.Start();
     }
 
@@ -83,6 +86,7 @@ public class FirstBossController : Controller
         {
             return (Vector3.Distance(playerPos, Character.transform.position) < PLAYER_RANGE);
         }
+        Engaged = false;
         return false;
     }
 
@@ -94,6 +98,7 @@ public class FirstBossController : Controller
 
         if (IsPlayerInRange() && Character.animationState != Character.AnimationState.special)
         {
+            Engaged = true;
             FireLaserCannons();
             MoveAroundPlayer();
             FireMissiles();

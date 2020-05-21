@@ -40,9 +40,31 @@ public class ShockLance : Weapon
             FireTimer = RateOfFire;
             energyScript.Velocity = BulletVeloc;
             energyScript.Activate();
+            if (audioSource.clip != FireSfx)
+            {
+                audioSource.clip = FireSfx;
+            }
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
             return true;
         }
         else
             return false;
+    }
+
+    public override bool EndFire()
+    {
+        if (IsReloading)
+        {
+            return false;
+        }
+
+        if (audioSource.clip == FireSfx)
+        {
+            audioSource.Stop();
+        }
+        return true;
     }
 }

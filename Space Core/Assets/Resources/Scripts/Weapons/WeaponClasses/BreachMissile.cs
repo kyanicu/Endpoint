@@ -40,6 +40,8 @@ public class BreachMissile : Weapon
                 rocketScript.Velocity = BulletVeloc;
                 rocketScript.Range = Range;
                 rocketScript.Activate();
+                audioSource.clip = FireSfx;
+                audioSource.Play();
                 return true;
             }
             return false;

@@ -144,5 +144,7 @@ MonoBehaviour:
   AudioClips:
   - {fileID: 8300000, guid: 4ab848c62bff15844b21507d713bfadc, type: 3}
   - {fileID: 8300000, guid: de84d0600047d654ba8431cb70122800, type: 3}
+  - {fileID: 8300000, guid: c828a09a36dc2a04ea7688d55d206135, type: 3}
   BattleClipIdx: 0
   BackgroundMusicClipIdx: 1
+  BossMusicClipIdx: 2

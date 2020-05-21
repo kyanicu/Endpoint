@@ -203,4 +203,17 @@ public abstract class Weapon : MonoBehaviour
             TotalAmmo += num;
         }
     }
+
+    /// <summary>
+    /// Optionally implemented function for specifying the end of firing the weapon
+    /// </summary>
+    public virtual bool EndFire()
+    {
+        if (IsReloading)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
