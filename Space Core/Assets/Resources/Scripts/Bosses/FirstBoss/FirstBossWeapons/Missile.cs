@@ -23,6 +23,7 @@ public class Missile : MonoBehaviour
         if (movingUp && startPosition.y + FinishPosition > transform.position.y)
         {
             transform.position += Time.deltaTime * velocity * Vector3.up;
+            transform.rotation = Quaternion.AngleAxis(180, Vector3.forward);
         }
         else
         {
