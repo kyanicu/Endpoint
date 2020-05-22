@@ -169,6 +169,12 @@ public abstract class Movement : MonoBehaviour
             CancelDirectionalVelocity(dist.normalized);
 
         }
+
+        if(!collision.isTrigger)
+        {
+            int contactCount;
+            UpdateState(Vector2.up, out contactCount);
+        }
     }
 
     /// <summary>

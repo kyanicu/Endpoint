@@ -132,7 +132,7 @@ public class MovingPlatform : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (Vector2.Distance(transform.position, playerPos) <= 3) 
+        if (Vector2.Distance(transform.position, playerPos) <= 5) 
         {
             if (!entered)
             {

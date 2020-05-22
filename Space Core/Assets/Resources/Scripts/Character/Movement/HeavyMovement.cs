@@ -96,6 +96,9 @@ public class HeavyMovement : Movement
     private IEnumerator Ascend()
     {
 
+        int moveCount;
+        charCont.Move(Vector2.up * Physics.defaultContactOffset, out moveCount, true);
+
         isAscending = true;
 
         //gravityScale = 0;
