@@ -6,6 +6,7 @@ using LO = LoadObjectives;
 using LD = LoadDialogue;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class LoadingFileManager : MonoBehaviour
 {

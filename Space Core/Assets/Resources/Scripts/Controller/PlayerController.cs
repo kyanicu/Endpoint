@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 //We'll need to figure out a way to decouple scene loading from player
@@ -104,6 +105,7 @@ public class PlayerController : Controller
     public override void Die()
     {
         InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene(2);
     }
 
@@ -114,7 +116,7 @@ public class PlayerController : Controller
     {
         if(Enemy != null)
         {
-            InputManager.instance.currentState = InputManager.InputState.LOADING;
+            InputManager.instance.currentState = InputManager.InputState.HACKING;
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
             Enemy.Character.movement.runMax = Enemy.BaseRunMax;

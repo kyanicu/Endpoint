@@ -221,6 +221,7 @@ public class PauseMenuManager : MonoBehaviour {
     {
         // Load main menu scene
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene(0);
     }
     public void QuitGameToDesktop()

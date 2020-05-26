@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
@@ -141,6 +142,7 @@ public class MainMenuManager : MonoBehaviour
         SaveSystem.loadedData = null;
         InputManager.instance.currentState = InputManager.InputState.GAMEPLAY;
         GameManager.currentScene = GameManager.Scenes.CentralProcessing;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene((int)GameManager.currentScene);
 
     }

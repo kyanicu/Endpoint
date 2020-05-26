@@ -52,6 +52,11 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60; 
         LoadMaxStats();
 
+        if (OneTimeEvents.Count > 0)
+        {
+            LoadOneTimeEvents();
+        }
+
         //If DB hasn't been initialized yet, do that
         if (!Initialized)
         {
@@ -86,38 +91,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         EnemyControllers = null;
-
-        if (OneTimeEvents.Count > 0)
-        {
-            //Iterate through each One Time Event that has already occurred
-            foreach (KeyValuePair<string, OneTimeEventTags> ote in OneTimeEvents)
-            {
-                //Locate the event in the scene given its name
-                GameObject Event = GameObject.Find(ote.Key);
-
-                //Check if the game object exists in the current scene
-                if (Event != null)
-                {
-                    switch (ote.Value)
-                    {
-                        case OneTimeEventTags.Destroy:
-                            Destroy(Event.gameObject);
-                            break;
-                        case OneTimeEventTags.Console:
-                            Console console = Event.GetComponent<Console>();
-                            if (console != null)
-                            {
-                                console.AlreadyPressed = true;
-                            }
-                            break;
-                        case OneTimeEventTags.HazardSwitch:
-                            HazardSwitch hazardSwitch = Event.GetComponent<HazardSwitch>();
-                            hazardSwitch.AlreadyPressed = true;
-                            break;
-                    }
-                }
-            }
-        }
     }
 
     public void Update()
@@ -194,5 +167,47 @@ public class GameManager : MonoBehaviour
         int hours = (int)playerTime / 3600;
         string hr = hours > 9 ? hours + "" : "0" + hours;
         return $"{hr}:{min}:{sec}";
+    }
+
+    private void LoadOneTimeEvents()
+    {
+        if (OneTimeEvents.Count > 0)
+        {
+            //Iterate through each One Time Event that has already occurred
+            foreach (KeyValuePair<string, OneTimeEventTags> ote in GameManager.OneTimeEvents)
+            {
+                //Locate the event in the scene given its name
+                GameObject Event = GameObject.Find(ote.Key);
+
+                //Check if the game object exists in the current scene
+                if (Event != null)
+                {
+                    switch (ote.Value)
+                    {
+                        case OneTimeEventTags.Destroy:
+                            Destroy(Event.gameObject);
+                            break;
+                        case OneTimeEventTags.Console:
+                            Console console = Event.GetComponent<Console>();
+                            if (console != null)
+                            {
+                                console.AlreadyPressed = true;
+                                break;
+                            }
+
+                            ParadigmTerminal terminal = Event.GetComponent<ParadigmTerminal>();
+                            if (terminal != null)
+                            {
+                                terminal.ParadigmGranted = true;
+                            }
+                            break;
+                        case OneTimeEventTags.HazardSwitch:
+                            HazardSwitch hazardSwitch = Event.GetComponent<HazardSwitch>();
+                            hazardSwitch.AlreadyPressed = true;
+                            break;
+                    }
+                }
+            }
+        }
     }
 }

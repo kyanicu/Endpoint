@@ -95,7 +95,7 @@ public static class LoadObjectives
     {
         currentPrimaryObjective = 0;
         LoadPrimaryObjectives();
-        //LoadSecondaryObjectives();
+        LoadSecondaryObjectives();
     }
 
     /// <summary>
@@ -125,14 +125,12 @@ public static class LoadObjectives
         SecondaryObjectives = new Dictionary<string, List<Objective>>();
 
         //Get the directionary holding the location folders
-        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Objectives/Secondary");
-        string[] locationFolders = Directory.GetDirectories(dir.FullName);
+        TextAsset directories = Resources.Load<TextAsset>("Text/Objectives/SecondaryObjectivesMap");
+        string[] locationFolders = directories.text.Split("\n"[0]);
 
         //Iterate through each location folder
-        foreach (string locationPath in locationFolders)
+        foreach (string location in locationFolders)
         {
-            //Retrieve location name
-            string location = GameManager.instance.PullDirectoryEndPoint(locationPath);
 
             //Get each text file in the location folder
             TextAsset[] pObjectivesList = Resources.LoadAll<TextAsset>("Text/Objectives/Secondary/" + location);

@@ -220,6 +220,7 @@ public class FirstBossController : Controller
     public override void Die()
     {
         InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene(3);
     }
 

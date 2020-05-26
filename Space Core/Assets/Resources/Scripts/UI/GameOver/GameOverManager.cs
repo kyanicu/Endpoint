@@ -158,6 +158,7 @@ public class GameOverManager : MonoBehaviour
     public void ExitGameToMenu()
     {
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene(0);
     }
 
@@ -169,6 +170,7 @@ public class GameOverManager : MonoBehaviour
     {
         if (saveID < 0)
         {
+            GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
             SceneManager.LoadScene(1);
         }
 

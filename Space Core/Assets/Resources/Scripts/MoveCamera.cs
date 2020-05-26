@@ -40,12 +40,12 @@ public class MoveCamera : MonoBehaviour
         float dist = Vector2.Distance(player.position, camPos);
 
         //Perform different type of camera movement dependent on if we're swapping or not
-        if (InputManager.instance.currentState == InputManager.InputState.LOADING)
+        if (InputManager.instance.currentState == InputManager.InputState.HACKING)
         {
             //Zoom in on first frame of hack swap
             if(!adjustingZoom && camera.fieldOfView == CAM_ZOOM_OUT)
             {
-                adjustingZoom = false;
+                adjustingZoom = true;
                 StartCoroutine(adjustCameraZoom(true));
             }
             foreach(ParticleSystem ps in hackSpirit)
@@ -72,8 +72,11 @@ public class MoveCamera : MonoBehaviour
                 }
                 PlayerController.instance.Character.SetMeshEmissionColor(Color.red);
 
-                StartCoroutine(adjustCameraZoom(false));
-                adjustingZoom = true;
+                if (!adjustingZoom)
+                {
+                    StartCoroutine(adjustCameraZoom(false));
+                    adjustingZoom = true;
+                }   
             }
         }
         //Otherwise, do normal camera movement
@@ -127,5 +130,6 @@ public class MoveCamera : MonoBehaviour
             counter++;
             yield return null;
         }
+        adjustingZoom = false;
     }
 }
