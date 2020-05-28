@@ -34,6 +34,7 @@ public class Character : MonoBehaviour
     public SkinnedMeshRenderer[] childComponents;
     public AnimationState animationState { get; set; }
     public Animator animator;
+    private Material hitMaterial;
     
     public bool lookingLeft = false;
     public int facingDirection { get { return (int)Mathf.Sign(transform.localScale.x); } }
@@ -66,6 +67,7 @@ public class Character : MonoBehaviour
         else
             movement = GetComponent<Movement>();
 
+        hitMaterial = Resources.Load<Material>("Materials/Red");
         RotationPoint = transform.Find("RotationPoint").gameObject;
         Weapon = WeaponGenerator.GenerateWeapon(RotationPoint.transform.Find("WeaponLocation")).GetComponent<Weapon>();
         AbilityGenerator.AddAbilitiesToCharacter(gameObject);
@@ -198,7 +200,7 @@ public class Character : MonoBehaviour
             {
                 Material m = smr.material;
                 Color32 c = smr.material.color;
-                smr.material = null;
+                smr.material = hitMaterial;
                 smr.material.color = Color.red;
                 yield return new WaitForSeconds(0.1f);
                 smr.material = m;

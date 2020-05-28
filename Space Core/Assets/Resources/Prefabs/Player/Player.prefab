@@ -2217,6 +2217,7 @@ MonoBehaviour:
   HitClip: {fileID: 8300000, guid: a804436c426068b4da0b592c0f6f38fd, type: 3}
   childComponents: []
   animator: {fileID: 0}
+  HitMaterial: {fileID: 2100000, guid: f1a89b58f5c481946854c9d4493ace74, type: 2}
   lookingLeft: 0
 --- !u!114 &7519951028398615165
 MonoBehaviour:
@@ -5402,14 +5403,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3658287851682297180}
     m_Modifications:
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_Name
-      value: PS_Hack Sphere
-      objectReference: {fileID: 0}
-    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5452,6 +5445,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779100436801372, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_Name
+      value: PS_Hack Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547153050576274, guid: adc8b05849acbcb4db958419bfc77438, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8530807881161471891, guid: adc8b05849acbcb4db958419bfc77438,
@@ -5552,16 +5553,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3658287851682297180}
     m_Modifications:
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_Name
-      value: QTE_Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5666,6 +5657,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_Name
+      value: QTE_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034222646284107494, guid: a7ffcbef2272aab41afb4d82c43cd727,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8871462847359994029, guid: a7ffcbef2272aab41afb4d82c43cd727,
         type: 3}
@@ -6002,11 +6003,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3658287851682297180}
     m_Modifications:
-    - target: {fileID: 8591777870503240230, guid: 09369ca31d648284cadb6d4ac6ffedf0,
-        type: 3}
-      propertyPath: m_Name
-      value: WorldspaceCanvas
-      objectReference: {fileID: 0}
     - target: {fileID: 2365166386345223272, guid: 09369ca31d648284cadb6d4ac6ffedf0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6111,6 +6107,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8591777870503240230, guid: 09369ca31d648284cadb6d4ac6ffedf0,
+        type: 3}
+      propertyPath: m_Name
+      value: WorldspaceCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 2475267814119387872, guid: 09369ca31d648284cadb6d4ac6ffedf0,
         type: 3}
