@@ -127,8 +127,23 @@ public class LightMovement : Movement
         freezeRun = true;
         gravityScale = 0;
 
+        // Make sure distance doesn't go past walls 
+        
+        int max = 10;
+        float dist = dashDistance;
+        RaycastHit2D[] hits = new RaycastHit2D[max];
+        int count = charCont.capCol.Cast(direction, hits, dashDistance, true);
+
+        for (int i = 0; i < count; i++) {
+            if (!hits[i].collider.isTrigger && hits[i].distance < dist) 
+            {
+                dist = hits[i].distance;
+            }
+        }
+
+
         /// Set velocity for dash
-        velocity = direction * (dashDistance / dashTime);
+        velocity = direction * (dist / dashTime);
 
         // Check conditional during dash
         for (dashTimer = 0; dashTimer < dashTime; dashTimer += Time.fixedDeltaTime)
