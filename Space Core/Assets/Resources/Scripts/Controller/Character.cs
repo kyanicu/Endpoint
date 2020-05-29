@@ -124,7 +124,7 @@ public class Character : MonoBehaviour
         }
         //If we are running, jumping or falling, the character is grounded and not moving, move to the idle state
         else if (direction.x == 0 
-            && (animationState == AnimationState.running || animationState == AnimationState.jump || animationState == AnimationState.falling)
+            && (animationState == AnimationState.running || animationState == AnimationState.jump || animationState == AnimationState.falling )
             && movement.charCont.isGrounded)
         {
             animationState = AnimationState.idle;

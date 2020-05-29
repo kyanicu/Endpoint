@@ -23,8 +23,8 @@ public class BossCharacter : Character
         //}
         animator = transform.Find("BossBotAnimated").gameObject.GetComponent<Animator>();
 
-        Health = 500;
-        MaxHealth = 500;
+        Health = 2000;
+        MaxHealth = 2000;
     }
 
     public override void ReceiveAttack(AttackInfo attackInfo)

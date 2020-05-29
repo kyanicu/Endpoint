@@ -24,7 +24,9 @@ public class StompCollider : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && detectPlayer)
+        if (other.CompareTag("Player") 
+            && detectPlayer
+            && Boss.Character.animationState != Character.AnimationState.runextended)
         {
             Boss.Stomp();
             detectPlayer = false;
@@ -39,7 +41,9 @@ public class StompCollider : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && detectPlayer)
+        if (collision.CompareTag("Player")
+            && detectPlayer 
+            && Boss.Character.animationState != Character.AnimationState.runextended)
         {
             Boss.Stomp();
             detectPlayer = false;
@@ -60,6 +64,10 @@ public class StompCollider : MonoBehaviour
         harmPlayer = false;
         yield return new WaitForSeconds(COOLDOWN);
         detectPlayer = true;
-        Boss.Character.SetAnimationState(Character.AnimationState.idle);
+
+        if (Boss.Character.animationState == Character.AnimationState.special)
+        {
+            Boss.Character.SetAnimationState(Character.AnimationState.idle);
+        }
     }
 }

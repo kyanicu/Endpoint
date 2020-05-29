@@ -10,14 +10,34 @@ public class Missile : MonoBehaviour
     public float FinishPosition;
     private Vector2 startPosition;
     private bool hit;
+    private Collider2D collider;
     private bool movingUp;
+    private float colliderInactiveTimer;
     private float activeTimer;
+
+    private const float colliderInactiveTime = 0.2f;
+
+    private void OnEnable()
+    {
+        collider = gameObject.GetComponent<Collider2D>();
+        collider.enabled = false;
+        colliderInactiveTimer = colliderInactiveTime;
+    }
 
     private void Update()
     {
         if (hit)
         {
             return;
+        }
+
+        if (colliderInactiveTimer <= 0)
+        {
+            collider.enabled = true;
+        }
+        else
+        {
+            colliderInactiveTimer -= Time.deltaTime;
         }
 
         if (movingUp && startPosition.y + FinishPosition > transform.position.y)

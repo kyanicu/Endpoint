@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class FirstBossController : Controller
 {
-    public enum BossStage { Stage1, State2, Stage3 }
+    public enum BossStage { Stage1, Stage2, Stage3 }
 
     public static bool Engaged;
 
@@ -14,6 +14,8 @@ public class FirstBossController : Controller
     public float AltLaserTime;
     public float RightRocketArmTime;
     public float LeftRocketArmTime;
+    public float RoarTime;
+
     public BossStage Stage { get; set; }
     public CentralLaserCannon CentralLaserCannon;
     public LaserCannons LaserCannonRight;
@@ -25,11 +27,13 @@ public class FirstBossController : Controller
     public Transform RocketArmRightAttachedPoint;
     public Transform RocketArmLeftAttachedPoint;
     public MissileLauncher[] MissileLaunchers;
+    public BossEnemySpawnPoint[] EnemySpawners;  
     #endregion
 
     #region PrivateVariables
     private float fireWaitTime;
     private float moveWaitTime;
+    private float roarTimer;
     private float moveTimer;
     private float laserCannonTimer;
     private float rightRocketArmTimer;
@@ -61,6 +65,7 @@ public class FirstBossController : Controller
         Character.TriggerEntered2DDelegate = TriggerEnter2D;
         fireWaitTime = 1.5f;
         moveWaitTime = .75f;
+        roarTimer = 0;
         moveTimer = moveWaitTime;
         laserCannonTimer = AltLaserTime;
         leftRocketArmTimer = LeftRocketArmTime;
@@ -96,13 +101,36 @@ public class FirstBossController : Controller
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
             return;
 
-        if (IsPlayerInRange() && Character.animationState != Character.AnimationState.special)
+        if (IsPlayerInRange() && Character.animationState != Character.AnimationState.special && roarTimer <= 0)
         {
-            Engaged = true;
-            FireLaserCannons();
             MoveAroundPlayer();
-            FireMissiles();
-            //FireRocketArms();
+            Engaged = true;
+            
+            FireLaserCannons();
+
+            if (Stage != BossStage.Stage1)
+            {
+                FireMissiles();
+            }
+
+            if (Stage == BossStage.Stage1 && Character.Health/Character.MaxHealth <= 0.66f)
+            {
+                Stage = BossStage.Stage2;
+                Roar();
+                SpawnEnemies();
+                Move(Vector2.zero);
+            }
+            else if (Stage == BossStage.Stage2 && Character.Health / Character.MaxHealth <= 0.33f)
+            {
+                Stage = BossStage.Stage3;
+                Roar();
+                SpawnEnemies();
+                Move(Vector2.zero);
+            }
+        }
+        else
+        {
+            roarTimer -= Time.deltaTime;
         }
     }
 
@@ -117,6 +145,14 @@ public class FirstBossController : Controller
         {
             finishedMoving = true;
             StartCoroutine(WaitToMoveTimer());
+        }
+    }
+
+    private void SpawnEnemies()
+    {
+        foreach (BossEnemySpawnPoint point in EnemySpawners)
+        {
+            point.GenerateEnemy();
         }
     }
 
@@ -184,7 +220,7 @@ public class FirstBossController : Controller
                 finishedFiring = true;
             }
 
-            if (laserCannonTimer <= 0)
+            if (laserCannonTimer <= 0 && Stage == BossStage.Stage3)
             {
                 LaserCannonRight.Activate(1);
                 laserCannonTimer = AltLaserTime;
@@ -209,6 +245,12 @@ public class FirstBossController : Controller
     private void AttachlaserCannonsToCeiling()
     {
 
+    }
+
+    private void Roar()
+    {
+        Character.SetAnimationState(Character.AnimationState.runextended);
+        roarTimer = RoarTime;
     }
 
     public void Stomp()
@@ -282,7 +324,6 @@ public class FirstBossController : Controller
         else
         {
             yield return new WaitForSeconds(STOMP_TIME);
-            Character.SetAnimationState(Character.AnimationState.idle);
         }
     }
 
@@ -295,5 +336,31 @@ public class FirstBossController : Controller
         }
         yield return new WaitForSeconds(MISSILE_COOLDOWN);
         firingMissiles = false;
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        if (roarTimer <= 0)
+        {
+            base.TakeDamage(damage);
+        }
+    }
+
+    public override void ReceiveAttack(AttackInfo attackInfo)
+    {
+        if (Character.Invincible < 0)
+        {
+            Character.Invincible = 0;
+        }
+
+        if (Character.Invincible > 0)
+            return;
+
+        TakeDamage(attackInfo.damage);
+        if (!Character.IsBlinking)
+        {
+            Character.IsBlinking = true;
+            StartCoroutine(Character.beginFlashing());
+        }
     }
 }
