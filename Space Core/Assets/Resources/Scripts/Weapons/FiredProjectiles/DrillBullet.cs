@@ -59,7 +59,8 @@ public class DrillBullet : Bullet
     {
         if (collision.CompareTag("Terrain"))
         {
-            gameObject.SetActive(false);
+            Homing = false;
+            transform.parent.gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {

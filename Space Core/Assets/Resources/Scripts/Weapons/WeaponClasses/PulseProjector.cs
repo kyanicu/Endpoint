@@ -56,6 +56,7 @@ public class PulseProjector : Weapon
                 bulletScript.KnockbackTime = KnockbackTime;
                 bulletScript.StunTime = StunTime;
                 bulletScript.Source = BulletSource;
+                bulletScript.Homing = BulletHoming;
                 bulletScript.Range = Range;
                 bulletScript.Velocity = BulletVeloc;
                 bulletScript.Activate();

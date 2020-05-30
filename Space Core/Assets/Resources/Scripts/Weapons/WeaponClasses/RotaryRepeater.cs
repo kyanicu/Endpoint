@@ -46,6 +46,7 @@ public class RotaryRepeater : Weapon
                 bulletScript.Source = BulletSource;
                 bulletScript.Range = Range;
                 bulletScript.Velocity = BulletVeloc;
+                bulletScript.Homing = BulletHoming;
                 FireTimer = RateOfFire;
                 bulletScript.Activate();
                 audioSource.clip = FireSfx;

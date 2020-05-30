@@ -38,6 +38,7 @@ public class BreachMissile : Weapon
                 rocketScript.KnockbackImpulse = KnockbackImpulse;
                 FireTimer = RateOfFire;
                 rocketScript.Velocity = BulletVeloc;
+                rocketScript.Homing = BulletHoming;
                 rocketScript.Range = Range;
                 rocketScript.Activate();
                 audioSource.clip = FireSfx;

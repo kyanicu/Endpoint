@@ -52,7 +52,8 @@ public class Bullet : MonoBehaviour
         //if we have travelled outside the range, destroy the bullet
         if (transform.position.x > highRange || transform.position.x < lowRange)
         {
-            gameObject.SetActive(false);
+            Homing = false;
+            transform.parent.gameObject.SetActive(false);
         }
 
         if (Source == DamageSource.Spread && Damage > baseDamage / 2.0f)
@@ -63,13 +64,11 @@ public class Bullet : MonoBehaviour
         if (Homing && LockedEnemy != null)
         {
             Vector3 targetDirection = LockedEnemy.transform.position - transform.position;
-            transform.position += (targetDirection.normalized * Velocity * Time.deltaTime);
-            HomingRadar.transform.position += (targetDirection.normalized * Velocity * Time.deltaTime);
+            transform.parent.position += (targetDirection.normalized * Velocity * Time.deltaTime);
         }
         else
         {
-            HomingRadar.transform.position += (transform.right * Velocity * Time.deltaTime);
-            transform.position += (transform.right * Velocity * Time.deltaTime);
+            transform.parent.position += (transform.right * Velocity * Time.deltaTime);
         }
     }
 
@@ -77,14 +76,16 @@ public class Bullet : MonoBehaviour
     {
         if (collision.CompareTag("Terrain"))
         {
-            gameObject.SetActive(false);
+            Homing = false;
+            transform.parent.gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {
             if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
             {
                 DealDamage(collision);
-                gameObject.SetActive(false);
+                Homing = false;
+                transform.parent.gameObject.SetActive(false);
             }
         }
     }

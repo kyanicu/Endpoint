@@ -25,7 +25,8 @@ public class WaveBullet : Bullet
     {
         if (collision.CompareTag("Terrain"))
         {
-            gameObject.SetActive(false);
+            Homing = false;
+            transform.parent.gameObject.SetActive(false);
         }
         else if (collision.CompareTag("Player") || collision.CompareTag("Enemy"))
         {
@@ -34,9 +35,11 @@ public class WaveBullet : Bullet
                 DealDamage(collision);
                 if (numPierced > maxPiercing)
                 {
-                    gameObject.SetActive(false);
+                    Homing = false;
+                    transform.parent.gameObject.SetActive(false);
                 }
-                gameObject.SetActive(false);
+                Homing = false;
+                transform.parent.gameObject.SetActive(false);
                 numPierced++;
             }
         }

@@ -37,6 +37,7 @@ public class ShockLance : Weapon
             energyScript.StunTime = StunTime;
             energyScript.Source = BulletSource;
             energyScript.Range = Range;
+            energyScript.Homing = BulletHoming;
             FireTimer = RateOfFire;
             energyScript.Velocity = BulletVeloc;
             energyScript.Activate();

@@ -5,8 +5,7 @@
 /// </summary>
 public class HomingRadar : MonoBehaviour
 {
-    [SerializeField]
-    private Bullet parentBullet;
+    public Bullet parentBullet;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

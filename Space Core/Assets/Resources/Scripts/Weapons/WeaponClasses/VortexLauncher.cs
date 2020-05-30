@@ -45,6 +45,7 @@ public class VortexLauncher : RotaryRepeater
             bulletScript.KnockbackImpulse = KnockbackImpulse;
             bulletScript.KnockbackTime = KnockbackTime;
             bulletScript.StunTime = StunTime;
+            bulletScript.Homing = BulletHoming;
             bulletScript.Source = BulletSource;
             bulletScript.Range = Range;
             bulletScript.Velocity = BulletVeloc;

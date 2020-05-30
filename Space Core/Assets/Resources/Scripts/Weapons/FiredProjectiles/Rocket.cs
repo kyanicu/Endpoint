@@ -52,6 +52,7 @@ public class Rocket : Bullet
         DamageRadius.SetActive(false);
         meshRenderer.enabled = true;
         yield return new WaitForSeconds(0.2f);
-        gameObject.SetActive(false);
+        Homing = false;
+        transform.parent.gameObject.SetActive(false);
     }
 }

@@ -24047,7 +24047,8 @@ GameObject:
   - component: {fileID: 2516737295715155749}
   - component: {fileID: 2295821752990936884}
   - component: {fileID: 4430532696225646494}
-  m_Layer: 16
+  - component: {fileID: 1687489121171824350}
+  m_Layer: 0
   m_Name: HomingRadar
   m_TagString: HomingRadar
   m_Icon: {fileID: 0}
@@ -24142,3 +24143,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentBullet: {fileID: 2966086736204485973}
+--- !u!50 &1687489121171824350
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6095987653609889492}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
