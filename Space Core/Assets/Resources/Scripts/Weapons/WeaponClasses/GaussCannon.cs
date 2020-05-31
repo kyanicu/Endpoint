@@ -30,8 +30,8 @@ public class GaussCannon : Weapon
         {
             //Retrieve bullet from pooler
             GameObject bullet = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.identity);
-            GameObject muzzleFlash = ObjectPooler.instance.SpawnFromPool("MuzzleFlash", FireLocation.transform.position, Quaternion.identity);
-            muzzleFlash.transform.Rotate(RotationPoint.rotation.eulerAngles);
+            GameObject muzzleFlash = ObjectPooler.instance.SpawnFromPool("RRMuzzleFlash", FireLocation.transform.position, Quaternion.identity);
+            //muzzleFlash.transform.Rotate(RotationPoint.rotation.eulerAngles);
 
             //Check that bullet was loaded after pooler has been populated
             if (bullet != null)

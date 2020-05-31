@@ -17,7 +17,7 @@ public class BreachMissile : Weapon
         {
             //Get the rocket object from the ObjectPooler
             GameObject rocket = ObjectPooler.instance.SpawnFromPool(BulletTag, FireLocation.transform.position, Quaternion.identity);
-            //GameObject muzzleFlash = ObjectPooler.instance.SpawnFromPool("RocketSmoke", FireLocation.transform.position, Quaternion.identity);
+            GameObject muzzleFlash = ObjectPooler.instance.SpawnFromPool("BMMuzzleFlash", FireLocation.transform.position, Quaternion.identity);
             //muzzleFlash.transform.Rotate(RotationPoint.rotation.eulerAngles);
 
             if (rocket != null)

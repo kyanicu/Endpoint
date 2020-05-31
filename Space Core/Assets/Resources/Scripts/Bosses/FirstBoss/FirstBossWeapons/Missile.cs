@@ -26,6 +26,11 @@ public class Missile : MonoBehaviour
 
     private void Update()
     {
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+        {
+            return;
+        }
+
         if (hit)
         {
             return;

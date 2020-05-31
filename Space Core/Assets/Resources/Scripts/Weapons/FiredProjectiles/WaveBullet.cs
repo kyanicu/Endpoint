@@ -33,6 +33,7 @@ public class WaveBullet : Bullet
             if (!(Enum.GetName(typeof(DamageSource), Source) == collision.tag))
             {
                 DealDamage(collision);
+                ObjectPooler.instance.SpawnFromPool("PPHit", gameObject.transform.position, Quaternion.identity);
                 if (numPierced > maxPiercing)
                 {
                     Homing = false;

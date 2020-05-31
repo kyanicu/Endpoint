@@ -95,6 +95,7 @@ public class DrillBullet : Bullet
                     && damageTimer <= 0)
                 {
                     DealDamage(collision);
+                    ObjectPooler.instance.SpawnFromPool("VLHit", gameObject.transform.position, Quaternion.identity);
                     encounteredObjectTimers[collision.gameObject] = timePerDamageTic;
                 }
             }

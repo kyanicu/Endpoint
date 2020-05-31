@@ -285,7 +285,7 @@ public class FirstBossController : Controller
                     PlayerController.instance.HealCharacter((int)healthToHeal);
                 }
             }
-            ReceiveAttack(info);
+            Character.ReceiveAttack(info);
         }
     }
 

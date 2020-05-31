@@ -175,6 +175,11 @@ public abstract class AIController : Controller
             {
                 bulletsToFire--;
             }
+
+            if (bulletsToFire == 0)
+            {
+                Character.EndFire();
+            }
         }
         else if (bulletsToFire <= 0 && !finishedFiring)
         {

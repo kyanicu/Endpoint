@@ -6,7 +6,7 @@ public class Rocket : Bullet
     //attInfo is AttackInfo passed from Heavy Weapon
     public AttackInfo attInfo;
     public GameObject DamageRadius;
-    private MeshRenderer meshRenderer;
+    public GameObject ParticleSystem;
     private float explosionTime = .5f;
     private float baseVelocity;
     private float startVelocityFactor = .2f;
@@ -18,11 +18,16 @@ public class Rocket : Bullet
     public override void Activate()
     {
         base.Activate();
-        meshRenderer = GetComponent<MeshRenderer>();
-        meshRenderer.enabled = true;
+        ParticleSystem.SetActive(true);
         baseVelocity = Velocity;
         Velocity = Velocity * startVelocityFactor;
         StartCoroutine(WaitToSpeedUp());
+    }
+
+    public override void Update()
+    {
+
+        base.Update();
     }
 
     //Explodes on collision with anything
@@ -33,7 +38,8 @@ public class Rocket : Bullet
             //Pass the attack info on to the explosion radius
             DamageRadius.GetComponent<ExplosionInformation>().Info = attInfo;
             DamageRadius.SetActive(true);
-            meshRenderer.enabled = false;
+            ParticleSystem.SetActive(false);
+            ObjectPooler.instance.SpawnFromPool("BMHit", gameObject.transform.position, Quaternion.identity);
             StartCoroutine(Explosion());
             Velocity = baseVelocity;
             //ObjectPooler.instance.SpawnFromPool("RocketExplosion", transform.position, Quaternion.identity);
@@ -50,7 +56,7 @@ public class Rocket : Bullet
     {
         yield return new WaitForSeconds(explosionTime);
         DamageRadius.SetActive(false);
-        meshRenderer.enabled = true;
+        ParticleSystem.SetActive(true);
         yield return new WaitForSeconds(0.2f);
         Homing = false;
         transform.parent.gameObject.SetActive(false);

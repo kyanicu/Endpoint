@@ -9434,8 +9434,9 @@ GameObject:
   - component: {fileID: 425116}
   - component: {fileID: 19831366}
   - component: {fileID: 19910108}
+  - component: {fileID: 5249582639526493403}
   m_Layer: 0
-  m_Name: StormExplosion
+  m_Name: VL_Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9450,7 +9451,7 @@ Transform:
   m_GameObject: {fileID: 144952}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.20035, y: 0.20035, z: 0.20035}
   m_Children:
   - {fileID: 460010}
   - {fileID: 443082}
@@ -14093,6 +14094,18 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &5249582639526493403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334bb9aa18099f342ae6fe8299f57eb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &167232
 GameObject:
   m_ObjectHideFlags: 0
