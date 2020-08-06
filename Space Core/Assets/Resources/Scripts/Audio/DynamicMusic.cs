@@ -13,6 +13,7 @@ public class DynamicMusic : MonoBehaviour
     public AudioClip[] AudioClips;
     public int BattleClipIdx;
     public int BackgroundMusicClipIdx;
+    public int BossMusicClipIdx;
 
     //sets audio source
     private void Start()
@@ -29,6 +30,19 @@ public class DynamicMusic : MonoBehaviour
 
         //check if any enemies are in range
         bool InRangeOfEnemy = CheckInRange();
+
+        if(FirstBossController.Engaged)
+        {
+            if (audioSource.clip != AudioClips[BossMusicClipIdx])
+            {
+                audioSource.clip = AudioClips[BossMusicClipIdx];
+            }
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+            return;
+        }
 
         //set to battle music or background depending on range
         if (InRangeOfEnemy)
@@ -62,9 +76,20 @@ public class DynamicMusic : MonoBehaviour
             for (int i = 0; i < GameManager.EnemyControllers.Count; i++)
             {
                 GameObject enemy = GameManager.EnemyControllers[i];
+<<<<<<< HEAD
+                if (enemy != null)
+=======
                 if (enemy != null && enemy.GetComponent<EnemyController>() && enemy.GetComponent<EnemyController>().PlayerInRange)
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                 {
-                    return true;
+                    AIController[] controllers = enemy.GetComponents<AIController>();
+                    foreach (AIController controller in controllers)
+                    {
+                        if(controller.enabled && controller.IsPlayerInRange())
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
             return false;

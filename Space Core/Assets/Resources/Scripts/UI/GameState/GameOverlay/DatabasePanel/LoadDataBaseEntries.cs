@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using SimpleJSON;
+using UnityEngine;
 
 [System.Serializable]
 public static class LoadDataBaseEntries
@@ -51,51 +52,50 @@ public static class LoadDataBaseEntries
     /// </summary>
     public static void LoadAllDataEntries()
     {
+<<<<<<< HEAD
+        Logs = new Dictionary<string, DataEntry>();
+        string jsonMap = Resources.Load<TextAsset>("Text/Lore/LoreMap").text;
+        JSONNode loreMap = JSON.Parse(jsonMap);
+=======
         //Reset log list
         Logs = new Dictionary<string, DataEntry>();
 
         //Get the directionary holding the category folders
         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
         string[] categoryFolders = Directory.GetDirectories(dir.FullName);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
-        //Foreach category folder, pull individual log folders
-        for (int i = 0; i < categoryFolders.Length; i++)
+        foreach (KeyValuePair<string, JSONNode> category in (JSONObject)loreMap)
         {
-            DirectoryInfo catDir = new DirectoryInfo(categoryFolders[i]);
-            string[] logFolders = Directory.GetDirectories(catDir.FullName);
 
-            //for each log folder, pull out all of their data entries
-            foreach (string logPath in logFolders)
+            //for each json node, pull out all of their data entries
+            foreach (KeyValuePair<string, JSONNode> subcategory in (JSONObject)category.Value)
             {
-                DirectoryInfo logDir = new DirectoryInfo(logPath);
-                FileInfo[] Files = logDir.GetFiles("*.txt");
-
-                string logName = GameManager.instance.PullDirectoryEndPoint(logPath);
-
                 //Load all text assets from resources
-                TextAsset[] dataFolders = Resources.LoadAll<TextAsset>("Text/Lore/" + catDir.Name + "/" + logName);
+                //TextAsset[] dataFolders = Resources.LoadAll<TextAsset>("Text/Lore/" + catDir.Name + "/" + logName);
 
                 //Loop through each text file in log folder
 
-                for (int ii = 0; ii < dataFolders.Length; ii++)
+                foreach (JSONNode logName in subcategory.Value)
                 {
-                    //Format filename appropriately 
-                    string logFileType = GameManager.instance.PullDirectoryEndPoint(Files[ii].Name);
-                    logFileType = logFileType.Substring(0, logFileType.Length - 4);
-
+                    string categoryName = category.Key.Trim('"');
+                    string subcategoryName = subcategory.Key.Trim('"');
+                    string logNameName = logName.Value.Trim('"');
+                    string filePath = $"Text/Lore/{categoryName}/{subcategoryName}/{logNameName}";
+                    TextAsset logContent = Resources.Load<TextAsset>(filePath);
                     //Compile the data entry
-                    DataEntry d = RetrieveDataEntryFromText(dataFolders[ii], logName, catDir.Name, logFileType);
+                    DataEntry d = RetrieveDataEntryFromText(logContent, subcategoryName, categoryName, logNameName);
 
                     //If it is a new entry, add it to logs
-                    if (!Logs.ContainsKey(logName))
+                    if (!Logs.ContainsKey(subcategoryName))
                     {
                         d.Visible = false;
-                        Logs.Add(logName, d);
+                        Logs.Add(subcategoryName, d);
                     }
                 }
             }
         }
-    }
+    }    
 
     /// <summary>
     /// Converts a text file into a data entry by retrieving log name, info,

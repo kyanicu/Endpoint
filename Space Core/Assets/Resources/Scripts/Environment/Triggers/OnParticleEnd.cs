@@ -19,7 +19,7 @@ using System.Collections;
         }
     }
 
-    public void OnEnable()
+    public virtual void OnEnable()
     {
         StartCoroutine(particleDuration());
     }

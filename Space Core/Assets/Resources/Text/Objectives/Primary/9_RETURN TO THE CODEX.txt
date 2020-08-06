@@ -1,0 +1,6 @@
+Description: RETURN TO THE CODEX
+Number of Objectives: 1
+Icon Type: diamondIcon
+The Aurora Sphere gently pulses with waves of soft light. For a breif moment, you wonder what purpose it serves the Codex.
+
+But you realize it doesn't matter. You must complete your directive. Deliver the sphere.

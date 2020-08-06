@@ -18,6 +18,7 @@ public abstract class WeaponGenerationInfo
     public string name;
     public string baseName;
     public string description;
+    public string BulletTag;
 
     #region Weapon Stat Ranges
     public float MinSpread;

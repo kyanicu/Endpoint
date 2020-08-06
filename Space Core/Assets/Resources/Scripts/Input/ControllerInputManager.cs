@@ -12,10 +12,12 @@ public class ControllerInputManager : InputManager
 {
     private GamePadState? state;
     private GamePadState? prevState;
+    private bool jumped;
 
     // Start is called before the first frame update
     void Start()
     {
+        jumped = false;
         state = null;
         prevState = null;
     }
@@ -71,13 +73,20 @@ public class ControllerInputManager : InputManager
         {
             PlayerController.instance.Fire();
             HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
+        }
+        else if (state.Value.Triggers.Right <= 0.3f && prevState.Value.Triggers.Right > 0.3f)
+        {
+            PlayerController.instance.EndFire();
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
 
-        if (state.Value.Triggers.Left > 0.3f)
+        if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left <= 0.3f)
         {
             PlayerController.instance.Jump();
         }
-        else if (state.Value.Triggers.Left == 0)
+        else if (state.Value.Triggers.Left <= 0.3f && prevState.Value.Triggers.Left > 0.3f)
         {
             PlayerController.instance.JumpCancel();
         }
@@ -103,7 +112,7 @@ public class ControllerInputManager : InputManager
 
         if (prevState.Value.Buttons.Y == ButtonState.Released && state.Value.Buttons.Y == ButtonState.Pressed)
         {
-            //TBD
+            // None
         }
 
         #endregion
@@ -114,6 +123,21 @@ public class ControllerInputManager : InputManager
         {
             float angle = Mathf.Atan2(state.Value.ThumbSticks.Right.Y, state.Value.ThumbSticks.Right.X) * Mathf.Rad2Deg;
             PlayerController.instance.AimWeapon(angle);
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
+        }
+        else
+        {
+            switch (PlayerController.instance.Character.MoveDirection)
+            {
+                case 1:
+                    PlayerController.instance.AimWeapon(0, false);
+                    break;
+                case -1:
+                    PlayerController.instance.AimWeapon(180, false);
+                    break;
+            }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
 
         if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
@@ -137,7 +161,14 @@ public class ControllerInputManager : InputManager
             if (!PauseMenuManager.instance.PauseMenuPanelIsActive)
             {
                 // Open the pause menu.
+                currentState = InputState.PAUSE;
                 PauseMenuManager.instance.OpenPauseMenu();
+            }
+            else
+            {
+                // Open the pause menu.
+                currentState = InputState.GAMEPLAY;
+                PauseMenuManager.instance.ClosePauseMenu();
             }
         }
 
@@ -168,9 +199,22 @@ public class ControllerInputManager : InputManager
         #endregion
 
         #region D-Pad
-
+        /*
+        float horiz = 0;
+        float vert = 0;
         if (state.Value.DPad.Right == ButtonState.Pressed)
         {
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
+            horiz = +1f;
+        }
+        else if (state.Value.DPad.Left == ButtonState.Pressed)
+        {
+            horiz = -1f;
+        }
+        if (state.Value.DPad.Up == ButtonState.Pressed)
+        {
+            vert = +1f;
+=======
             float horiz = 1f;
             PlayerController.instance.Move(horiz);
         }
@@ -178,8 +222,18 @@ public class ControllerInputManager : InputManager
         {
             float horiz = -1f;
             PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
+        else if (state.Value.DPad.Down == ButtonState.Pressed)
+        {
+            vert = -1f;
+        }
+
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
+        PlayerController.instance.Move(direction);
+        */    
         #endregion
+        
     }
 
     /// <summary>
@@ -189,7 +243,8 @@ public class ControllerInputManager : InputManager
     /// </summary>
     protected override void RunMainMenuFrameInput()
     {
-        if (!CheckControllerConnected() || state == null || prevState == null)
+        if (!CheckControllerConnected() || state == null || 
+            prevState == null || MainMenuManager.instance == null)
         {
             return;
         }
@@ -203,10 +258,23 @@ public class ControllerInputManager : InputManager
         {
             MainMenuManager.instance.TraverseMenu(1);
         }
+        if (state.Value.DPad.Left == ButtonState.Pressed && prevState.Value.DPad.Left == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseSettings(1);
+        }
+        else if (state.Value.DPad.Right == ButtonState.Pressed && prevState.Value.DPad.Right == ButtonState.Released)
+        {
+            MainMenuManager.instance.TraverseSettings(-1);
+        }
         //Check vertical movement through menu with Left Stick
         else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
         {
             MainMenuManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+        //Check horizontal movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.X != 0 && prevState.Value.ThumbSticks.Left.X == 0)
+        {
+            MainMenuManager.instance.TraverseSettings(state.Value.ThumbSticks.Left.X * -1);
         }
 
         //If player selects the currently highlighted button, invoke it
@@ -282,7 +350,8 @@ public class ControllerInputManager : InputManager
         //Check for B button press
         if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Released)
         {
-            OverlayManager.instance.ReceiveFaceButtonInput("b");
+            OverlayManager.instance.ToggleOverlayVisibility();
+            currentState = InputState.GAMEPLAY;
         }
         //Check for X button press
         if (state.Value.Buttons.X == ButtonState.Pressed && prevState.Value.Buttons.X == ButtonState.Released)
@@ -355,9 +424,62 @@ public class ControllerInputManager : InputManager
         {
             PauseMenuManager.instance.SelectButton();
         }
+        //If player selects the currently highlighted button, invoke it
+        else if (state.Value.Buttons.B == ButtonState.Pressed && prevState.Value.Buttons.B == ButtonState.Pressed)
+        {
+            PauseMenuManager.instance.ClosePauseMenu();
+        }
         else if (prevState.Value.Buttons.Start == ButtonState.Released && state.Value.Buttons.Start == ButtonState.Pressed)
         {
             PauseMenuManager.instance.ClosePauseMenu();
+        }
+    }
+
+    /// <summary>
+    /// Runs the frame input intended while in the game over InputState
+    /// Should not handle anything physics related that does not require use of "Input.Get___Down/Up"
+    /// </summary>
+    protected override void RunGameOverFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+
+        //Check vertical movement through menu with D-Pad
+        if (state.Value.DPad.Up == ButtonState.Pressed && prevState.Value.DPad.Up == ButtonState.Released)
+        {
+            GameOverManager.instance.TraverseMenu(-1);
+        }
+        else if (state.Value.DPad.Down == ButtonState.Pressed && prevState.Value.DPad.Down == ButtonState.Released)
+        {
+            GameOverManager.instance.TraverseMenu(1);
+        }
+        //Check vertical movement through menu with Left Stick
+        else if (state.Value.ThumbSticks.Left.Y != 0 && prevState.Value.ThumbSticks.Left.Y == 0)
+        {
+            GameOverManager.instance.TraverseMenu(state.Value.ThumbSticks.Left.Y * -1);
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            GameOverManager.instance.SelectButton();
+        }
+
+    }
+
+    protected override void RunTerminalWindowFrameInput()
+    {
+        if (!CheckControllerConnected() || state == null || prevState == null)
+        {
+            return;
+        }
+
+        //If player selects the currently highlighted button, invoke it
+        if (state.Value.Buttons.A == ButtonState.Pressed && prevState.Value.Buttons.A == ButtonState.Pressed)
+        {
+            TerminalWindow.instance.ButtonClick();
         }
     }
 
@@ -375,8 +497,14 @@ public class ControllerInputManager : InputManager
         }
 
         float horiz = state.Value.ThumbSticks.Left.X;
+        float vert = state.Value.ThumbSticks.Left.Y;
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
+        PlayerController.instance.Move(direction);
+=======
         PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
     }
 
     /// <summary>

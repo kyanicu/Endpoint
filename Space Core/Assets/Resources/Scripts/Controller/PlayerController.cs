@@ -1,4 +1,8 @@
 ﻿using System.Collections;
+<<<<<<< HEAD
+using System.Collections.Generic;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 using UnityEngine;
 
 //We'll need to figure out a way to decouple scene loading from player
@@ -9,6 +13,36 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PlayerController : Controller
 {
+<<<<<<< HEAD
+
+    //Base variables for the player controller
+    public AIController Enemy;
+    public InteractableEnv InteractableObject { private get; set; }
+
+    //Variables for wheel upgrades
+    public bool ForceCompensatorActive { get; set; }
+    public bool HasSwitched { get; set; }
+    public bool HealthRegenOnPickup { get; set; }
+    public bool HealOnHack { get; set; }
+    public bool ScorchedEarthActive { get; set; }
+    public bool IYBKYDActive { get; set; }
+    public bool TacticalActive { get; set; }
+    public bool ReverseEngineeringProtocolActive { get; set; }
+    public bool RateOfFireOptimizerActive { get; set; }
+    public bool StealthHackActive { get; set; }
+    public bool Undetectable { get; set; }
+    public int Shield { get; set; }
+    public int ShieldMax { get; set; }
+
+    //constants
+    private const float HACK_AREA_LENGTH = 22.5f;
+    private const float COOLDOWN_TIME = 2.5f;
+    private const float SHIELD_RECHARGE_TIME = 2.5f;
+    private const int SNAP_RANGE = 10;
+    private float IFRAME_TIME = 3f;
+    private bool canSwap;
+    private bool routineRunning;
+=======
     //Base variables for the player controller
     public EnemyController Enemy { get; set; }
     public InteractableEnv InteractableObject { private get; set; }
@@ -16,6 +50,7 @@ public class PlayerController : Controller
     private const float COOLDOWN_TIME = 2.5f;
     private float IFRAME_TIME = 3f;
     private bool canSwap;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     //setup singleton of the Player Controller
     private static PlayerController _instance;
@@ -26,6 +61,15 @@ public class PlayerController : Controller
     /// </summary>
     private void Awake()
     {
+<<<<<<< HEAD
+        routineRunning = false;
+        HealthRegenOnPickup = false;
+        HasSwitched = false;
+        Shield = 0;
+        ShieldMax = 0;
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         if (_instance == null)
         {
             _instance = this;
@@ -43,14 +87,29 @@ public class PlayerController : Controller
         Character.Weapon.BulletSource = DamageSource.Player;
         if (Character.Class == null)
         {
+<<<<<<< HEAD
+            Character.MaxHealth = 150;
+            Character.Health = 150;
+            Character.Class = "medium";
+            Character.IsPlayer = true;
+
+            // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
+            Character.WorldspaceCanvas.gameObject.SetActive(true);
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
+=======
             Character.MaxHealth = 100;
             Character.Health = 100;
             Character.Class = "medium";
             Character.IsPlayer = true;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
         canSwap = true;
         HUDController.instance.UpdateHUD(Character);
         base.Start();
+<<<<<<< HEAD
+        Character.SetMeshEmissionColor(Color.red);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -59,6 +118,13 @@ public class PlayerController : Controller
     public override void DeselectHackTarget()
     {
         Enemy.DeselectHackTarget();
+<<<<<<< HEAD
+        if (IYBKYDActive)
+        {
+            Enemy.Character.ReceiveAttack(new AttackInfo(IYBKYD.DamageOnCancel, Vector2.zero, 0, 0, DamageSource.Player));
+        }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         Enemy = null;
     }
 
@@ -67,8 +133,14 @@ public class PlayerController : Controller
     /// </summary>
     public override void Die()
     {
+<<<<<<< HEAD
+        InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
+        GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
+        SceneManager.LoadScene(2);
+=======
         InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
         SceneManager.LoadScene(0);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -78,8 +150,20 @@ public class PlayerController : Controller
     {
         if(Enemy != null)
         {
+<<<<<<< HEAD
+            InputManager.instance.currentState = InputManager.InputState.HACKING;
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
+            Enemy.Character.movement.runMax = Enemy.BaseRunMax;
+            // Disable player canvas on the old character.
+            Character.WorldspaceCanvas.gameObject.SetActive(false);
+
+            Character.SetMeshEmissionColor(Color.blue);
+
+=======
+            Enemy.Character.HackArea.gameObject.SetActive(false);
+            Enemy.Character.QTEPanel.gameObject.SetActive(false);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.IsPlayer = false;
             Character.Weapon.BulletSource = DamageSource.Enemy;
             Character.Weapon.ControlledByPlayer = false;
@@ -87,7 +171,31 @@ public class PlayerController : Controller
             Character.name = "Enemy";
             Character.IsBlinking = false;
             Character.Invincible = 0;
+<<<<<<< HEAD
+            SwapCharacter(Enemy.Character, ref Enemy);
+
+            if(ScorchedEarthActive)
+            {
+                Enemy.Character.ReceiveAttack(new AttackInfo(ScorchedEarth.DamageOnSwitch, Vector2.zero, 0, 0, DamageSource.Player));
+            }
+
+            if(TacticalActive)
+            {
+                Tactical.ResetAbility();
+            }
+
+            if (RateOfFireOptimizerActive)
+            {
+                RateOfFireOptimizer.ResetAbility();
+            }
+
+            // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
+            Character.WorldspaceCanvas.gameObject.SetActive(true);
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
+
+=======
             SwapCharacter(Enemy.Character, Enemy);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.IsPlayer = true;
             Character.Weapon.BulletSource = DamageSource.Player;
             Character.Weapon.ControlledByPlayer = true;
@@ -96,7 +204,33 @@ public class PlayerController : Controller
             Character.IsBlinking = false;
             Character.Invincible = 0;
             Enemy = null;
+<<<<<<< HEAD
+
+            if (TacticalActive)
+            {
+                Tactical.ResetAbility();
+            }
+
+            if (RateOfFireOptimizerActive)
+            {
+                RateOfFireOptimizer.ApplyAbility();
+            }
+
+            if (StealthHackActive)
+            {
+                if (routineRunning)
+                {
+                    StopCoroutine(ResetPlayerTag());
+                    routineRunning = false;
+                }
+                StartCoroutine(ResetPlayerTag());
+            }
+
             HUDController.instance.UpdateHUD(Character);
+            HasSwitched = true;
+=======
+            HUDController.instance.UpdateHUD(Character);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
     }
 
@@ -106,12 +240,39 @@ public class PlayerController : Controller
     /// <param name="attackInfo">Information on the attack the player is taking</param>
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
+<<<<<<< HEAD
+        if (Shield > 0)
+        {
+            Shield--;
+            StartCoroutine(RechargeShield());
+            return;
+        }
+
+        if (Character.Invincible > 0)
+            return;
+
+        if (ReverseEngineeringProtocolActive)
+        {
+            float ammoGained = attackInfo.damage * ReverseEngineeringProtocol.AmmoRetentionMod;
+            if (ammoGained < 0)
+            {
+                ammoGained = 1;
+            }
+            Character.Weapon.AddAmmo((int) ammoGained);
+            HUDController.instance.UpdateAmmo(Character);
+        }
+
+        base.ReceiveAttack(attackInfo);
+
+        if (attackInfo.damageSource != DamageSource.Hazard)
+=======
         if (Character.Invincible > 0)
             return;
 
         base.ReceiveAttack(attackInfo);
 
         if (attackInfo.damageSource != DamageSource.Spread && attackInfo.damageSource != DamageSource.Hazard)
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         {
             Character.Invincible++;
             StartCoroutine(RunIFrames());
@@ -137,10 +298,49 @@ public class PlayerController : Controller
     {
         if (collision.CompareTag("Ammo"))
         {
+<<<<<<< HEAD
+            if (!HealthRegenOnPickup)
+            {
+                Character.Weapon.AddAmmo(collision.gameObject.GetComponent<DroppedAmmo>().Ammo);
+            }
+            else
+            {
+                float ammo = collision.gameObject.GetComponent<DroppedAmmo>().Ammo;
+                float health = ammo * .2f;
+                if (health < 1)
+                {
+                    health = 1;
+                }
+                ammo = ammo * .7f;
+                if (ammo < 1)
+                {
+                    ammo = 1;
+                }
+                Character.Weapon.AddAmmo((int)ammo);
+                Character.HealCharacter((int)health);
+                HUDController.instance.UpdateHUD(Character);
+            }
+
+            // Update the ammo text above player - using ONLY this Enemy's canvas.
+            Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdatePlayerAmmo();
+            
+            HUDController.instance.UpdateAmmo(Character);
+            collision.gameObject.SetActive(false);
+        }
+        else if (collision.CompareTag("Rocket"))
+        {
+            //Damage applied from Rockets. Can damage self.
+
+            //collision.gameObject.GetComponent<Rocket>().attInfo.knockbackImpulse 
+                //= collision.gameObject.GetComponent<Rocket>().KnockbackImpulse * (transform.position - collision.transform.position).normalized;
+            ReceiveAttack(collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info);
+        }
+=======
             Character.Weapon.AddAmmo(collision.gameObject.GetComponent<DroppedAmmo>().Ammo);
             HUDController.instance.UpdateAmmo(Character);
             collision.gameObject.SetActive(false);
         }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -165,6 +365,15 @@ public class PlayerController : Controller
         //If player is not in hack circle, reload
         if (Enemy == null || Vector3.Distance(transform.position, Enemy.transform.position) > HACK_AREA_LENGTH)
         {
+<<<<<<< HEAD
+            if (RateOfFireOptimizerActive)
+            {
+                RateOfFireOptimizer.ResetAbility();
+                RateOfFireOptimizer.ApplyAbility();
+            }
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.Reload();
 
             //update hud
@@ -172,12 +381,59 @@ public class PlayerController : Controller
         }
     }
 
+<<<<<<< HEAD
+    public void AimWeapon(float angle, bool track)
+    {
+        if (!track)
+        {
+            Character.AimWeapon(angle, Camera.main);
+        }
+        else
+        {
+            AimWeapon(angle);
+        }
+    }
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Method for passing the main camera to the character when the player aim's the weapon
     /// </summary>
     /// <param name="angle">New angle the player will be aiming at</param>
     public override void AimWeapon(float angle)
     {
+<<<<<<< HEAD
+        Vector2 direction = (Vector2)(Quaternion.Euler(0, 0, angle) * Vector2.right);
+        bool previous = Physics2D.queriesHitTriggers;
+        Physics2D.queriesHitTriggers = true;
+        RaycastHit2D hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+        //check if we hit an enemy
+        if (hit.collider == null || hit.collider.tag != "Enemy")
+        {
+            //check if we hit an enemy above the range
+            for (int i = 0; i < SNAP_RANGE && (hit.collider == null || hit.collider.tag != "Enemy"); i++)
+            {
+                direction = (Vector2)(Quaternion.Euler(0, 0, angle + i) * Vector2.right);
+                hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+            }
+            //if there is still no enemy hit, check below the current angle
+            if (hit.collider == null || hit.collider.tag != "Enemy")
+            {
+                for (int i = 0; i < SNAP_RANGE && (hit.collider == null || hit.collider.tag != "Enemy"); i++)
+                {
+                    direction = (Vector2)(Quaternion.Euler(0, 0, angle - i) * Vector2.right);
+                    hit = Physics2D.Raycast(Character.Weapon.FireLocation.transform.position, direction, Character.Weapon.Range);
+                }
+            }
+        }
+        Physics2D.queriesHitTriggers = previous;
+        if (hit && hit.collider && hit.collider.tag == "Enemy")
+        {
+            Vector3 diff = hit.collider.gameObject.transform.position - Character.transform.position;
+            angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         Character.AimWeapon(angle, Camera.main);
     }
 
@@ -202,6 +458,29 @@ public class PlayerController : Controller
         }
     }
 
+<<<<<<< HEAD
+    public override bool Fire()
+    {
+        if (Character.isStunned > 0)
+        {
+            return false;
+        }
+
+        bool fired = base.Fire();
+        if (fired && RateOfFireOptimizerActive)
+        {
+            RateOfFireOptimizer.ApplyMod();
+        }
+        else if(!fired && RateOfFireOptimizerActive)
+        {
+            RateOfFireOptimizer.ResetAbility();
+            RateOfFireOptimizer.ApplyAbility();
+        }
+        return fired;
+    }
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// function for resetting the swap
     /// </summary>
@@ -253,4 +532,73 @@ public class PlayerController : Controller
         yield return new WaitForSeconds(IFRAME_TIME);
         Character.Invincible--;
     }
+<<<<<<< HEAD
+
+    protected override void Update()
+    {
+        //Check that player is not in a menu
+        if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY)
+            return;
+
+        base.Update();
+
+        switch (Character.Class)
+        {
+            case "heavy":
+                CheckMaxSpeed();
+                break;
+            case "medium":
+                CheckRolling();
+                break;
+        }
+        
+        UpdateWorldspaceCanvasDirection();
+    }
+
+    protected void UpdateWorldspaceCanvasDirection()
+    {
+        // If character is facing to the left, x local scale is negative
+        // So that the character's UI is always facing the right direction.
+        if (isFacingLeft)
+        {
+            Character.WorldspaceCanvas.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        //Else reset scale and positions
+        else
+        {
+            Character.WorldspaceCanvas.transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    //Returns whether or not the character is facing left
+    //Used in UpdatePlayerCanvasDirection()
+    public bool isFacingLeft
+    {
+        get
+        {
+            Vector2 charScale = Character.transform.localScale;
+            return charScale.x < 0;
+        }
+    }
+
+    private IEnumerator RechargeShield()
+    {
+        if(ShieldMax != 0)
+        {
+            yield return new WaitForSeconds(SHIELD_RECHARGE_TIME);
+            if (ShieldMax != 0)
+                Shield++;
+        }
+    }
+
+    private IEnumerator ResetPlayerTag()
+    {
+        routineRunning = true;
+        Undetectable = true;
+        yield return new WaitForSeconds(UndetectableHack.UndetectableTime);
+        Undetectable = false;
+        routineRunning = false;
+    }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 }

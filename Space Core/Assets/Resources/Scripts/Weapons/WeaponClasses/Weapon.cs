@@ -13,19 +13,25 @@ public abstract class Weapon : MonoBehaviour
     /// </summary>
     public static Dictionary<int, string> WeaponsList = new Dictionary<int, string>()
     {
-        { 0, "Matsya" },
-        { 1, "Jakkaru" },
-        { 2, "SnipeyBoi" },
-        //{ 3, "Tributar" },
-        //{ 4, "Bestafera" },
-        //{ 5, "Thor" },
+        { 0, "Pulse Projector" },
+        { 1, "Rotary Repeater" },
+        { 2, "Gauss Cannon" },
+        { 3, "Vortex Launcher"},
+        { 4, "Breach Missile" },
+        { 5, "Shock Lance" }
+        //{ 6, "Tributar" },
+        //{ 7, "Bestafera" },
+        //{ 8, "Thor" },
     };
+
+    public enum WeaponType { Automatic, Scatter, Precision, Heavy, Energy };
 
     public string Name { get; set; }
     public string FullName { get; set; }
     public string Description { get; set; }
     public bool IsReloading { get; set; }
     public DamageSource BulletSource { get; set; }
+    public WeaponType Type { get; set; }
     public int AmmoInClip { get; set; }
     public float SpreadFactor { get; set; }
     public int TotalAmmo { get; set; }
@@ -43,6 +49,11 @@ public abstract class Weapon : MonoBehaviour
     public string BulletTag { protected get; set; }
     public GameObject FireLocation { get; set; }
     public Character owner { get; set; }
+    public AudioClip ReloadStart;
+    public AudioClip ReloadEnd;
+    public AudioClip FireSfx;
+    public bool BulletHoming { get; set; }
+    protected AudioSource audioSource { get; set; }
 
     public float BulletVeloc
     {
@@ -54,12 +65,24 @@ public abstract class Weapon : MonoBehaviour
     private float playerBulletVelocMod = 1.5f;
     private float enemyBulletVelocMod = .75f;
     private float _bulletVelocity;
+    internal int ammoInClip;
 
+    public Vector2 aimingDirection
+    {
+        get
+        {
+            if (RotationPoint == null)
+            {
+                return transform.right;
+            }
 
-    public Vector2 aimingDirection { get { return RotationPoint.transform.right; } }
+            return RotationPoint.transform.right;
+        }
+    }
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         owner = transform.root.GetComponent<Character>();
     }
 
@@ -111,9 +134,22 @@ public abstract class Weapon : MonoBehaviour
         //Check that passed character still exists
         if(c != null)
         {
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Weapons/WeaponClasses/Weapon.cs
+            if(ReloadStart != null && ReloadEnd != null)
+            {
+                audioSource.clip = ReloadStart;
+                audioSource.Play();
+            }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Weapons/Weapon.cs
             //Begin reloading loop
             while (TotalAmmo > 0 && AmmoInClip < ClipSize)
             {
+                if (ReloadStart != null && ReloadEnd == null)
+                {
+                    audioSource.clip = ReloadStart;
+                    audioSource.Play();
+                }
                 if (c == null) break;
 
                 //Wait until reload timer is up.
@@ -129,6 +165,11 @@ public abstract class Weapon : MonoBehaviour
                     HUDController.instance.UpdateAmmo(c);
                 }
             }
+            if (ReloadStart != null && ReloadEnd != null)
+            {
+                audioSource.clip = ReloadEnd;
+                audioSource.Play();
+            }
 
             IsReloading = false;
             yield return null;
@@ -138,7 +179,7 @@ public abstract class Weapon : MonoBehaviour
     /// <summary>
     /// Main update function decrementing fire timer
     /// </summary>
-    protected void Update()
+    protected virtual void Update()
     {
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
@@ -164,5 +205,18 @@ public abstract class Weapon : MonoBehaviour
         {
             TotalAmmo += num;
         }
+    }
+
+    /// <summary>
+    /// Optionally implemented function for specifying the end of firing the weapon
+    /// </summary>
+    public virtual bool EndFire()
+    {
+        if (IsReloading)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

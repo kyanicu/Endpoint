@@ -31,6 +31,10 @@ public class PlayerInitializer : MonoBehaviour
             player.name = "Player";
             player.tag = "Player";
             PlayerController.instance.Character = player.GetComponent<Character>();
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Player/PlayerInitializer.cs
+            ExperienceSystem.instance.StartExperienceSystem();
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Player/PlayerInitializer.cs
         }
         //Begin operation for loading a player from a save file
         else
@@ -48,10 +52,19 @@ public class PlayerInitializer : MonoBehaviour
             {
                 #region Load Player
                 GameObject player = Instantiate(Enemies[classToInstantiate]);
-                player.transform.position = transform.position;
+                player.transform.position = transform.position; 
 
                 //Remove enemy component and add a player component
                 PlayerController.instance.Character = player.GetComponent<Character>();
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Player/PlayerInitializer.cs
+                PlayerController.instance.Character.WorldspaceCanvas.gameObject.SetActive(true);
+                WorldspaceCanvasManager WSCanvasManager = 
+                    PlayerController.instance.Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>();
+
+                WSCanvasManager.InitializeAsPlayerCanvas(PlayerController.instance.Character);
+                WSCanvasManager.UpdatePlayerAmmo();
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Player/PlayerInitializer.cs
 
                 #region Load Player Stats
                 PlayerController.instance.Character.Class = classes[classToInstantiate];
@@ -61,6 +74,12 @@ public class PlayerInitializer : MonoBehaviour
                 PlayerController.instance.Character.MinimapIcon.GetComponent<SpriteRenderer>().color = Color.cyan;
                 player.name = "Player";
                 player.tag = "Player";
+
+                ExperienceSystem.instance.level = SaveSystem.loadedData.level;
+                ExperienceSystem.instance.experience = SaveSystem.loadedData.experience;
+                ExperienceSystem.instance.totalExperience = SaveSystem.loadedData.totalExperience;
+                ExperienceSystem.instance.nextLevelExperience = SaveSystem.loadedData.nextLevelExperience;
+                ExperienceSystem.instance.totalNextLevelExperience = SaveSystem.loadedData.totalNextLevelExperience;
                 #endregion
 
                 Transform weaponParent = PlayerController.instance.Character.RotationPoint.transform.GetChild(0);
@@ -117,6 +136,14 @@ public class PlayerInitializer : MonoBehaviour
 
                 #endregion
             }
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Player/PlayerInitializer.cs
+
+            //Empty saved data cache as confirmation that data was successfully loaded
+            SaveSystem.loadedData = null;
+
+            HUDController.instance.UpdateHUD(PlayerController.instance.Character);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Player/PlayerInitializer.cs
         }
     }
 }

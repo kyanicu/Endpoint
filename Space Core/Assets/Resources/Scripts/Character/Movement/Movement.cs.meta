@@ -1,21 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Movement/Movement.cs.meta
 guid: 5733448870a4bfd48b3ca34ac0b58b42
-=======
-guid: e3546d88f81793d40a66a9ae067430d0
->>>>>>> a05cbffea63b6dd802be9a35a5097575b94ca895:Space Core/Assets/Resources/Scripts/Character/Abilities/AbilityGenerator.cs.meta
-=======
-<<<<<<< HEAD
-guid: 5733448870a4bfd48b3ca34ac0b58b42
-=======
-<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Character/Abilities/ConcreteAbilities/Overclock.cs.meta
-guid: 62c0f5ea316272442ba4c35e65671202
-=======
-guid: 5733448870a4bfd48b3ca34ac0b58b42
->>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1:Space Core/Assets/Resources/Scripts/Character/Movement/Movement.cs.meta
->>>>>>> f03b45590c3c6721bb7b79e2dbbd87401d16b5a1
->>>>>>> a05cbffea63b6dd802be9a35a5097575b94ca895
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

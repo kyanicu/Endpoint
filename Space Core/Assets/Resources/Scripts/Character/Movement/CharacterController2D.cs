@@ -48,7 +48,7 @@ public static class VectorLibrary
     }
 
     public static float getAngleFromHorizon(Vector2 slope)
-    {
+    { 
         float fromRight = Vector2.Angle(Vector2.right, slope);
         float fromLeft = Vector2.Angle(Vector2.left, slope);
 
@@ -91,7 +91,7 @@ public class CharacterController2D : MonoBehaviour
     private bool _isTouchingRightWall;
     public bool isTouchingRightWall { get { return _isTouchingRightWall; } private set { _isTouchingRightWall = value; } }
 
-    [SerializeField] private float slopeMax = 45;
+    [SerializeField] private float slopeMax = 50;
     [SerializeField] private float stepMax = 0.5f;
 
     public Vector2 bottomPoint { get { return (Vector2)(capCol.bounds.center + (-transform.up * capCol.size.y / 2)); } }
@@ -128,6 +128,11 @@ public class CharacterController2D : MonoBehaviour
     void Start()
     {
         
+    }
+
+    public bool CheckGroundableSlope(Vector2 normal)
+    {
+        return Vector2.Angle(normal, Vector2.up) < slopeMax;
     }
 
     private bool CheckStep(ContactData corner)
@@ -179,7 +184,7 @@ public class CharacterController2D : MonoBehaviour
 
                 ContactData contact = moveDatas[moveCount - 1].contacts[i];
 
-                if (Vector2.Angle(contact.normal, Vector2.up) < slopeMax && !stepHit)
+                if (CheckGroundableSlope(contact.normal) && !stepHit)
                     slopeNormal += contact.normal;
                 else
                 {
@@ -240,7 +245,7 @@ public class CharacterController2D : MonoBehaviour
     public ContactData[] UpdateState(out int contactCount, Vector2 simMoveDir)
     {
         ContactData[] contactDatas = mover.UpdateState(out contactCount, simMoveDir);
-
+        
         if (!isGrounded)
         {
             isTouchingCeiling = false;
@@ -253,7 +258,7 @@ public class CharacterController2D : MonoBehaviour
                 for (int i = 0; i < contactCount; i++)
                 {
 
-                    if (Vector2.Angle(contactDatas[i].normal, Vector2.up) < slopeMax)
+                    if (CheckGroundableSlope(contactDatas[i].normal))
                         slopeNormal += contactDatas[i].normal;
                     else
                     {
@@ -283,7 +288,7 @@ public class CharacterController2D : MonoBehaviour
             for (int i = 0; i < contactCount; i++)
             {
 
-                if (Vector2.Angle(contactDatas[i].normal, Vector2.up) < slopeMax && !stepHit)
+                if (CheckGroundableSlope(contactDatas[i].normal) && !stepHit)
                     slopeNormal += contactDatas[i].normal;
                 else
                 {
@@ -311,10 +316,10 @@ public class CharacterController2D : MonoBehaviour
             }
             else
             {
-                //if (!AttemptReground())
-                //{
+                if (!AttemptReground())
+                {
                     Unground();
-                //}
+                }
             }
         }
 
@@ -390,7 +395,7 @@ public class CharacterController2D : MonoBehaviour
                 if (hit.distance > distance)
                     break;
 
-                if (Vector2.Angle(Vector2.up, hit.normal) <= slopeMax)
+                if (CheckGroundableSlope(hit.normal))
                 {
                     slopeNormal += hit.normal;
                 }
@@ -418,7 +423,7 @@ public class CharacterController2D : MonoBehaviour
         {
             ContactData contact = moveData.contacts[i];
 
-            if (Vector2.Angle(moveData.contacts[i].normal, Vector2.up) >= slopeMax)
+            if (CheckGroundableSlope(moveData.contacts[i].normal))
             {
                 if (Vector2.Dot(contact.normal, Vector2.down) > 0.000001f)
                     isTouchingCeiling = true;
@@ -460,7 +465,7 @@ public class CharacterController2D : MonoBehaviour
 
                 ContactData contact = moveDatas[moveCount - 1].contacts[i];
 
-                if (Vector2.Angle(moveData.contacts[i].normal, Vector2.up) < slopeMax)
+                if (CheckGroundableSlope(moveData.contacts[i].normal))
                     slopeNormal += moveData.contacts[i].normal;
                 else
                 {

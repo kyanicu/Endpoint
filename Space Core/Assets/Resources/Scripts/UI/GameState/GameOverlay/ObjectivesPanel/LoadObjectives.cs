@@ -48,12 +48,12 @@ public static class LoadObjectives
         /// <param name="cc"></param>
         public Objective(string name, string descr, string subdescr, int ntc, string iconType)
         {
-            Name = name;
-            Description = descr;
-            SubDescription = subdescr;
+            Name = name.Replace("\r", "");
+            Description = descr.Replace("\r", "");
+            SubDescription = subdescr.Replace("\r", "");
             NumToComplete = ntc;
             CurrentlyCompleted = 0;
-            IconPath = "Images/Icons/" + iconType;
+            IconPath = "Images/Icons/" + iconType.Replace("\r", "");
         }
 
         /// <summary>
@@ -125,14 +125,12 @@ public static class LoadObjectives
         SecondaryObjectives = new Dictionary<string, List<Objective>>();
 
         //Get the directionary holding the location folders
-        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Objectives/Secondary");
-        string[] locationFolders = Directory.GetDirectories(dir.FullName);
+        TextAsset directories = Resources.Load<TextAsset>("Text/Objectives/SecondaryObjectivesMap");
+        string[] locationFolders = directories.text.Split("\n"[0]);
 
         //Iterate through each location folder
-        foreach (string locationPath in locationFolders)
+        foreach (string location in locationFolders)
         {
-            //Retrieve location name
-            string location = GameManager.instance.PullDirectoryEndPoint(locationPath);
 
             //Get each text file in the location folder
             TextAsset[] pObjectivesList = Resources.LoadAll<TextAsset>("Text/Objectives/Secondary/" + location);
@@ -167,7 +165,7 @@ public static class LoadObjectives
                 Objective primaryObj = primary.Item2;
 
                 //If primary is the one to be completed
-                if (primaryObj.Name.Equals(objName.Substring(2)))
+                if (primaryObj.Name.Equals(objName) && counter == currentPrimaryObjective)
                 {
                     //Update its item1 to true confirming that its been completed
                     Tuple<bool, Objective> update = new Tuple<bool, Objective>(true, primary.Item2);
@@ -179,7 +177,7 @@ public static class LoadObjectives
                     Objective nextPrimObj = nextPrimObjTuple.Item2;
 
                     //Send call to HUD Controller to animate Objective popup
-                    HUDController.instance.InitiateDatabasePopup(nextPrimObj.Name, nextPrimObj.Description);
+                    HUDController.instance.InitiateObjectivesPopup(nextPrimObj.Name, nextPrimObj.Description);
                     break;
                 }
                 counter++;

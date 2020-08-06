@@ -1,0 +1,6 @@
+Description: ACQUIRE A SUITABLE FORM
+Number of Objectives: 1
+Icon Type: diamondIcon
+You have awoken in an unfamilliar space.
+
+Regain your bearings, and find a way out of this primitive host. 

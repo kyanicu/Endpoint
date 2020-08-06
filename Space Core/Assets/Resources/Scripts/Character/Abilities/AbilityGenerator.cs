@@ -11,21 +11,7 @@ public static class AbilityGenerator
     /// <param name="character">The character getting the abilities</param>
     public static void AddAbilitiesToCharacter(GameObject character)
     {
-        int passiveAbilityIndex = Random.Range(0, PassiveAbility.PassiveAbilityList.Count);
         int activeAbilityIndex = Random.Range(0, ActiveAbility.ActiveAbilityList.Count);
-
-        switch (PassiveAbility.PassiveAbilityList[passiveAbilityIndex])
-        {
-            case "Overclock":
-                character.AddComponent<Overclock>();
-                break;
-            case "Immortal Reloading":
-                character.AddComponent<ImmortalReloading>();
-                break;
-            case "Piercing Shot":
-                character.AddComponent<PiercingShotAbility>();
-                break;
-        }
 
         switch (ActiveAbility.ActiveAbilityList[activeAbilityIndex])
         {
@@ -49,19 +35,6 @@ public static class AbilityGenerator
     /// <param name="character">The character getting the abilities</param>
     public static void AddAbilitiesToCharacter(Character player, string activeAbility, string passiveAbility)
     {
-        switch (passiveAbility)
-        {
-            case "Overclock":
-                player.gameObject.AddComponent<Overclock>();
-                break;
-            case "Immortal Reloading":
-                player.gameObject.AddComponent<ImmortalReloading>();
-                break;
-            case "Piercing Shot":
-                player.gameObject.AddComponent<PiercingShotAbility>();
-                break;
-        }
-
         switch (activeAbility)
         {
             case "Homing Bullet":

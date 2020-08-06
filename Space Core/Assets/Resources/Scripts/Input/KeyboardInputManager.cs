@@ -105,6 +105,16 @@ public class KeyboardInputManager : InputManager
             } 
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            // If the pause menu isn't already open...
+            if (HUDController.instance.visible)
+            {
+                currentState = InputState.OVERLAY;
+                OverlayManager.instance.ToggleOverlayVisibility();
+            }
+        }
+
         Vector2 positionOnScreen = Vector2.zero;
         if (PlayerController.instance.Character.RotationPoint != null)
         {
@@ -151,6 +161,20 @@ public class KeyboardInputManager : InputManager
     /// </summary>
     protected override void RunPlayerOverlayFrameInput()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            currentState = InputState.GAMEPLAY;
+            OverlayManager.instance.ToggleOverlayVisibility();
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OverlayManager.instance.NavigateOverlay(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OverlayManager.instance.NavigateOverlay(1);
+        }
+
 
     }
 
@@ -196,6 +220,33 @@ public class KeyboardInputManager : InputManager
     }
 
     /// <summary>
+    /// Runs the frame input intended while in the game over InputState
+    /// </summary>
+    protected override void RunGameOverFrameInput()
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameOverManager.instance.TraverseMenu(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameOverManager.instance.TraverseMenu(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            GameOverManager.instance.SelectButton();
+        }
+    }
+
+    protected override void RunTerminalWindowFrameInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+        {
+            TerminalWindow.instance.ButtonClick();
+        }
+    }
+
+    /// <summary>
     /// Runs the fixed input intended while in the gameplay InputState
     /// Called only on an physics tick through FixedUpdate() function
     /// Should only handle things physics related
@@ -204,8 +255,14 @@ public class KeyboardInputManager : InputManager
     protected override void RunGameplayFixedInput()
     {
         float horiz = Input.GetAxisRaw("Horizontal");
+        float vert = Input.GetAxisRaw("Vertical");
+        Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/KeyboardInputManager.cs
+        PlayerController.instance.Move(direction);
+=======
         PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/KeyboardInputManager.cs
     }
 
     /// <summary>

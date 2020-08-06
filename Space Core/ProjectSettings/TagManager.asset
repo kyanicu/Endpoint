@@ -15,6 +15,14 @@ TagManager:
   - EMP
   - EnemyController
   - ControllerGroup
+<<<<<<< HEAD
+  - Rocket
+  - EnergyBurst
+  - HomingRadar
+  - Boss
+  - Missile
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   layers:
   - Default
   - TransparentFX
@@ -32,7 +40,7 @@ TagManager:
   - Weapon
   - Player
   - Enemy
-  - 
+  - HackRadar
   - 
   - 
   - 

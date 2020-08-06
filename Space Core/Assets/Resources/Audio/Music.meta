@@ -1,5 +1,17 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Particles.meta
+<<<<<<< HEAD:Space Core/Assets/BodySwappingPrototype/Assets/Resources.meta
+guid: a1ef29ee536a09847bab752819139052
+=======
+guid: 53e6ea36d29f04847b85d5b1f705405d
+>>>>>>> 6a330cb9c3120b0fde186c90cad71cc387178ef6:Space Core/Assets/Resources/Scripts/Particles.meta
+=======
 guid: 6fa417cc8a0679944ae9f11b9ba094c7
+>>>>>>> cfeef635a95cb5f03345c6159c7a5e31e017300e:Space Core/Assets/Resources/Audio/Music.meta
+=======
+guid: 6fa417cc8a0679944ae9f11b9ba094c7
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

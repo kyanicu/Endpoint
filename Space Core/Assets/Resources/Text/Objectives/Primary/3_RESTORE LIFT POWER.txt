@@ -1,0 +1,6 @@
+Description: RESTORE LIFT POWER
+Number of Objectives: 1
+Icon Type: diamondIcon
+You've discovered a higher being exists within these walls. Find it.
+
+A lift will take you further into the depths--but it's deactivated. Restore its purpose. 

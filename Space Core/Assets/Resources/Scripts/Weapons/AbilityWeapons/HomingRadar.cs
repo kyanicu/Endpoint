@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Homing Radar for the homing bullet. Helps the bullet lock onto a target
 /// </summary>
 public class HomingRadar : MonoBehaviour
 {
-    [SerializeField]
-    private HomingBullet parentBullet;
+    public Bullet parentBullet;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

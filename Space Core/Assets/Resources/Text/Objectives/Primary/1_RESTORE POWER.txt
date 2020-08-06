@@ -1,0 +1,6 @@
+Description: RESTORE POWER
+Number of Objectives: 1
+Icon Type: diamondIcon
+The new vessel is cold, stiff, confining--but it will do. 
+
+Now, you must find a way out.

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -19,7 +18,7 @@ public class HomingBulletAbility : ActiveAbility
     {
         //get the owner's bullet type. Could be different from standard bullet if they have a
         //passive ability that changes their bullet type.
-        owner.Weapon.BulletTag = "HomingBullet";
+        owner.Weapon.BulletHoming = true;
         StartCoroutine(ResetBullets());
     }
 
@@ -47,7 +46,7 @@ public class HomingBulletAbility : ActiveAbility
     IEnumerator ResetBullets()
     {
         yield return new WaitForSeconds(activeTime);
-        owner.Weapon.BulletTag = "NormalBullet";
+        owner.Weapon.BulletHoming = false;
         activationTimer = Cooldown;
     }
 }

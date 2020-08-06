@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Movement : MonoBehaviour
 {
 
-    Character owner;
+    protected Character owner;
 
     /// <summary>
     /// Have the default values been set?
@@ -16,6 +16,13 @@ public abstract class Movement : MonoBehaviour
 
     private Vector2 _velocity;
     public Vector2 velocity { get { return _velocity; } set { _velocity = value; } }
+
+    /// <summary>
+    /// Max Velocity
+    /// </summary> 
+    private float terminalVelocity = 50;
+
+    protected Vector2 movingDirection = Vector2.zero;
 
     /// <summary>
     /// Are we forcing the character controller off the ground this frame?
@@ -54,19 +61,19 @@ public abstract class Movement : MonoBehaviour
 
     // The following values return the encapsulated value with the current set modifier  
 
-    protected float runMax { get { return _runMax * mod; } set { _runMax = value; } }
-    protected float runAccel { get { return _runAccel * mod; } set { _runAccel = value; } }
-    protected float runDecel { get { return _runDecel * mod; } set { _runDecel = value; } }
-    protected float runBreak { get { return _runBreak * mod; } set { _runBreak = value; } }
-    protected float jumpVelocity { get { return _jumpVelocity * mod; } set { _jumpVelocity = value; } }
-    protected float gravityScale { get { return _gravityScale * mod; } set { _gravityScale = value; } }
-    protected float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } set { _jumpCancelMinVel = value; } }
-    protected float jumpCancelVel { get { return _jumpCancelVel / mod; } set { _jumpCancelVel = value; } }
-    protected float airAccel { get { return _airAccel * mod; } set { _airAccel = value; } }
-    protected float airDecel { get { return _airDecel * mod; } set { _airDecel = value; } }
-    protected float airMax { get { return _airMax * mod; } set { _airMax = value; } }
-    protected float pushForce { get { return _pushForce * mod; } set { _pushForce = value; } }
-    protected float mass { get { return _mass * mod; } set { _mass = value; } }
+    public float runMax { get { return _runMax * mod; } set { _runMax = value; } }
+    public float runAccel { get { return _runAccel * mod; } protected set { _runAccel = value; } }
+    public float runDecel { get { return _runDecel * mod; } protected set { _runDecel = value; } }
+    public float runBreak { get { return _runBreak * mod; } protected set { _runBreak = value; } }
+    public float jumpVelocity { get { return _jumpVelocity * mod; } protected set { _jumpVelocity = value; } }
+    public float gravityScale { get { return _gravityScale * mod; } protected set { _gravityScale = value; } }
+    public float jumpCancelMinVel { get { return _jumpCancelMinVel * mod; } protected set { _jumpCancelMinVel = value; } }
+    public float jumpCancelVel { get { return _jumpCancelVel / mod; } protected set { _jumpCancelVel = value; } }
+    public float airAccel { get { return _airAccel * mod; } protected set { _airAccel = value; } }
+    public float airDecel { get { return _airDecel * mod; } protected set { _airDecel = value; } }
+    public float airMax { get { return _airMax * mod; } protected set { _airMax = value; } }
+    public float pushForce { get { return _pushForce * mod; } protected set { _pushForce = value; } }
+    public float mass { get { return _mass * mod; } protected set { _mass = value; } }
     /// <summary>
     /// Current jump values
     /// </summary>
@@ -96,7 +103,7 @@ public abstract class Movement : MonoBehaviour
             charCont = gameObject.AddComponent<CharacterController2D>();
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         owner = GetComponent<Character>();
 
@@ -113,7 +120,7 @@ public abstract class Movement : MonoBehaviour
             charCont = GetComponent<CharacterController2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
 
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
@@ -129,7 +136,7 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
 
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
@@ -149,7 +156,7 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (collideWithCharacters && (collision.tag == "Enemy" || collision.tag == "Player" || (collision.tag == "Weapon" && collision.GetComponent<Weapon>().owner.gameObject != gameObject)))
         {
@@ -162,6 +169,25 @@ public abstract class Movement : MonoBehaviour
             CancelDirectionalVelocity(dist.normalized);
 
         }
+
+        if(!collision.isTrigger)
+        {
+            int contactCount;
+            UpdateState(Vector2.up, out contactCount);
+        }
+    }
+
+    /// <summary>
+    /// Handles intended movement on x and y axes
+    /// </summary>
+    /// <param name="direction">direction of intended movement</param>
+    public virtual void Move(Vector2 direction)
+    {
+        movingDirection = direction;
+        if (direction.x == 0)
+            Run(0);
+        else
+            Run(Mathf.Sign(direction.x));
     }
 
     /// <summary>
@@ -171,7 +197,7 @@ public abstract class Movement : MonoBehaviour
     /// 0 == none,
     /// -1 == left,
     /// +1 == right</param>
-    public virtual void Run(float direction)
+    protected virtual void Run(float direction)
     {
         if (freezeRun)
             return;
@@ -278,6 +304,14 @@ public abstract class Movement : MonoBehaviour
                 isJumpCanceling = true;
         }
 
+    }
+
+    /// <summary>
+    /// Virtual blank function for unique movement option for different movement classes
+    /// </summary>
+    public virtual void SpecialAbility() 
+    {
+        
     }
 
     /// <summary>
@@ -448,6 +482,9 @@ public abstract class Movement : MonoBehaviour
         //Check that player is not in a menu
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
+
+        if (velocity.magnitude > terminalVelocity)
+            velocity = velocity.normalized * terminalVelocity;
 
         bool prevGroundedState = charCont.isGrounded;
 

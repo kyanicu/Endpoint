@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class DoorBehavior : MonoBehaviour
 {
+    public AudioClip OpenDoor;
+    public AudioClip CloseDoor;
     public GameObject BottomDoor;
     public GameObject TopDoor;
     public float velocity;
@@ -13,11 +16,14 @@ public class DoorBehavior : MonoBehaviour
     private float bottomStart;
     private float lowerDistance;
 
+    private AudioSource audioSource;
+
     private bool open;
 
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         topStart = TopDoor.transform.localPosition.y;
         bottomStart = BottomDoor.transform.localPosition.y;
         riseDistance = TopDoor.transform.localPosition.y + 1.0f;
@@ -55,8 +61,11 @@ public class DoorBehavior : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.CompareTag("Player"))
         {
+            audioSource.clip = OpenDoor;
+            audioSource.Play();
             open = true;
         }
     }
@@ -73,6 +82,8 @@ public class DoorBehavior : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            audioSource.clip = CloseDoor;
+            audioSource.Play();
             open = false;
         }
     }

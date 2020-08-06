@@ -5,7 +5,11 @@ using UnityEngine;
 public class DashAttack : ActiveAbility
 {
     protected override bool activationCondition
+<<<<<<< HEAD
+        { get { return owner.movement.charCont.isGrounded && owner.isStunned <= 0 && activationTimer <= 0f; } }
+=======
         { get { return owner.movement.charCont.isGrounded && !owner.isStunned && activationTimer <= 0f; } }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     private bool isDashing;
 
@@ -45,7 +49,7 @@ public class DashAttack : ActiveAbility
         // Set dash values
         isDashing = true;
         owner.movement.collideWithCharacters = false;
-        owner.isStunned = true;
+        owner.isStunned++;
         owner.movement.freezeRun = true;
         owner.Invincible++;
         owner.movement.velocity = owner.movement.charCont.currentSlope * facingDirection * dashSpeed;
@@ -68,7 +72,7 @@ public class DashAttack : ActiveAbility
         // Reset dash values
         isDashing = false;
         owner.movement.collideWithCharacters = true;
-        owner.isStunned = false;
+        owner.isStunned--;
         owner.movement.freezeRun = false;
         owner.Invincible--;
         activationTimer = Cooldown;

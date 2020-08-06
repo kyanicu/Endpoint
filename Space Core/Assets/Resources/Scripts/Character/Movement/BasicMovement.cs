@@ -24,6 +24,12 @@ public class BasicMovement : Movement
         mass = 1;
     }
 
-    
+    /// <summary>
+    /// Null function override for SpecialAbility()
+    /// </summary>
+    public override void SpecialAbility()
+    {
+
+    }
 
 }

@@ -30,8 +30,8 @@ public class DataBaseOverlayManager : MonoBehaviour
     private float Y_MODIFIER;
     private float X_MODIFIER;
 
-    private Color selectedColor = Color.yellow;
-    private Color deselectedColor = Color.blue;
+    private Color selectedColor = new Color32(0xf4, 0x0a, 0xfd, 0xff);
+    private Color deselectedColor = new Color32(0x53, 0x51, 0x4c, 0xff);
 
     private List<string> loadedArticleInfo;
 
@@ -47,14 +47,6 @@ public class DataBaseOverlayManager : MonoBehaviour
 
         Y_MODIFIER = BlankTextInsert.GetComponent<TextMeshProUGUI>().rectTransform.rect.height + 5;
         X_MODIFIER = 40f;
-
-        //Populate headers list with all category types
-        foreach (TextMeshProUGUI header in CategoryHeaders)
-        {
-            ActiveLeftSideElements.Add(header);
-            headersList.Add(header.text.Substring(2), new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
-            headerPos.Add(header.rectTransform.position);
-        }
     }
 
     /// <summary>
@@ -62,10 +54,20 @@ public class DataBaseOverlayManager : MonoBehaviour
     /// </summary>
     public void OnEnable()
     {
+        headersList.Clear();
+        ActiveLeftSideElements.Clear();
+
+        //Populate headers list with all category types
+        foreach (TextMeshProUGUI header in CategoryHeaders)
+        {
+            ActiveLeftSideElements.Add(header);
+            headersList.Add(header.text.Substring(2), new Tuple<bool, List<TextMeshProUGUI>>(false, new List<TextMeshProUGUI>()));
+        }
+
         selectedTextID = 0;
         selectedArticleID = 0;
         ActiveLeftSideElements[selectedTextID].color = selectedColor;
-        ResetLeftPanelData();
+        resetLeftPanelData();
         clearRightPanelData();
     }
 
@@ -75,7 +77,7 @@ public class DataBaseOverlayManager : MonoBehaviour
     public void OnDisable()
     {
         ActiveLeftSideElements[selectedTextID].color = deselectedColor;
-        ResetLeftPanelData();
+        resetLeftPanelData();
 
         //Populate list of left side items if it's empty
         if (ActiveLeftSideElements.Count == 0)
@@ -172,7 +174,7 @@ public class DataBaseOverlayManager : MonoBehaviour
                     ArticleButtonText[index].color = Color.yellow;
                 }
             }
-            LoadArticleInfo(0);
+            EntryInfo.text = loadedArticleInfo[0];
             ArticleButtons[selectedArticleID].GetComponent<Button>().image.color = Color.yellow;
             ArticleButtonText[selectedArticleID].color = Color.black;
         }
@@ -210,7 +212,7 @@ public class DataBaseOverlayManager : MonoBehaviour
         
         ArticleButtons[selectedArticleID].GetComponent<Button>().image.color = Color.yellow;
         ArticleButtonText[selectedArticleID].color = Color.black;
-        LoadArticleInfo(selectedArticleID);
+        EntryInfo.text = loadedArticleInfo[selectedArticleID];
     }
 
     /// <summary>
@@ -283,14 +285,43 @@ public class DataBaseOverlayManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Loads a specific article's data entry
-    /// </summary>
-    /// <param name="buttonID"></param>
-    public void LoadArticleInfo(int buttonID)
+    public void OpenSpecificEntry(string entryName)
     {
-        EntryInfo.text = loadedArticleInfo[buttonID];
+        #region Reset Entire Overlay
+        selectedTextID = 0;
+        selectedArticleID = 0;
+        ActiveLeftSideElements[selectedTextID].color = selectedColor;
+        resetLeftPanelData();
+        clearRightPanelData();
+        #endregion
+
+        //Deselect primary active element
+        ActiveLeftSideElements[selectedTextID].color = deselectedColor;
+
+        //Search through each log entry for specified entry
+        foreach (KeyValuePair<string, DataEntry> entry in LoadDataBaseEntries.Logs)
+        {
+            DataEntry de = entry.Value;
+
+            //If the category matches, set active ID to the header's ID
+            if (de.LogName.Equals(entryName))
+            {
+                selectedTextID = findItem(de.LogCategory);
+                break;
+            }
+        }
+
+        //Select the left panel item at the ID we want
+        SelectLeftPanelItem();
+        selectedTextID = findItem(entryName);
+
+        //Reload right hand panel
+        NavigateLeftPanel(0);
+
+        //Select new lore entry
+        ActiveLeftSideElements[selectedTextID].color = selectedColor;
     }
+
     /// <summary>
     /// Hides an active left side panel element
     /// </summary>
@@ -329,43 +360,6 @@ public class DataBaseOverlayManager : MonoBehaviour
         //Update the header's bool to represent that is now hidden
         content = new Tuple<bool, List<TextMeshProUGUI>>(false, content.Item2);
         headersList[item.text.Substring(2)] = content;
-    }
-
-    public void OpenSpecificEntry(string entryName)
-    {
-        #region Reset Entire Overlay
-        selectedTextID = 0;
-        selectedArticleID = 0;
-        ActiveLeftSideElements[selectedTextID].color = selectedColor;
-        ResetLeftPanelData();
-        clearRightPanelData();
-        #endregion
-
-        //Deselect primary active element
-        ActiveLeftSideElements[selectedTextID].color = deselectedColor;
-
-        //Search through each log entry for specified entry
-        foreach (KeyValuePair<string, DataEntry> entry in LoadDataBaseEntries.Logs)
-        {
-            DataEntry de = entry.Value;
-
-            //If the category matches, set active ID to the header's ID
-            if (de.LogName.Equals(entryName))
-            {
-                selectedTextID = findItem(de.LogCategory);
-                break;
-            }
-        }
-
-        //Select the left panel item at the ID we want
-        SelectLeftPanelItem();
-        selectedTextID = findItem(entryName);
-
-        //Reload right hand panel
-        NavigateLeftPanel(0);
-
-        //Select new lore entry
-        ActiveLeftSideElements[selectedTextID].color = selectedColor;
     }
 
     /// <summary>
@@ -414,7 +408,7 @@ public class DataBaseOverlayManager : MonoBehaviour
     /// <summary>
     /// Resets the left side Panel
     /// </summary>
-    private void ResetLeftPanelData()
+    private void resetLeftPanelData()
     {
         //If only headers (unedited list)
         if (ActiveLeftSideElements.Count == 6)
@@ -456,6 +450,7 @@ public class DataBaseOverlayManager : MonoBehaviour
                     //Check that element hasn't already been destroyed
                     if (ActiveLeftSideElements[i] != null)
                     {
+                        moveContent(i + 1, 1, true);
                         Destroy(ActiveLeftSideElements[i].gameObject);
                     }
                 }
@@ -463,7 +458,7 @@ public class DataBaseOverlayManager : MonoBehaviour
                 {
                     Tuple<bool, List<TextMeshProUGUI>> content = headersList[ActiveLeftSideElements[i].text.Substring(2)];
 
-                    //Otherwise collapse the header if it's expanded
+                    // Otherwise, collapse the header if it's expanded
                     if (content.Item1)
                     {
                         content = new Tuple<bool, List<TextMeshProUGUI>>(false, content.Item2);
@@ -471,12 +466,6 @@ public class DataBaseOverlayManager : MonoBehaviour
                         ActiveLeftSideElements[i].text = "+ " + ActiveLeftSideElements[i].text.Substring(2);
                     }
                 }
-            }
-
-            //Reposition all the header elements
-            for (int i = 0; i < CategoryHeaders.Length; i++)
-            {
-                CategoryHeaders[i].rectTransform.position = headerPos[i];
             }
 
             //Reset the element list

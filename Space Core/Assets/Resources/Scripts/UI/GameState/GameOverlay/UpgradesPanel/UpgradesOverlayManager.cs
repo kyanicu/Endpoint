@@ -12,8 +12,11 @@ public class UpgradesOverlayManager : MonoBehaviour
     public Image[] IconBackgrounds;
     public Image[] Icons;
     public List<TextMeshProUGUI> DispositionModValues;
+<<<<<<< HEAD
+=======
     public TextMeshProUGUI OverlayHeader;
     public Image OverlayHeaderIcon;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     #endregion
 
     [Header("Upgrade Details")]
@@ -27,6 +30,10 @@ public class UpgradesOverlayManager : MonoBehaviour
     #region Attached GameObjects [Wheel Panel]
     public List<Image> Nodes;
     public List<Image> Branches;
+<<<<<<< HEAD
+    public List<WheelUpgrade> UpgradeGameObjects;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     public TextMeshProUGUI Level;
     public TextMeshProUGUI ParadigmName;
     public TextMeshProUGUI Equipped;
@@ -36,7 +43,12 @@ public class UpgradesOverlayManager : MonoBehaviour
     public Transform ParadigmTreeGroup;
     private Sprite[] normalBranchSprites;
     private Sprite[] dottedBranchSprites;
+<<<<<<< HEAD
+    private Sprite[] upgradeIconsSelected;
+    private Sprite[] upgradeIconsUnselected;
+=======
     private Sprite[] upgradeIcons;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     private string dominantDispositionTxt = "white";
     #endregion
 
@@ -72,7 +84,11 @@ public class UpgradesOverlayManager : MonoBehaviour
         ""
     };
     #endregion
+<<<<<<< HEAD
+    public int PlayerLevel = 0;
+=======
     public static int PlayerLevel = 5;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     public Transform Reticle;
     private const int maxLevel = 15;
     public static List<Paradigm> UnlockedParadigms { get; private set; }
@@ -89,6 +105,45 @@ public class UpgradesOverlayManager : MonoBehaviour
     {
         ///PROTOTYPING - GENERATE PARADIGM TESTS AND TEMPLATE UPGRADES-----------------------------------------------
         UnlockedParadigms = new List<Paradigm>();
+<<<<<<< HEAD
+        //Commenting out as functionality will now be done with terminals
+        //for (int x = 0; x < 10; x++)
+            //UnlockedParadigms.Add(new Paradigm());
+        Upgrades = new List<Upgrade>();
+        Upgrade u = new Upgrade("Stealth Identity", "STEALTH.ID", "After using the hack target ability, enemies can not detect you for a few seconds.", new int[] { 2, 0, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Fortification Chipset", "FTFY.CHIP", "Using the hack target ability on enemies heals them.", new int[] { 2, 0, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Scorched Earth", "SCORCH.ZIP", "Completing a hack into a new chassis causes the old chassis to receive damage.", new int[] { 1, 1, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Tactical Trojan", "TROJ.TAC", "Cancelling the hack target ability causes the enemy to receive damage.", new int[] { 1, 1, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Force Compensator", "FORCE.COMP", "You gain a passive shield which reduces damage from the front, but you take more damage from the back.", new int[] { 0, 2, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Defense Module", "DEF.MOD", "While reloading, you are rendered invulnerable.", new int[] { 0, 2, 0 });
+        Upgrades.Add(u);
+        u = new Upgrade("Salvage Scanner", "SALV~GE.SCAN", "When picking up ammo, you gain a small amount of HP, but you gain less ammo than usual.", new int[] { 0, 1, 1 });
+        Upgrades.Add(u);
+        u = new Upgrade("Active Protection Module", "PROTECT.MOD", "You gain a passive shield which completely absorbs a single shot from any source before having to recharge.", new int[] { 0, 1, 1 });
+        Upgrades.Add(u);
+        u = new Upgrade("Tactical Protocol", "TAC_MAG.PRO", "You get larger magazines, but your reloads are slower.", new int[] { 0, 0, 2 });
+        Upgrades.Add(u);
+        u = new Upgrade("Reverse Engineering", "REVERSI.ENG", "When you get shot and damaged by an enemy, you receive ammo proportional to the damage sustained.", new int[] { 0, 0, 2 });
+        Upgrades.Add(u);
+        u = new Upgrade("Vampire Subroutine", "VAMPIRE.SUB", "When you deal damage to an enemy, you regain HP proportional to the damage sustained.", new int[] { 1, 0, 1 });
+        Upgrades.Add(u);
+        u = new Upgrade("Reload Optimizer", "RLD.OPTIMIZE", "Reloading on an empty magazine is much faster than normal, while reloading on a partial magazine is slower.", new int[] { 1, 0, 1 });
+        Upgrades.Add(u);
+        ///--------------------------------------------------------------------------------------------------------------
+        normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/solid");
+        dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/wheel-lines/dashed");
+
+        // Unselected sprites for upgrades
+        upgradeIconsUnselected = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/icons-unselected");
+        // Selected sprites for upgrades
+        upgradeIconsSelected = Resources.LoadAll<Sprite>("Images/UI/Overlay/upgrades/icons-selected");
+
+=======
         for (int x = 0; x < 10; x++)
             UnlockedParadigms.Add(new Paradigm());
         Upgrades = new List<Upgrade>();
@@ -120,6 +175,7 @@ public class UpgradesOverlayManager : MonoBehaviour
         normalBranchSprites = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/NormalBranches");
         dottedBranchSprites = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/DottedBranches");
         upgradeIcons = Resources.LoadAll<Sprite>("Images/UI/UpgradesOverlay/UpgradeIcons");
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         reticleStartPos = Reticle.position;
         paradigmTreeGroupStartPos = ParadigmTreeGroup.position;
     }
@@ -133,6 +189,14 @@ public class UpgradesOverlayManager : MonoBehaviour
         RefreshUpgradesOverlay(equippedParadigmID);
     }
 
+<<<<<<< HEAD
+    private void Start()
+    {
+        EquipNewParadigm(equippedParadigmID);
+    }
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Swaps the active paradigm used by the player
     /// </summary>
@@ -206,12 +270,64 @@ public class UpgradesOverlayManager : MonoBehaviour
         SelectedIconFullName.text = u.FullName;
         SelectedIconDescription.text = u.Description;
 
+<<<<<<< HEAD
+        // Set icon to use currently selected icon sprite
+        SelectedUpgradeIcon.sprite = upgradeIconsUnselected[nodeID];
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         for (int index = 0; index < u.DispositionValues.Length; index++)
         {
             SelectedDispositionValues[index].text = $"+{u.DispositionValues[index]}{DispositionAbreviation[index]}";
         }
     }
 
+<<<<<<< HEAD
+    public void EquipNewParadigm()
+    {
+        if (selectedParadigmID < 0 || selectedParadigmID > UnlockedParadigms.Count)
+        {
+            return;
+        }
+
+        foreach (int branch in UnlockedParadigms[equippedParadigmID].Branches)
+        {
+            UpgradeGameObjects[branch].DeactivateAbility();
+        }
+
+        foreach (int branch in UnlockedParadigms[selectedParadigmID].Branches)
+        {
+            UpgradeGameObjects[branch].enabled = true;
+            UpgradeGameObjects[branch].EnableAbility();
+        }
+
+        equippedParadigmID = selectedParadigmID;
+    }
+
+    public void EquipNewParadigm(int paradigmID)
+    {
+        //Don't run functionality if we don't have any paradigms
+        if (UnlockedParadigms.Count == 0) 
+        {
+            return;
+        }
+
+        foreach (int branch in UnlockedParadigms[paradigmID].Branches)
+        {
+            UpgradeGameObjects[branch].enabled = true;
+            UpgradeGameObjects[branch].EnableAbility();
+        }
+
+        equippedParadigmID = paradigmID;
+    }
+
+    public void SetLevel(int level)
+    {
+        PlayerLevel = level;
+    }
+
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Refreshes all the information on the Upgrades Overlay
     /// </summary>
@@ -248,6 +364,17 @@ public class UpgradesOverlayManager : MonoBehaviour
             branch.sprite = null;
             branch.color = ColorWithVariedTransparency(branch.color, 1);
             branch.gameObject.SetActive(false);
+<<<<<<< HEAD
+
+            
+        }
+
+        for (int i = 0; i < 12; i++)
+        {
+            // Set corresponding icon sprites to unselected.
+            Nodes[i].sprite = upgradeIconsUnselected[i];
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
 
         //Hide Paradigm upgrade list 
@@ -278,21 +405,38 @@ public class UpgradesOverlayManager : MonoBehaviour
                 //Update list of paradigm's upgrades
                 Upgrade u = Upgrades[branchID];
 
+<<<<<<< HEAD
+                if (upgradeIconsUnselected.Length > 0)
+                {
+                    ParadigmUpgradeIcons[x].sprite = upgradeIconsUnselected[x];
+=======
                 //Remove when icons are in <--------------------------------------
                 if (upgradeIcons.Length > 0)
                 {
                     ParadigmUpgradeIcons[x].sprite = upgradeIcons[x];
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                 }
                 ParadigmUpgradeNames[x].text = u.ShortName;
 
                 //Check if branch should be a solid line
                 if (playerLevel >= x)
                 {
+<<<<<<< HEAD
+                    if (normalBranchSprites.Length > 0)
+                    {
+                        Branches[branchID].sprite = normalBranchSprites[branchID];
+
+                        // Set corresponding icon sprites to selected.
+                        Nodes[branchID].sprite = upgradeIconsSelected[branchID];
+                    }
+
+=======
                     //Remove when icons are in <--------------------------------------
                     if (normalBranchSprites.Length > 0)
                     {
                         Branches[branchID].sprite = normalBranchSprites[x];
                     }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                     //Iterate through each disposition and calculate new dis values
                     for (int i = 0; i <= (int)Disposition.VirtualRanger; i++)
                     {
@@ -302,8 +446,13 @@ public class UpgradesOverlayManager : MonoBehaviour
                 else
                 {
                     //Make upgrade list element transparent
+<<<<<<< HEAD
+                    ParadigmUpgradeIcons[x].color = ColorWithVariedTransparency(ParadigmUpgradeIcons[x].color, .2f);
+                    ParadigmUpgradeNames[x].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .2f);
+=======
                     ParadigmUpgradeIcons[x].color = ColorWithVariedTransparency(ParadigmUpgradeIcons[x].color, .5f);
                     ParadigmUpgradeNames[x].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .5f);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
                     //Check if branch should be a dotted line
                     if (x - 1 == playerLevel)
@@ -311,7 +460,11 @@ public class UpgradesOverlayManager : MonoBehaviour
                         //Remove when icons are in <--------------------------------------
                         if (dottedBranchSprites.Length > 0)
                         {
+<<<<<<< HEAD
+                            Branches[branchID].sprite = dottedBranchSprites[branchID];
+=======
                             Branches[branchID].sprite = dottedBranchSprites[x];
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                         }
                     }
                     //Check if branch should be a faded solid line
@@ -320,9 +473,15 @@ public class UpgradesOverlayManager : MonoBehaviour
                         //Remove when icons are in <--------------------------------------
                         if (normalBranchSprites.Length > 0)
                         {
+<<<<<<< HEAD
+                            Branches[branchID].sprite = normalBranchSprites[branchID];
+                        }
+                        Branches[branchID].color = ColorWithVariedTransparency(ParadigmUpgradeNames[x].color, .2f);
+=======
                             Branches[branchID].sprite = normalBranchSprites[x];
                         }
                         Branches[branchID].color = ColorWithVariedTransparency(Branches[branchID].color, .5f);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                     }
                 }
             }
@@ -421,7 +580,12 @@ public class UpgradesOverlayManager : MonoBehaviour
         for (int i = 0; i < Branches.Count; i++)
         {
             Nodes[i].color = dominantCol;
+<<<<<<< HEAD
+            //Branches[i].color = dominantCol;
+            Branches[i].color = ColorWithVariedTransparency(dominantCol, Branches[i].color.a);
+=======
             Branches[i].color = dominantCol;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
 
         //If color is white, everything in the Dispositions Section should already be active
@@ -453,8 +617,13 @@ public class UpgradesOverlayManager : MonoBehaviour
         Equipped.color = dominantCol;
         WheelCenter.color = dominantCol;
         SelectedUpgradeIcon.color = dominantCol;
+<<<<<<< HEAD
+        //OverlayHeader.color = dominantCol;
+        //OverlayHeaderIcon.color = dominantCol;
+=======
         OverlayHeader.color = dominantCol;
         OverlayHeaderIcon.color = dominantCol;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
         for (int i = 0; i< Paradigm.maxActiveBranches; i++)
         {
@@ -494,4 +663,16 @@ public class UpgradesOverlayManager : MonoBehaviour
         yield return new WaitForSeconds(timer);
         lockParadigmSwap = false;
     }
+<<<<<<< HEAD
+
+    /// <summary>
+    /// Add Paradigm to the UnlockedParadigm list
+    /// </summary>
+    /// <returns></returns>
+    public static void AddParadigm(Paradigm paradigm)
+    {
+        UnlockedParadigms.Add(paradigm);
+    }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 }

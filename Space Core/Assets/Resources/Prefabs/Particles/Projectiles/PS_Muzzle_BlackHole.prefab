@@ -46,7 +46,11 @@ ParticleSystem:
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -4658,7 +4662,11 @@ ParticleSystem:
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -9432,7 +9440,11 @@ ParticleSystem:
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -14007,6 +14019,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4767839390891648}
+<<<<<<< HEAD
+  - component: {fileID: 2161280578021713771}
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   m_Layer: 0
   m_Name: PS_Muzzle_BlackHole
   m_TagString: Untagged
@@ -14034,6 +14050,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
+--- !u!114 &2161280578021713771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580551768239302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8503911019d2c49ac874a1b660cf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 --- !u!1 &1713336776189460
 GameObject:
   m_ObjectHideFlags: 0
@@ -14080,7 +14111,11 @@ ParticleSystem:
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -18854,7 +18889,11 @@ ParticleSystem:
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -23628,7 +23667,11 @@ ParticleSystem:
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
+<<<<<<< HEAD
+  looping: 1
+=======
   looping: 0
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
