@@ -7,9 +7,12 @@ public class Console : InteractableEnv
     public string EntryName;
     public string EntryArticle;
 
+<<<<<<< HEAD
     public int ExperienceGiven = -1;
     private const int DEFAULT_EXPERIENCE_GIVEN = 50;
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     public bool AlreadyPressed { private get; set; }
 
     private void Awake()
@@ -26,9 +29,16 @@ public class Console : InteractableEnv
     {
         if (!AlreadyPressed)
         {
+<<<<<<< HEAD
             // Open terminal window, and pass this object.
             // Object is passed so functionality can be executed on terminal window close.
             TerminalWindow.instance.openLoreWindow(this);
+=======
+            //Add this object to one time events that get unlocked on scene load
+            GameManager.OneTimeEvents.Add(name, oteTag.Console);
+            LoadDataBaseEntries.UnlockDataEntry(EntryName, EntryArticle);
+            AlreadyPressed = true;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
     }
 

@@ -68,6 +68,7 @@ public static class SaveSystem
         else
         {
             Debug.LogWarning("Save file not found in " + path);
+<<<<<<< HEAD
             return null;
         }
     }
@@ -113,6 +114,8 @@ public static class SaveSystem
         else
         {
             Debug.LogWarning("No settings found in " + path);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             return null;
         }
     }

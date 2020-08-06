@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Bosses/BossCanvas.prefab.meta
 guid: 24fe549012c6f2d4d91afa91501f758f
+=======
+guid: 51ae22a0eafd9e04c97c5c1ec748dc8c
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Player/PlayerController.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

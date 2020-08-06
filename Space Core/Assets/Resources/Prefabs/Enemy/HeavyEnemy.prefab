@@ -3744,10 +3744,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
   - component: {fileID: 2003812402355083579}
   m_Layer: 0
   m_Name: Heavy_Bot_LeftHandPinky4
   m_TagString: Untagged
+=======
+  - component: {fileID: 7020053998476787177}
+  - component: {fileID: 8578582866189733339}
+  - component: {fileID: 4207505430929957285}
+  - component: {fileID: 7915790555309483051}
+  - component: {fileID: 680916442308977636}
+  - component: {fileID: 3504712412667575069}
+  - component: {fileID: 5611042408891511947}
+  m_Layer: 0
+  m_Name: HeavyEnemy
+  m_TagString: Enemy
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3766,12 +3779,19 @@ Transform:
   m_Father: {fileID: 1555872041830454771}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!1 &6141129393667397954
 GameObject:
+=======
+--- !u!50 &8578582866189733339
+Rigidbody2D:
+  serializedVersion: 4
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8665402292058300489}
@@ -3784,10 +3804,29 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &8665402292058300489
 Transform:
+=======
+  m_GameObject: {fileID: 7043612048626985560}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!70 &4207505430929957285
+CapsuleCollider2D:
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
   m_GameObject: {fileID: 6141129393667397954}
   m_LocalRotation: {x: 5.551115e-17, y: -7.2116164e-22, z: 8.4703295e-22, w: 1}
   m_LocalPosition: {x: 1.591638, y: 1.5039955, z: 0.02033794}
@@ -3797,6 +3836,97 @@ Transform:
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6254877877417018201
+=======
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.05, y: 0}
+  m_Size: {x: 0.95, y: 2.75}
+  m_Direction: 0
+--- !u!114 &7915790555309483051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a104f93f0c3fd4a93d80529edd7989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinimapIcon: {fileID: 2407232025168154996}
+  IsBlinking: 0
+  IsPlayer: 0
+  childComponents: []
+  animator: {fileID: 2058831596261310425}
+  QTEPointLeft: {fileID: 0}
+  QTEPointRight: {fileID: 0}
+  lookingLeft: 0
+--- !u!114 &680916442308977636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b64473acf8df44045965fac99bea20fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charCont: {fileID: 3504712412667575069}
+  freezeRun: 0
+  collideWithCharacters: 1
+  _runMax: 7
+  _runAccel: 40
+  _runDecel: 40
+  _runBreak: 100
+  _jumpVelocity: 18
+  _gravityScale: 1
+  _jumpCancelMinVel: 12
+  _jumpCancelVel: 2
+  _airAccel: 50
+  _airDecel: 25
+  _airMax: 9
+  _pushForce: 14
+  _mass: 1
+  mod: 1
+--- !u!114 &3504712412667575069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31db19f6bd85b14e87742ec981dbd38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slopeMax: 45
+  stepMax: 0.5
+  mover: {fileID: 5611042408891511947}
+  capCol: {fileID: 4207505430929957285}
+--- !u!114 &5611042408891511947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043612048626985560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbf9d1ef98b98344acb767f8ad504a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stopOnHit: 1
+--- !u!1 &7082208702630697399
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5616,6 +5746,7 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7ffcbef2272aab41afb4d82c43cd727, type: 3}
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!114 &217986720803354004 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2090716308575237493, guid: a7ffcbef2272aab41afb4d82c43cd727,
@@ -5628,6 +5759,8 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
 --- !u!114 &6496617800176846113 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4912681538493547968, guid: a7ffcbef2272aab41afb4d82c43cd727,
@@ -5640,6 +5773,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!1 &2836875434500153534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
@@ -5649,6 +5783,11 @@ GameObject:
 --- !u!114 &2027332275947938369 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 155164549321712288, guid: a7ffcbef2272aab41afb4d82c43cd727,
+=======
+--- !u!114 &4077105143935140245 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2779019099767718260, guid: a7ffcbef2272aab41afb4d82c43cd727,
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
     type: 3}
   m_PrefabInstance: {fileID: 2163353600770851041}
   m_PrefabAsset: {fileID: 0}
@@ -5676,9 +5815,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2163353600770851041}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!114 &570776924015080258 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1868439922494075811, guid: a7ffcbef2272aab41afb4d82c43cd727,
+=======
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9107127270732038162 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6946453481033285875, guid: a7ffcbef2272aab41afb4d82c43cd727,
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
     type: 3}
   m_PrefabInstance: {fileID: 2163353600770851041}
   m_PrefabAsset: {fileID: 0}
@@ -5688,9 +5839,15 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!114 &8737275271948982262 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7441300298126104343, guid: a7ffcbef2272aab41afb4d82c43cd727,
+=======
+--- !u!114 &2027332275947938369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 155164549321712288, guid: a7ffcbef2272aab41afb4d82c43cd727,
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
     type: 3}
   m_PrefabInstance: {fileID: 2163353600770851041}
   m_PrefabAsset: {fileID: 0}
@@ -5700,18 +5857,31 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!114 &6498820820016924294 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4915034378100786791, guid: a7ffcbef2272aab41afb4d82c43cd727,
+=======
+--- !u!224 &161782257954323995 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2034222646284107514, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    type: 3}
+  m_PrefabInstance: {fileID: 2163353600770851041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7284575522790934604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8871462847359994029, guid: a7ffcbef2272aab41afb4d82c43cd727,
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
     type: 3}
   m_PrefabInstance: {fileID: 2163353600770851041}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f56f41b4d7ed56408db64d3f9822030, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:Space Core/Assets/Resources/Prefabs/Enemy/HeavyEnemy.prefab
 --- !u!114 &1176619001793347753 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1031876393326886984, guid: a7ffcbef2272aab41afb4d82c43cd727,
@@ -5725,6 +5895,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &9107127270732038162 stripped
+=======
+--- !u!1 &2836875434500153534 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4132999948330049631, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    type: 3}
+  m_PrefabInstance: {fileID: 2163353600770851041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1118146392160919378 stripped
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Prefabs/Enemy/LargeEnemy.prefab
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6946453481033285875, guid: a7ffcbef2272aab41afb4d82c43cd727,
     type: 3}
@@ -5788,6 +5967,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0cad3dbc35130e4b9275f63ba2380d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7467660678697871907 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8766172498576419522, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    type: 3}
+  m_PrefabInstance: {fileID: 2163353600770851041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7811452916290103937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8242182879974222432, guid: a7ffcbef2272aab41afb4d82c43cd727,
+    type: 3}
+  m_PrefabInstance: {fileID: 2163353600770851041}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4888616517225841686

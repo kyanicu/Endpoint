@@ -161,6 +161,7 @@ public static class WeaponGenerator
     private static GameObject BuildAutomatic(Transform parent, WeaponGenerationInfo wgi)
     {
         return SetCommonAttributes(parent, wgi);
+<<<<<<< HEAD
     }
 
     /// <summary>
@@ -172,6 +173,8 @@ public static class WeaponGenerator
     private static GameObject BuildBurstFire(Transform parent, WeaponGenerationInfo wgi)
     {
         return SetCommonAttributes(parent, wgi);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -182,6 +185,7 @@ public static class WeaponGenerator
     private static GameObject BuildSpread(Transform parent, WeaponGenerationInfo wgi)
     {
 
+<<<<<<< HEAD
         return SetCommonAttributes(parent, wgi);
     }
 
@@ -193,6 +197,12 @@ public static class WeaponGenerator
     private static GameObject BuildEnergy(Transform parent, WeaponGenerationInfo wgi)
     {
         return SetCommonAttributes(parent, wgi);
+=======
+        GameObject weaponObject = SetCommonAttributes(parent, wgi);
+        Spread spread = weaponObject.GetComponent<Spread>();
+        spread.NumPellets = UnityEngine.Random.Range(wgi.MinNumPellets, wgi.MaxNumPellets);
+        return weaponObject;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -216,7 +226,10 @@ public static class WeaponGenerator
         GameObject weaponResource = Resources.Load<GameObject>("Prefabs/Weapons/" + wgi.name);
         GameObject weaponObject = GameObject.Instantiate(weaponResource, parent);
         Weapon weapon = weaponObject.GetComponent<Weapon>();
+<<<<<<< HEAD
         weapon.BulletTag = wgi.BulletTag;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         weapon.SpreadFactor = UnityEngine.Random.Range(wgi.MinSpread, wgi.MaxSpread);
         weapon.Damage = UnityEngine.Random.Range(wgi.MinDamage, wgi.MaxDamage);
         weapon.StunTime = wgi.StunTime;

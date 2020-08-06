@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 ﻿using UnityEngine;
+=======
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 using UnityEngine.UI;
 using TMPro;
 using LDB = LoadDataBaseEntries;
@@ -6,7 +12,10 @@ using LO = LoadObjectives;
 using LD = LoadDialogue;
 using System.IO;
 using UnityEngine.SceneManagement;
+<<<<<<< HEAD
 using System.Collections.Generic;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
 public class LoadingFileManager : MonoBehaviour
 {
@@ -20,7 +29,11 @@ public class LoadingFileManager : MonoBehaviour
     public TextMeshProUGUI FileSector;
     public TextMeshProUGUI FileTimer;
 
+<<<<<<< HEAD
     public PlayerData loadedData;
+=======
+    private PlayerData loadedData;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     // Start is called before the first frame update
     void Start()

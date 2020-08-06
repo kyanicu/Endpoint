@@ -34,8 +34,13 @@ public class GaussCannonInfo : WeaponGenerationInfo
         MinReloadTime = 0.5f;
         MaxReloadTime = 3.0f;
 
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Weapons/WeaponInfo/PrecisionWeapons/GaussCannonInfo.cs
         MinRange = 15f;
         MaxRange = 25f;
+=======
+        MinRange = 25f;
+        MaxRange = 60f;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Weapons/WeaponInfo/PrecisionWeapons/SnipeyBoi.cs
 
         MaxBulletVeloc = 40f;
         MinBulletVeloc = 30f;

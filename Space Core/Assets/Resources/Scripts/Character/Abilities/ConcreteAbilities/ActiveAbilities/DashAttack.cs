@@ -5,7 +5,11 @@ using UnityEngine;
 public class DashAttack : ActiveAbility
 {
     protected override bool activationCondition
+<<<<<<< HEAD
         { get { return owner.movement.charCont.isGrounded && owner.isStunned <= 0 && activationTimer <= 0f; } }
+=======
+        { get { return owner.movement.charCont.isGrounded && !owner.isStunned && activationTimer <= 0f; } }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     private bool isDashing;
 

@@ -73,10 +73,13 @@ public class ControllerInputManager : InputManager
         {
             PlayerController.instance.Fire();
             HUDController.instance.UpdateAmmo(PlayerController.instance.Character);
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
         }
         else if (state.Value.Triggers.Right <= 0.3f && prevState.Value.Triggers.Right > 0.3f)
         {
             PlayerController.instance.EndFire();
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
 
         if (state.Value.Triggers.Left > 0.3f && prevState.Value.Triggers.Left <= 0.3f)
@@ -120,6 +123,7 @@ public class ControllerInputManager : InputManager
         {
             float angle = Mathf.Atan2(state.Value.ThumbSticks.Right.Y, state.Value.ThumbSticks.Right.X) * Mathf.Rad2Deg;
             PlayerController.instance.AimWeapon(angle);
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
         }
         else
         {
@@ -132,6 +136,8 @@ public class ControllerInputManager : InputManager
                     PlayerController.instance.AimWeapon(180, false);
                     break;
             }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
 
         if (prevState.Value.Buttons.RightStick == ButtonState.Released && state.Value.Buttons.RightStick == ButtonState.Pressed)
@@ -198,6 +204,7 @@ public class ControllerInputManager : InputManager
         float vert = 0;
         if (state.Value.DPad.Right == ButtonState.Pressed)
         {
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
             horiz = +1f;
         }
         else if (state.Value.DPad.Left == ButtonState.Pressed)
@@ -207,6 +214,15 @@ public class ControllerInputManager : InputManager
         if (state.Value.DPad.Up == ButtonState.Pressed)
         {
             vert = +1f;
+=======
+            float horiz = 1f;
+            PlayerController.instance.Move(horiz);
+        }
+        else if (state.Value.DPad.Left == ButtonState.Pressed)
+        {
+            float horiz = -1f;
+            PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
         }
         else if (state.Value.DPad.Down == ButtonState.Pressed)
         {
@@ -484,7 +500,11 @@ public class ControllerInputManager : InputManager
         float vert = state.Value.ThumbSticks.Left.Y;
         Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/ControllerInputManager.cs
         PlayerController.instance.Move(direction);
+=======
+        PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/ControllerInputManager.cs
     }
 
     /// <summary>

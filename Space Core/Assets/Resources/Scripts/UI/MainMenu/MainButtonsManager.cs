@@ -34,8 +34,12 @@ public class MainButtonsManager : MonoBehaviour
     /// </summary>
     /// <param name="vert"></param>
     public void TraverseMenu(float vert)
+<<<<<<< HEAD
     {
         // Find out the previously selected button.
+=======
+    {// Find out the previously selected button.
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         int selected = (int)selectedID;
 
         // Change style of previously selected button to regular.
@@ -72,8 +76,11 @@ public class MainButtonsManager : MonoBehaviour
     /// </summary>
     public void SelectButton()
     {
+<<<<<<< HEAD
         if (selectedID == MenuItemID.SettingsButton)
             TagText.gameObject.SetActive(false);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         MenuButtons[(int)selectedID].onClick.Invoke();
     }
 

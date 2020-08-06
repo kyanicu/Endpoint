@@ -258,7 +258,11 @@ public class KeyboardInputManager : InputManager
         float vert = Input.GetAxisRaw("Vertical");
         Vector2 direction = horiz * Vector2.right + vert * Vector2.up;
 
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/KeyboardInputManager.cs
         PlayerController.instance.Move(direction);
+=======
+        PlayerController.instance.Move(horiz);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/KeyboardInputManager.cs
     }
 
     /// <summary>

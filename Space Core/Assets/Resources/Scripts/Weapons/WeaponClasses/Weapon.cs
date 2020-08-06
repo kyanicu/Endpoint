@@ -134,11 +134,14 @@ public abstract class Weapon : MonoBehaviour
         //Check that passed character still exists
         if(c != null)
         {
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Weapons/WeaponClasses/Weapon.cs
             if(ReloadStart != null && ReloadEnd != null)
             {
                 audioSource.clip = ReloadStart;
                 audioSource.Play();
             }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Weapons/Weapon.cs
             //Begin reloading loop
             while (TotalAmmo > 0 && AmmoInClip < ClipSize)
             {

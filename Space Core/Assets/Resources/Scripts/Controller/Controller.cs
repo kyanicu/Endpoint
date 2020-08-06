@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿using System;
 using UnityEngine;
+=======
+﻿using UnityEngine;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
 /// <summary>
 /// A controller is responsible for guiding the behavior of a character in the scene
@@ -7,7 +11,11 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     //Character this controller is in control of
+<<<<<<< HEAD
     public Character Character;
+=======
+    public Character Character { get; set; }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     //Abstract methods all sub-controllers need to implement
     public abstract void DeselectHackTarget();
@@ -23,16 +31,20 @@ public abstract class Controller : MonoBehaviour
         gameObject.transform.SetParent(parent.transform);
     }
 
+<<<<<<< HEAD
     protected virtual void Update()
     {
         CheckFalling();
     }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Method for swapping the controller's character with another controller.
     /// </summary>
     /// <param name="newCharacter">New Character this controller will gain control of</param>
     /// <param name="controller">The controller that is getting this controller's old character</param>
+<<<<<<< HEAD
     public void SwapCharacter(Character newCharacter, ref AIController controller)
     {
         GameObject controllerGameObject = controller.gameObject;
@@ -64,12 +76,18 @@ public abstract class Controller : MonoBehaviour
                 controller = controllerGameObject.GetComponent<LightEnemyAIController>();
                 break;
         }
+=======
+    public void SwapCharacter(Character newCharacter, Controller controller)
+    {
+        Character temp = Character;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         temp.AttackRecievedDeleage = controller.ReceiveAttack;
         temp.TriggerEntered2DDelegate = controller.TriggerEnter2D;
         Character = newCharacter;
         Character.AttackRecievedDeleage = ReceiveAttack;
         Character.TriggerEntered2DDelegate = TriggerEnter2D;
         controller.Character = temp;
+<<<<<<< HEAD
         //enable the controller object
         switch (temp.Class)
         {
@@ -89,15 +107,24 @@ public abstract class Controller : MonoBehaviour
     {
         Character.HealCharacter(health);
         HUDController.instance.UpdatePlayer(Character);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
     /// Move method that exposes the character's move method
     /// </summary>
+<<<<<<< HEAD
     /// <param name="direction">direcion the player is moving in</param>
     public void Move(Vector2 direction)
     {
         Character.Move(direction.normalized);
+=======
+    /// <param name="axis">Axis the player is moving along</param>
+    public void Move(float axis)
+    {
+        Character.Move(axis);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -123,6 +150,7 @@ public abstract class Controller : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         Character.Health -= damage;
+<<<<<<< HEAD
         Character.AudioSource.clip = Character.HitClip;
         Character.AudioSource.Play();
 
@@ -132,6 +160,8 @@ public abstract class Controller : MonoBehaviour
             Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsEnemyCanvas(Character);
         }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         if (Character.Health <= 0)
         {
             Die();
@@ -144,17 +174,25 @@ public abstract class Controller : MonoBehaviour
     /// <param name="attackInfo">information about the attack that the character will take</param>
     public virtual void ReceiveAttack(AttackInfo attackInfo)
     {
+<<<<<<< HEAD
         if (Character.Invincible < 0)
         {
             Character.Invincible = 0;
         }
 
         if (Character.Invincible > 0)
+=======
+        if (Character.Invincible != 0)
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             return;
 
         TakeDamage(attackInfo.damage);
         StartCoroutine(Character.Stun(attackInfo.stunTime));
+<<<<<<< HEAD
         //Character.movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
+=======
+        Character.movement.TakeKnockback(attackInfo.knockbackImpulse, attackInfo.knockbackTime);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         if (!Character.IsBlinking)
         {
             Character.IsBlinking = true;
@@ -174,16 +212,23 @@ public abstract class Controller : MonoBehaviour
     /// Method for exposing the character's fire method
     /// </summary>
     /// <returns></returns>
+<<<<<<< HEAD
     public virtual bool Fire()
+=======
+    public bool Fire()
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     {
         return Character.Fire();
     }
 
+<<<<<<< HEAD
     public virtual bool EndFire()
     {
         return Character.EndFire();
     }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Method for exposing the character's Aim Weapon method
     /// </summary>
@@ -200,6 +245,7 @@ public abstract class Controller : MonoBehaviour
     {
         Character.ActivateActiveAbility();
     }
+<<<<<<< HEAD
 
     /// <summary>
     /// Checks if the character is falling
@@ -248,4 +294,6 @@ public abstract class Controller : MonoBehaviour
             Character.animator.SetInteger("AnimationState", (int)Character.animationState);
         }
     }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 }

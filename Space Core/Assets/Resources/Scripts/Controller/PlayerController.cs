@@ -1,5 +1,8 @@
 ﻿using System.Collections;
+<<<<<<< HEAD
 using System.Collections.Generic;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 using UnityEngine;
 
 //We'll need to figure out a way to decouple scene loading from player
@@ -10,6 +13,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PlayerController : Controller
 {
+<<<<<<< HEAD
 
     //Base variables for the player controller
     public AIController Enemy;
@@ -38,6 +42,15 @@ public class PlayerController : Controller
     private float IFRAME_TIME = 3f;
     private bool canSwap;
     private bool routineRunning;
+=======
+    //Base variables for the player controller
+    public EnemyController Enemy { get; set; }
+    public InteractableEnv InteractableObject { private get; set; }
+    const float HACK_AREA_LENGTH = 22.5f;
+    private const float COOLDOWN_TIME = 2.5f;
+    private float IFRAME_TIME = 3f;
+    private bool canSwap;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
     //setup singleton of the Player Controller
     private static PlayerController _instance;
@@ -48,12 +61,15 @@ public class PlayerController : Controller
     /// </summary>
     private void Awake()
     {
+<<<<<<< HEAD
         routineRunning = false;
         HealthRegenOnPickup = false;
         HasSwitched = false;
         Shield = 0;
         ShieldMax = 0;
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         if (_instance == null)
         {
             _instance = this;
@@ -71,6 +87,7 @@ public class PlayerController : Controller
         Character.Weapon.BulletSource = DamageSource.Player;
         if (Character.Class == null)
         {
+<<<<<<< HEAD
             Character.MaxHealth = 150;
             Character.Health = 150;
             Character.Class = "medium";
@@ -79,11 +96,20 @@ public class PlayerController : Controller
             // Enable player canvas on the new character, and update the Player Canvas controller to point to the new canvas.
             Character.WorldspaceCanvas.gameObject.SetActive(true);
             Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
+=======
+            Character.MaxHealth = 100;
+            Character.Health = 100;
+            Character.Class = "medium";
+            Character.IsPlayer = true;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
         canSwap = true;
         HUDController.instance.UpdateHUD(Character);
         base.Start();
+<<<<<<< HEAD
         Character.SetMeshEmissionColor(Color.red);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -92,10 +118,13 @@ public class PlayerController : Controller
     public override void DeselectHackTarget()
     {
         Enemy.DeselectHackTarget();
+<<<<<<< HEAD
         if (IYBKYDActive)
         {
             Enemy.Character.ReceiveAttack(new AttackInfo(IYBKYD.DamageOnCancel, Vector2.zero, 0, 0, DamageSource.Player));
         }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         Enemy = null;
     }
 
@@ -104,9 +133,14 @@ public class PlayerController : Controller
     /// </summary>
     public override void Die()
     {
+<<<<<<< HEAD
         InputManager.instance.currentState = InputManager.InputState.GAME_OVER;
         GameManager.OneTimeEvents = new Dictionary<string, GameManager.OneTimeEventTags>();
         SceneManager.LoadScene(2);
+=======
+        InputManager.instance.currentState = InputManager.InputState.MAIN_MENU;
+        SceneManager.LoadScene(0);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -116,6 +150,7 @@ public class PlayerController : Controller
     {
         if(Enemy != null)
         {
+<<<<<<< HEAD
             InputManager.instance.currentState = InputManager.InputState.HACKING;
             Enemy.Character.HackArea.gameObject.SetActive(false);
             Enemy.Character.QTEPanel.gameObject.SetActive(false);
@@ -125,6 +160,10 @@ public class PlayerController : Controller
 
             Character.SetMeshEmissionColor(Color.blue);
 
+=======
+            Enemy.Character.HackArea.gameObject.SetActive(false);
+            Enemy.Character.QTEPanel.gameObject.SetActive(false);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.IsPlayer = false;
             Character.Weapon.BulletSource = DamageSource.Enemy;
             Character.Weapon.ControlledByPlayer = false;
@@ -132,6 +171,7 @@ public class PlayerController : Controller
             Character.name = "Enemy";
             Character.IsBlinking = false;
             Character.Invincible = 0;
+<<<<<<< HEAD
             SwapCharacter(Enemy.Character, ref Enemy);
 
             if(ScorchedEarthActive)
@@ -153,6 +193,9 @@ public class PlayerController : Controller
             Character.WorldspaceCanvas.gameObject.SetActive(true);
             Character.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().InitializeAsPlayerCanvas(Character);
 
+=======
+            SwapCharacter(Enemy.Character, Enemy);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.IsPlayer = true;
             Character.Weapon.BulletSource = DamageSource.Player;
             Character.Weapon.ControlledByPlayer = true;
@@ -161,6 +204,7 @@ public class PlayerController : Controller
             Character.IsBlinking = false;
             Character.Invincible = 0;
             Enemy = null;
+<<<<<<< HEAD
 
             if (TacticalActive)
             {
@@ -184,6 +228,9 @@ public class PlayerController : Controller
 
             HUDController.instance.UpdateHUD(Character);
             HasSwitched = true;
+=======
+            HUDController.instance.UpdateHUD(Character);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         }
     }
 
@@ -193,6 +240,7 @@ public class PlayerController : Controller
     /// <param name="attackInfo">Information on the attack the player is taking</param>
     public override void ReceiveAttack(AttackInfo attackInfo)
     {
+<<<<<<< HEAD
         if (Shield > 0)
         {
             Shield--;
@@ -217,6 +265,14 @@ public class PlayerController : Controller
         base.ReceiveAttack(attackInfo);
 
         if (attackInfo.damageSource != DamageSource.Hazard)
+=======
+        if (Character.Invincible > 0)
+            return;
+
+        base.ReceiveAttack(attackInfo);
+
+        if (attackInfo.damageSource != DamageSource.Spread && attackInfo.damageSource != DamageSource.Hazard)
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         {
             Character.Invincible++;
             StartCoroutine(RunIFrames());
@@ -242,6 +298,7 @@ public class PlayerController : Controller
     {
         if (collision.CompareTag("Ammo"))
         {
+<<<<<<< HEAD
             if (!HealthRegenOnPickup)
             {
                 Character.Weapon.AddAmmo(collision.gameObject.GetComponent<DroppedAmmo>().Ammo);
@@ -278,6 +335,12 @@ public class PlayerController : Controller
                 //= collision.gameObject.GetComponent<Rocket>().KnockbackImpulse * (transform.position - collision.transform.position).normalized;
             ReceiveAttack(collision.gameObject.GetComponentInChildren<ExplosionInformation>().Info);
         }
+=======
+            Character.Weapon.AddAmmo(collision.gameObject.GetComponent<DroppedAmmo>().Ammo);
+            HUDController.instance.UpdateAmmo(Character);
+            collision.gameObject.SetActive(false);
+        }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -302,12 +365,15 @@ public class PlayerController : Controller
         //If player is not in hack circle, reload
         if (Enemy == null || Vector3.Distance(transform.position, Enemy.transform.position) > HACK_AREA_LENGTH)
         {
+<<<<<<< HEAD
             if (RateOfFireOptimizerActive)
             {
                 RateOfFireOptimizer.ResetAbility();
                 RateOfFireOptimizer.ApplyAbility();
             }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             Character.Reload();
 
             //update hud
@@ -315,6 +381,7 @@ public class PlayerController : Controller
         }
     }
 
+<<<<<<< HEAD
     public void AimWeapon(float angle, bool track)
     {
         if (!track)
@@ -327,12 +394,15 @@ public class PlayerController : Controller
         }
     }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Method for passing the main camera to the character when the player aim's the weapon
     /// </summary>
     /// <param name="angle">New angle the player will be aiming at</param>
     public override void AimWeapon(float angle)
     {
+<<<<<<< HEAD
         Vector2 direction = (Vector2)(Quaternion.Euler(0, 0, angle) * Vector2.right);
         bool previous = Physics2D.queriesHitTriggers;
         Physics2D.queriesHitTriggers = true;
@@ -362,6 +432,8 @@ public class PlayerController : Controller
             Vector3 diff = hit.collider.gameObject.transform.position - Character.transform.position;
             angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         Character.AimWeapon(angle, Camera.main);
     }
 
@@ -386,6 +458,7 @@ public class PlayerController : Controller
         }
     }
 
+<<<<<<< HEAD
     public override bool Fire()
     {
         if (Character.isStunned > 0)
@@ -406,6 +479,8 @@ public class PlayerController : Controller
         return fired;
     }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// function for resetting the swap
     /// </summary>
@@ -457,6 +532,7 @@ public class PlayerController : Controller
         yield return new WaitForSeconds(IFRAME_TIME);
         Character.Invincible--;
     }
+<<<<<<< HEAD
 
     protected override void Update()
     {
@@ -523,4 +599,6 @@ public class PlayerController : Controller
         Undetectable = false;
         routineRunning = false;
     }
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 }

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Space Core/Assets/Resources/Materials/Particles/Weapons/VortexLauncher/Materials/Additive.meta
 guid: b25b69b60aab3f84a98fd9d40ed7bdf2
+=======
+guid: c2414a8e98377e04fac9813de5cc08d4
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/Input.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

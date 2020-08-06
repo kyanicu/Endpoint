@@ -253,7 +253,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331473746972588, guid: 837d93fad6231d041be14cf643f5e1a6, type: 3}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 8
+=======
+      value: 7
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
       objectReference: {fileID: 0}
     - target: {fileID: 4331473746972588, guid: 837d93fad6231d041be14cf643f5e1a6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -269,6 +273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 837d93fad6231d041be14cf643f5e1a6, type: 3}
+<<<<<<< HEAD
 --- !u!1001 &760906034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -368,6 +373,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a94a59d1a4c71ea48b50f3917d550512, type: 3}
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 --- !u!1001 &1181247027
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -558,7 +565,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4641642333452326, guid: 17d342865beb3b549a1bcb4c4814dac5, type: 3}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 6
+=======
+      value: 5
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
       objectReference: {fileID: 0}
     - target: {fileID: 4641642333452326, guid: 17d342865beb3b549a1bcb4c4814dac5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -615,7 +626,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4767839390891648, guid: ac42ee4d23c7a12408d7fb20076efdf7, type: 3}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 7
+=======
+      value: 6
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
       objectReference: {fileID: 0}
     - target: {fileID: 4767839390891648, guid: ac42ee4d23c7a12408d7fb20076efdf7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -631,6 +646,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac42ee4d23c7a12408d7fb20076efdf7, type: 3}
+<<<<<<< HEAD
 --- !u!1001 &147493794994828866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -700,6 +716,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6002398cd3e5b0940afbeeb51367ecaa, type: 3}
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 --- !u!1001 &1691978603485825726
 PrefabInstance:
   m_ObjectHideFlags: 0

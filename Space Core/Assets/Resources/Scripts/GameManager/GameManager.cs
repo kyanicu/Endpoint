@@ -91,6 +91,38 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         EnemyControllers = null;
+<<<<<<< HEAD
+=======
+
+        if (OneTimeEvents.Count > 0)
+        {
+            //Iterate through each One Time Event that has already occurred
+            foreach (KeyValuePair<string, OneTimeEventTags> ote in OneTimeEvents)
+            {
+                //Locate the event in the scene given its name
+                GameObject Event = GameObject.Find(ote.Key);
+
+                //Check if the game object exists in the current scene
+                if (Event != null)
+                {
+                    switch (ote.Value)
+                    {
+                        case OneTimeEventTags.Destroy:
+                            Destroy(Event.gameObject);
+                            break;
+                        case OneTimeEventTags.Console:
+                            Console console = Event.GetComponent<Console>();
+                            console.AlreadyPressed = true;
+                            break;
+                        case OneTimeEventTags.HazardSwitch:
+                            HazardSwitch hazardSwitch = Event.GetComponent<HazardSwitch>();
+                            hazardSwitch.AlreadyPressed = true;
+                            break;
+                    }
+                }
+            }
+        }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     public void Update()
@@ -100,7 +132,11 @@ public class GameManager : MonoBehaviour
         if (InputManager.instance.currentState != InputManager.InputState.GAMEPLAY) 
             return;
 
+<<<<<<< HEAD
         if (EnemyControllers == null || EnemyControllers.Count == 0)
+=======
+        if (EnemyControllers == null)
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         {
             EnemyControllers = GameObject.FindGameObjectsWithTag("EnemyController").ToList();
         }
@@ -161,6 +197,7 @@ public class GameManager : MonoBehaviour
     public static string RetrievePlayTime(float playerTime)
     {
         int seconds = (int)playerTime % 60;
+<<<<<<< HEAD
         string sec = seconds > 9 ? seconds + "" : "0" + seconds;
         int minutes = (int)playerTime / 60;
         string min = minutes > 9 ? minutes + "" : "0" + minutes;
@@ -209,5 +246,10 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+=======
+        int minutes = (int)playerTime / 60;
+        int hours = (int)playerTime / 3600;
+        return $"{hours}:{minutes}:{seconds}";
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 }

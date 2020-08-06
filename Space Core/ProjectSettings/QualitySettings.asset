@@ -41,5 +41,9 @@ QualitySettings:
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
+<<<<<<< HEAD
   m_PerPlatformDefaultQuality:
     Standalone: 0
+=======
+  m_PerPlatformDefaultQuality: {}
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2

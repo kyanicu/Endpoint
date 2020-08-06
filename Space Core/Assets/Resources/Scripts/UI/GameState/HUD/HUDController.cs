@@ -24,7 +24,10 @@ public class HUDController : MonoBehaviour
     public CharacterPanelManager CharacterPM;
     public WeaponPanelManager WeaponPM;
     public SwapPanelManager SwapPM;
+<<<<<<< HEAD
     public ExperiencePanelManager ExperiencePM;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     public MinimapController MinimapManager;
     public DialogueManager DialogueManager;
     public PopupManager PopupManager;
@@ -55,10 +58,20 @@ public class HUDController : MonoBehaviour
         {
             instance.UpdateMinimap(GameManager.Sector, "Save Room");
         }
+<<<<<<< HEAD
     }
     private void Start()
     {
         visible = true;
+=======
+
+        //Empty saved data cache as confirmation that data was successfully loaded
+        SaveSystem.loadedData = null;
+    }
+    private void Start()
+    {
+        visible = false;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
     
     /// <summary>
@@ -77,7 +90,10 @@ public class HUDController : MonoBehaviour
             CharacterPM.UpdateCharacterClass(p);
             CharacterPM.UpdateCharacterAbilities(p);
             RecolorHUD();
+        }
+    }
 
+<<<<<<< HEAD
             ExperiencePM.UpdateExperienceFromSystem();
 
             // After updating the HUD, also make sure to update the player's worldspace canvas.
@@ -85,6 +101,8 @@ public class HUDController : MonoBehaviour
         }
     }
 
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     /// <summary>
     /// Updates every Section of the HUD
     /// </summary>
@@ -111,9 +129,12 @@ public class HUDController : MonoBehaviour
     public void UpdateAmmo(Character c)
     {
         WeaponPM.UpdateAmmo(c.Weapon);
+<<<<<<< HEAD
 
         // After updating the HUD, also make sure to update the player's worldspace canvas.
         c.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsPlayerCanvas(c);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>
@@ -132,9 +153,12 @@ public class HUDController : MonoBehaviour
     public void UpdatePlayer(Character c)
     {
         CharacterPM.UpdateHealth(c.MaxHealth, c.Health);
+<<<<<<< HEAD
 
         // After updating the HUD, also make sure to update the player's worldspace canvas.
         c.WorldspaceCanvas.GetComponent<WorldspaceCanvasManager>().UpdateAsPlayerCanvas(c);
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     /// <summary>

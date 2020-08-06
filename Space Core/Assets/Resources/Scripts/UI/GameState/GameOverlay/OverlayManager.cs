@@ -23,7 +23,10 @@ public class OverlayManager : MonoBehaviour
     public MapOverlayManager MapManager;
     public ObjectivesOverlayManager OOManager;
     public UpgradesOverlayManager UpgradesManager;
+<<<<<<< HEAD
     public TopPanelManager TopPM;
+=======
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     [Space]
     #endregion
 
@@ -112,9 +115,13 @@ public class OverlayManager : MonoBehaviour
         OverlayPanels[(int)ActivePanel].SetActive(false);
         OverlayPanelsContainerOpenClose = OverlayPanelsContainer.GetComponent<CanvasGroup>().DOFade(0f, 0.2f);
 
+<<<<<<< HEAD
         MenuOptionButtons[activeButtonID].SwapSelect();
 
         // If the player hasn't recently unlocked lore entry
+=======
+        //If haven't recently unlocked lore entry
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
         if (HUDController.instance.RecentDataBaseEntry == null ||
             HUDController.instance.RecentDataBaseEntry.Length == 0)
         {
@@ -124,6 +131,7 @@ public class OverlayManager : MonoBehaviour
 
             // Toggle overlay visibility.
             overlayVisible = !overlayVisible;
+<<<<<<< HEAD
 
             // If it is not visible, open everything, including the newly reset active panel.
             if (overlayVisible)
@@ -147,6 +155,10 @@ public class OverlayManager : MonoBehaviour
             }
 
             HUDController.instance.visible = !overlayVisible;
+=======
+            HUDController.instance.visible = !overlayVisible;
+            overlay.gameObject.SetActive(overlayVisible);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             HUDController.instance.ToggleHUDVisibility();
         }
         //Otherwise go straight to database overlay

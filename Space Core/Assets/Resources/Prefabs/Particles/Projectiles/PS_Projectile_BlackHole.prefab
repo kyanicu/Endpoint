@@ -4791,7 +4791,11 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
+<<<<<<< HEAD
   m_IsActive: 0
+=======
+  m_IsActive: 1
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 --- !u!4 &4455343131239944
 Transform:
   m_ObjectHideFlags: 0

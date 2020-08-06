@@ -6,7 +6,11 @@ using UnityEngine.SceneManagement;
 public abstract class InputManager : MonoBehaviour
 {
     /// <summary> enum type used to keep track of how the input from user should be handled </summary>
+<<<<<<< HEAD:Space Core/Assets/Resources/Scripts/Input/InputManager.cs
     public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING, GAME_OVER, TERMINAL_WINDOW, HACKING }
+=======
+    public enum InputState { MAIN_MENU, OVERLAY, PLAYER_MENU, GAMEPLAY, PAUSE, LOADING }
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2:Space Core/Assets/Resources/Scripts/InputManager.cs
     /// <summary> The current state of how input should be handled </summary>
     public InputState currentState { get; set; }
 

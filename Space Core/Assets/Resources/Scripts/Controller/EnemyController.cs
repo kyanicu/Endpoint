@@ -9,6 +9,10 @@ public class EnemyController : Controller
     public static string[] EnemyTypes =
         { "light", "medium", "heavy" };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     protected int moveDirection = +1;
     public float PatrolRange { get; set; }
     public bool PlayerInRange { get; set; }
@@ -86,7 +90,11 @@ public class EnemyController : Controller
                     finishedFiring = true;
                 }
 
+<<<<<<< HEAD
                 Move(Vector2.zero);
+=======
+                Move(0);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             }
             else
             {
@@ -99,7 +107,11 @@ public class EnemyController : Controller
                 else if (Dist0 < .5 || Character.movement.charCont.isTouchingRightWall)
                     moveDirection = -1;
 
+<<<<<<< HEAD
                 Move(moveDirection * Vector2.right );
+=======
+                Move(moveDirection);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
             }
         }
     }
@@ -216,6 +228,10 @@ public class EnemyController : Controller
         {
             if (PlayerController.instance.Enemy == null)
             {
+<<<<<<< HEAD
+=======
+                PlayerController.instance.Enemy = this;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
                 Character.IsSelected = true;
                 Character.QTEPanel.SetActive(Character.IsSelected);
                 Character.HackArea.SetActive(Character.IsSelected);

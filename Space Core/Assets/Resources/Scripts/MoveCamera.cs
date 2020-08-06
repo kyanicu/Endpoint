@@ -28,6 +28,7 @@ public class MoveCamera : MonoBehaviour
 
     void FixedUpdate()
     {
+<<<<<<< HEAD
         if (PlayerController.instance == null)
         {
             return;
@@ -35,6 +36,11 @@ public class MoveCamera : MonoBehaviour
 
         Transform player = PlayerController.instance.Character.gameObject.transform;
         float interpolation = CAM_SPEED * Time.deltaTime;
+=======
+        if (PlayerController.instance == null) return;
+        Transform player = PlayerController.instance.Character.gameObject.transform;
+        float interpolation = speed * Time.deltaTime;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
         Vector3 camPos = transform.position;
         float dist = Vector2.Distance(player.position, camPos);

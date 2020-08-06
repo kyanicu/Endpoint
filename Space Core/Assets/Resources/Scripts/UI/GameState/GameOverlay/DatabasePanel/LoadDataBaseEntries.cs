@@ -52,9 +52,18 @@ public static class LoadDataBaseEntries
     /// </summary>
     public static void LoadAllDataEntries()
     {
+<<<<<<< HEAD
         Logs = new Dictionary<string, DataEntry>();
         string jsonMap = Resources.Load<TextAsset>("Text/Lore/LoreMap").text;
         JSONNode loreMap = JSON.Parse(jsonMap);
+=======
+        //Reset log list
+        Logs = new Dictionary<string, DataEntry>();
+
+        //Get the directionary holding the category folders
+        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/Text/Lore");
+        string[] categoryFolders = Directory.GetDirectories(dir.FullName);
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
 
         foreach (KeyValuePair<string, JSONNode> category in (JSONObject)loreMap)
         {

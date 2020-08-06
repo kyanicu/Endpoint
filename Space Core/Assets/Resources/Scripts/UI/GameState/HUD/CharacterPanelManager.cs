@@ -159,6 +159,18 @@ public class CharacterPanelManager : MonoBehaviour
         CharDiagnosticActiveAbilityAbbr.text = playerActiveAbility.AbilityShortName;
         CharDiagnosticActiveAbilityTitle.text = playerActiveAbility.AbilityName;
         CharDiagnosticActiveAbilityText.text = playerActiveAbility.AbilityDescription;
+<<<<<<< HEAD
+=======
+
+        //CharacterPassiveAbilityFill.sprite = playerPassiveAbility.AbilityImage;
+        //CharacterPassiveAbilityEmpty.sprite = playerPassiveAbility.AbilityImage;
+        //CharacterPassiveAbilityText.text = playerPassiveAbility.AbilityShortName;
+
+        //CharDiagnosticPassiveAbilityIcon.sprite = playerPassiveAbility.AbilityImage;
+        //CharDiagnosticPassiveAbilityAbbr.text = playerPassiveAbility.AbilityShortName;
+        //CharDiagnosticPassiveAbilityTitle.text = playerPassiveAbility.AbilityName;
+        //CharDiagnosticPassiveAbilityText.text = playerPassiveAbility.AbilityDescription;
+>>>>>>> 2f6d9b00abb4d75f634655ee7111d4f1c2f6abd2
     }
 
     // Recolors all elements within the Character Panel to match the current character's class.
